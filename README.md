@@ -21,7 +21,7 @@ gulp.task('testAutoFx', function () {
 });
 ```
 
-#### 参数shuom
+#### 参数说明
 
 ```
 ● last 2 versions: 主流浏览器的最新两个版本
@@ -32,4 +32,37 @@ gulp.task('testAutoFx', function () {
 ● iOS 7: IOS7版本
 ● Firefox ESR: 最新ESR版本的火狐
 ● > 5%: 全球统计有超过5%的使用率
+```
+
+## gulp-ruby-sass 编译scss
+
+```
+var compileSASS = function (filename, options) {
+  return sass('src/scss/*.scss', options)
+        .pipe(autoprefixer('last 2 versions', '> 5%'))
+        .pipe(concat(filename))
+        .pipe(gulp.dest(DEST+'/css'))
+        .pipe(browserSync.stream());
+};
+
+gulp.task('sass-minify', function() {
+    /**
+     * style有以下4种选择：
+     * nested：嵌套缩进，它是默认值
+     * expanded：每个属性占一行
+     * compact：每条样式占一行
+     * compressed：整个压缩成一行
+     */
+    return compileSASS('custom.min.css', {style: 'compressed'});
+});
+```
+
+#### 参数说明
+
+```
+ * style有以下4种选择：
+     ● nested：嵌套缩进，它是默认值
+     ● expanded：每个属性占一行
+     ● compact：每条样式占一行
+     ● compressed：整个压缩成一行
 ```

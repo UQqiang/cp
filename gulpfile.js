@@ -5,20 +5,23 @@ var gulp = require('gulp'),
     sass = require('gulp-ruby-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     browserSync = require('browser-sync').create();
+var inject = require('gulp-inject');
+var fileinclude = require('gulp-file-include');
+
 
 var DEST = 'build/';
 
-gulp.task('scripts', function() {
+gulp.task('scripts', function () {
     return gulp.src([
-        'src/js/helpers/*.js',
-        'src/js/*.js',
-      ])
-      .pipe(concat('custom.js'))
-      .pipe(gulp.dest(DEST+'/js'))
-      .pipe(rename({suffix: '.min'}))
-      .pipe(uglify())
-      .pipe(gulp.dest(DEST+'/js'))
-      .pipe(browserSync.stream());
+            'src/js/helpers/*.js',
+            'src/js/*.js',
+        ])
+        .pipe(concat('custom.js'))
+        .pipe(gulp.dest(DEST + '/js'))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(uglify())
+        .pipe(gulp.dest(DEST + '/js'))
+        .pipe(browserSync.stream());
 });
 
 // TODO: Maybe we can simplify how sass compile the minify and unminify version
@@ -31,18 +34,18 @@ gulp.task('scripts', function() {
  */
 
 var compileSASS = function (filename, options) {
-  return sass('src/scss/*.scss', options)
+    return sass('src/scss/*.scss', options)
         .pipe(autoprefixer('last 2 versions', '> 5%'))
         .pipe(concat(filename))
-        .pipe(gulp.dest(DEST+'/css'))
+        .pipe(gulp.dest(DEST + '/css'))
         .pipe(browserSync.stream());
 };
 
-gulp.task('sass', function() {
+gulp.task('sass', function () {
     return compileSASS('custom.css', {});
 });
 
-gulp.task('sass-minify', function() {
+gulp.task('sass-minify', function () {
     /**
      * style有以下4种选择：
      * nested：嵌套缩进，它是默认值
@@ -56,23 +59,49 @@ gulp.task('sass-minify', function() {
 /**
  * 静态服务器
  */
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', function () {
     browserSync.init({
         server: {
             baseDir: './'
         },
-        startPath: './view/login.html'
+        startPath: './build/view/login.html'
+    }, function () {
+        console.log('browser-sync.............OK')
     });
 });
 
-gulp.task('watch', function() {
-  // Watch .html files
-  gulp.watch('production/*.html', browserSync.reload);
-  // Watch .js files
-  gulp.watch('src/js/*.js', ['scripts']);
-  // Watch .scss files
-  gulp.watch('src/scss/*.scss', ['sass', 'sass-minify']);
+gulp.task('packHtml', function () {
+
+    var srcArr = [
+        './build/css/*.min.css',
+        './build/js/*.min.js'
+    ];
+
+    gulp.src(['./view/*.html', '!./view/common/*.html'])
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        .pipe(inject(gulp.src(srcArr, {
+            read: false,
+            relative: true
+        })))
+        .pipe(gulp.dest(DEST + 'view/'));
+});
+
+gulp.task('copy', function () {
+    return gulp.src(['./vendors/**'])
+        .pipe(gulp.dest(DEST + 'vendors/'))
+});
+
+gulp.task('watch', function () {
+    // Watch .html files
+    gulp.watch('production/*.html', browserSync.reload);
+    // Watch .js files
+    gulp.watch('src/js/*.js', ['scripts']);
+    // Watch .scss files
+    gulp.watch('src/scss/*.scss', ['sass', 'sass-minify']);
 });
 
 // Default Task
-gulp.task('default', ['browser-sync', 'watch']);
+gulp.task('default', ['packHtml', 'browser-sync']);

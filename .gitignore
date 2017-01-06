@@ -1,3 +1,9 @@
 .idea/
 node_modules/
-.DS_Store/
+.DS_Store
+build/
+production/
+documentation/
+bower.json
+changelog.md
+vendors/
