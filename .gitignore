@@ -7,3 +7,4 @@ documentation/
 bower.json
 changelog.md
 vendors/
+.sass-cache/

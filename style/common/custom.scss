@@ -336,11 +336,13 @@ body .container.body .right_col {
 }
 body {
   color: #73879C;
-  background: #2A3F54;
+  background: rgba(42, 63, 84, 0.2);
   font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
-  font-size: 13px;
+  font-size: 13px!important;
   font-weight: 400;
   line-height: 1.471;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 .main_container .top_nav {
   display: block;
@@ -4338,3 +4340,47 @@ ul.notifications {
   border: 1px solid #e5e5e5;
 }
 /** /Dropzone.js **/
+
+/*** self style ***/
+.form-control-sm{
+  height:30px;
+  font-size:12px;
+}
+.fr{
+  float: right!important;
+}
+.fl{
+  float: left!important;
+}
+.ml10{
+  margin-left: 10px;
+}
+
+/****** pagination ******/
+.ui-pagination a {
+  display: inline-block;
+  height: 25px;
+  min-width: 25px;
+  line-height: 25px;
+  background: #fff;
+  text-align: center;
+  color: #333;
+  margin: 0 1px;
+}
+.ui-pagination a.active, .ui-pagination a:hover {
+  background: #26B99A;
+  color: #fff;
+}
+.ui-pagination a.disabled {
+  color: #ccc;
+}
+.ui-pagination a.disabled.active, .ui-pagination a.disabled:hover {
+  background: #ccc;
+  color: #fff;
+}
+.pagination-info {
+  display: inline-block;
+  height: 25px;
+  line-height: 25px;
+  vertical-align: middle;
+}
