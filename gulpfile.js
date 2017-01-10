@@ -1,6 +1,6 @@
 /**
  * gulpfile
- * todo 时间戳.压缩html
+ * todo 时间戳.压缩html.压缩css
  */
 
 /**
@@ -71,7 +71,7 @@ gulp.task('scripts', function () {
  * @returns {*}
  */
 
-var compileSASS = function (filename, options, url) {
+var compileCommonSASS = function (filename, options, url) {
     return sass(url, options)
         .pipe(autoprefixer('last 2 versions', '> 5%'))
         .pipe(concat(filename))
@@ -88,12 +88,13 @@ var compileSASS = function (filename, options, url) {
  * compressed：整个压缩成一行
  */
 gulp.task('sass', function () {
-    var url = './style/common/*.scss';
+    var url = './style/scss/common/*.scss';
 
     if (DEST.indexOf('build') != -1) {
-        return compileSASS('custom.css', {}, url);
+        return compileCommonSASS('custom.css', {}, url);
     }else{
-        return compileSASS('custom.css', {style: 'compressed'}, url);
+        return compileCommonSASS('custom.css', {}, url);
+        //return compileCommonSASS('custom.css', {style: 'compressed'}, url);
     }
 
 });
@@ -199,9 +200,15 @@ gulp.task('copy-js', function () {
 
 });
 
-gulp.task('copy-css', ['sass'], function () {
-    return gulp.src(['./style/common/*.css'])
-        .pipe(gulp.dest(DEST + '/style/common'))
+gulp.task('copy-common-css', ['sass'], function () {
+    if (DEST.indexOf('build') != -1) {
+        return gulp.src(['./style/common/*.css'])
+            .pipe(gulp.dest(DEST + '/style/common'))
+    }else{
+        return gulp.src(['./style/common/*.css'])
+            .pipe(gulp.dest(DEST + '/style/common'))
+    }
+
 });
 
 /**
@@ -219,12 +226,12 @@ gulp.task('watch', function () {
 
 // Dev Task
 // 开发环境
-gulp.task('dev', ['build', 'copy-plugin', 'copy-js', 'copy-css','browser-sync'], function () {
+gulp.task('dev', ['build', 'copy-plugin', 'copy-js', 'copy-common-css','browser-sync'], function () {
     console.log('dev OK version!')
 });
 
 // Rc Task
 // 生产环境
-gulp.task('rc', ['html', 'copy-plugin', 'copy-js', 'copy-css', 'packHtml'], function () {
+gulp.task('rc', ['html', 'copy-plugin', 'copy-js', 'copy-common-css', 'packHtml'], function () {
     console.log('rc OK version!')
 });
