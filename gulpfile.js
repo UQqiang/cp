@@ -1,3 +1,12 @@
+/**
+ * gulpfile
+ * todo 时间戳.压缩html
+ */
+
+/**
+ * root
+ * @type {Gulp|*|exports|module.exports}
+ */
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
@@ -6,34 +15,55 @@ var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     inject = require('gulp-inject'),
     fileinclude = require('gulp-file-include'),
+    path = require('path'),
     browserSync = require('browser-sync').create();
 
 // 开发环境目录
-var DEST = 'build/';
+var DEST;
 
 // 生产环境目录
-var HTML = 'html/';
+
+var ROOT_PATH = path.resolve(__dirname);
+var HTML_PATH = path.resolve(ROOT_PATH, 'view/*.html');
+
+gulp.task('build', function () {
+    DEST = 'build/';
+});
+
+gulp.task('html', function () {
+    DEST = 'html/';
+});
 
 /**
- * js 公共部分
+ * javascript
  */
 
 gulp.task('scripts', function () {
-    return gulp.src([
-            'src/js/helpers/*.js',
-            'src/js/common/common.js'
-        ])
-        .pipe(concat('common.js'))
-        .pipe(gulp.dest(DEST + '/js'))
-        .pipe(rename({suffix: '.min'}))
-        .pipe(uglify())
-        .pipe(gulp.dest(DEST + '/js'))
-        .pipe(browserSync.stream());
+    if (DEST.indexOf('build') != -1) {
+        return gulp.src([
+                './src/fn/common/smartresize.js',
+                './src/fn/common/common.js'
+            ])
+            .pipe(concat('common.js'))
+            .pipe(gulp.dest(DEST + '/src/fn/common'))
+            .pipe(rename({suffix: '.min'}))
+            .pipe(uglify())
+            .pipe(gulp.dest(DEST + '/src/fn/common'))
+            .pipe(browserSync.stream());
+    }else{
+        return gulp.src([
+                './src/fn/common/smartresize.js',
+                './src/fn/common/common.js'
+            ])
+            .pipe(concat('common.js'))
+            .pipe(uglify())
+            .pipe(gulp.dest(DEST + '/src/fn/common'))
+            .pipe(browserSync.stream());
+    }
 });
 
-// TODO: Maybe we can simplify how sass compile the minify and unminify version
-
 /**
+ * style
  * sass,scss
  * autoprefixer 自动处理游览器前缀
  * @param filename
@@ -45,53 +75,94 @@ var compileSASS = function (filename, options, url) {
     return sass(url, options)
         .pipe(autoprefixer('last 2 versions', '> 5%'))
         .pipe(concat(filename))
-        .pipe(gulp.dest(DEST + '/css/common/'))
+        .pipe(gulp.dest('./style/common/'))
         .pipe(browserSync.stream());
 };
 
 /**
+ * 编译sass
+ * style有以下4种选择：
+ * nested：嵌套缩进，它是默认值
+ * expanded：每个属性占一行
+ * compact：每条样式占一行
+ * compressed：整个压缩成一行
+ */
+gulp.task('sass', function () {
+    var url = './style/common/*.scss';
+
+    if (DEST.indexOf('build') != -1) {
+        return compileSASS('custom.css', {}, url);
+    }else{
+        return compileSASS('custom.css', {style: 'compressed'}, url);
+    }
+
+});
+
+/**
+ * html
  * 合并html => include
  * @param srcArr
  * @returns {*}
  */
 var pickHtml = function (srcArr) {
-    return gulp.src(['./view/*.html', '!./view/common/*.html'])
+    return gulp.src(HTML_PATH)
         .pipe(fileinclude({
             prefix: '@@',
             basepath: '@file'
         }))
-        .pipe(inject(gulp.src(srcArr)))
+        .pipe(inject(gulp.src(srcArr, {read: false}), {relative: true}))
         .pipe(gulp.dest(DEST + '/view'));
 };
 
-/**
- * 编译sass
- */
-gulp.task('sass', function () {
-    var url = 'style/common/*.scss';
-    return compileSASS('custom.css', {} ,url);
-});
+gulp.task('packHtml', ['sass', 'scripts'], function () {
+    var srcArr;
 
-/**
- * 编辑并压缩sass
- */
+    if (DEST.indexOf('build') != -1) {
+        srcArr = [
+            './src/plugin/bootstrap/css/bootstrap.css',
+            './src/plugin/font-awesome/css/font-awesome.css',
+            './src/plugin/nprogress/css/nprogress.css',
+            './src/plugin/animate/css/animate.css',
+            './src/plugin/daterangepicker/css/daterangepicker.css',
+            './src/plugin/iCheck/skins/flat/green.css',
+            './style/common/custom.css',
+            './src/plugin/jquery/js/jquery.js',
+            './src/plugin/bootstrap/js/bootstrap.js',
+            './src/plugin/moment/js/moment.min.js',
+            './src/plugin/daterangepicker/js/daterangepicker.js',
+            './src/plugin/iCheck/js/icheck.js',
+            './src/plugin/nprogress/js/nprogress.js',
+            './src/plugin/jquery.paginator/jqPaginator.min.js',
+            './src/fn/common/common.js'
+        ];
 
-gulp.task('sass-minify', function () {
-    var url = 'style/common/*.scss';
-    /**
-     * style有以下4种选择：
-     * nested：嵌套缩进，它是默认值
-     * expanded：每个属性占一行
-     * compact：每条样式占一行
-     * compressed：整个压缩成一行
-     */
-    return compileSASS('custom.min.css', {style: 'compressed'}, url);
+    } else {
+        srcArr = [
+            './src/plugin/bootstrap/css/bootstrap.min.css',
+            './src/plugin/font-awesome/css/font-awesome.min.css',
+            './src/plugin/nprogress/css/nprogress.css',
+            './src/plugin/animate/css/animate.min.css',
+            './src/plugin/daterangepicker/css/daterangepicker.css',
+            './src/plugin/iCheck/skins/flat/green.css',
+            './style/common/custom.css',
+            './src/plugin/jquery/js/jquery.min.js',
+            './src/plugin/bootstrap/js/bootstrap.min.js',
+            './src/plugin/moment/js/moment.min.js',
+            './src/plugin/daterangepicker/js/daterangepicker.js',
+            './src/plugin/iCheck/js/icheck.js',
+            './src/plugin/nprogress/js/nprogress.js',
+            './src/plugin/jquery.paginator/jqPaginator.min.js',
+            './src/fn/common/common.js'
+        ];
+    }
+
+    return pickHtml(srcArr)
 });
 
 /**
  * 静态服务器
  */
-gulp.task('browser-sync', ['packHtml'], function () {
+gulp.task('browser-sync',['packHtml'], function () {
     return browserSync.init({
         server: {
             baseDir: './'
@@ -103,44 +174,39 @@ gulp.task('browser-sync', ['packHtml'], function () {
 });
 
 /**
+ * copy
  * 复制
  */
 
-gulp.task('copy', function () {
+gulp.task('copy-plugin', function () {
     return gulp.src(['./src/plugin/**'])
-        .pipe(gulp.dest(DEST + '/js/plugin'))
+        .pipe(gulp.dest(DEST + '/src/plugin'))
 });
 
-gulp.task('packHtml', ['sass', 'sass-minify', 'scripts'], function () {
+gulp.task('copy-js', function () {
 
-    var srcArr = [
-        './build/css/*.min.css',
-        './build/js/*.min.js'
-    ];
-    return pickHtml(srcArr)
+    if (DEST.indexOf('build') != -1) {
+        return gulp.src(['./src/fn/*.js', '!./src/fn/common/*.js'])
+            .pipe(gulp.dest(DEST + '/src/fn'))
+            .pipe(rename({suffix: '.min'}))
+            .pipe(uglify())
+            .pipe(gulp.dest(DEST + '/src/fn'))
+    }else{
+        return gulp.src(['./src/fn/*.js', '!./src/fn/common/*.js'])
+            .pipe(uglify())
+            .pipe(gulp.dest(DEST + '/src/fn'))
+    }
+
 });
 
-gulp.task('packHtml-dev', ['sass', 'sass-minify', 'scripts'], function () {
-
-    var srcArr = [
-        './build/js/plugin/bootstrap/css/bootstrap.css',
-        './build/js/plugin/font-awesome/css/font-awesome.css',
-        './build/js/plugin/nprogress/css/nprogress.css',
-        './build/js/plugin/animate/css/animate.css',
-        './build/js/plugin/daterangepicker/css/daterangepicker.css',
-        './build/js/plugin/iCheck/skins/flat/green.css',
-        './build/css/common/custom.css',
-        './build/js/plugin/jquery/js/jquery.js',
-        './build/js/plugin/bootstrap/js/bootstrap.js',
-        './build/js/plugin/moment/js/moment.min.js',
-        './build/js/plugin/daterangepicker/js/daterangepicker.js',
-        './build/js/plugin/iCheck/js/icheck.js',
-        './build/js/plugin/nprogress/js/nprogress.js',
-        './build/js/plugin/jquery.paginator/jqPaginator.min.js',
-        './build/js/common.js'
-    ];
-    return pickHtml(srcArr)
+gulp.task('copy-css', ['sass'], function () {
+    return gulp.src(['./style/common/*.css'])
+        .pipe(gulp.dest(DEST + '/style/common'))
 });
+
+/**
+ * watch
+ */
 
 gulp.task('watch', function () {
     // Watch .html files
@@ -148,14 +214,17 @@ gulp.task('watch', function () {
     // Watch .js files
     gulp.watch('src/js/*.js', ['scripts']);
     // Watch .scss files
-    gulp.watch('src/scss/*.scss', ['sass', 'sass-minify']);
+    gulp.watch('src/scss/*.scss', ['sass']);
 });
 
 // Dev Task
 // 开发环境
-gulp.task('default', ['sass', 'sass-minify', 'scripts', 'copy', 'packHtml-dev', 'browser-sync','watch']);
-gulp.task('dev', ['sass', 'sass-minify', 'scripts', 'packHtml-dev', 'browser-sync']);
+gulp.task('dev', ['build', 'copy-plugin', 'copy-js', 'copy-css','browser-sync'], function () {
+    console.log('dev OK version!')
+});
 
 // Rc Task
 // 生产环境
-gulp.task('rc', ['sass', 'sass-minify', 'scripts', 'packHtml', 'browser-sync']);
+gulp.task('rc', ['html', 'copy-plugin', 'copy-js', 'copy-css', 'packHtml'], function () {
+    console.log('rc OK version!')
+});
