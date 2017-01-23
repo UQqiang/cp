@@ -1,6 +1,6 @@
 /**
  * gulpfile
- * todo 时间戳.压缩html.压缩css
+ * todo 时间戳
  */
 
 /**
@@ -17,6 +17,7 @@ var gulp = require('gulp'),
     fileinclude = require('gulp-file-include'),
     clean = require('gulp-clean'),
     htmlmin = require('gulp-htmlmin'),
+    cssmin = require('gulp-cssmin'),
     path = require('path'),
     browserSync = require('browser-sync').create();
 
@@ -38,7 +39,11 @@ gulp.task('clean', function () {
         .pipe(clean({force: true}));
 });
 
+/**
+ * 压缩html
+ */
 gulp.task('htmlmin', ['packHtml'], function () {
+    gulp.start(['cssmin']);
     var options = {
         collapseWhitespace: true,       //压缩HTML
         minifyJS: true,                 //压缩页面JS
@@ -49,6 +54,15 @@ gulp.task('htmlmin', ['packHtml'], function () {
         .pipe(gulp.dest(DEST + '/view'));
 });
 
+/**
+ * 压缩css
+ */
+gulp.task('cssmin', function () {
+    return gulp.src([DEST + 'style/*.css',DEST + 'style/**/*.css'])
+    .pipe(cssmin())
+    .pipe(gulp.dest(DEST + '/style'))
+
+});
 /**
  * javascript
  */

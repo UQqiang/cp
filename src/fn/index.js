@@ -4,7 +4,7 @@
 ;(function () {
     var main = {
         init: function () {
-
+            toastr.success('Have fun storming the castle!', 'Miracle Max Says');
         },
         addEvent: function () {
             

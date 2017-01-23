@@ -25,8 +25,6 @@
 
 ## gulp-fileinclude - 引入公共部分的html
 
-## gulp-autoprefixer - 自动处理游览器前缀
-
 ## gulp-clean - 清除文件
 
 ## gulp-htmlmin - 压缩html
@@ -34,6 +32,8 @@
 ## path - node 的 path模块
 
 ## browserSync - 启动服务
+
+## gulp-autoprefixer - 自动处理游览器前缀
 
 #### 基本使用
 
@@ -68,6 +68,8 @@ gulp.task('testAutoFx', function () {
 ```
 
 ## gulp-ruby-sass 编译scss
+
+#### 基本使用
 
 ```
 var compileSASS = function (filename, options) {
