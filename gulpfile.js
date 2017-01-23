@@ -1,6 +1,6 @@
 /**
  * gulpfile
- * todo 时间戳
+ * todo watch
  */
 
 /**
@@ -18,6 +18,7 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     htmlmin = require('gulp-htmlmin'),
     cssmin = require('gulp-cssmin'),
+    rev = require('gulp-rev-hash'),
     path = require('path'),
     browserSync = require('browser-sync').create();
 
@@ -34,15 +35,27 @@ gulp.task('html', function () {
     DEST = 'html/';
 });
 
+/**
+ * clean
+ */
 gulp.task('clean', function () {
     return gulp.src(DEST)
         .pipe(clean({force: true}));
 });
 
 /**
+ * hash
+ */
+gulp.task('hash', ['packHtml'], function () {
+    return gulp.src(DEST + '/view/*.html')
+        .pipe(rev({'assetsDir':'./' + DEST}))
+        .pipe(gulp.dest(DEST +'/view/'));
+});
+
+/**
  * 压缩html
  */
-gulp.task('htmlmin', ['packHtml'], function () {
+gulp.task('htmlmin', ['packHtml','hash'], function () {
     gulp.start(['cssmin']);
     var options = {
         collapseWhitespace: true,       //压缩HTML
@@ -58,9 +71,9 @@ gulp.task('htmlmin', ['packHtml'], function () {
  * 压缩css
  */
 gulp.task('cssmin', function () {
-    return gulp.src([DEST + 'style/*.css',DEST + 'style/**/*.css'])
-    .pipe(cssmin())
-    .pipe(gulp.dest(DEST + '/style'))
+    return gulp.src([DEST + 'style/*.css', DEST + 'style/**/*.css'])
+        .pipe(cssmin())
+        .pipe(gulp.dest(DEST + '/style'))
 
 });
 /**
@@ -268,13 +281,13 @@ gulp.task('watch', function () {
 // Dev Task
 // 开发环境
 gulp.task('dev', ['build', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'copy-common-css', 'browser-sync']);
+    gulp.start(['copy-plugin', 'copy-js', 'copy-common-css', 'hash', 'browser-sync']);
     console.log('============dev OK version!============')
 });
 
 // Rc Task
 // 生产环境
 gulp.task('rc', ['html', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'copy-common-css', 'htmlmin']);
+    gulp.start(['copy-plugin', 'copy-js', 'copy-common-css', 'hash', 'htmlmin']);
     console.log('============rc OK version!============')
 });
