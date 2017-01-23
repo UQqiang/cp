@@ -1,6 +1,39 @@
 # gulp
 
-## gulp-autoprefixer 自动处理游览器前缀
+## gulpfile config 说明
+
+## 使用
+
+```
+1. git clone <当前项目>
+
+2. npm install / sudo npm install / cnpm install
+
+3. 开发环境 - gulp dev
+
+4. 生产环境 - gulp rc
+
+```
+
+## gulp-concat - 连接文件
+
+## gulp-uglify - 压缩 js
+
+## gulp-rename - 重命名
+
+## gulp-inject - 注入公共部分的js和css
+
+## gulp-fileinclude - 引入公共部分的html
+
+## gulp-autoprefixer - 自动处理游览器前缀
+
+## gulp-clean - 清除文件
+
+## gulp-htmlmin - 压缩html
+
+## path - node 的 path模块
+
+## browserSync - 启动服务
 
 #### 基本使用
 
