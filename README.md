@@ -29,6 +29,15 @@
 
 4. 生产环境 - gulp rc
 
+// 存在 gem sass is not installed 的问题
+// 解决办法:
+$ sudo gem install sass
+
+// 如果安装不成功,gem使用淘宝镜像
+$ gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
+$ gem sources -l
+$ sudo gem install sass
+
 ```
 
 ## gulp-concat - 连接文件
