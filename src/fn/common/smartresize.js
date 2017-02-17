@@ -1,6 +1,6 @@
 /**
  * Resize function without multiple trigger
- *
+ * 管理窗口调整大小事件
  * Usage:
  * $(window).smartresize(function(){
  *     // code here

@@ -1,5 +1,6 @@
 /**
  * Created by lijiahao on 17/1/9.
+ * 工程公共部分的js
  */
 ;(function ($) {
     var common = {
@@ -10,7 +11,6 @@
             this.page = {};
             this.page.pageSize = 20;
             this.page.vpage = 10;
-
             this.addEvent();
             this.setContentHeight();
             this.nprogress();
@@ -24,6 +24,8 @@
                 $menu_toggle = $('#menu_toggle'),
                 $sidebar_menu = $('#sidebar-menu'),
                 that = this;
+
+            console.log(current_url);
 
             // 侧边栏
             $sidebar_menu.find('a').on('click', function () {
@@ -54,7 +56,8 @@
                     $sidebar_menu.find('li.active ul').hide();
                     $sidebar_menu.find('li.active').addClass('active-sm').removeClass('active');
                 } else {
-                    $sidebar_menu.find('li.active-sm ul').show();
+                    $sidebar_menu.find('li.active-sm ul li.current-page').parents('ul').show();
+                    $sidebar_menu.find('li.active-sm ul li.current-page ul').show();
                     $sidebar_menu.find('li.active-sm').addClass('active').removeClass('active-sm');
                 }
 
@@ -68,9 +71,15 @@
 
             $sidebar_menu.find('a').filter(function () {
                 return this.href == current_url;
-            }).parent('li').addClass('current-page').parents('ul').slideDown(function () {
+            }).parent('li').addClass('current-page').parents('ul[data-target_menu!=3]').slideDown(function () {
                 that.setContentHeight();
             }).parent().addClass('active');
+
+            if( $('.current-page').parent('ul').attr('data-target_menu') == 3 ){
+                $('.current-page').parents('ul[data-target_menu=2] li').addClass('current-page');
+            }
+
+            $('ul[data-target_menu=3]').remove();
 
             // recompute content when resizing
             $(window).smartresize(function () {
@@ -214,9 +223,9 @@
             var that = this;
             $('.ui-pagination').jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
-                pageSize: that.page.pageSize,                          // 设置每一页的条目数
-                visiblePages: that.page.visiblePages,                  // 设置最多显示的页码数
-                currentPage: that.pageId,                                       // 设置当前的页码
+                pageSize: that.page.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page.visiblePages,                            // 设置最多显示的页码数
+                currentPage: that.pageId,                                        // 设置当前的页码
                 prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
                 next: '<a class="next" href="javascript:;">&gt;<\/a>',
                 page: '<a href="javascript:;">{{page}}<\/a>',

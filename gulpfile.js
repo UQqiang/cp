@@ -1,11 +1,6 @@
 /**
  * gulpfile
- * todo watch
- */
-
-/**
- * root
- * @type {Gulp|*|exports|module.exports}
+ * q: scss编译成css在引用
  */
 var gulp = require('gulp'),
     concat = require('gulp-concat'),
@@ -37,6 +32,7 @@ gulp.task('html', function () {
 
 /**
  * clean
+ * 清除文件.文件夹
  */
 gulp.task('clean', function () {
     return gulp.src(DEST)
@@ -45,6 +41,7 @@ gulp.task('clean', function () {
 
 /**
  * hash
+ * 增加hash
  */
 gulp.task('hash', ['packHtml'], function () {
     return gulp.src(DEST + '/view/*.html')
@@ -53,9 +50,10 @@ gulp.task('hash', ['packHtml'], function () {
 });
 
 /**
+ * htmlmin
  * 压缩html
  */
-gulp.task('htmlmin', ['packHtml','hash'], function () {
+gulp.task('htmlmin', ['hash'], function () {
     gulp.start(['cssmin']);
     var options = {
         collapseWhitespace: true,       //压缩HTML
@@ -68,6 +66,7 @@ gulp.task('htmlmin', ['packHtml','hash'], function () {
 });
 
 /**
+ * cssmin
  * 压缩css
  */
 gulp.task('cssmin', function () {
@@ -76,10 +75,11 @@ gulp.task('cssmin', function () {
         .pipe(gulp.dest(DEST + '/style'))
 
 });
+
 /**
  * javascript
+ * 合并公共的js
  */
-
 gulp.task('scripts', function () {
     if (DEST.indexOf('build') != -1) {
         // build
@@ -116,12 +116,28 @@ gulp.task('scripts', function () {
  * @returns {*}
  */
 
-var compileCommonSASS = function (filename, options, url) {
-    return sass(url, options)
-        .pipe(autoprefixer('last 2 versions', '> 5%'))
-        .pipe(concat(filename))
-        .pipe(gulp.dest('./style/common/'))
-        .pipe(browserSync.stream());
+//var compileCommonSASS = function (filename, options, url) {
+//    return sass(url, options)
+//        .pipe(autoprefixer('last 2 versions', '> 5%'))
+//        .pipe(concat(filename))
+//        .pipe(gulp.dest('./style/common/'))
+//        .pipe(browserSync.stream());
+//};
+var compileCommonSASS = function (options, url) {
+    if( DEST.indexOf('build') != -1 ){
+        // build
+        return sass(url, options)
+            .pipe(autoprefixer('last 2 versions', '> 5%'))
+            .pipe(gulp.dest('./style/css/'))
+            .pipe(gulp.dest(DEST + '/style/css/'))
+            .pipe(browserSync.stream());
+    }else{
+        // html
+        return sass(url, options)
+            .pipe(autoprefixer('last 2 versions', '> 5%'))
+            .pipe(gulp.dest(DEST + '/style/css/'))
+            .pipe(browserSync.stream());
+    }
 };
 
 /**
@@ -133,13 +149,13 @@ var compileCommonSASS = function (filename, options, url) {
  * compressed：      整个压缩成一行
  */
 gulp.task('sass', function () {
-    var url = './style/scss/common/*.scss';
+    var url = ['./style/scss/*.{scss,sass}'];
 
     if (DEST.indexOf('build') != -1) {
-        return compileCommonSASS('custom.css', {}, url);
+        return compileCommonSASS({}, url);
     } else {
-        return compileCommonSASS('custom.css', {}, url);
-        //return compileCommonSASS('custom.css', {style: 'compressed'}, url);
+        //return compileCommonSASS({}, url);
+        return compileCommonSASS({style: 'compressed'}, url);
     }
 
 });
@@ -172,7 +188,7 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/daterangepicker/css/daterangepicker.css',
             './src/plugin/iCheck/skins/flat/green.css',
             './src/plugin/toastr/toastr.min.css',
-            './style/common/custom.css',
+            './style/css/custom.css',
             './src/plugin/jquery/js/jquery.js',
             './src/plugin/bootstrap/js/bootstrap.js',
             './src/plugin/moment/js/moment.min.js',
@@ -193,7 +209,7 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/daterangepicker/css/daterangepicker.min.css',
             './src/plugin/iCheck/skins/flat/green.min.css',
             './src/plugin/toastr/toastr.min.css',
-            './style/common/custom.css',
+            './style/css/custom.css',
             './src/plugin/jquery/js/jquery.min.js',
             './src/plugin/bootstrap/js/bootstrap.min.js',
             './src/plugin/moment/js/moment.min.js',
@@ -248,30 +264,19 @@ gulp.task('copy-js', function () {
 
 });
 
-gulp.task('copy-common-css', ['sass'], function () {
-    if (DEST.indexOf('build') != -1) {
-        return gulp.src(['./style/common/*.css'])
-            .pipe(gulp.dest(DEST + '/style/common'))
-    } else {
-        return gulp.src(['./style/common/*.css'])
-            .pipe(gulp.dest(DEST + '/style/common'))
-    }
-
-});
-
 /**
  * watch
  */
 
 gulp.task('watch', function () {
     // Watch .html files
-    gulp.watch('build/view/*.html', browserSync.reload);
+    gulp.watch('view/*.html', ['packHtml'], browserSync.reload);
 
-    gulp.watch(['style/*.css', 'style/**/*.css'], browserSync.reload);
+    // Watch .js files
+    gulp.watch(['src/fn/**.js'], ['copy-js'], browserSync.reload);
 
-    gulp.watch([
-        'src/fn/**.js'
-    ], browserSync.reload);
+    // Watch .scss files
+    gulp.watch(['style/scss/*.{sass,scss}'], ['sass'], browserSync.reload);
     // Watch .js files
     //gulp.watch('src/js/*.js', ['scripts']);
     // Watch .scss files
@@ -281,13 +286,13 @@ gulp.task('watch', function () {
 // Dev Task
 // 开发环境
 gulp.task('dev', ['build', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'copy-common-css', 'hash', 'browser-sync']);
+    gulp.start(['copy-plugin', 'copy-js', 'browser-sync', 'watch']);
     console.log('============dev OK version!============')
 });
 
 // Rc Task
 // 生产环境
 gulp.task('rc', ['html', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'copy-common-css', 'hash', 'htmlmin']);
+    gulp.start(['copy-plugin', 'copy-js', 'hash', 'htmlmin']);
     console.log('============rc OK version!============')
 });
