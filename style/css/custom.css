@@ -2,6 +2,9 @@
 .left_col {
   background: #2A3F54; }
 
+.right_col {
+  min-width: 980px; }
+
 .nav-sm .container.body .col-md-3.left_col {
   min-height: 100%;
   width: 70px;
@@ -329,7 +332,7 @@ body .container.body .right_col {
 
 body {
   color: #73879C;
-  background: rgba(42, 63, 84, 0.2);
+  background: #2A3F54;
   font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
   font-size: 13px !important;
   font-weight: 400;
@@ -3887,9 +3890,24 @@ ul.notifications {
 
 /** /Dropzone.js **/
 /*** self style ***/
-.form-control-sm {
+.form-control.form-control-sm {
   height: 30px;
-  font-size: 12px; }
+  font-size: 12px;
+  width: 100px; }
+
+.form-control.form-control-md {
+  font-size: 12px;
+  width: 140px;
+  height: 30px; }
+
+.tr {
+  text-align: right; }
+
+.tl {
+  text-align: left; }
+
+.dib {
+  display: inline-block; }
 
 .fr {
   float: right !important; }
@@ -3899,6 +3917,12 @@ ul.notifications {
 
 .ml10 {
   margin-left: 10px; }
+
+.mr10 {
+  margin-right: 10px; }
+
+.mr15 {
+  margin-right: 15px; }
 
 /****** pagination ******/
 .ui-pagination a {

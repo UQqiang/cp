@@ -1,0 +1,28 @@
+.add-goods-step {
+  padding-bottom: 25px;
+  span {
+    display: inline-block;
+    padding: 10px 25px;
+    text-align: center;
+    background: #e5e5e5;
+    border: 1px solid #e5e5e5;
+  }
+  span.add-goods-active {
+    color: #73879C;
+    background: #fff;
+    border-bottom: none;
+  }
+}
+
+.add-goods-categories{
+  border: 1px solid #ccc;
+  display: inline-block;
+  height: 500px;
+  width: 49%;
+}
+
+.add-goods-footer{
+  padding:20px;
+  margin-top: 40px;
+  background: #f8f8f8;
+}
