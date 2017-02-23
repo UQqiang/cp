@@ -29,6 +29,7 @@
 
             <!-- 内容部分 -->
             <div class="x_panel">
+
                 <div class="x_title">
                     <div class="add-goods-step clearfix">
                         <span class="add-goods-active col-md-4">选择商品分类</span>
@@ -37,10 +38,34 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="x_content">
+
+                <div class="x_content" id="content-1">
+
                     <div class="categories">
-                        <div class="add-goods-categories mr10"></div>
-                        <div class="add-goods-categories"></div>
+                        <div class="add-goods-categories mr10">
+                            <div class="add-goods-search">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-success">搜索</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="add-goods-categories">
+                            <div class="add-goods-search">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-success">搜索</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="add-goods-footer clearfix">
@@ -54,12 +79,113 @@
                         <div class="col-md-4 tr">
                             <span>当前选择：</span>
                             <span class="mr10">美食 > 火龙果</span>
-                            <a href="javascript:;" class="btn btn-success btn-sm" disabled="disabled">
-                                请选择类目
+                            <!--<a href="javascript:;" class="btn btn-success btn-sm" disabled="disabled">-->
+                                <!--请选择类目-->
+                            <!--</a>-->
+                            <a href="javascript:;" class="btn btn-success btn-sm" id="nextStep">
+                            下一步
                             </a>
                         </div>
                     </div>
+
                 </div>
+
+
+                <div class="x_content" id="content-2">
+                    <div>
+                        <div class="goods-content">
+                            <div class="add-goods-title">
+                                <div class="add-goods-inner">
+                                    基本信息
+                                </div>
+                            </div>
+                            <div class="add-goods-content add-goods-inner">
+                                <div class="form-group">
+                                    <label class="ui-label ui-label-lg tr">* 商品类目：</label>
+                                    <span>美食 > 火龙果</span>
+                                </div>
+                                <div class="item form-group field">
+                                    <label class="ui-label ui-label-lg tr"><span>* 商品名称：</span></label>
+                                    <input class="form-control form-control-hg" required="required" placeholder="商品名称" name="商品名称" type="text" data-validate-length="6,20">
+                                </div>
+                                <div class="item form-group">
+                                    <label class="ui-label ui-label-lg tr">* 商品类型：</label>
+                                    <label for="goodsType-1" class="ml5 mr5">
+                                        国内商品
+                                    </label>
+                                    <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="" checked="checked" />
+                                    <label for="goodsType-2" class="ml5 mr5">
+                                        跨境商品
+                                    </label>
+                                    <input type="radio" class="flat" name="radio-goods" id="goodsType-2" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="ui-label ui-label-lg tr">* 商品品牌：</label>
+                                    <select class="form-control form-control-md">
+                                        <option>请选择商品品牌</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="ui-label ui-label-lg tr">* 货源地：</label>
+                                    <select class="form-control form-control-md">
+                                        <option>请选择商品货源地</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="goods-content">
+                            <div class="add-goods-title">
+                                <div class="add-goods-inner">
+                                    税率
+                                </div>
+                            </div>
+                            <div class="add-goods-content add-goods-inner">
+                            </div>
+                        </div>
+
+                        <div class="goods-content">
+                            <div class="add-goods-title">
+                                <div class="add-goods-inner">
+                                    规格
+                                </div>
+                            </div>
+                            <div class="add-goods-content add-goods-inner">
+                            </div>
+                        </div>
+
+                        <div class="goods-content">
+                            <div class="add-goods-title">
+                                <div class="add-goods-inner">
+                                    图文详情
+                                </div>
+                            </div>
+                            <div class="add-goods-content add-goods-inner">
+                            </div>
+                        </div>
+
+                        <div class="goods-content">
+                            <div class="add-goods-title">
+                                <div class="add-goods-inner">
+                                    其他
+                                </div>
+                            </div>
+                            <div class="add-goods-content add-goods-inner">
+                            </div>
+                        </div>
+
+
+
+                        <div class="goods-content-footer">
+                            <button class="btn btn-success nextStep" id="submit" type="submit">下一步</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="x_content" id="content-3">
+
+                </div>
+
             </div>
             <!-- 内容部分 -->
 

@@ -197,6 +197,7 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/nprogress/js/nprogress.js',
             './src/plugin/jquery.paginator/jqPaginator.min.js',
             './src/plugin/toastr/toastr.min.js',
+            './src/plugin/validator/validator.js',
             './src/fn/common/common.js'
         ];
 

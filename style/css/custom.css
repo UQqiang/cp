@@ -1997,7 +1997,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
 
 /* alerts (when validation fails) */
 .item .alert {
-  float: left;
+  display: inline-block;
   margin: 0 0 0 20px;
   padding: 3px 10px;
   color: #FFF;
@@ -3890,6 +3890,9 @@ ul.notifications {
 
 /** /Dropzone.js **/
 /*** self style ***/
+.form-group .form-control {
+  display: inline-block; }
+
 .form-control.form-control-sm {
   height: 30px;
   font-size: 12px;
@@ -3898,6 +3901,16 @@ ul.notifications {
 .form-control.form-control-md {
   font-size: 12px;
   width: 140px;
+  height: 30px; }
+
+.form-control.form-control-lg {
+  font-size: 12px;
+  width: 200px;
+  height: 30px; }
+
+.form-control.form-control-hg {
+  font-size: 12px;
+  width: 340px;
   height: 30px; }
 
 .tr {
@@ -3915,6 +3928,12 @@ ul.notifications {
 .fl {
   float: left !important; }
 
+.ml5 {
+  margin-left: 5px; }
+
+.mr5 {
+  margin-right: 5px; }
+
 .ml10 {
   margin-left: 10px; }
 
@@ -3923,6 +3942,15 @@ ul.notifications {
 
 .mr15 {
   margin-right: 15px; }
+
+.ui-label {
+  width: 75px; }
+
+.ui-label.ui-label-md {
+  width: 100px; }
+
+.ui-label.ui-label-lg {
+  width: 140px; }
 
 /****** pagination ******/
 .ui-pagination a {
