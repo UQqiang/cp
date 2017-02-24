@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cn">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -32,14 +32,14 @@
 
                 <div class="x_title">
                     <div class="add-goods-step clearfix">
-                        <span class="add-goods-active col-md-4">选择商品分类</span>
-                        <span class="col-md-4">编辑商品信息</span>
-                        <span class="col-md-4">选择发货仓库</span>
+                        <span class="add-goods-active col-md-4" data-step_value="1">选择商品分类</span>
+                        <span class="col-md-4" data-step_value="2">编辑商品信息</span>
+                        <span class="col-md-4" data-step_value="3">选择发货仓库</span>
                     </div>
                     <div class="clearfix"></div>
                 </div>
 
-                <div class="x_content" id="content-1">
+                <div class="x_content active-step step" data-now_step="1">
 
                     <div class="categories">
                         <div class="add-goods-categories mr10">
@@ -82,7 +82,7 @@
                             <!--<a href="javascript:;" class="btn btn-success btn-sm" disabled="disabled">-->
                                 <!--请选择类目-->
                             <!--</a>-->
-                            <a href="javascript:;" class="btn btn-success btn-sm" id="nextStep">
+                            <a href="javascript:;" class="btn btn-success btn-sm" id="nextStep" data-type="next">
                             下一步
                             </a>
                         </div>
@@ -91,7 +91,7 @@
                 </div>
 
 
-                <div class="x_content" id="content-2">
+                <div class="x_content step" data-now_step="2">
                     <div>
                         <div class="goods-content">
                             <div class="add-goods-title">
@@ -99,37 +99,43 @@
                                     基本信息
                                 </div>
                             </div>
-                            <div class="add-goods-content add-goods-inner">
-                                <div class="form-group">
-                                    <label class="ui-label ui-label-lg tr">* 商品类目：</label>
-                                    <span>美食 > 火龙果</span>
-                                </div>
-                                <div class="item form-group field">
-                                    <label class="ui-label ui-label-lg tr"><span>* 商品名称：</span></label>
-                                    <input class="form-control form-control-hg" required="required" placeholder="商品名称" name="商品名称" type="text" data-validate-length="6,20">
-                                </div>
-                                <div class="item form-group">
-                                    <label class="ui-label ui-label-lg tr">* 商品类型：</label>
-                                    <label for="goodsType-1" class="ml5 mr5">
-                                        国内商品
-                                    </label>
-                                    <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="" checked="checked" />
-                                    <label for="goodsType-2" class="ml5 mr5">
-                                        跨境商品
-                                    </label>
-                                    <input type="radio" class="flat" name="radio-goods" id="goodsType-2" value="" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="ui-label ui-label-lg tr">* 商品品牌：</label>
-                                    <select class="form-control form-control-md">
-                                        <option>请选择商品品牌</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="ui-label ui-label-lg tr">* 货源地：</label>
-                                    <select class="form-control form-control-md">
-                                        <option>请选择商品货源地</option>
-                                    </select>
+                            <div class="add-goods-content">
+                                <div class="add-goods-inner">
+                                    <div class="form-group">
+                                        <label class="ui-label ui-label-lg tr">* 商品类目：</label>
+                                        <span>美食 > 火龙果</span><span class="ml10"><a href="javascript:;" id="reselect" data-type="back">重新选择</a></span>
+                                    </div>
+                                    <div class="item form-group field">
+                                        <label class="ui-label ui-label-lg tr"><span>* 商品名称：</span></label>
+                                        <input class="form-control form-control-hg" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length="6,20">
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="ui-label ui-label-lg tr">* 商品类型：</label>
+                                        <label for="goodsType-1" class="ml5 mr5">
+                                            国内商品
+                                        </label>
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="" checked="checked" />
+                                        <label for="goodsType-2" class="ml5 mr5">
+                                            跨境商品
+                                        </label>
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-2" value="" />
+                                    </div>
+                                    <div class="item form-group field">
+                                        <label class="ui-label ui-label-lg tr">* 商品品牌：</label>
+                                        <select class="form-control form-control-md" required name="商品品牌">
+                                            <option>请选择商品品牌</option>
+                                            <option>A</option>
+                                            <option>B</option>
+                                        </select>
+                                    </div>
+                                    <div class="item form-group field">
+                                        <label class="ui-label ui-label-lg tr">* 货源地：</label>
+                                        <select class="form-control form-control-md" required name="货源地">
+                                            <option>请选择商品货源地</option>
+                                            <option>W</option>
+                                            <option>Q</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +146,10 @@
                                     税率
                                 </div>
                             </div>
-                            <div class="add-goods-content add-goods-inner">
+                            <div class="add-goods-content">
+                                <div class="add-goods-inner">
+
+                                </div>
                             </div>
                         </div>
 
@@ -150,7 +159,40 @@
                                     规格
                                 </div>
                             </div>
-                            <div class="add-goods-content add-goods-inner">
+                            <div class="add-goods-content">
+                                <div class="add-goods-inner">
+                                    <div class="form-group">
+                                        <label class="ui-label ui-label-lg tr vat"><span>商品规格：</span></label>
+                                        <div class="sku-wrapper">
+                                            <div id="skuCont"></div>
+                                            <div class="sku-group add-group">
+                                                <div class="sku-group-title">
+                                                    <a href="javascript:;" class="btn btn-default btn-sm j-add-sku-specifications">添加规格项目</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group stock-container">
+                                        <label class="ui-label ui-label-lg tr vat"><span>商品库存：</span></label>
+                                        <div class="sku-wrapper" id="sku">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group sku-container">
+                                        <label class="ui-label ui-label-lg tr vat"><span>SKU图片：</span></label>
+                                        <div class="sku-wrapper" id="sku-img">
+
+                                        </div>
+                                    </div>
+                                    <div class="item form-group field">
+                                        <label class="ui-label ui-label-lg tr"><span>* 成本价：</span></label>
+                                        <input class="form-control form-control-hg" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal">
+                                    </div>
+                                    <div class="item form-group field">
+                                        <label class="ui-label ui-label-lg tr"><span>* EAN：</span></label>
+                                        <input class="form-control form-control-hg" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="decimal">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -182,7 +224,7 @@
                     </div>
                 </div>
 
-                <div class="x_content" id="content-3">
+                <div class="x_content step" data-now_step="3">
 
                 </div>
 
@@ -206,5 +248,77 @@
 <script src="../src/fn/goods.js"></script>
 <!-- end -->
 
+<!-- sku模板 - 商品规格 -->
+<script type="text/template" id="j-template-selectize">
+    <div class="sku-group add-group">
+        <div class="sku-group-title">
+            <div class="selectize-wrapper selectize-wrapper-<%= number %>">
+                <select id="selectize-<%= number %>"></select>
+            </div>
+        </div>
+        <div class="sku-group-cont sku-group-cont-<%= number %>" data-index="<%= number %>">
+
+        </div>
+    </div>
+</script>
+
+<!-- sku模板 - 添加sku -->
+<script type="text/template" id="j-template-skuProp">
+    <a href="javascript:;" class="j-add-prop">+ 添加</a>
+</script>
+
+<!-- sku模板 - sku - 商品库存 -->
+<script type="text/template" id="j-template-sku">
+    <div>
+        <table class="table table-striped jambo_table bulk_action table-bordered">
+            <thead>
+                <tr>
+                    <% _.each(items,function(item,index){ %>
+                        <% if( index == 0 ){ %>
+                            <% _.each(item,function(n,m){ %>
+                                    <th class="tc cell-12"><%= n.prop_name %></th>
+                            <% }) %>
+                        <% } %>
+                    <% }) %>
+                    <th class="tc cell-12">成本价</th>
+                    <th class="tc cell-12">EAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% _.each(items,function(item,index){ %>
+                    <tr>
+                        <% _.each(item,function(n,m){ %>
+                            <td class="tc"><%= n.value_name %></td>
+                        <% }) %>
+                        <td class="tc"><input class="form-control form-control-sm"></td>
+                        <td class="tc"><input class="form-control form-control-sm"></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div>
+
+    </div>
+</script>
+
+<!-- sku模板 - sku - sku主图 -->
+<script type="text/template" id="j-template-sku-img">
+    <div class="sku-img-wrapper">
+        <p>选择需要添加图片的SKU属性
+            <span>
+            <% _.each(items,function(item,index){ %>
+                <% if( index == 0 ){ %>
+                    <% _.each(item,function(n,m){ %>
+                        <label class="ml10 mr10"><%= n.prop_name %></label>
+                        <input type="radio" name="radio-sku-prop" class="flat">
+                    <% }) %>
+                <% } %>
+            <% }) %>
+            </span>
+        </p>
+        <div class="sku-gallery"></div>
+    </div>
+</script>
 </body>
 </html>

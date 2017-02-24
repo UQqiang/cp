@@ -188,6 +188,8 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/daterangepicker/css/daterangepicker.css',
             './src/plugin/iCheck/skins/flat/green.css',
             './src/plugin/toastr/toastr.min.css',
+            './src/plugin/selectize/selectize.bootstrap3.css',
+            './src/plugin/jquery.dialog/jquery.dialog.css',
             './style/css/custom.css',
             './src/plugin/jquery/js/jquery.js',
             './src/plugin/bootstrap/js/bootstrap.js',
@@ -198,6 +200,10 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/jquery.paginator/jqPaginator.min.js',
             './src/plugin/toastr/toastr.min.js',
             './src/plugin/validator/validator.js',
+            './src/plugin/selectize/selectize.js',
+            './src/plugin/underscore/underscore.js',
+            './src/plugin/jquery.dialog/jquery.dialog.js',
+            './src/plugin/jquery.dialog/jquery.mask.js',
             './src/fn/common/common.js'
         ];
 

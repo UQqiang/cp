@@ -58,6 +58,7 @@ FormValidator.prototype = {
             url          : /^(https?:\/\/)?([\w\d\-_]+\.+[A-Za-z]{2,})+\/?/,
             phone        : /^\+?([0-9]|[-|' '])+$/i,
             numeric      : /^[0-9]+$/i,
+            decimal      : /^\d+(\.\d{2})?$/,
             alphanumeric : /^[a-zA-Z0-9]+$/i,
             email        : {
                 illegalChars : /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
@@ -77,27 +78,28 @@ FormValidator.prototype = {
     tests : {
         sameAsPlaceholder : function( $field, data ){
             if( $field.prop('placeholder') )
-                return data.value != $field.prop('placeholder') || this.texts.empty;
+                return data.value != $field.prop('placeholder') || (this.name + this.texts.empty);
             else
                 return true;
         },
 
         hasValue : function( value ){
-            return value ? true : this.texts.empty;
+            var empty = this.name + this.texts.empty;
+            return value ? true : empty;
         },
 
         // 'linked' is a special test case for inputs which their values should be equal to each other (ex. confirm email or retype password)
         linked : function(a, b, type){
             if( b != a && a && b ){
                 // choose a specific message or a general one
-                return this.texts[type + '_repeat'] || this.texts.no_match;
+                return this.name + this.texts[type + '_repeat'] || this.name + this.texts.no_match;
             }
             return true;
         },
 
         email : function($field, data){
             if ( !this.settings.regex.email.filter.test( data.value ) || data.value.match( this.settings.regex.email.illegalChars ) ){
-                return this.texts.email;
+                return (this.name + this.texts.email);
             }
 
             return true;
@@ -113,23 +115,23 @@ FormValidator.prototype = {
                 var wordsLength = function(len){
                     for( var w = words.length; w--; )
                         if( words[w].length < len )
-                            return this.texts.short;
+                            return this.name + this.texts.short;
                     return true;
                 };
 
                 if( words.length < data.validateWords || !wordsLength(2) )
-                    return this.texts.complete;
+                    return this.name + this.texts.complete;
 
                 return true;
             }
 
             if( data.lengthRange && data.value.length < data.lengthRange[0] ){
-                return this.texts.short;
+                return this.name + this.texts.short;
             }
 
             // check if there is max length & field length is greater than the allowed
             if( data.lengthRange && data.lengthRange[1] && data.value.length > data.lengthRange[1] ){
-                return this.texts.long;
+                return this.name + this.texts.long;
             }
 
             // check if the field's value should obey any length limits, and if so, make sure the length of the value is as specified
@@ -140,7 +142,7 @@ FormValidator.prototype = {
                     }
                 }
 
-                return this.texts.complete;
+                return this.name + this.texts.complete;
             }
 
             if( data.pattern ){
@@ -156,18 +158,21 @@ FormValidator.prototype = {
                     case 'phone' :
                         regex = this.settings.regex.phone
                         break;
+                    case 'decimal':
+                        regex = this.settings.regex.decimal;
+                        break;
                     default :
                         regex = data.pattern;
                 }
                 try{
                     jsRegex = new RegExp(regex).test(data.value);
                     if( data.value && !jsRegex ){
-                        return this.texts.invalid;
+                        return this.name + this.texts.invalid;
                     }
                 }
                 catch(err){
                     console.warn(err, $field[0], 'regex is invalid');
-                    return this.texts.invalid;
+                    return this.name + this.texts.invalid;
                 }
             }
 
@@ -178,21 +183,21 @@ FormValidator.prototype = {
             var a = data.value;
             // if not not a number
             if( isNaN(parseFloat(a)) && !isFinite(a) ){
-                return this.texts.number;
+                return this.name + this.texts.number;
             }
             // not enough numbers
             else if( data.lengthRange && a.length < data.lengthRange[0] ){
-                return this.texts.short;
+                return this.name + this.texts.short;
             }
             // check if there is max length & field length is greater than the allowed
             else if( data.lengthRange && data.lengthRange[1] && a.length > data.lengthRange[1] ){
-                return this.texts.long;
+                return this.name + this.texts.long;
             }
             else if( data.minmax[0] && (a|0) < data.minmax[0] ){
-                return this.texts.number_min;
+                return this.name + this.texts.number_min;
             }
             else if( data.minmax[1] && (a|0) > data.minmax[1] ){
-                return this.texts.number_max;
+                return this.name + this.texts.number_max;
             }
 
             return true;
@@ -207,47 +212,47 @@ FormValidator.prototype = {
 
             for( i = A.length; i--; ){
                 if( isNaN(parseFloat( data.value )) && !isFinite(data.value) )
-                    return this.texts.date;
+                    return this.name + this.texts.date;
             }
             try{
                 day = new Date(A[2], A[1]-1, A[0]);
                 if( day.getMonth()+1 == A[1] && day.getDate() == A[0] )
                     return true;
-                return this.texts.date;
+                return this.name + this.texts.date;
             }
             catch(er){
-                return this.texts.date;
+                return this.name + this.texts.date;
             }
         },
 
         url : function( $field, data ){
             // minimalistic URL validation
             if( !this.settings.regex.url.test(data.value) )
-                return this.texts.url;
+                return this.name + this.texts.url;
 
             return true;
         },
 
         hidden : function( $field, data ){
             if( data.lengthRange && data.value.length < data.lengthRange[0] )
-                return this.texts.short;
+                return this.name + this.texts.short;
 
             if( data.pattern ){
                 if( data.pattern == 'alphanumeric' && !this.settings.regex.alphanumeric.test(data.value) )
-                    return this.texts.invalid;
+                    return this.name + this.texts.invalid;
             }
 
             return true;
         },
 
         select : function( $field, data ){
-            return data.value ? true : this.texts.select;
+            return data.value ? true : this.name + this.texts.select;
         },
 
         checkbox : function( $field, data ){
             if( $field[0].checked ) return true;
 
-            return this.texts.checked;
+            return this.name + this.texts.checked;
         }
     },
 
@@ -331,12 +336,15 @@ FormValidator.prototype = {
         data.pattern = $field.attr('pattern');
         data.name    = $field.attr('name');
 
-        // Special treatment
-        if( nodeName === "select" )
-            data.type = "select";
+        this.name = data.name || '';
 
-        else if( nodeName === "textarea" )
+        // Special treatment
+        if( nodeName === "select" ){
+            data.value = $field[0].options.selectedIndex === 0 ? '': $field[0].value.replace(/^\s+|\s+$/g, "");
+            data.type = "select";
+        } else if( nodeName === "textarea" ){
             data.type = "text";
+        }
 
         /* Gather Custom data attributes for specific validation:
          */
