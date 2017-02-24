@@ -131,12 +131,12 @@
 }
 .j-dialog .j-dialog-btn.x-highlight:first-child {
     color: #fff;
-    background-color: #5cb85c;
-    border-color: #4cae4c;
+    background-color: #169F85;
+    border-color: #169F85;
 }
 .j-dialog .j-dialog-btn.x-highlight:first-child:focus, .j-dialog .j-dialog-btn.x-highlight:first-child:active, .j-dialog .j-dialog-btn.x-highlight:first-child:hover, .j-dialog .j-dialog-btn.x-highlight:first-child.x-hlhover {
     color: #fff;
-    background-color: #449d44;
+    background-color: #169F85;
     border-color: #255625;
 }
 .j-dialog .j-dialog-btn.x-highlight:last-child {

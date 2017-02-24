@@ -75,6 +75,19 @@
     border: 1px solid #dedede;
     cursor: pointer;
     position: relative; }
+  .goods-content #main-gallery {
+    display: inline-block; }
+    .goods-content #main-gallery ul {
+      padding-left: 0; }
+      .goods-content #main-gallery ul li {
+        float: left;
+        width: 62px;
+        height: 62px;
+        border: 1px solid #dedede;
+        margin: 0 10px 10px 0;
+        cursor: pointer;
+        position: relative;
+        list-style: none; }
 
 .goods-content-footer {
   padding: 20px;

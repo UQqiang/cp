@@ -3,7 +3,7 @@
   background: #2A3F54; }
 
 .right_col {
-  min-width: 980px; }
+  min-width: 1050px; }
 
 .nav-sm .container.body .col-md-3.left_col {
   min-height: 100%;
@@ -1887,9 +1887,6 @@ button,
   margin: 5px 2px;
   padding: 3px 0;
   border: 1px solid #EFEFEF; }
-
-.input-group {
-  margin-bottom: 10px; }
 
 .ln_solid {
   border-top: 1px solid #e5e5e5;
@@ -3892,6 +3889,8 @@ ul.notifications {
 /*** self style ***/
 .form-group .form-control {
   display: inline-block; }
+.form-group .form-control.none {
+  display: none; }
 
 .form-control.form-control-sm {
   height: 30px;
@@ -4232,22 +4231,25 @@ ul.notifications {
   float: left !important; }
 
 .vat {
-  vertical-align: top; }
+  vertical-align: top !important; }
 
 .ml5 {
-  margin-left: 5px; }
+  margin-left: 5px !important; }
 
 .mr5 {
-  margin-right: 5px; }
+  margin-right: 5px !important; }
 
 .ml10 {
-  margin-left: 10px; }
+  margin-left: 10px !important; }
 
 .mr10 {
-  margin-right: 10px; }
+  margin-right: 10px !important; }
+
+.mb10 {
+  margin-bottom: 10px !important; }
 
 .mr15 {
-  margin-right: 15px; }
+  margin-right: 15px !important; }
 
 .ui-label {
   width: 75px; }

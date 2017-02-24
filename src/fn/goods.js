@@ -41,6 +41,9 @@
                 }
                 ]
             ];
+
+            // 富文本编辑器
+            this.editor = UE.getEditor('editor');
         },
         /**
          * 初始化提示框
@@ -66,14 +69,14 @@
                 var type = $(this).attr('data-type');
                 var num = Number($('.add-goods-active').attr('data-step_value'));
 
-                if( type === 'next' ){
-                    if( that.nowStep == 1  ){
+                if (type === 'next') {
+                    if (that.nowStep == 1) {
                         // todo 验证类目选择
-                    }else if( that.nowStep == 2 ){
+                    } else if (that.nowStep == 2) {
                         // todo 验证商品编辑
                     }
                     that.nowStep = num + 1 == 4 ? 1 : num + 1;
-                }else if( type === 'back' ){
+                } else if (type === 'back') {
                     // todo back
                     that.nowStep = num - 1 == 0 ? 1 : num - 1;
                 }
@@ -83,6 +86,12 @@
                 $('[data-step_value=' + that.nowStep + ']').addClass('add-goods-active');
                 $('[data-now_step=' + that.nowStep + ']').addClass('active-step');
             });
+        },
+        /**
+         *  排序
+         */
+        sortNumber: function (a, b) {
+            return a - b
         },
         validator: function () {
             var validator = new FormValidator();
@@ -117,15 +126,55 @@
                         id: data.target.parent().attr('data-index')
                     };
                     that.skuProp.push(prop);
+                    console.log(that.skuProp);
                     that.combine(that.arr);
                     dialog.close();
-                    if( that.arr ){
+                    if (that.arr) {
                         $('.stock-container,.sku-container').show();
                     }
                 }, function (button, dialog) {
                     dialog.close();
                 })
-            })
+            });
+
+            // 批量设置 - sku
+            $('.goods-content').on('click', '.j-batch', function () {
+                var type = $(this).attr('data-type');
+                $(this).hide();
+                $('input[data-type]').hide();
+                $('input[data-type=' + type + ']').show().focus();
+            });
+
+            // 批量设置 - sku - input
+            $('.goods-content').on('change', 'input[data-type=costPrice],input[data-type=ean]', function () {
+                var type = $(this).attr('data-type');
+
+                $(this).hide();
+                $('.j-batch[data-type=' + type + ']').show();
+
+                if ($(this).val() == '') {
+                    return;
+                }
+                $('input[data-input_type=' + type + ']').val($(this).val()).change();
+            });
+
+            // 单个输入 - sku - input
+            $('.goods-content').on('change', 'input[data-input_type=costPrice],input[data-input_type=ean]', function () {
+                var type = $(this).attr('data-input_type');
+                var arr = [], hasEmpty = false;
+                if ($(this).val() == '') {
+                    return;
+                }
+                $.each($('input[data-input_type=' + type + ']'), function (index, ele) {
+                    var v = $(ele).val();
+                    if (v == '') {
+                        hasEmpty = true;
+                        return;
+                    }
+                    arr.push(Number(v));
+                });
+                hasEmpty ? $('#' + type).val('') : $('#' + type).val(arr.sort(this.sortNumber).shift().toFixed(2));
+            });
         },
         /**
          * 新增sku条目
@@ -212,12 +261,14 @@
             } else {
                 toastr.error('输入的sku已经存在~', '错误提示!');
             }
+            // sku组合
             var skuData = this.combine(this.arr);
             var skuTemplate = _.template($('#j-template-sku').html());
             $('#sku').html(skuTemplate({
                 items: skuData
             }));
 
+            // sku 图片
             var skuImgTemplate = _.template($('#j-template-sku-img').html());
             $('#sku-img').html(skuImgTemplate({
                 items: skuData

@@ -99,6 +99,23 @@
     cursor: pointer;
     position: relative;
   }
+  #main-gallery{
+    display: inline-block;
+    ul{
+      padding-left: 0;
+      li{
+        float: left;
+        width: 62px;
+        height: 62px;
+        border: 1px solid #dedede;
+        margin: 0 10px 10px 0;
+        //background: url(../images/icon_add.png) no-repeat center #fff;
+        cursor: pointer;
+        position: relative;
+        list-style: none;
+      }
+    }
+  }
 }
 .goods-content-footer{
   padding:20px;
