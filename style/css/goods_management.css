@@ -67,6 +67,10 @@
       background: #f8f8f8; }
     .goods-content .sku-wrapper .sku-group .sku-group-cont {
       padding: 10px; }
+    .goods-content .sku-wrapper .props {
+      border: 1px solid #dbdbdb;
+      padding: 6px;
+      margin-right: 10px; }
   .goods-content .selectize-wrapper {
     width: 150px; }
   .goods-content .sku-gallery {

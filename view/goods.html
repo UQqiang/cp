@@ -113,11 +113,11 @@
                                         <label for="goodsType-1" class="ml5 mr5">
                                             跨境商品
                                         </label>
-                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="" checked="checked"/>
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="1" checked="checked"/>
                                         <label for="goodsType-2" class="ml5 mr5">
                                             国内商品
                                         </label>
-                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-2" value="" />
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-2" value="2" />
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr">* 商品品牌：</label>
@@ -126,6 +126,8 @@
                                             <option>A</option>
                                             <option>B</option>
                                         </select>
+                                        <span class="ml10"><a href="javascript:;">刷新</a></span>
+                                        <span class="ml10 mr10"><a href="javascript:;">新建品牌</a></span>
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr">* 货源地：</label>
@@ -141,7 +143,7 @@
                         <!-- 基本信息 end -->
 
                         <!-- 税率 -->
-                        <div class="goods-content">
+                        <div class="goods-content" id="rate">
                             <div class="add-goods-title">
                                 <div class="add-goods-inner">
                                     税率
@@ -157,7 +159,7 @@
                                                     <label for="rate-1" class="ml5 mr5">
                                                         统一税率
                                                     </label>
-                                                    <input type="radio" class="flat" name="radio-rate" id="rate-1" value="" checked="checked"/>
+                                                    <input type="radio" class="flat" name="radio-rate" id="rate-1" value="1" checked="checked"/>
                                                 </div>
                                                 <div class="rate-table">
                                                     <table class="table table-bordered">
@@ -171,13 +173,13 @@
                                                         <tr>
                                                             <td>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control form-control-md">
+                                                                    <input type="text" class="form-control form-control-md" id="rateCommonThreshold">
                                                                     <span class="input-group-addon">元</span>
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control form-control-md">
+                                                                    <input type="text" class="form-control form-control-md" id="rateCommon">
                                                                     <span class="input-group-addon">%</span>
                                                                 </div>
                                                             </td>
@@ -192,13 +194,13 @@
                                                     <label for="rate-2" class="ml5 mr5">
                                                         税率模板
                                                     </label>
-                                                    <input type="radio" class="flat" name="radio-rate" id="rate-2" value="""/>
+                                                    <input type="radio" class="flat" name="radio-rate" id="rate-2" value="2"/>
                                                 </div>
                                                 <div class="rate-template">
-                                                    <select class="form-control form-control-md">
+                                                    <select class="form-control form-control-md" id="rateTemplate">
                                                         <option>请选择税率模板</option>
-                                                        <option>模板一</option>
-                                                        <option>模板二</option>
+                                                        <option value="1">模板一</option>
+                                                        <option value="2">模板二</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -243,11 +245,11 @@
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr"><span>* 成本价：</span></label>
-                                        <input class="form-control form-control-hg" id="costPrice" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal">
+                                        <input class="form-control form-control-md" id="costPrice" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal" disabled="disabled">
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr"><span>* EAN：</span></label>
-                                        <input class="form-control form-control-hg" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="decimal">
+                                        <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="decimal" disabled="disabled">
                                     </div>
                                 </div>
                             </div>
@@ -320,7 +322,27 @@
 
                 <!-- 选择仓库 -->
                 <div class="x_content step" data-now_step="3">
-
+                    <table class="table table-striped jambo_table bulk_action table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="tc">仓库</th>
+                                <th class="tc">库存</th>
+                                <th class="tc">运费</th>
+                                <th class="tc">优先级</th>
+                                <th class="tc">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="warehouse">
+                            <tr>
+                                <td>
+                                    <select class="form-conrol form-control-md">
+                                        <option>请选择仓库</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <!-- 选择仓库 end -->
 
@@ -362,7 +384,7 @@
 
 <!-- sku模板 - 添加sku -->
 <script type="text/template" id="j-template-skuProp">
-    <a href="javascript:;" class="j-add-prop">+ 添加</a>
+    <a href="javascript:;" class="j-add-prop" data-name="<%= current_prop_name %>" data-value="<%= current_prop_value %>">+ 添加</a>
 </script>
 
 <!-- sku模板 - sku - 商品库存 -->
