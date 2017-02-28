@@ -204,6 +204,8 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/underscore/underscore.js',
             './src/plugin/jquery.dialog/jquery.dialog.js',
             './src/plugin/jquery.dialog/jquery.mask.js',
+            './src/plugin/uploadify/webuploader.js',
+            './src/plugin/uploadify/imgUploadModal.js',
             './src/fn/common/common.js'
         ];
 

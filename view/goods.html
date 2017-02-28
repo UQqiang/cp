@@ -15,6 +15,7 @@
 
     <!-- rev-hash -->
     <link href="../style/css/goods_management.css" rel="stylesheet" type="text/css">
+    <link href="../style/css/uploader.css" rel="stylesheet" type="text/css">
     <!-- end -->
 </head>
 
@@ -23,6 +24,7 @@
     <div class="main_container">
         @@include('common/sidebar.html')
         @@include('common/header.html')
+        @@include('common/uploader.html')
 
         <!-- page content -->
         <div class="right_col" role="main">
@@ -245,11 +247,11 @@
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr"><span>* 成本价：</span></label>
-                                        <input class="form-control form-control-md" id="costPrice" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal" disabled="disabled">
+                                        <input class="form-control form-control-md" id="costPrice" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal">
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr"><span>* EAN：</span></label>
-                                        <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="decimal" disabled="disabled">
+                                        <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="decimal">
                                     </div>
                                 </div>
                             </div>
@@ -269,7 +271,7 @@
                                     <div id="main-gallery">
                                         <p>最多5张，支持格式JPEG,PNG，建议尺寸：640 x 640 像素</p>
                                         <ul class="clearfix">
-                                            <li></li>
+                                            <li class="imgUploadBtn"></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -375,6 +377,7 @@
             <div class="selectize-wrapper selectize-wrapper-<%= number %>">
                 <select id="selectize-<%= number %>"></select>
             </div>
+            <i class="fa fa-close selectize-close j-close"></i>
         </div>
         <div class="sku-group-cont sku-group-cont-<%= number %>" data-index="<%= number %>">
 
@@ -419,8 +422,8 @@
                 <tr>
                     <td colspan="10">
                         <label class="ui-label tl">批量设置：</label>
-                        <span class="j-batch" data-type="costPrice">成本价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="costPrice"></span>
-                        <span class="j-batch" data-type="ean">EAN</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="ean"></span>
+                        <span class="j-batch btn btn-sm" data-type="costPrice">成本价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="costPrice"></span>
+                        <span class="j-batch btn btn-sm" data-type="ean">EAN</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="ean"></span>
                     </td>
                 </tr>
             </tfoot>
@@ -428,8 +431,8 @@
     </div>
 </script>
 
-<!-- sku模板 - sku - sku主图 -->
-<script type="text/template" id="j-template-sku-img">
+<!-- sku模板 - sku - sku主图select框 -->
+<script type="text/template" id="j-template-sku-select">
     <div class="sku-img-wrapper">
         <p>选择需要添加图片的SKU属性
             <span>
@@ -438,9 +441,9 @@
                     <% _.each(item,function(n,m){ %>
                         <label class="ml10 mr10"><%= n.prop_name %></label>
                         <% if( m == 0 ){ %>
-                            <input type="radio" name="radio-sku-prop" class="flat" checked="checked">
+                            <input type="radio" name="radio-sku-prop" class="flat" checked="checked" data-key="<%= n.prop_name %>">
                         <% }else{ %>
-                            <input type="radio" name="radio-sku-prop" class="flat">
+                            <input type="radio" name="radio-sku-prop" class="flat" data-key="<%= n.prop_name %>">
                         <% } %>
                     <% }) %>
                 <% } %>
@@ -449,6 +452,25 @@
         </p>
         <div class="sku-gallery"></div>
     </div>
+</script>
+
+<!-- sku模板 - sku - sku主图 -->
+<script type="text/template" id="j-template-sku-img">
+    <% _.each(items,function(value,key){ %>
+        <% _.each(value['arr'],function(item,index){ %>
+            <% if( value['floor'] == 1 ){ %>
+                <dl class="dl-active" data-key="<%= key %>">
+                    <dt class="imgUploadBtn"></dt>
+                    <dd><span><%= item.value_name %></span></dd>
+                </dl>
+            <% }else{ %>
+                <dl data-key="<%= key %>">
+                    <dt class="imgUploadBtn"></dt>
+                    <dd><span><%= item.value_name %></span></dd>
+                </dl>
+            <% } %>
+        <% }) %>
+    <% }) %>
 </script>
 </body>
 </html>

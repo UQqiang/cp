@@ -6,43 +6,30 @@
         init: function () {
             this.nowStep = 1;                           // 添加商品的步骤
             this.selectizeNumber = 1;                   // 商品规格选择框的index
-            //this.skuName = [];                        // sku的名称数组
-            this.skuPropArr = [];                       // sku的prop数组
-            this.skuArr = {};                           // sku的对象
+            this.skuArr = {};                           // sku的对象数组
             this.editor = UE.getEditor('editor');       // 富文本编辑器
 
             this.toastrInit();
             this.step();
             this.validator();
             this.addEvent();
-
-            //this.arr = [
-            //    [{prop_name: '尺码', prop_id: 1, value_name: 'X', value_id: 10}, {
-            //        prop_name: '尺码',
-            //        prop_id: 2,
-            //        value_name: 'M',
-            //        value_id: 11
-            //    }, {
-            //        prop_name: '尺码',
-            //        prop_id: 5,
-            //        value_name: 'L',
-            //        value_id: 20
-            //    }],
-            //    [{prop_name: '颜色', prop_id: 3, value_name: '红色', value_id: 12}, {
-            //        prop_name: '颜色',
-            //        prop_id: 4,
-            //        value_name: '绿色',
-            //        value_id: 13
-            //    }],
-            //    [
-            //        {prop_name: '数量', prop_id: 3, value_name: '多', value_id: 12}, {
-            //        prop_name: '数量',
-            //        prop_id: 4,
-            //        value_name: '少',
-            //        value_id: 13
-            //    }
-            //    ]
-            //];
+            this.imgModal();
+        },
+        imgModal: function(){
+            var that = this;
+            $('.imgUploadBtn').imgModal({
+                selectImgPopupBtn:'.imgUploadBtn',
+                selectImgBtn:'.j-select-img',
+                times:1,
+                multiple:false,
+                //newImgBtn:'.j-upload',
+                selectSuccess:function(data,target){
+                    $('body').trigger('imgUploadSelected', [data]);
+                },
+                uploadSuccess:function(data,target){
+                    $('body').trigger('imgUploadSelected', [data[0].url]);
+                }
+            });
         },
         /**
          * 初始化提示框
@@ -202,20 +189,32 @@
                 var dataArr = [];
                 var k = 0;
                 var isExist = false;
+
+                if( that.skuArr[name].arr.length >= 8 ){
+                    toastr.warning('添加的sku'+ name +'超出上限','警告提示');
+                    return false;
+                }
+
                 data.content = '<input type="text" class="form-control prop">';
                 data.target = $(this);
                 data.position = 'bottom';
                 that.tip(data, function (button, dialog) {
                     prop.prop_name = name;
                     prop.prop_value = value;
-                    prop.value_name = $('.prop').val();
+                    prop.value_name = $.trim($('.prop').val());
                     prop.value_id = data.target.parent().attr('data-index');
 
-                    if (that.skuArr[prop.prop_value].arr.length == 0) {
+                    if( prop.value_name == '' ){
+                        toastr.error('规格属性不能为空','错误提示');
+                        return false;
+                    }
+
+                    // 渲染sku行
+                    if (that.skuArr[name].arr.length == 0) {
                         that.renderSkuGroupCont(data.target, prop);
                     } else {
-                        for (var n = 0; n < that.skuArr[prop.prop_value].arr.length; n++) {
-                            if (that.skuArr[prop.prop_value].arr[n].value_name === prop.value_name) {
+                        for (var n = 0; n < that.skuArr[name].arr.length; n++) {
+                            if (that.skuArr[name].arr[n].value_name === prop.value_name) {
                                 isExist = true;
                             }
                         }
@@ -224,28 +223,41 @@
                         }
                     }
 
-                    console.log(that.skuArr);
+                    console.log('this.skuArr' + JSON.stringify(that.skuArr));
 
                     // sku组合
                     for (var m in that.skuArr) {
-                        dataArr[k] = [];
-                        for (var i = 0; i < that.skuArr[m].arr.length; i++) {
-                            dataArr[k].push({
-                                prop_name: that.skuArr[m].arr[i].prop_name,
-                                prop_value: that.skuArr[m].arr[i].prop_value,
-                                value_name: that.skuArr[m].arr[i].value_name,
-                                value_id: that.skuArr[m].arr[i].value_id
-                            });
+                        // 判断sku 里面的具体内容是否存在. 例如 尺码 中是否具体存在X,M,L
+                        if (that.skuArr[m].arr.length > 0) {
+                            dataArr[k] = [];
+                            for (var i = 0; i < that.skuArr[m].arr.length; i++) {
+                                dataArr[k].push({
+                                    prop_name: that.skuArr[m].arr[i].prop_name,
+                                    prop_value: that.skuArr[m].arr[i].prop_value,
+                                    value_name: that.skuArr[m].arr[i].value_name,
+                                    value_id: that.skuArr[m].arr[i].value_id
+                                });
+                            }
                         }
                         k++
                     }
+                    console.log('dataArr:' + JSON.stringify(dataArr));
+
                     var skuData = that.combine(dataArr);
 
                     // sku组合
                     that.renderSkuTable(skuData);
 
-                    // sku 图片
-                    that.renderSkuImage(data);
+                    // sku 图片select框
+                    that.renderSkuSelect(skuData);
+                    that.renderSkuImage(that.skuArr);
+
+                    // props hover
+                    $('.props').hover(function () {
+                        $(this).find('.j-close').show();
+                    }, function () {
+                        $(this).find('.j-close').hide();
+                    });
 
                     // 渲染完成后 初始化下icheck
                     that.iCheck();
@@ -253,6 +265,7 @@
                     dialog.close();
                     if (that.skuArr) {
                         $('.stock-container,.sku-container').show();
+                        that.inputDisabled();
                     }
                 }, function (button, dialog) {
                     dialog.close();
@@ -268,7 +281,7 @@
             });
 
             // 批量设置 - sku - input
-            $('.goods-content').on('change', 'input[data-type=costPrice],input[data-type=ean]', function () {
+            $('.goods-content').on('blur', 'input[data-type=costPrice],input[data-type=ean]', function () {
                 var type = $(this).attr('data-type');
 
                 $(this).hide();
@@ -297,6 +310,23 @@
                 });
                 hasEmpty ? $('#' + type).val('') : $('#' + type).val(arr.sort(this.sortNumber).shift().toFixed(2));
             });
+
+            // sku 属性切换
+            $('.goods-content').on('ifChecked','input[name=radio-sku-prop]', function () {
+                var key = $(this).attr('data-key');
+                $('.dl-active').removeClass('dl-active');
+                $('dl[data-key='+key+']').addClass('dl-active');
+            });
+
+            // props 删除
+            $('.goods-content').on('click', '.j-close', function () {
+                toastr.success('删除成功','成功提示')
+            });
+
+            // selectize 删除
+            $('.goods-content').on('click', '.selectize-close', function () {
+                toastr.success('删除成功','成功提示')
+            });
         },
         /**
          * 新增sku条目
@@ -309,20 +339,15 @@
                 number: that.selectizeNumber
             }));
             var selectize = $('#selectize-' + that.selectizeNumber).selectize({
-                options: [{value: 278, text: '11111'}, {value: 412, text: '名字'}],
+                options: [{value: 278, text: '278'}, {value: 412, text: '412'}],
                 placeholder: '请添加规格',
                 create: true,
                 onItemAdd: function (value, $item) {
                     // 选择sku事件
-                    console.log(value, $item);
                     var name = $item.html();
                     var targetNumber = $item.parents('.sku-group').index() + 1;
                     var $selectize = selectize[0].selectize;
                     that.renderSkuAddButtom($selectize, targetNumber, name, value);
-                },
-                onChange: function (value,$item) {
-                    alert('value:' + value);
-                    alert('$item:' + $item)
                 }
             });
 
@@ -330,6 +355,13 @@
             if (that.selectizeNumber === 4) {
                 $('.j-add-sku-specifications').parents('.sku-group').hide();
             }
+
+            // selectize hover
+            $('.sku-group-title').hover(function () {
+                $(this).find('.selectize-close').show();
+            }, function () {
+                $(this).find('.selectize-close').hide();
+            })
         },
         /**
          * 排列组合
@@ -360,6 +392,7 @@
         },
         /**
          * 渲染sku 添加按钮并组合数组skuArr
+         * 根据skuArr / floor 与 当前选择的sku进行比较判断是否存在
          * @param $selectize    当前的selectize
          * @param targetNumber  当前的指针数
          * @param name          选择的条目
@@ -368,6 +401,11 @@
         renderSkuAddButtom: function ($selectize, targetNumber, name, value) {
 
             if (this.validatorSkuName(name) === true) {
+                // 不存在sku数组中 直接添加
+                // 判断楼层是否已经存在
+                if (this.isExist(targetNumber) == true) {
+                    this.delSku(this.skuArr, targetNumber);
+                }
                 var template = _.template($('#j-template-skuProp').html());
 
                 this.skuArr[value] = {
@@ -382,11 +420,14 @@
                     current_prop_value: value
                 }));
 
-                console.log(this.skuArr);
             } else {
-                toastr.error('输入的sku已经存在', '错误提示');
+                // 存在sku数组中 先删除后添加
+                // 删除
+                this.delSku(this.skuArr, targetNumber);
+                toastr.error('所选sku已经存在了', '错误提示');
                 $selectize.clear();
             }
+            console.log('this.skuArr' + JSON.stringify(this.skuArr));
         },
         /**
          * 渲染sku规格添加行
@@ -395,7 +436,7 @@
          */
         renderSkuGroupCont: function (target, prop) {
             this.skuArr[prop.prop_value].arr.push(prop);
-            target.before('<span class="props">' + prop.value_name + '</span>');
+            target.before('<span class="props">' + prop.value_name + '<i class="fa fa-close props-close j-close"></i></span>');
         },
         /**
          * 渲染sku组合表格
@@ -408,25 +449,48 @@
             }));
         },
         /**
+         * 渲染sku选择框radio
+         */
+        renderSkuSelect: function (data) {
+            var template = _.template($('#j-template-sku-select').html());
+            $('#sku-img').html(template({
+                items: data
+            }));
+        },
+        /**
          * 渲染sku图片
+         * @param data
          */
         renderSkuImage: function (data) {
-            var skuImgTemplate = _.template($('#j-template-sku-img').html());
-            $('#sku-img').html(skuImgTemplate({
+            var template = _.template($('#j-template-sku-img').html());
+            $('.sku-gallery').html(template({
                 items: data
             }));
         },
         /**
          * 移除floor级别的sku
          * @param obj
-         * @param f
+         * @param floor
          */
-        delSku: function(obj, f) {
-            for (i in obj) {
-                if (obj[i].floor == f) {
-                    delete obj[i];
+        delSku: function (obj, floor) {
+            for (k in obj) {
+                if (obj[k].floor == floor) {
+                    delete obj[k];
                 }
             }
+        },
+        /**
+         * 判断是否存在
+         * @param targetNumber
+         * @returns {boolean}
+         */
+        isExist: function (targetNumber) {
+            for (k in this.skuArr) {
+                if (targetNumber == this.skuArr[k].floor) {
+                    return true;
+                }
+            }
+            return false;
         },
         /**
          * icheck定义
@@ -470,6 +534,14 @@
                     }
                 }]
             });
+        },
+        inputDisabled: function () {
+            if( !this.skuArr ){
+                $('#costPrice,#ean').prop('disabled',false);
+            }else{
+                $('#costPrice,#ean').prop('disabled',true);
+                $('#costPrice,#ean').val('')
+            }
         }
     };
     // run

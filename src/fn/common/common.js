@@ -17,6 +17,7 @@
             this.iCheck();
             this.dateTimerPick();
             this.pagination(20);
+            window.ossDomain = 'http://media.mockuai.com/';
         },
         addEvent: function () {
             var current_url = window.location.href.split('#')[0].split('?')[0],

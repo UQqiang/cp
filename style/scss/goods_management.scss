@@ -39,10 +39,11 @@
   }
 }
 
-.step,.stock-container,.sku-container {
+.step, .stock-container, .sku-container {
   display: none;
 }
-.active-step.step{
+
+.active-step.step {
   display: block;
 }
 
@@ -70,45 +71,82 @@
     flex: 7;
     background: #f8f8f8;
   }
-  .sku-wrapper{
+  .sku-wrapper {
     border: 1px solid #dedede;
     padding: 10px;
     background: #fff;
     display: inline-block;
     min-width: 620px;
     max-width: 620px;
-    .sku-group{
-      .sku-group-title{
+    .sku-group {
+      .sku-group-title {
         position: relative;
         padding: 5px 10px;
         background: #f8f8f8;
       }
-      .sku-group-cont{
+      .sku-group-cont {
         padding: 10px;
       }
     }
-    .props{
+    .props {
       border: 1px solid #dbdbdb;
-      padding: 6px;
+      padding: 6px 10px;
       margin-right: 10px;
+      position: relative;
+    }
+    .props-close {
+      display: none;
+      position: absolute;
+      right: -10px;
+      top: -9px;
+      border: 1px solid #f86161;
+      border-radius: 50%;
+      padding: 1px 3px;
+      background: #fff;
+      cursor: pointer;
+      color: #f86161
+    }
+    .selectize-close{
+      display: none;
+      position: absolute;
+      right: 5px;
+      top: 14px;
+      border: 1px solid #f86161;
+      border-radius: 50%;
+      padding: 2px 4px;
+      background: #fff;
+      cursor: pointer;
+      color: #f86161
     }
   }
-  .selectize-wrapper{
+  .selectize-wrapper {
     width: 150px;
   }
-  .sku-gallery{
-    width: 62px;
-    height: 62px;
-    border: 1px solid #dedede;
-    //background: url(../images/icon_add.png) no-repeat center #fff;
-    cursor: pointer;
-    position: relative;
+  .sku-gallery {
+    dl.dl-active {
+      display: inline-block;
+    }
+    dl {
+      display: none;
+      margin-right: 8px;
+      dt {
+        width: 62px;
+        height: 62px;
+        border: 1px solid #dedede;
+        //background: url(../images/icon_add.png) no-repeat center #fff;
+        cursor: pointer;
+        position: relative;
+      }
+      dd {
+        text-align: center;
+      }
+    }
   }
-  #main-gallery{
+  #main-gallery {
     display: inline-block;
-    ul{
+    ul {
       padding-left: 0;
-      li{
+      li {
         float: left;
         width: 62px;
         height: 62px;
@@ -122,8 +160,9 @@
     }
   }
 }
-.goods-content-footer{
-  padding:20px;
+
+.goods-content-footer {
+  padding: 20px;
   text-align: center;
   background: #f8f8f8;
 }
