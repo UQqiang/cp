@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- rev-hash -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- end -->
+    <!-- rev-hash -->
+    <link href="../style/css/add-account.css" rel="stylesheet" type="text/css">
+    <!-- end -->
+</head>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        @@include('common/sidebar.html')
+        @@include('common/header.html')
+    </div>
+    <!-- page content -->
+
+    <!-- 内容部分 -->
+    <div class="right_col" role="main">
+
+        <!-- 搜索 -->
+        <div class="x_panel">
+            <div class="x_content">
+                <button type="button" class="btn btn-sm btn-success ml10 pull-right btn-search">搜索</button>
+                <div class="col-md-3 col-sm-12 col-xs-12 form-group pull-right">
+                    <input type="text" placeholder="请输入商品名称" class="form-control form-control-sm ">
+                </div>
+            </div>
+        </div>
+        <!-- 添加-->
+        <button type="button" class="btn btn-sm btn-success ml10 ">添加</button>
+        <!-- 姓名角色-->
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>商品列表<small>表格</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="fr">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="table-responsive">
+                    <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
+                        <thead>
+                        <tr class="headings">
+                            <th>
+                                <input type="checkbox" id="check-all" class="flat">
+                            </th>
+                            <th class="column-title">姓名 </th>
+                            <th class="column-title">角色</th>
+                            <th class="column-title">账号</th>
+                            <th class="column-title">部门</th>
+                            <th class="column-title">职务</th>
+                            <th class="column-title">电话</th>
+                            <th class="column-title">手机</th>
+                            <th class="column-title">创建人</th>
+                            <th class="column-title">创建时间</th>
+                            <th class="column-title">状态</th>
+                            <th class="column-title no-link last"><span class="nobr">操作</span>
+                            </th>
+                            <th class="bulk-actions" colspan="7">
+                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr class="even pointer">
+                            <td class="a-center ">
+                                <input type="checkbox" class="flat" name="table_records">
+                            </td>
+                            <td class=" ">121000040</td>
+                            <td class=" ">May 23, 2014 11:47:56 PM </td>
+                            <td class=" ">121000210 <i class="success fa fa-long-arrow-up"></i></td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$7.45</td>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                        </tr>
+                        <tr class="odd pointer">
+                            <td class="a-center ">
+                                <input type="checkbox" class="flat" name="table_records">
+                            </td>
+                            <td class=" ">121000039</td>
+                            <td class=" ">May 23, 2014 11:30:12 PM</td>
+                            <td class=" ">121000208 <i class="success fa fa-long-arrow-up"></i>
+                            </td>
+                            <td class=" ">John Blank L</td>
+                            <td class=" ">Paid</td>
+                            <td class="a-right a-right ">$741.20</td>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            <td class=" last"><a href="#">View</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 页码 -->
+                <div class="ui-box">
+                    <div class="widget-list">
+                        <div class="list-page fr">
+                            <span class="pagination-info">1</span>
+                            <div class="ui-pagination pagination"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /页码 -->
+            </div>
+        </div>
+    </div>
+        <!-- page content -->
+    @@include('common/footer.html')
+
+</div>
+</body>
+
+<!-- rev-hash -->
+<!-- inject:js -->
+<!-- endinject -->
+<!-- end -->
+
+
+<!-- rev-hash -->
+
+<!-- end -->
+</html>

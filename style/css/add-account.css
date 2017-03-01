@@ -70,3 +70,6 @@
 .item.bad .alert {
   left: 0;
   opacity: 1; }
+
+.btn-search {
+  margin-top: 5px; }
