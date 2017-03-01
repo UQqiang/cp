@@ -3576,7 +3576,7 @@ ul.project_files li a i {
 }
 
 .thumbnail {
-  height: 190px;
+  //height: 190px;
   overflow: hidden;
 }
 
@@ -4908,24 +4908,24 @@ ul.notifications {
 .form-control.form-control-sm {
   height: 30px;
   font-size: 12px;
-  width: 100px;
+  width: 100px!important;
 }
 
 .form-control.form-control-md {
   font-size: 12px;
-  width: 140px;
+  width: 140px!important;
   height: 30px;
 }
 
 .form-control.form-control-lg {
   font-size: 12px;
-  width: 200px;
+  width: 200px!important;
   height: 30px;
 }
 
 .form-control.form-control-hg {
   font-size: 12px;
-  width: 340px;
+  width: 340px!important;
   height: 30px;
 }
 
@@ -5423,5 +5423,9 @@ ul.notifications {
   display: inline-block;
   height: 25px;
   line-height: 25px;
+  vertical-align: middle;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
   vertical-align: middle;
 }

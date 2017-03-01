@@ -273,6 +273,16 @@ gulp.task('copy-js', function () {
 
 });
 
+gulp.task('copy-img', function () {
+    if (DEST.indexOf('build') != -1) {
+        return gulp.src('./style/images/*')
+            .pipe(gulp.dest(DEST + '/style/images'))
+    } else {
+        return gulp.src('./style/images')
+            .pipe(gulp.dest(DEST + '/style/images'))
+    }
+});
+
 /**
  * watch
  */
@@ -295,7 +305,7 @@ gulp.task('watch', function () {
 // Dev Task
 // 开发环境
 gulp.task('dev', ['build', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'browser-sync', 'watch']);
+    gulp.start(['copy-plugin', 'copy-js', 'copy-img', 'browser-sync', 'watch']);
     console.log('============dev OK version!============')
 });
 

@@ -133,7 +133,8 @@
   display: inline-block; }
 
 #theList ul {
-  margin-bottom: 0 !important; }
+  margin-bottom: 0 !important;
+  padding-left: 0; }
 
 #theList ul li {
   float: left; }
@@ -208,3 +209,7 @@
 
 .thumbnail p, .img-import p {
   margin: 0 !important; }
+
+.j-import {
+  margin-right: 0;
+  margin-bottom: 0; }
