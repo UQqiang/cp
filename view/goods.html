@@ -54,6 +54,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="add-goods-category-1" class="category-list"></div>
                         </div>
                         <div class="add-goods-categories">
                             <div class="add-goods-search">
@@ -66,6 +67,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="add-goods-category-2" class="category-list"></div>
                         </div>
                     </div>
                     <div class="add-goods-footer clearfix">
@@ -78,13 +80,13 @@
                         <div class="col-md-4"></div>
                         <div class="col-md-4 tr">
                             <span>当前选择：</span>
-                            <span class="mr10">美食 > 火龙果</span>
-                            <!--<a href="javascript:;" class="btn btn-success btn-sm" disabled="disabled">-->
-                                <!--请选择类目-->
-                            <!--</a>-->
-                            <a href="javascript:;" class="btn btn-success btn-sm" id="nextStep" data-type="next">
-                            下一步
+                            <span class="mr10 currentCategory"></span>
+                            <a href="javascript:;" class="btn btn-success btn-sm" id="nextStep" disabled="disabled" data-type="next">
+                                请选择类目
                             </a>
+                            <!--<a href="javascript:;" class="btn btn-success btn-sm" id="nextStep" data-type="next">-->
+                            <!--下一步-->
+                            <!--</a>-->
                         </div>
                     </div>
                 </div>
@@ -104,7 +106,7 @@
                                 <div class="add-goods-inner">
                                     <div class="form-group">
                                         <label class="ui-label ui-label-lg tr">* 商品类目：</label>
-                                        <span>美食 > 火龙果</span><span class="ml10"><a href="javascript:;" id="reselect" data-type="back">重新选择</a></span>
+                                        <span class="currentCategory"></span><span class="ml10"><a href="javascript:;" id="reselect" data-type="back">重新选择</a></span>
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr"><span>* 商品名称：</span></label>
@@ -271,7 +273,11 @@
                                     <div id="main-gallery">
                                         <p>最多5张，支持格式JPEG,PNG，建议尺寸：640 x 640 像素</p>
                                         <ul class="clearfix">
-                                            <li class="imgUploadBtn"></li>
+                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
+                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
+                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
+                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
+                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -370,6 +376,23 @@
 <script src="../src/fn/goods.js"></script>
 <!-- end -->
 
+<!-- 类目模板 -->
+<script type="text/template" id="template-category">
+    <ul>
+    <% _.each(items,function(item,index){ %>
+        <% if( level === item.cate_level ){ %>
+            <% if( level == 1 ){ %>
+                <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+            <% }else{ %>
+                <% if( item.parent_id == parent_id ){ %>
+                     <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+                <% } %>
+            <% } %>
+        <% } %>
+    <% }) %>
+    </ul>
+</script>
+
 <!-- sku模板 - 商品规格 -->
 <script type="text/template" id="j-template-selectize">
     <div class="sku-group add-group">
@@ -460,12 +483,12 @@
         <% _.each(value['arr'],function(item,index){ %>
             <% if( value['floor'] == 1 ){ %>
                 <dl class="dl-active" data-key="<%= key %>">
-                    <dt class="imgUploadBtn"></dt>
+                    <dt class="imgUploadBtn"><i class="fa fa-plus"></i></dt>
                     <dd><span><%= item.value_name %></span></dd>
                 </dl>
             <% }else{ %>
                 <dl data-key="<%= key %>">
-                    <dt class="imgUploadBtn"></dt>
+                    <dt class="imgUploadBtn"><i class="fa fa-plus"></i></dt>
                     <dd><span><%= item.value_name %></span></dd>
                 </dl>
             <% } %>

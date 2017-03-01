@@ -3,11 +3,11 @@
     // 定义构造函数
     var SelectImg = function(ele,opt){
 
-        var content = '<div class="ui-box"><table class="table table-striped jambo_table bulk_action">' +
+        var content = '<div class="ui-box" style="overflow: scroll;height: 450px;"><table class="table table-striped jambo_table bulk_action">' +
                 '<thead>'+
                 '<tr>'+
                 '<th class="tc">图片</th>'+
-                '<th class="tc">名称</th>'+
+                '<th>名称</th>'+
                 '<th class="tc">时间</th>'+
                 '<th class="tc">操作</th>'+
                 '</tr>'+

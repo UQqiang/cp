@@ -24,8 +24,8 @@
             <div class="line"></div>
         </div>
         <div class="upload-footer">
-            <button class="btn btn-success imgModalUpload" style="margin-right: 15px;">确定</button>
-            <button class="btn btn-default imgModalCancel">取消</button>
+            <button class="btn btn-sm btn-success imgModalUpload" style="margin-right: 15px;">确定</button>
+            <button class="btn btn-sm btn-default imgModalCancel">取消</button>
         </div>
     </div>
 </script>
@@ -34,11 +34,11 @@
 <script type="text/template" id="j-select-img-tpl">
     <% _.each(items,function(item,index){ %>
     <tr>
-        <td><a class="j-blank-link" target="_blank" href="<%= item.file_url %>"><img style="width: 60px;height: 60px;" src="<%= item.file_url %>"></a></td>
+        <td class="tc"><a class="j-blank-link" target="_blank" href="<%= item.file_url %>"><img style="width: 60px;height: 60px;" src="<%= item.file_url %>"></a></td>
         <td><%= item.file_name %></td>
-        <td class="j-time"><%= item.create_time %></td>
+        <td class="j-time tc"><%= item.create_time %></td>
         <td>
-            <a href="javascript:;" class="j-select-img" data-furl="<%= item.file_url %>">选择</a>
+            <a href="javascript:;" class="j-select-img tc" data-furl="<%= item.file_url %>">选择</a>
         </td>
     </tr>
     <% }) %>
