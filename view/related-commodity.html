@@ -13,7 +13,7 @@
     <!-- endinject -->
     <!-- end -->
     <!-- rev-hash -->
-    <link href="../style/css/add-account.css" rel="stylesheet" type="text/css">
+    <link href="../style/css/channel.css" rel="stylesheet" type="text/css">
     <!-- end -->
 </head>
 <body class="nav-md">
@@ -32,14 +32,13 @@
             <div class="x_content">
                 <div class="col-md-4 col-sm-12 col-xs-12 form-group pull-right field">
                     <button type="button" class="btn btn-sm btn-success pull-right btn-search">搜索</button>
-                    <input type="text" required="required" pattern="decimal" name="渠道名称" placeholder="请输入角色名称" class="form-control form-control-lg pull-right">
+                    <input type="text" required="required" pattern="decimal" name="渠道名称" placeholder="请输入渠道商名称" class="form-control form-control-lg pull-right">
                 </div>
             </div>
-        </div>
-        <!-- 姓名角色-->
+        </div>        <!-- 姓名角色-->
         <div class="x_panel">
             <div class="x_title">
-                <h2>角色列表</h2>
+                <h2>渠道商：渠道A，渠道B</h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="fr">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -48,21 +47,24 @@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <!-- 添加-->
+                <!-- 关联-->
                 <div class="form-group">
-                    <a class="btn btn-sm btn-success" href="editor-role.html">添加</a>
+                    <a class="btn btn-sm btn-success " href="#">关联</a>
                 </div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                         <thead>
                         <tr class="headings">
                             <th>
-                                <input type="checkbox" id="check-all" class="flat">
+                                <input type="checkbox" id="check-all" class="flat">商品名称
                             </th>
-                            <th class="column-title">角色名称 </th>
-                            <th class="column-title">创建人</th>
-                            <th class="column-title">说明</th>
-                            <th class="column-title no-link last"><span class="nobr">操作</span></th>
+                            <th colspan="2" class="column-title">规格 </th>
+                            <th class="column-title">成本价</th>
+                            <th class="column-title">结算价</th>
+                            <th class="column-title">最低售价</th>
+                            <th class="column-title">建议售价</th>
+                            <th class="column-title no-link last"><span class="nobr">操作</span>
+                            </th>
                             <th class="bulk-actions" colspan="7">
                                 <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                             </th>
@@ -71,19 +73,35 @@
 
                         <tbody>
                         <tr class="even pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
+                            <td rowspan="2" class="a-center ">
+                                <input type="checkbox" class="flat" name="table_records">商品名称
                             </td>
-                            <td class=" ">张三</td>
-                            <td class=" ">管理员1 </td>
-                            <td class=" ">111111111</td>
-                            <td class=" last"><a href="#">编辑-删除</a>
+                            <td  rowspan="2" class=" ">红色</td>
+                            <td class="a-center">XL</td>
+                            <td class="a-center">111元</td>
+                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
+                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
+                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
+                            <td class=" last"><a href="#">编辑-删除-禁用</a>
+                            </td>
+                        </tr>
+                        <tr class="odd pointer">
+                            <td class=" ">XL</td>
+                            <td class=" ">111元</td>
+                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
+                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
+                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
+
+                            <td class=" last"><a href="#">编辑-删除-应用</a>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-
+                <div class="form-group ">
+                    <button class="btn btn-sm btn-success " >删除</button>
+                    <button class="btn btn-sm btn-success " >批量设置</button>
+                </div>
                 <!-- 页码 -->
                 <div class="ui-box">
                     <div class="widget-list">
@@ -99,10 +117,8 @@
     </div>
     <!-- page content -->
     @@include('common/footer.html')
-
 </div>
 </body>
-
 <!-- rev-hash -->
 <!-- inject:js -->
 <!-- endinject -->
@@ -110,6 +126,6 @@
 
 
 <!-- rev-hash -->
-<script src="../src/fn/role-management.js"></script>
+<script src="../src/fn/account-number.js"></script>
 <!-- end -->
 </html>

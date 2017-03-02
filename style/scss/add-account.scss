@@ -1,5 +1,5 @@
 .form-group .form-control{
-  margin: 5px;
+  margin-top: 5px;
 }
 .form-group label {
   width: 100px;
@@ -49,6 +49,7 @@
   right: 20px;
   background: #f8f8f8;
   text-align: center;
+  bottom: 50px;
 }
 .alert {
   display: inline-block;
@@ -86,4 +87,5 @@
 //账号列表css
 .btn-search{
   margin-top: 5px;
+  border-radius: 0;
 }
