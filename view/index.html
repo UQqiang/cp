@@ -35,49 +35,45 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <div class="row">
-                        <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                    <div class="form-inline fr">
+                        <div class="form-group">
                             <select id="heard1" class="form-control form-control-sm" required>
-                                <option value="">Choose..</option>
-                                <option value="press">Press</option>
-                                <option value="net">Internet</option>
-                                <option value="mouth">Word of mouth</option>
+                                <option value="">请选择类型</option>
+                                <option value="net">国内商品</option>
+                                <option value="press">跨境商品</option>
                             </select>
                         </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                        <div class="form-group">
                             <select id="heard2" class="form-control form-control-sm" required>
-                                <option value="">Choose..</option>
+                                <option value="">请选择状态</option>
                                 <option value="press">Press</option>
                                 <option value="net">Internet</option>
                                 <option value="mouth">Word of mouth</option>
                             </select>
                         </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                        <div class="form-group">
                             <select id="heard3" class="form-control form-control-sm" required>
-                                <option value="">Choose..</option>
+                                <option value="">请选择品类</option>
                                 <option value="press">Press</option>
                                 <option value="net">Internet</option>
                                 <option value="mouth">Word of mouth</option>
                             </select>
                         </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+                        <div class="form-group">
                             <select id="heard4" class="form-control form-control-sm" required>
-                                <option value="">Choose..</option>
+                                <option value="">请选择品牌</option>
                                 <option value="press">Press</option>
                                 <option value="net">Internet</option>
                                 <option value="mouth">Word of mouth</option>
                             </select>
                         </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12 form-group">
-                            <input type="text" placeholder="请输入商品名称" class="form-control form-control-sm">
+                        <div class="form-group">
+                            <input type="text" placeholder="请输入商品名称" class="form-control form-control-lg">
                         </div>
-                        <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                            <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12 form-group">
-                            <a class="btn btn-sm btn-success" href="goods.html">添加商品</a>
-                        </div>
+                        <!--<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">-->
+                            <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
+                            <!--<span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>-->
+                        <!--</div>-->
                         <button type="button" class="btn btn-sm btn-success ml10">搜索</button>
                     </div>
                 </div>
@@ -96,6 +92,11 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
+                    <div>
+                        <div class="form-group">
+                            <a class="btn btn-sm btn-success" href="goods.html">添加商品</a>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                             <thead>
@@ -257,15 +258,13 @@
                     </div>
 
                     <!-- 页码 -->
-                    <div class="ui-box">
-                        <div class="widget-list">
-                            <div class="fl pagination">
-                                <button class="btn btn-sm btn-success">删除</button>
-                            </div>
-                            <div class="list-page fr">
-                                <span class="pagination-info">1111111111111111</span>
-                                <div class="ui-pagination pagination"></div>
-                            </div>
+                    <div class="widget-list clearfix ">
+                        <div class="fl pagination">
+                            <button class="btn btn-sm btn-success">删除</button>
+                        </div>
+                        <div class="list-page fr">
+                            <span class="pagination-info">1111111111111111</span>
+                            <div class="ui-pagination pagination"></div>
                         </div>
                     </div>
                     <!-- /页码 -->

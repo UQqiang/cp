@@ -1,6 +1,7 @@
 @charset "UTF-8";
 .left_col {
-  background: #2A3F54; }
+  background: #2A3F54;
+  z-index: 1024; }
 
 .right_col {
   min-width: 1050px; }
@@ -185,7 +186,8 @@
   border-bottom: 1px solid #D9DEE4;
   margin-bottom: 10px;
   width: 100%;
-  position: relative; }
+  position: relative;
+  min-width: 1050px; }
 
 @media (min-width: 480px) {
   .nav_menu {
@@ -197,7 +199,7 @@
   position: absolute;
   display: -ms-flexbox;
   display: flex;
-  z-index: 1; }
+  z-index: 1024; }
 
 .nav-md .container.body .col-md-3.left_col.menu_fixed {
   height: 100%;
@@ -669,7 +671,8 @@ a:hover, a:focus {
 footer {
   background: #fff;
   padding: 15px 20px;
-  display: block; }
+  display: block;
+  min-width: 1050px; }
 
 .nav-sm footer {
   margin-left: 70px; }
@@ -1750,13 +1753,6 @@ a.star {
   margin: 0 0 15px !important;
   text-align: left;
   width: 100%; }
-
-button,
-.buttons,
-.btn,
-.modal-footer .btn + .btn {
-  margin-bottom: 5px;
-  margin-right: 5px; }
 
 .btn-group-vertical .btn, .btn-group .btn {
   margin-bottom: 0;

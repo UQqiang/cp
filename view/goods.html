@@ -34,9 +34,9 @@
 
                 <div class="x_title">
                     <div class="add-goods-step clearfix">
-                        <span class="add-goods-active col-md-4" data-step_value="1">选择商品分类</span>
-                        <span class="col-md-4" data-step_value="2">编辑商品信息</span>
-                        <span class="col-md-4" data-step_value="3">选择发货仓库</span>
+                        <span class="add-goods-active col-md-4 col-sm-4 col-xs-4" data-step_value="1">选择商品分类</span>
+                        <span class="col-md-4 col-sm-4 col-xs-4" data-step_value="2">编辑商品信息</span>
+                        <span class="col-md-4 col-sm-4 col-xs-4" data-step_value="3">选择发货仓库</span>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -71,14 +71,14 @@
                         </div>
                     </div>
                     <div class="add-goods-footer clearfix">
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
                             <span>您最近使用的类目：</span>
                             <select class="form-control form-control-md dib">
                                 <option>美食 > 火龙果</option>
                             </select>
                         </div>
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4 tr">
+                        <div class="col-md-4 col-sm-4 col-xs-4">&nbsp;</div>
+                        <div class="col-md-4 col-sm-4 col-xs-4 tr">
                             <span>当前选择：</span>
                             <span class="mr10 currentCategory"></span>
                             <a href="javascript:;" class="btn btn-success btn-sm" id="nextStep" disabled="disabled" data-type="next">
@@ -110,7 +110,7 @@
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-lg tr"><span>* 商品名称：</span></label>
-                                        <input class="form-control form-control-hg" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length="6,20">
+                                        <input class="form-control form-control-hg" id="name" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length="6,20">
                                     </div>
                                     <div class="item form-group">
                                         <label class="ui-label ui-label-lg tr">* 商品类型：</label>
@@ -273,11 +273,7 @@
                                     <div id="main-gallery">
                                         <p>最多5张，支持格式JPEG,PNG，建议尺寸：640 x 640 像素</p>
                                         <ul class="clearfix">
-                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
-                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
-                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
-                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
-                                            <li class="imgUploadBtn"><i class="fa fa-plus"></i></li>
+                                            <li class="imgUploadBtn" data-type="common"><i class="fa fa-plus"></i></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -483,17 +479,32 @@
         <% _.each(value['arr'],function(item,index){ %>
             <% if( value['floor'] == 1 ){ %>
                 <dl class="dl-active" data-key="<%= key %>">
-                    <dt class="imgUploadBtn"><i class="fa fa-plus"></i></dt>
+                    <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value_name %>">
+                        <i class="fa fa-plus"></i>
+                    </dt>
                     <dd><span><%= item.value_name %></span></dd>
                 </dl>
             <% }else{ %>
                 <dl data-key="<%= key %>">
-                    <dt class="imgUploadBtn"><i class="fa fa-plus"></i></dt>
+                    <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value_name %>">
+                        <i class="fa fa-plus"></i>
+                    </dt>
                     <dd><span><%= item.value_name %></span></dd>
                 </dl>
             <% } %>
         <% }) %>
     <% }) %>
+</script>
+
+<!-- 商品主图 -->
+<script type="text/template" id="j-template-common-gallery">
+        <% _.each(items,function(item,index){ %>
+            <li class="imgUploadBtn" data-type="common"><img class="image" src="<%= item.img %>"><i class="fa fa-plus"></i></li>
+            <!--<li><img src="<%= item.img %>"></li>-->
+        <% }) %>
+        <% if(items.length < 5){ %>
+        <li class="imgUploadBtn" data-type="common"><i class="fa fa-plus"></i></li>
+        <% } %>
 </script>
 </body>
 </html>

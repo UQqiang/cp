@@ -8,6 +8,8 @@
             this.currentCateObj = {};                   // 当前选择的一二级类目对象
             this.selectizeNumber = 1;                   // 商品规格选择框的index
             this.skuArr = {};                           // sku的对象数组
+            this.commonGallery = [];                    // 商品主图
+            this.skuGallery = [];                       // sku主图
             this.editor = UE.getEditor('editor');       // 富文本编辑器
 
             this.toastrInit();
@@ -26,12 +28,47 @@
                 multiple: false,
                 //newImgBtn:'.j-upload',
                 selectSuccess: function (data, target) {
-                    $('body').trigger('imgUploadSelected', [data]);
+                    //$('body').trigger('imgUploadSelected', [data]);
+                    that.$currentImgUploadBtn = target;
+                    that.imgSelected(data);
                 },
                 uploadSuccess: function (data, target) {
-                    $('body').trigger('imgUploadSelected', [data[0].url]);
+                    that.$currentImgUploadBtn = target;
+                    //$('body').trigger('imgUploadSelected', [data[0].url]);
+                    that.imgSelected(data[0].url);
                 }
             });
+        },
+        /**
+         * 图片选择后的操作
+         * @param url
+         */
+        imgSelected: function (url) {
+            var that = this;
+            var img = url;
+            var thumb = img + '@1e_80w_80h_1c_0i_1o_90Q_1x.png';
+            if (that.$currentImgUploadBtn.attr('data-type') == 'common') {
+                // 商品主图
+                that.commonGallery.push({
+                    color: '通用',
+                    img: img,
+                    id: 0
+                });
+                that.renderCommonGallery(that.commonGallery);
+            } else {
+                // sku主图
+                var sId = that.$currentImgUploadBtn.attr('data-sId');
+                var pId = that.$currentImgUploadBtn.attr('data-pId');
+                var name = that.$currentImgUploadBtn.attr('data-name');
+                var index = that.$currentImgUployadBtn.parents('dl').index();
+                that.skuGallery.push({
+                    color: name,
+                    img: img,
+                    id: pId
+                });
+                that.skuProp[sId].value[index].thumb = thumb;
+                that.renderSkuGallery();
+            }
         },
         /**
          * 初始化提示框
@@ -481,6 +518,12 @@
                 items: data
             }));
         },
+        renderCommonGallery: function (data) {
+            var template = _.template($('#j-template-common-gallery').html());
+            $('#main-gallery ul').html(template({
+                items:data
+            }))
+        },
         /**
          * 移除floor级别的sku
          * @param obj
@@ -556,6 +599,15 @@
                 $('#costPrice,#ean').prop('disabled', true);
                 $('#costPrice,#ean').val('')
             }
+        },
+        setPostData: function () {
+            this.postData = {};
+            this.postData.name = $('#name').val();
+            this.postData.cate_id = this.currentCateObj['1'].id;
+            this.postData.skus = JSON.stringify(this.skuArr);
+            this.postData.gallery = this.commonGallery;
+            this.postData.price_cost = $('#costPrice').val();
+
         },
         /**
          * 获取类目

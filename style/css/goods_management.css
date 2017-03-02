@@ -144,6 +144,9 @@
         cursor: pointer;
         position: relative;
         list-style: none; }
+        .goods-content #main-gallery ul li .image {
+          width: 100%;
+          max-height: 80px; }
 
 .goods-content-footer {
   padding: 20px;
