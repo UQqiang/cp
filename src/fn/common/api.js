@@ -1,8 +1,14 @@
 /**
  * Created by lijiahao on 17/3/1.
  */
-//;(function () {
-//    var api = {
-//
-//    }
-//})
+;var Api = (function () {
+    var api = {
+        init: function () {
+            return this;
+        },
+        domain: function () {
+            return 'http://boss.mockuai.net:8080';
+        }
+    };
+    return api.init();
+})();

@@ -15,7 +15,7 @@
             this.setContentHeight();
             this.nprogress();
             this.iCheck();
-            this.dateTimerPick();
+            //this.dateTimerPick();
             this.pagination(20);
             window.ossDomain = 'http://media.mockuai.com/';
         },
@@ -242,7 +242,7 @@
 
             var cb = function (start, end, label) {
                 console.log(start.toISOString(), end.toISOString(), label);
-                $('#reportrange span').html(start.format('YYYY-MM-DD') + '~' + end.format('YYYY-MM-DD'));
+                $('#timepicker span').html(start.format('YYYY-MM-DD') + '~' + end.format('YYYY-MM-DD'));
             };
 
             var optionSet1 = {
@@ -284,30 +284,30 @@
                     firstDay: 1
                 }
             };
-            $('#reportrange span').html(moment().subtract(29, 'days').format('YYYY-MM-DD') + '~' + moment().format('YYYY-MM-DD'));
-            $('#reportrange').daterangepicker(optionSet1, cb);
+            //$('#timepicker span').html(moment().subtract(29, 'days').format('YYYY-MM-DD') + '~' + moment().format('YYYY-MM-DD'));
+            $('#timepicker').daterangepicker(optionSet1, cb);
 
-            $('#reportrange').on('show.daterangepicker', function () {
-                console.log("show event fired");
-            });
-            $('#reportrange').on('hide.daterangepicker', function () {
-                console.log("hide event fired");
-            });
-            $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
-                console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY-MM-DD') + " to " + picker.endDate.format('YYYY-MM-DD'));
-            });
-            $('#reportrange').on('cancel.daterangepicker', function (ev, picker) {
-                console.log("cancel event fired");
-            });
-            $('#options1').click(function () {
-                $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
-            });
-            $('#options2').click(function () {
-                $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
-            });
-            $('#destroy').click(function () {
-                $('#reportrange').data('daterangepicker').remove();
-            });
+            //$('#reportrange').on('show.daterangepicker', function () {
+            //    console.log("show event fired");
+            //});
+            //$('#reportrange').on('hide.daterangepicker', function () {
+            //    console.log("hide event fired");
+            //});
+            //$('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+            //    console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY-MM-DD') + " to " + picker.endDate.format('YYYY-MM-DD'));
+            //});
+            //$('#reportrange').on('cancel.daterangepicker', function (ev, picker) {
+            //    console.log("cancel event fired");
+            //});
+            //$('#options1').click(function () {
+            //    $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
+            //});
+            //$('#options2').click(function () {
+            //    $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
+            //});
+            //$('#destroy').click(function () {
+            //    $('#reportrange').data('daterangepicker').remove();
+            //});
         }
     };
     // run

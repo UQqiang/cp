@@ -85,6 +85,7 @@ gulp.task('scripts', function () {
         // build
         return gulp.src([
                 './src/fn/common/smartresize.js',
+                './src/fn/common/api.js',
                 './src/fn/common/common.js'
             ])
             .pipe(concat('common.js'))

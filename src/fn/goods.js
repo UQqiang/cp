@@ -11,7 +11,7 @@
             this.commonGallery = [];                    // 商品主图
             this.skuGallery = [];                       // sku主图
             this.editor = UE.getEditor('editor');       // 富文本编辑器
-
+            this.api = Api.domain();
             this.toastrInit();
             this.step();
             this.validator();
@@ -613,9 +613,10 @@
          * 获取类目
          */
         queryCategory: function () {
+            console.log(this.api);
             var that = this;
             $.ajax({
-                url: 'http://boss.mockuai.net:8080/bossmanager/category/query.do',
+                url: that.api + '/bossmanager/category/query.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: {},
