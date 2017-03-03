@@ -26,7 +26,6 @@
 .mt-25{
   position: relative;
   left: 50%;
-  top: 20px;
   margin-left: -270px;
   width: 600px;
   height: 100%;
@@ -81,6 +80,9 @@
 .item.bad .alert {
   left: 0;
   opacity: 1;
+}
+.last-main{
+  margin-top: 10px;
 }
 
 
