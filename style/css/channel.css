@@ -76,3 +76,7 @@
 .btn-search {
   margin-top: 5px;
   border-radius: 0; }
+
+.form-control-select {
+  width: 47px !important;
+  height: 30px; }
