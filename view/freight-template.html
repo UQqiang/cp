@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- rev-hash -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- end -->
+    <!-- rev-hash -->
+    <link href="../style/css/add-account.css" rel="stylesheet" type="text/css">
+    <!-- end -->
+</head>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        @@include('common/sidebar.html')
+        @@include('common/header.html')
+    </div>
+    <!-- page content -->
+
+    <!-- 内容部分 -->
+    <div class="right_col" role="main">
+
+        <!-- 搜索 -->
+        <div class="x_panel">
+            <div class="x_content">
+                <div class="col-md-4 col-sm-12 col-xs-12 form-group pull-right field">
+                    <button type="button" class="btn btn-sm btn-success pull-right btn-search">搜索</button>
+                    <input type="text" required="required" pattern="decimal" name="渠道名称" placeholder="请输入模板名称" class="form-control form-control-lg pull-right">
+                </div>
+            </div>
+        </div>        <!-- 姓名角色-->
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>账号列表</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="fr">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <!-- 添加-->
+                <div class="form-group">
+                    <a class="btn btn-sm btn-success" href="#">添加</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
+                        <thead>
+                        <tr class="headings">
+                            <th>
+                                <input type="checkbox" id="check-all" class="flat">
+                            </th>
+                            <th class="column-title">姓名 </th>
+                            <th class="column-title">角色</th>
+                            <th class="column-title">账号</th>
+                            <th class="column-title">部门</th>
+                            <th class="column-title">职务</th>
+                            <th class="column-title">电话</th>
+                            <th class="column-title">手机</th>
+                            <th class="column-title">创建人</th>
+                            <th class="column-title">创建时间</th>
+                            <th class="column-title">状态</th>
+                            <th class="column-title no-link last"><span class="nobr">操作</span>
+                            </th>
+                            <th class="bulk-actions" colspan="7">
+                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr class="even pointer">
+                            <td class="a-center ">
+                                <input type="checkbox" class="flat" name="table_records">
+                            </td>
+                            <td class=" ">张三</td>
+                            <td class=" ">管理员1 </td>
+                            <td class=" ">111111111</td>
+                            <td class=" ">商务部</td>
+                            <td class=" ">运营</td>
+                            <td class="a-right a-right ">123456</td>
+                            <td class=" last"><a href="#">13128907281</a>
+                            <td class=" last"><a href="#">admin</a>
+                            <td class=" last"><a href="#">2017.3.1</a>
+                            <td class=" last"><a href="#">有效</a>
+                            <td class=" last"><a href="#">编辑-删除-禁用</a>
+                            </td>
+                        </tr>
+                        <tr class="odd pointer">
+                            <td class="a-center ">
+                                <input type="checkbox" class="flat" name="table_records">
+                            </td>
+                            <td class=" ">李四</td>
+                            <td class=" ">管理员2</td>
+                            <td class=" ">111111</td>
+                            <td class=" ">技术部</td>
+                            <td class=" ">技术</td>
+                            <td class="a-right a-right ">456789</td>
+                            <td class=" last"><a href="#">17890272131</a>
+                            <td class=" last"><a href="#">admin</a>
+                            <td class=" last"><a href="#">2017.3.1</a>
+                            <td class=" last"><a href="#">有效</a>
+                            <td class=" last"><a href="#">编辑-删除-应用</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 页码 -->
+                <div class="ui-box">
+                    <div class="widget-list">
+                        <div class="list-page fr">
+                            <span class="pagination-info">1</span>
+                            <div class="ui-pagination pagination"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /页码 -->
+            </div>
+        </div>
+    </div>
+    <!-- page content -->
+    @@include('common/footer.html')
+
+</div>
+</body>
+
+<!-- rev-hash -->
+<!-- inject:js -->
+<!-- endinject -->
+<!-- end -->
+
+
+<!-- rev-hash -->
+<script src="../src/fn/account-number.js"></script>
+<!-- end -->
+</html>
