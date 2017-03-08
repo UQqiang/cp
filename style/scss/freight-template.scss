@@ -1,0 +1,155 @@
+.tpl-set a{
+  cursor: pointer;
+}
+.J_carriage_tpl {
+  margin-bottom: 50px;
+}
+
+.J_carriage_tpl .carriage-title {
+  overflow: hidden;
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+.J_carriage_tpl .carriage-title a,
+.J_carriage_tpl .carriage-title span {
+  display: inline-block;
+  padding: 0 10px;
+  margin: 10px 0;
+}
+
+.J_carriage_tpl thead tr th,
+.J_carriage_tpl tbody tr td {
+  text-align: center;
+}
+
+.J_carriage_tpl thead tr th:nth-child(1),
+.J_carriage_tpl tbody tr td:nth-child(1) {
+  width: 320px;
+}
+.button-group {
+  position: absolute;
+  left: 230px;
+  margin-top: 50px;
+  right: 20px;
+  background: #f8f8f8;
+  text-align: center;
+  bottom: 50px;
+}
+/********************* 运费模板样式开始 ********************/
+
+.tpl-content {
+  padding: 20px;
+}
+
+.tpl-content .tpl-title {
+  margin-bottom: 20px;
+}
+
+.tpl-content .tpl-name input {
+  border-radius: 0;
+  width: 400px;
+}
+
+.tpl-content .tpl-set .ui-table {
+  margin-bottom: 5px;
+}
+
+.tpl-content .tpl-set .default-shipping {
+  margin: 10px 0;
+  background: #F6FCF3;
+  width: 100%;
+  padding: 10px 0 10px 10px;
+}
+
+.tpl-content .tpl-set .form-control {
+  border-radius: 0;
+  width: 100px;
+  height: 20px;
+  padding: 6px!important;
+}
+
+.tpl-content .tpl-set {
+  margin-left: 63px;
+  padding: 5px;
+  border: 1px solid #d9d9d9;
+}
+
+.tpl-content .tpl-set .ui-table thead tr th,
+.modal .tpl-set .ui-table tbody tr td {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.tpl-content .tpl-set .ui-table thead tr th:first-child {
+  width: 300px;
+}
+
+.tpl-content .tpl-set .ui-table .border-r {
+  border-right: 1px solid #d9d9d9;
+}
+
+.tpl-content .tpl-set .ui-table .left {
+  float: left;
+  height: 16px;
+}
+
+.tpl-content .tpl-set .ui-table .right {
+  float: right;
+  height: 16px;
+}
+
+.tpl-content .tpl-set .ui-table .checkItem {
+  display: none;
+  margin: 0 5px;
+  vertical-align: super;
+}
+
+.tpl-content .tpl-set .the-batch {
+  display: none;
+}
+
+.tpl-content .tpl-footer {
+  text-align: center;
+}
+
+.J_tpl_list .left em div {
+  display: inline-block;
+}
+
+.J_tpl_list .left em {
+  display: inline-block;
+  width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+}
+.ui-table th, .ui-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e5e5;
+  vertical-align: middle;
+}
+.ui-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+  text-align: left;
+}
+.batch-ope{
+  margin-left: 20px;
+}
+
+/********************* 运费模板样式结束********************/
+
+
+/**************** 批量设置弹出框样式 ********************/
+
+.modal-lg{
+  display: none;
+  z-index:1111;
+  position: fixed;
+  top:15%;
+  left: 50%;
+  margin-left: -440px;
+}

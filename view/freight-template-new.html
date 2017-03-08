@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- rev-hash -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- end -->
+    <!-- rev-hash -->
+    <link href="../style/css/freight-template.css" rel="stylesheet" type="text/css">
+    <!-- end -->
+</head>
+<body class="nav-md">
+<div class="container body" style="position: relative">
+    <div class="main_container">
+        @@include('common/sidebar.html')
+        @@include('common/header.html')
+    </div>
+    <!-- page content -->
+
+    <!-- 内容部分 -->
+    <div class="right_col" role="main">
+        <div class="content">
+            <div class="x_panel">
+                <div class="x_content">
+                    <p class="title">新建运费模板</p>
+                </div>
+            </div>
+            <div class="tpl-content">
+                <!-- 运费模板内容开始 -->
+                <div class="x_panel">
+                    <div class="form-inline tpl-name mb-15">
+                        <div class="form-group">
+                            <label>模板名称：</label>
+                            <input type="text" class="form-control name"> </div>
+                    </div>
+                    <div class="form-inline mb-15 pricing_method" style="margin-top: 15px;margin-bottom: 15px;">
+                        <div class="form-group">
+                            <label>计价方式：</label>
+                        </div>
+                        <div class="form-group mr-15">
+                            <input type="radio" name="radio" value="0">
+                            <label>按件数</label>
+                        </div>
+                        <div class="form-group mr-15">
+                            <input type="radio" name="radio" value="1" checked="checked">
+                            <label>按重量</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" name="radio" value="2">
+                            <label>按体积</label>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label>配送区域：</label> <span>除指定地区外，其余地区的运费采用”默认运费“</span> </div>
+                    </div>
+                    <div class="tpl-set mb-15">
+                        <div class="form-inline">
+                            <div class="form-group default-shipping">
+                                <label>默认运费：</label>
+                                <input class="form-control basic_count" type="text"> <span class="unit">kg</span><span>内，</span>
+                                <input class="form-control basic_charge" type="text"> <span>元，每增加</span>
+                                <input class="form-control  extra_count" type="text"> <span class="unit">kg</span><span>，增加运费</span>
+                                <input class="form-control extra_charge" type="text"> <span>元</span> </div>
+                        </div>
+                        <table class="ui-table">
+                            <thead>
+                            <tr>
+                                <th class="border-r">运送到</th>
+                                <th class="border-r">首<span class="unit-che">重</span>（<span class="unit">kg</span>）</th>
+                                <th class="border-r">首费（元）</th>
+                                <th class="border-r">续<span class="unit-che">重</span>（<span class="unit">kg</span>）</th>
+                                <th class="border-r">续费（元）</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="J_tpl_list">
+                            </tbody>
+                        </table>
+                        <div class="the-batch">
+                            <input type="checkbox" class="checkAll"> <span>全选</span> <a class="batch-setting">批量设置</a> <a class="batch-del">批量删除</a> </div>
+                        <div> <a class="J_addTpl">为指定地区城市设置运费</a> <a class="batch-ope">批量操作</a> </div>
+                    </div>
+                </div>
+                <!-- 运费模板内容结束 -->
+            </div>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">批量设置</h4> </div>
+                    <div class="modal-body">
+                        <div class="form-inline">
+                            <div class="form-group batch-input">
+                             </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
+                        <button class="btn btn-success btn-sm btn-submit">确定</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <div class="ui-box button-wrapper">
+                <div class="button-group"> <a class="btn btn-success J_submit">确定</a> <a class="btn btn-default" href="freight-template.html">返回</a> </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade in" style="display: none"></div>
+    <!-- page content -->
+    @@include('common/footer.html')
+
+</div>
+</body>
+
+<!-- rev-hash -->
+<!-- inject:js -->
+<!-- endinject -->
+<!-- end -->
+
+
+<!-- rev-hash -->
+<script src="../src/fn/freight-template-new.js"></script>
+
+<!-- 管控平台地区城市设置运费 -->
+<script type="text/template" id="tpl">
+    <% _.each(data, function (item) { %>
+    <tr class="odd gradeX">
+        <td class="border-r areas">
+            <div class="left">
+                <input type="checkbox" class="checkItem">
+                <em><%= item %></em>
+            </div>
+            <div class="right">
+                <a class="city-choose no-current-target" href="javascript:;">编辑</a>
+            </div>
+        </td>
+        <td class="border-r">
+            <input type="text" class="form-control basic_count">
+        </td>
+        <td class="border-r">
+            <input type="text" class="form-control basic_charge">
+        </td>
+        <td class="border-r">
+            <input type="text" class="form-control extra_count">
+        </td>
+        <td class="border-r">
+            <input type="text" class="form-control extra_charge">
+        </td>
+        <td><a class="J_del">删除</a></td>
+    </tr>
+    <% }); %>
+</script>
+<!-- end -->
+</html>

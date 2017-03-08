@@ -13,7 +13,7 @@
     <!-- endinject -->
     <!-- end -->
     <!-- rev-hash -->
-    <link href="../style/css/add-account.css" rel="stylesheet" type="text/css">
+    <link href="../style/css/freight-template.css" rel="stylesheet" type="text/css">
     <!-- end -->
 </head>
 <body class="nav-md">
@@ -38,7 +38,7 @@
         </div>        <!-- 姓名角色-->
         <div class="x_panel">
             <div class="x_title">
-                <h2>账号列表</h2>
+                <h2>运费模板</h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="fr">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -50,68 +50,41 @@
 
                 <!-- 添加-->
                 <div class="form-group">
-                    <a class="btn btn-sm btn-success" href="#">添加</a>
+                    <a class="btn btn-sm btn-success" href="freight-template-new.html">添加</a>
                 </div>
 
                 <div class="table-responsive">
+                    <div class="carriage-title">
+                        <div class="pull-left"><span>test</span></div>
+                        <div class="pull-right"> <a data-id="354" class="J_copy" href="javascript:;">复制模板</a> <a href="goods_carriage_tpl_new.html?id=354">修改</a> <a data-id="354" class="J_del" href="javascript:;">删除</a> </div>
+                    </div>
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                         <thead>
                         <tr class="headings">
-                            <th>
-                                <input type="checkbox" id="check-all" class="flat">
-                            </th>
-                            <th class="column-title">姓名 </th>
-                            <th class="column-title">角色</th>
-                            <th class="column-title">账号</th>
-                            <th class="column-title">部门</th>
-                            <th class="column-title">职务</th>
-                            <th class="column-title">电话</th>
-                            <th class="column-title">手机</th>
-                            <th class="column-title">创建人</th>
-                            <th class="column-title">创建时间</th>
-                            <th class="column-title">状态</th>
-                            <th class="column-title no-link last"><span class="nobr">操作</span>
+                            <th class="column-title">运送到</th>
+                            <th class="column-title">首体积(m³)</th>
+                            <th class="column-title">运费(元)</th>
+                            <th class="column-title">续体积(m³)</th>
+                            <th class="column-title">运费(元)</th>
                             </th>
                             <th class="bulk-actions" colspan="7">
-                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                             </th>
                         </tr>
                         </thead>
-
                         <tbody>
                         <tr class="even pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class=" ">张三</td>
-                            <td class=" ">管理员1 </td>
-                            <td class=" ">111111111</td>
-                            <td class=" ">商务部</td>
-                            <td class=" ">运营</td>
-                            <td class="a-right a-right ">123456</td>
-                            <td class=" last"><a href="#">13128907281</a>
-                            <td class=" last"><a href="#">admin</a>
-                            <td class=" last"><a href="#">2017.3.1</a>
-                            <td class=" last"><a href="#">有效</a>
-                            <td class=" last"><a href="#">编辑-删除-禁用</a>
-                            </td>
+                            <td class=" ">全国</td>
+                            <td class=" ">1.0</td>
+                            <td class=" ">10.00</td>
+                            <td class=" ">1.0</td>
+                            <td class=" ">5.00</td>
                         </tr>
                         <tr class="odd pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class=" ">李四</td>
-                            <td class=" ">管理员2</td>
-                            <td class=" ">111111</td>
-                            <td class=" ">技术部</td>
-                            <td class=" ">技术</td>
-                            <td class="a-right a-right ">456789</td>
-                            <td class=" last"><a href="#">17890272131</a>
-                            <td class=" last"><a href="#">admin</a>
-                            <td class=" last"><a href="#">2017.3.1</a>
-                            <td class=" last"><a href="#">有效</a>
-                            <td class=" last"><a href="#">编辑-删除-应用</a>
-                            </td>
+                            <td class=" ">新疆</td>
+                            <td class=" ">1.0</td>
+                            <td class=" ">20.00</td>
+                            <td class=" ">1.0</td>
+                            <td class=" ">10.00</td>
                         </tr>
                         </tbody>
                     </table>

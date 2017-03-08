@@ -1,5 +1,5 @@
 /**
- * Created by hzmk on 17/3/3.
+ * Created by kyn on 17/3/3.
  */
 ;(function(){
     var main={
