@@ -1,0 +1,12 @@
+.verify-input {
+  display: inline-block;
+  border-radius: 3px 0 0 3px; }
+
+.verify {
+  display: inline-block;
+  background: #dedede;
+  padding: 5px;
+  height: 30px;
+  width: 145px;
+  margin-left: -3px;
+  border-radius: 0 3px 3px 0; }
