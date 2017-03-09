@@ -3887,6 +3887,11 @@ ul.notifications {
 .form-group .form-control.none {
   display: none; }
 
+.form-control.form-control-xs {
+  height: 30px;
+  font-size: 12px;
+  width: 70px !important; }
+
 .form-control.form-control-sm {
   height: 30px;
   font-size: 12px;
