@@ -171,7 +171,7 @@
             // 显示弹窗
             $(that.body).on('click', that.$element, function () {
 
-                if (that.options.selectedList.length > 0) {
+                if (that.options.selectedList) {
                     that.selected_list = that.options.selectedList
                 }
 
@@ -717,7 +717,7 @@
                             if ((selectedList[i].id || selectedList[i].sku_id || selectedList[i].item_id ) == selectedDom.attr('data-id')) {
                                 selectedDom.attr('data-status', '1');
                                 selectedDom.text('取消');
-                                selectedDom.css({'background': '#5cb85c', 'border-color': '#5cb85c', 'color': '#fff'})
+                                selectedDom.css({'background': '#26B99A', 'border-color': '#169F85', 'color': '#fff'})
                             }
                         }
                     }
