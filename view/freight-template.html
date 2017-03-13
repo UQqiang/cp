@@ -52,53 +52,20 @@
                 <div class="form-group">
                     <a class="btn btn-sm btn-success" href="freight-template-new.html">添加</a>
                 </div>
+                <div class="template-main">
 
-                <div class="table-responsive">
-                    <div class="carriage-title">
-                        <div class="pull-left"><span>test</span></div>
-                        <div class="pull-right"> <a data-id="354" class="J_copy" href="javascript:;">复制模板</a> <a href="goods_carriage_tpl_new.html?id=354">修改</a> <a data-id="354" class="J_del" href="javascript:;">删除</a> </div>
-                    </div>
-                    <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
-                        <thead>
-                        <tr class="headings">
-                            <th class="column-title">运送到</th>
-                            <th class="column-title">首体积(m³)</th>
-                            <th class="column-title">运费(元)</th>
-                            <th class="column-title">续体积(m³)</th>
-                            <th class="column-title">运费(元)</th>
-                            </th>
-                            <th class="bulk-actions" colspan="7">
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="even pointer">
-                            <td class=" ">全国</td>
-                            <td class=" ">1.0</td>
-                            <td class=" ">10.00</td>
-                            <td class=" ">1.0</td>
-                            <td class=" ">5.00</td>
-                        </tr>
-                        <tr class="odd pointer">
-                            <td class=" ">新疆</td>
-                            <td class=" ">1.0</td>
-                            <td class=" ">20.00</td>
-                            <td class=" ">1.0</td>
-                            <td class=" ">10.00</td>
-                        </tr>
-                        </tbody>
-                    </table>
                 </div>
+
 
                 <!-- 页码 -->
-                <div class="ui-box">
-                    <div class="widget-list">
-                        <div class="list-page fr">
-                            <span class="pagination-info">1</span>
-                            <div class="ui-pagination pagination"></div>
-                        </div>
-                    </div>
-                </div>
+                <!--<div class="ui-box">-->
+                    <!--<div class="widget-list">-->
+                        <!--<div class="list-page fr">-->
+                            <!--<span class="pagination-info">1</span>-->
+                            <!--<div class="ui-pagination pagination"></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <!-- /页码 -->
             </div>
         </div>
@@ -116,6 +83,87 @@
 
 
 <!-- rev-hash -->
-<script src="../src/fn/account-number.js"></script>
+<script src="../src/fn/freight-template.js"></script>
+
+<!-- 运费模板渲染-->
+<script type="text/template" id="tpl">
+    <% _.each(data, function (item) { %>
+    <div class="table-responsive row">
+        <div class="carriage-title">
+            <div class="pull-left"><span><%= item.name %></span></div>
+            <div class="pull-right">
+                <a data-id="<%= item.id %>" class="J_copy" href="javascript:;">复制模板</a>
+                <a href="freight-template-new.html?id=<%= item.id %>">修改</a>
+                <a data-id="<%= item.id %>" class="J_del" href="javascript:;">删除</a>
+            </div>
+        </div>
+        <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered ">
+            <thead>
+            <tr class="headings">
+                <th class="col-md-4">运送到</th>
+                <th class="col-md-2">
+                    <% if ( item.pricing_method == 0 ) { %>
+                    <span>首件（件）</span>
+                    <% }else if ( item.pricing_method == 1 ) { %>
+                    <span>首重（kg）</span>
+                    <% } else if ( item.pricing_method == 2 ) { %>
+                    <span>首体积（m³）</span>
+                    <% } %>
+                </th>
+                <th class="col-md-2">运费（元）</th>
+                <th class="col-md-2">
+                    <% if ( item.pricing_method == 0 ) { %>
+                    <span>续件（件）</span>
+                    <% }else if ( item.pricing_method == 1 ) { %>
+                    <span>续重（kg）</span>
+                    <% } else if ( item.pricing_method == 2 ) { %>
+                    <span>续体积（m³）</span>
+                    <% } %>
+                </th>
+                <th class="col-md-2">续费（元）</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>全国</td>
+                <% if ( item.pricing_method == 0 ) { %>
+                <td><%= item.basic_count %></td>
+                <% }else{ %>
+                <td><%= (item.basic_count)/10 %></td>
+                <% } %>
+                <td><%= (item.basic_charge)/100 %></td>
+                <% if ( item.pricing_method == 0 ) { %>
+                <td><%= item.extra_count %></td>
+                <% }else{ %>
+                <td><%= (item.extra_count)/10 %></td>
+                <% } %>
+                <td><%= (item.extra_charge)/100 %></td>
+            </tr>
+            <% _.each(item.freight_area_template_list, function(o){ %>
+            <tr>
+                <td>
+                    <% _.each(o.areas,function(i){ %>
+                    <span data-level="<%= i.level%>" data-id="<%= i.code%>"><%= i.name %>、</span>
+                    <% }) %>
+                </td>
+                <% if ( item.pricing_method == 0 ) { %>
+                <td><%= o.basic_count %></td>
+                <% }else{ %>
+                <td><%= (o.basic_count)/10 %></td>
+                <% } %>
+                <td><%= (o.basic_charge)/100 %></td>
+                <% if ( item.pricing_method == 0 ) { %>
+                <td><%= o.extra_count %></td>
+                <% }else{ %>
+                <td><%= (o.extra_count)/10 %></td>
+                <% } %>
+                <td><%= (o.extra_charge)/100 %></td>
+            </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <% }); %>
+</script>
 <!-- end -->
 </html>

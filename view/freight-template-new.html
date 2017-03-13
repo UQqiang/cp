@@ -36,9 +36,9 @@
                 <!-- 运费模板内容开始 -->
                 <div class="x_panel">
                     <div class="form-inline tpl-name mb-15">
-                        <div class="form-group">
+                        <div class="form-group field" >
                             <label>模板名称：</label>
-                            <input type="text" class="form-control name"> </div>
+                            <input type="text" class="form-control name" required="required" name="模板名称"> </div>
                     </div>
                     <div class="form-inline mb-15 pricing_method" style="margin-top: 15px;margin-bottom: 15px;">
                         <div class="form-group">
@@ -61,16 +61,16 @@
                         <div class="form-group">
                             <label>配送区域：</label> <span>除指定地区外，其余地区的运费采用”默认运费“</span> </div>
                     </div>
-                    <div class="tpl-set mb-15">
+                    <div class="tpl-set mb-15 ">
                         <div class="form-inline">
-                            <div class="form-group default-shipping">
+                            <div class="form-group default-shipping field">
                                 <label>默认运费：</label>
-                                <input class="form-control basic_count" type="text"> <span class="unit">kg</span><span>内，</span>
-                                <input class="form-control basic_charge" type="text"> <span>元，每增加</span>
-                                <input class="form-control  extra_count" type="text"> <span class="unit">kg</span><span>，增加运费</span>
-                                <input class="form-control extra_charge" type="text"> <span>元</span> </div>
+                                <input class="form-control basic_count" type="text" required="required" name="数据"> <span class="unit">kg</span><span>内，</span>
+                                <input class="form-control basic_charge" type="text" required="required" name="数据"> <span>元，每增加</span>
+                                <input class="form-control  extra_count" type="text" required="required" name="数据"> <span class="unit">kg</span><span>，增加运费</span>
+                                <input class="form-control extra_charge" type="text" required="required" name="数据"> <span>元</span> </div>
                         </div>
-                        <table class="ui-table">
+                        <table class="ui-table ">
                             <thead>
                             <tr>
                                 <th class="border-r">运送到</th>
@@ -91,30 +91,28 @@
                 </div>
                 <!-- 运费模板内容结束 -->
             </div>
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" id="main-tpl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title">批量设置</h4> </div>
+                        <h4 class="modal-title">批量设置</h4>
+                    </div>
                     <div class="modal-body">
-                        <div class="form-inline">
-                            <div class="form-group batch-input">
-                             </div>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
                         <button class="btn btn-success btn-sm btn-submit">确定</button>
                     </div>
                 </div>
-                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-content -->
             </div>
             <div class="ui-box button-wrapper">
                 <div class="button-group"> <a class="btn btn-success J_submit">确定</a> <a class="btn btn-default" href="freight-template.html">返回</a> </div>
             </div>
         </div>
     </div>
-    <div class="modal-backdrop fade in" style="display: none"></div>
+    <!--<div class="modal-backdrop fade in" style="display: none"></div>-->
     <!-- page content -->
     @@include('common/footer.html')
 
@@ -132,32 +130,98 @@
 
 <!-- 管控平台地区城市设置运费 -->
 <script type="text/template" id="tpl">
-    <% _.each(data, function (item) { %>
-    <tr class="odd gradeX">
+    <% _.each(items,function(item){ %>
+    <tr class="gradeX odd field">
         <td class="border-r areas">
             <div class="left">
                 <input type="checkbox" class="checkItem">
-                <em><%= item %></em>
+                <em>
+                    <% _.each(item.areas,function(area){ %>
+                    <% if (area.level == 1) { %>
+                    <div><span class="province" data-level="<%= area.level%>" data-id="<%= area.code%>"><%= area.name%></span>、</div>
+                    <% } else { %>
+                    <div><span class="city" data-level="<%= area.level%>" data-id="<%= area.code%>"><%= area.name%></span>、</div>
+                    <% } %>
+                    <% }) %>
+                </em>
             </div>
             <div class="right">
                 <a class="city-choose no-current-target" href="javascript:;">编辑</a>
             </div>
         </td>
         <td class="border-r">
-            <input type="text" class="form-control basic_count">
+            <% if( status == 0 ){ %>
+            <input type="text" class="form-control basic_count" value="<%= item.basic_count %>" required="required" name="数据">
+            <% }else if( status ==-1 ){ %>
+            <input type="text" class="form-control basic_count" required="required" name="数据">
+            <% }else{ %>
+            <input type="text" class="form-control basic_count" value="<%= (item.basic_count)/10 %>" required="required" name="数据">
+            <% } %>
         </td>
         <td class="border-r">
-            <input type="text" class="form-control basic_charge">
+            <% if( status == -1 ){ %>
+            <input type="text" class="form-control basic_charge" required="required" name="数据">
+            <% }else{ %>
+            <input type="text" class="form-control basic_charge" value="<%= (item.basic_charge)/100 %>" required="required" name="数据">
+            <% } %>
         </td>
         <td class="border-r">
-            <input type="text" class="form-control extra_count">
+            <% if( status == 0 ){ %>
+            <input type="text" class="form-control extra_count" value="<%= (item.extra_count) %>" required="required" name="数据">
+            <% }else if( status ==-1 ){ %>
+            <input type="text" class="form-control extra_count" >
+            <% }else{ %>
+            <input type="text" class="form-control extra_count" value="<%= (item.extra_count)/10 %>" required="required" name="数据">
+            <% } %>
         </td>
         <td class="border-r">
-            <input type="text" class="form-control extra_charge">
+            <% if( status == -1 ){ %>
+            <input type="text" class="form-control extra_charge" required="required" name="数据">
+            <% }else{ %>
+            <input type="text" class="form-control extra_charge" value="<%= (item.extra_charge)/100 %>" required="required" name="数据">
+            <% } %>
         </td>
         <td><a class="J_del">删除</a></td>
     </tr>
     <% }); %>
 </script>
+
+<!--城市选择-->
+<script type="text/template" id="tpl1">
+    <% _.each(data, function (item) { %>
+    <div class="choose-area">
+        <div class="area-name left">
+            <!--<input type="checkbox" name="checkbox" class="check-areas-all flat">-->
+            <input type="checkbox" name="checkbox" class="check-areas-all">
+            <span data-area="<%= item.area_name %>"><%= item.area_name %></span>
+        </div>
+        <div class="right">
+            <% _.each(item.provinces, function (n) { %>
+            <div class="area-item" data-name="<%=n.province_name %>" data-id="<%=n.province_id %>">
+                <!--<input type="checkbox" name="checkbox" class="check-city-all flat">-->
+                <input type="checkbox" name="checkbox" class="check-city-all">
+                <span data-name="<%=n.province_name %>"><%=n.province_name %></span>
+                <div class="cities">
+                 <% _.each(n.cities, function (m) { %>
+                      <div class="city">
+                           <!--<input type="checkbox" name="checkbox" class="check-city flat">-->
+                           <input type="checkbox" name="checkbox" class="check-city ">
+                           <span data-name="<%=m.city_name %>" data-id="<%= m.city_id %>">
+                           <%=m.city_name %>
+                           </span>
+                      </div>
+                    <% }); %>
+                    <button type="button" class="J_close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+    <% }); %>
+</script>
 <!-- end -->
 </html>
+
+
+
+

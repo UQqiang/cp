@@ -1,6 +1,32 @@
 .tpl-set a{
   cursor: pointer;
 }
+.alert{
+  display: inline-block;
+  margin: 10px 0 0 17px;
+  padding: 3px 10px;
+  color: #FFF;
+  border-radius: 3px 4px 4px 3px;
+  background-color: #CE5454;
+  max-width: 170px;
+  white-space: pre;
+  position: relative;
+  left: -15px;
+  z-index: 1;
+  transition: 0.15s ease-out;
+}
+.alert::after {
+  content: '';
+  display: block;
+  height: 0;
+  width: 0;
+  border-color: transparent #CE5454 transparent transparent;
+  border-style: solid;
+  border-width: 11px 7px;
+  position: absolute;
+  left: -13px;
+  top: 1px;
+}
 .J_carriage_tpl {
   margin-bottom: 50px;
 }
@@ -145,11 +171,77 @@
 
 /**************** 批量设置弹出框样式 ********************/
 
-.modal-lg{
-  display: none;
-  z-index:1111;
+//.modal-lg{
+//  display: none;
+//  z-index:1111;
+//  position: fixed;
+//  top:15%;
+//  left: 50%;
+//  margin-left: -440px;
+//}
+
+
+/******************配送地区选择弹出框样式****************/
+#main-tpl{
   position: fixed;
-  top:15%;
-  left: 50%;
-  margin-left: -440px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000;
+}
+#main-tpl span {
+  margin: 0 5px;
+}
+
+#main-tpl .left {
+  display: inline-block;
+  margin: 8px;
+  vertical-align: top;
+  width: 10%
+}
+
+#main-tpl .right {
+  display: inline-block;
+  width: 80%;
+}
+
+#main-tpl .choose-area .right .area-item {
+  display: inline-block;
+  position: relative;
+  padding: 8px;
+}
+
+#main-tpl .add-class {
+  background: #CBF1FF;
+}
+
+#main-tpl .cities {
+  position: absolute;
+  z-index: 100000;
+  left: 0;
+  top: 38px;
+  width: 390px;
+  display: none;
+  background: #ffffff;
+  border: 1px solid #cdcdcd;
+}
+
+#main-tpl .cities span[data-name] {
+  display: inline-block;
+  width: 75px;
+}
+
+#main-tpl .city {
+  text-align: center;
+  padding: 8px;
+  display: inline-block
+}
+
+.J_close {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #fff;
+  border:1px solid #cdcdcd;
 }
