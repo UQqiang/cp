@@ -107,7 +107,7 @@
                                 <div class="add-goods-inner">
                                     <div class="form-group">
                                         <label class="ui-label ui-label-md tr">* 商品类目：</label>
-                                        <span class="currentCategory"></span><span class="ml10"><a href="javascript:;" id="reselect" data-type="back">重新选择</a></span>
+                                        <span class="currentCategory"></span><span class="ml10"><a href="javascript:;" class="reselect" data-type="back">重新选择</a></span>
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-md tr"><span>* 商品名称：</span></label>
@@ -325,7 +325,7 @@
                         <!-- 其他 end -->
 
                         <div class="goods-content-footer">
-                            <button class="btn btn-success nextStep" id="submit" type="submit">下一步</button>
+                            <button class="btn btn-success btn-sm" id="nextStep2" data-type="next">下一步</button>
                         </div>
                     </div>
                 </div>
@@ -333,28 +333,18 @@
 
                 <!-- 选择仓库 -->
                 <div class="x_content step" data-now_step="3">
-                    <table class="table table-striped jambo_table bulk_action table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="tc">仓库</th>
-                                <th class="tc">库存</th>
-                                <th class="tc">运费</th>
-                                <th class="tc">优先级</th>
-                                <th class="tc">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="warehouse">
-                            <tr>
-                                <td>
-                                    <select class="form-conrol form-control-md">
-                                        <option>请选择仓库</option>
-                                    </select>
-                                    <button id="selectPluginButtonWarehouse">选择仓库</button>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="mb10 select-warehouse-wrapper">
+                        <button id="selectPluginButtonWarehouse" class="btn btn-success btn-sm">选择仓库</button>
+                    </div>
+                    <div id="warehouse">
+
+                    </div>
+
+                    <div class="goods-content-footer">
+                        <button class="btn btn-success btn-sm nextStep mr10" id="submit" data-type="submit">保存</button>
+                        <button class="btn btn-default btn-sm reselect ml10" data-type="back">返回</button>
+                    </div>
+
                 </div>
                 <!-- 选择仓库 end -->
 
@@ -404,7 +394,7 @@
             <div class="selectize-wrapper">
                 <select id="selectize-<%= index %>"></select>
             </div>
-            <i class="fa fa-close selectize-close j-close" data-floor="<%= index %>"></i>
+            <i class="fa fa-close selectize-close j-g-close" data-floor="<%= index %>"></i>
         </div>
         <div class="sku-group-cont sku-group-cont-<%= index %>" data-index="<%= index %>">
 
@@ -493,6 +483,7 @@
                     <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value_name %>" data-pid="<%= item.value_id %>" data-index="<%= index %>">
                         <% if( item.thumb ){ %>
                             <img class="image" src="<%= item.thumb %>">
+                            <i class="fa fa-close img-close j-g-close"></i>
                         <% } %>
                         <i class="fa fa-plus"></i>
                     </dt>
@@ -503,6 +494,7 @@
                     <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value_name %>" data-pid="<%= item.value_id %>" data-index="<%= index %>">
                         <% if( item.thumb ){ %>
                         <img class="image" src="<%= item.thumb %>">
+                        <i class="fa fa-close img-close j-g-close"></i>
                         <% } %>
                         <i class="fa fa-plus"></i>
                     </dt>
@@ -516,12 +508,76 @@
 <!-- 商品主图 -->
 <script type="text/template" id="j-template-common-gallery">
         <% _.each(items,function(item,index){ %>
-            <li class="imgUploadBtn" data-type="common"><img class="image" src="<%= item.img %>"><i class="fa fa-plus"></i></li>
+            <li class="imgUploadBtn" data-type="common">
+                <img class="image" src="<%= item.img %>">
+                <i class="fa fa-close img-close j-g-close"></i>
+                <i class="fa fa-plus"></i>
+            </li>
             <!--<li><img src="<%= item.img %>"></li>-->
         <% }) %>
         <% if(items.length < 5){ %>
-        <li class="imgUploadBtn" data-type="common"><i class="fa fa-plus"></i></li>
+        <li class="imgUploadBtn" data-type="common">
+            <i class="fa fa-plus"></i>
+        </li>
         <% } %>
+</script>
+
+<!-- 商品仓库 -->
+<script type="text/template" id="j-template-warehouse">
+    <% _.each(items,function(o,i){ %>
+    <table class="table table-striped jambo_table bulk_action table-bordered mt10 mb10" data-warehouse_id="<%= o.id %>">
+        <thead>
+        <tr>
+            <th class="tc cell-20">仓库</th>
+            <th colspan="<%= (2 * sku[0].length) + 1 %>" class="tc cell-50">库存</th>
+            <th class="tc cell-10">运费</th>
+            <th class="tc cell-10">优先级</th>
+            <th class="tc cell-10">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(sku,function(item,index){ %>
+        <% if( index == 0 ){ %>
+        <tr>
+            <td class="tc" rowspan="<%= sku.length %>"><%= o.name %></td>
+            <% _.each(item,function(n,m){ %>
+            <td class="tc cell-12" rowspan="<%= sku.length %>"><%= n.prop_name %></td>
+            <td class="tc"><%= n.value_name %></td>
+            <% }) %>
+            <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="stock" data-index="<%= index %>"></td>
+            <td rowspan="<%= sku.length %>">
+                <div class="form-inline">
+                    <div class="form-group mb10">
+                        <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked">&nbsp;统一运费</label>
+                        <div class="input-group">
+                            <input class="form-control form-control-sm">
+                            <span class="input-group-addon">元</span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" >&nbsp;运费模板</label>
+                        <select class="form-control form-control-md">
+                            <option>请选择运费模板</option>
+                        </select>
+                    </div>
+                </div>
+            </td>
+            <td rowspan="<%= sku.length %>" class="tc"><input class="form-control form-control-xs"></td>
+            <td rowspan="<%= sku.length %>" class="tc"><a class="j-delete-warehouse" href="javascript:;" data-warehouse_id="<%= o.id %>" data-name="<%= o.name %>">删除</a></td>
+        </tr>
+        <% }else{ %>
+        <tr>
+            <% _.each(item,function(n,m){ %>
+            <td class="tc"><%= n.value_name %></td>
+            <% }) %>
+            <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="stock" data-index="<%= index %>"></td>
+        </tr>
+        <% } %>
+        <% }) %>
+        </tbody>
+    </table>
+    <% }) %>
 </script>
 </body>
 </html>

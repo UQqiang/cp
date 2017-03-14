@@ -1,3 +1,5 @@
+@charset "UTF-8";
+/****** 添加商品 ******/
 .add-goods-step {
   padding-bottom: 25px; }
   .add-goods-step span {
@@ -27,12 +29,17 @@
         color: #fff; }
     .categories .add-goods-categories .category-list ul > li {
       list-style: none;
-      padding: 5px 0 5px 10px; }
+      padding: 5px 0 5px 10px;
+      position: relative; }
 
 .add-goods-footer {
   padding: 20px;
-  margin-top: 40px;
-  background: #f8f8f8; }
+  text-align: center;
+  background: #f8f8f8;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0; }
   .add-goods-footer .currentCategory {
     min-width: 200px; }
 
@@ -48,7 +55,8 @@
   display: none; }
 
 .active-step.step {
-  display: block; }
+  display: block;
+  padding-bottom: 80px; }
 
 .goods-content {
   display: -ms-flexbox;
@@ -115,10 +123,28 @@
   .goods-content .sku-gallery dl {
     display: none;
     margin-right: 8px; }
-    .goods-content .sku-gallery dl .fa {
+    .goods-content .sku-gallery dl .fa.fa-plus {
       position: absolute;
       left: 25px;
       top: 25px; }
+    .goods-content .sku-gallery dl .img-close {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 1px 3px;
+      background: rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      z-index: 20; }
+      .goods-content .sku-gallery dl .img-close:before {
+        position: absolute;
+        left: 19px;
+        top: 19px;
+        padding: 4px 5px;
+        background: #fff;
+        border-radius: 50%; }
     .goods-content .sku-gallery dl dt {
       width: 64px;
       height: 64px;
@@ -127,15 +153,35 @@
       position: relative; }
       .goods-content .sku-gallery dl dt .image {
         width: 100%;
-        height: 100%; }
+        height: 100%;
+        position: relative;
+        z-index: 3; }
     .goods-content .sku-gallery dl dd {
       text-align: center; }
   .goods-content #main-gallery {
     display: inline-block; }
-    .goods-content #main-gallery .fa {
+    .goods-content #main-gallery .fa.fa-plus {
       position: absolute;
       left: 35px;
       top: 35px; }
+    .goods-content #main-gallery .img-close {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 1px 3px;
+      background: rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      z-index: 20; }
+      .goods-content #main-gallery .img-close:before {
+        position: absolute;
+        left: 28px;
+        top: 28px;
+        padding: 4px 5px;
+        background: #fff;
+        border-radius: 50%; }
     .goods-content #main-gallery ul {
       padding-left: 0; }
       .goods-content #main-gallery ul li {
@@ -149,9 +195,71 @@
         list-style: none; }
         .goods-content #main-gallery ul li .image {
           width: 100%;
-          height: 100%; }
+          height: 100%;
+          position: relative;
+          z-index: 3; }
+
+.select-warehouse-wrapper {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dbdbdb; }
 
 .goods-content-footer {
   padding: 20px;
   text-align: center;
-  background: #f8f8f8; }
+  background: #f8f8f8;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0; }
+  .goods-content-footer .btn {
+    min-width: 150px;
+    text-align: center; }
+
+/****** 品类管理 ******/
+.categories li.active i {
+  color: #fff; }
+.categories .category-img-icon {
+  width: 30px;
+  height: 30px; }
+.categories .add-category {
+  background: #169F85;
+  padding: 5px;
+  text-align: center; }
+  .categories .add-category a {
+    color: #fff; }
+  .categories .add-category .fa-plus-circle {
+    font-size: 12px;
+    padding-right: 10px; }
+.categories .edit-category {
+  font-size: 18px;
+  padding: 0 5px;
+  display: none;
+  position: absolute;
+  right: 40px;
+  top: 1px;
+  line-height: 30px; }
+  .categories .edit-category.has-icon {
+    top: 5px; }
+.categories .delete-category {
+  font-size: 18px;
+  padding: 0 10px;
+  display: none;
+  position: absolute;
+  right: 5px;
+  top: 0;
+  line-height: 30px; }
+  .categories .delete-category.has-icon {
+    top: 4px; }
+
+.add-category-dialog a {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #73879c;
+  margin: 0 10px 10px 0;
+  cursor: pointer;
+  position: relative;
+  display: inline-block; }
+  .add-category-dialog a i.fa-plus {
+    margin-top: 23px; }
+.add-category-dialog input {
+  display: inline-block; }
