@@ -260,6 +260,15 @@
   position: relative;
   display: inline-block; }
   .add-category-dialog a i.fa-plus {
-    margin-top: 23px; }
+    position: absolute;
+    top: 24px;
+    left: 24px; }
+.add-category-dialog .icon-image {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: 0; }
 .add-category-dialog input {
-  display: inline-block; }
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 16px; }

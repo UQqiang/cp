@@ -97,7 +97,7 @@
 <script type="text/template" id="template-category">
     <ul>
         <% _.each(items,function(item,index){ %>
-            <li class="clear" data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>" data-name="<%= item.cate_name %>" data-sub_cate="<%= encodeURIComponent(JSON.stringify(item.sub_categorys)) %>">
+            <li class="clear" data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>" data-name="<%= item.cate_name %>" data-img="<%= item.image_url %>" data-sub_cate="<%= encodeURIComponent(JSON.stringify(item.sub_categorys)) %>">
                 <% if( item.image_url ){ %>
                     <span><img class="category-img-icon" src="<%= item.image_url %>"></span>
                 <% } %>

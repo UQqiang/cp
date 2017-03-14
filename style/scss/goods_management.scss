@@ -327,10 +327,20 @@
     position: relative;
     display: inline-block;
     i.fa-plus{
-      margin-top: 23px;
+      position: absolute;
+      top: 24px;
+      left: 24px;
     }
+  }
+  .icon-image{
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    left: 0;
   }
   input{
     display: inline-block;
+    vertical-align: top;
+    margin-top: 16px;
   }
 }
