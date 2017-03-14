@@ -78,42 +78,7 @@
                         </tr>
                         </thead>
 
-                        <tbody>
-                        <tr class="even pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class=" ">张三</td>
-                            <td class=" ">管理员1 </td>
-                            <td class=" ">111111111</td>
-                            <td class=" ">商务部</td>
-                            <td class=" ">运营</td>
-                            <td class="a-right a-right ">123456</td>
-                            <td class=" last"><a href="#">13128907281</a>
-                            <td class=" last"><a href="#">admin</a>
-                            <td class=" last"><a href="#">2017.3.1</a>
-                            <td class=" last"><a href="#">有效</a>
-                            <td class=" last"><a href="#">编辑-删除-禁用</a>
-                            </td>
-                        </tr>
-                        <tr class="odd pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class=" ">李四</td>
-                            <td class=" ">管理员2</td>
-                            <td class=" ">111111</td>
-                            <td class=" ">技术部</td>
-                            <td class=" ">技术</td>
-                            <td class="a-right a-right ">456789</td>
-                            <td class=" last"><a href="#">17890272131</a>
-                            <td class=" last"><a href="#">admin</a>
-                            <td class=" last"><a href="#">2017.3.1</a>
-                            <td class=" last"><a href="#">有效</a>
-                            <td class=" last"><a href="#">编辑-删除-应用</a>
-                            </td>
-                        </tr>
-                        </tbody>
+                        <tbody id="j-list"></tbody>
                     </table>
                 </div>
 
@@ -144,5 +109,26 @@
 
 <!-- rev-hash -->
 <script src="../src/fn/account-number.js"></script>
+<script type="text/template" id="tpl">
+    <% _.each(data,function(item){ %>
+    <tr class="even pointer">
+        <td class="a-center ">
+            <input type="checkbox" class="flat" name="table_records">
+        </td>
+        <td class=" "><%= item.name %></td>
+        <td class=" "><%= item.role_name || '-' %></td>
+        <td class=" "><%= item.user_name %></td>
+        <td class=" ">商务部</td>
+        <td class=" ">运营</td>
+        <td class="a-right a-right ">123456</td>
+        <td class=" last"><a href="#">13128907281</a>
+        <td class=" last"><a href="#">admin</a>
+        <td class=" last"><a href="#"><%= item.gmt_created %></a>
+        <td class=" last"><a href="#"><%= ['禁用','正常'][item.status] %></a>
+        <td class=" last"><a href="add-account.html?id=<%= item.id %>">编辑-<a href="#">删除-<a href="#">禁用</a>
+        </td>
+    </tr>
+   <% }) %>
+</script>
 <!-- end -->
 </html>

@@ -28,7 +28,7 @@
         getData:function(id){
             var that=this;
             $.ajax({
-                url:that.api+"/bossmanager/freight/get.do",
+                url:that.api+"/freight/get.do",
                 dataType:"jsonp",
                 type:"get",
                 data:{
@@ -94,7 +94,7 @@
         render:function(){
             var that = this;
             $.ajax({
-                url:that.api + "/bossmanager/freight/queryAreas.do",
+                url:that.api + "/freight/queryAreas.do",
                 dataType:"jsonp",
                 type:"get",
                 success:function(data){
@@ -268,7 +268,6 @@
         },
         cityRender:function(data){
             var $tpl1=$("#tpl1").html();
-            console.log(data.data.areas[0]);
             $(".modal-body").html(_.template($tpl1)({
                 data:data.data.areas
             }));

@@ -65,7 +65,7 @@
         copyCarriageTpl:function(data){
             var that = this;
             $.ajax({
-                url:that.api+"/bossmanager/freight/copy.do",
+                url:that.api+"/freight/copy.do",
                 dataType:"jsonp",
                 type:"get",
                 data:data,
