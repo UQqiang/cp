@@ -21,6 +21,8 @@ var DEST;
 var ROOT_PATH = path.resolve(__dirname);
 var HTML_PATH = path.resolve(ROOT_PATH, 'view/*.html');
 
+console.log(ROOT_PATH);
+
 // 开发环境目录
 gulp.task('build', function () {
     DEST = 'build/';
