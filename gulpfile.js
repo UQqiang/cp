@@ -191,6 +191,7 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/toastr/toastr.min.css',
             './src/plugin/selectize/selectize.bootstrap3.css',
             './src/plugin/jquery.dialog/jquery.dialog.css',
+            './src/plugin/select-plugin/select-plugin.css',
             './style/css/custom.css',
             './src/plugin/jquery/js/jquery.js',
             './src/plugin/bootstrap/js/bootstrap.js',
@@ -207,6 +208,7 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/jquery.dialog/jquery.mask.js',
             './src/plugin/uploadify/webuploader.js',
             './src/plugin/uploadify/imgUploadModal.js',
+            './src/plugin/select-plugin/select-plugin.js',
             './src/fn/common/common.js'
         ];
 
