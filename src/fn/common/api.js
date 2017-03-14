@@ -7,7 +7,7 @@
             return this;
         },
         domain: function () {
-            return 'http://boss.mockuai.net:8080';
+            return 'http://boss.mockuai.net:8080//bossmanager';
         }
     };
     return api.init();

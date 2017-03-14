@@ -217,7 +217,7 @@
         queryCategory: function (cateLevel) {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/category/leaf/query.do',
+                url: that.api + '/category/leaf/query.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: {},
@@ -295,7 +295,7 @@
         deleteCategory: function (id, success, error) {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/category/delete.do',
+                url: that.api + '/category/delete.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: {
@@ -326,7 +326,7 @@
         addCategory: function (data, success, error) {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/category/add.do',
+                url: that.api + '/category/add.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: data,
@@ -354,7 +354,7 @@
         updateCategory: function (data, success, error) {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/category/update.do',
+                url: that.api + '/category/update.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: data,

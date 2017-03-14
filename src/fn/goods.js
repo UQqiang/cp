@@ -957,7 +957,7 @@
         queryCategory: function () {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/category/query.do',
+                url: that.api + '/category/query.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: {},
@@ -1031,7 +1031,7 @@
         queryHistorySkuProperty: function () {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/property/sku/query.do',
+                url: that.api + '/property/sku/query.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: {},
@@ -1059,7 +1059,7 @@
         skuPropAdd: function (sku_id, property_name, cb) {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/property/sku_property/add.do',
+                url: that.api + '/property/sku_property/add.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: {
@@ -1086,7 +1086,7 @@
         addGoods: function () {
             var that = this;
             $.ajax({
-                url: that.api + '/bossmanager/item/add.do',
+                url: that.api + '/item/add.do',
                 type: 'get',
                 dataType: 'jsonp',
                 data: that.postData,
