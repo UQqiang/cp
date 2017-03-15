@@ -1996,7 +1996,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
   color: #FFF;
   border-radius: 3px 4px 4px 3px;
   background-color: #CE5454;
-  max-width: 170px;
+  max-width: 200px;
   white-space: pre;
   position: relative;
   left: -15px;
@@ -2132,7 +2132,8 @@ a.btn-success, a.btn-primary, a.btn-warning, a.btn-danger {
 textarea {
   padding: 10px;
   vertical-align: top;
-  width: 200px; }
+  width: 200px;
+  min-height: 200px; }
 
 textarea:focus {
   outline-style: solid;
@@ -4251,6 +4252,9 @@ ul.notifications {
 .mr15 {
   margin-right: 15px !important; }
 
+.pb70 {
+  padding-bottom: 70px; }
+
 .ui-label {
   width: 75px; }
 
@@ -4290,3 +4294,23 @@ ul.notifications {
 
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
   vertical-align: middle; }
+
+a.antoo {
+  color: #fff; }
+
+.footer-btn-group {
+  position: absolute;
+  bottom: 10px;
+  left: 5px;
+  right: 5px;
+  padding: 20px;
+  text-align: center;
+  background: #f8f8f8; }
+  .footer-btn-group a {
+    min-width: 150px; }
+
+.ellipsis {
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2; }

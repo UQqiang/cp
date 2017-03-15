@@ -7,16 +7,11 @@
         init: function () {
 
             document.title = '管控平台';
-
-            this.page = {};
-            this.page.pageSize = 20;
-            this.page.vpage = 10;
             this.addEvent();
             this.setContentHeight();
             this.nprogress();
             this.iCheck();
             //this.dateTimerPick();
-            this.pagination(20);
             window.ossDomain = 'http://media.mockuai.com/';
         },
         addEvent: function () {
@@ -219,24 +214,6 @@
 
             TableManageButtons.init();
 
-        },
-        pagination: function (total) {
-            var that = this;
-            $('.ui-pagination').jqPaginator({
-                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
-                pageSize: that.page.pageSize,                                    // 设置每一页的条目数
-                visiblePages: that.page.visiblePages,                            // 设置最多显示的页码数
-                currentPage: that.pageId,                                        // 设置当前的页码
-                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
-                next: '<a class="next" href="javascript:;">&gt;<\/a>',
-                page: '<a href="javascript:;">{{page}}<\/a>',
-                onPageChange: function (num, type) {
-                    that.pageId = num;
-                    if (type == 'change') {
-                        that.getData()
-                    }
-                }
-            });
         },
         dateTimerPick: function () {
 

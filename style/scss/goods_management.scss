@@ -268,9 +268,42 @@
     text-align: center;
   }
 }
+/****** 品牌管理 ******/
+#brandList{
+  .image{
+    width: 60px;
+    height: 60px;
+  }
+}
+#brandAdd{
+  .brand-img-btn{
+    width: 164px;
+    height: 94px;
+    display: inline-block;
+    position: relative;
+    border:2px solid #73879c;
+    i{
+      position: absolute;
+      left: 75px;
+      top: 38px;
+    }
+  }
+  .logo-image{
+    width: 160px;
+    height: 90px;
+    position: relative;
+  }
+}
 
 /****** 品类管理 ******/
 .categories{
+  .category-title{
+    padding: 5px;
+    background: #169F85;
+    text-align: center;
+    color: #fff;
+    border-bottom: 2px solid #fff;
+  }
   li.active{
     i{
       color:#fff;
@@ -279,11 +312,15 @@
   .category-img-icon{
     width: 30px;
     height: 30px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    padding: 1px;
   }
   .add-category{
     background: #169F85;
     padding: 5px;
     text-align: center;
+    border-top:2px solid #fff;
     a{
       color: #fff;
     }
