@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <!-- 姓名角色-->
+
         <div class="x_panel">
             <div class="x_title">
                 <h2>权限</h2>
@@ -71,5 +71,70 @@
 
 <!-- rev-hash -->
 <script src="../src/fn/role-management.js"></script>
+<script id="tpl" type="text/template">
+    <% _.each(items,function(item){ %>
+    <% if( item.children ){ %>
+    <tr class="j-parent" data-id="<%= item.id %>">
+        <% }else{ %>
+    <tr data-id="<%= item.id %>">
+        <%} %>
+        <td>
+            <span><input type="checkbox" name="checkbox" class="checkbox" data-id="<%= item.id %>">&nbsp;<span><%= item.menu_title %></span></span>
+            <span class="j-caret caret-right"></span>
+        </td>
+        <td class="tc"><span class="one-line"><%= item.menu_url %></span></td>
+        <td class="tc">
+                <span>
+                <% if( item.parent_id == 0 ){ %>
+                    否
+                <% }else{ %>
+                    是
+                <% } %>
+                </span>
+        </td>
+        <td><span>-</span></td>
+        <td class="tc"><span><%= item.sort %></span></td>
+    </tr>
+    <% if( item.children ){ %>
+    <% _.each(item.children,function(o,i){ %>
+    <tr style="display: none" class="j-children" data-id="<%= o.id %>" data-parent_id="<%= item.id %>" data-name="<%= o.menu_title %>">
+        <td style="text-indent: -30px;">
+            <span><label><input class="checkbox" type="checkbox" name="checkbox" data-id="<%= o.id %>">&nbsp;<%= o.menu_title %></label></span>
+            <span class="j-caret caret-right"></span>
+        </td>
+        <td class="tc"><span class="one-line"><%= o.menu_url %></span></td>
+        <td class="tc">
+                                <span>
+                                <% if( o.parent_id == 0 ){ %>
+                                    否
+                                <% }else{ %>
+                                    是
+                                <% } %>
+                                </span>
+        </td>
+        <td><span><%= item.menu_title %></span></td>
+        <td class="tc"><span><%= o.sort %></span></td>
+    </tr>
+    <% if( o.children ){ %>
+    <% _.each(o.children,function(obj,z){ %>
+    <tr style="display: none;" class="j-children-son" data-id="<%= obj.id %>" data-parent_id="<%= o.id %>" data-grandpa_id="<%= item.id %>">
+        <td style="text-indent: 30px;"><span>
+                        <span><label><input class="checkbox" type="checkbox" name="checkbox" data-id="<%= obj.id %>">&nbsp;<%= obj.menu_title %></label></span>
+        </td>
+        <td class="tc"><span class="one-line"><%= obj.menu_url %></span></td>
+        <td class="tc">是</td>
+        <td class="tc"><%= o.menu_title %></td>
+        <td class="tc"><span><%= obj.sort %></span></td>
+    </tr>
+    <% }) %>
+    <% }else{ %>
+    <tr style="display: none" class="j-children-son" data-parent_id="<%= o.id %>" data-grandpa_id="<%= item.id %>"><td colspan="18" style="text-align: center!important;">没有任何记录!</td></tr>
+    <% }%>
+    <% }) %>
+    <% }else{ %>
+    <tr style="display: none" class="j-children" data-parent_id="<%= item.id %>"><td colspan="18" style="text-align: center!important;">没有任何记录!</td></tr>
+    <% } %>
+    <% }) %>
+</script>
 <!-- end -->
 </html>

@@ -16,6 +16,9 @@
             this.render(data);
 
         },
+        //todo search逻辑没写   禁用 删除逻辑没写
+
+
         //请求渲染接口
         render:function(data){
             var that=this;
@@ -48,6 +51,39 @@
                     $("input").prop("checked",false)
                 }
             });
+
+            $('input[name=radio-goods]').on('ifChecked', function () {
+                if ($(this).val() == 2) {
+                    // 国内商品
+                    $('#rate').hide();
+                } else {
+                    // 跨进商品
+                    $('#rate').show();
+                }
+            });
+            //全选按钮逻辑
+            $(".flat").click(function(){
+                $("#check-all").prop("checked",false);
+                $(".icheckbox_flat-green").removeClass("checked")
+                if ($("input:checked").length==$("input[type='checkbox']").length-1){
+                    $("#check-all").prop("checked",true)
+                    $(".icheckbox_flat-green").addClass("checked")
+                }
+            })
+        },
+
+        /**
+         * icheck定义
+         */
+        iCheck: function () {
+            if ($("input.flat")[0]) {
+                $(document).ready(function () {
+                    $('input.flat').iCheck({
+                        checkboxClass: 'icheckbox_flat-green',
+                        radioClass: 'iradio_flat-green'
+                    });
+                });
+            }
         },
         //渲染账号
         accountShow:function(data){
@@ -57,6 +93,7 @@
                 data:data.data.data
             }));
             this.addEvent();
+            //this.iCheck();
         },
         //分页
         pagination: function (total) {

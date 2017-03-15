@@ -13,7 +13,6 @@
     <!-- endinject -->
     <!-- end -->
     <!-- rev-hash -->
-    <link href="../style/css/add-account.css" rel="stylesheet" type="text/css">
     <!-- end -->
 </head>
 <body class="nav-md">
@@ -69,40 +68,20 @@
                         </tr>
                         </thead>
 
-                        <tbody>
-                        <tr class="even pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class=" ">张三</td>
-                            <td class=" ">管理员1 </td>
-                            <td class=" ">111111111</td>
-                            <td class=" last"><a href="#">编辑-删除</a>
-                            </td>
-                        </tr>
-                        <tr class="even pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class=" ">张三</td>
-                            <td class=" ">管理员1 </td>
-                            <td class=" ">111111111</td>
-                            <td class=" last"><a href="#">编辑-删除</a>
-                            </td>
-                        </tr>
+                        <tbody id="tpl-main">
                         </tbody>
                     </table>
                 </div>
 
                 <!-- 页码 -->
-                <div class="ui-box">
-                    <div class="widget-list">
-                        <div class="list-page fr">
-                            <span class="pagination-info">1</span>
-                            <div class="ui-pagination pagination"></div>
-                        </div>
-                    </div>
-                </div>
+                <!--<div class="ui-box">-->
+                    <!--<div class="widget-list">-->
+                        <!--<div class="list-page fr">-->
+                            <!--<span class="pagination-info">1</span>-->
+                            <!--<div class="ui-pagination pagination"></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <!-- /页码 -->
             </div>
         </div>
@@ -121,5 +100,23 @@
 
 <!-- rev-hash -->
 <script src="../src/fn/role-management.js"></script>
+<script type="text/template" id="tpl">
+<% _.each(data,function(item){ %>
+<tr class="even pointer">
+    <td class="a-center ">
+        <input type="checkbox" class="flat" name="table_records">
+    </td>
+    <td class="tc "><%= item.role_name %></td>
+    <td class="tc"><%= item.role_desc %> </td>
+    <td class="tc"><%= item.total || '0' %></td>
+    <td class="tc last">
+        <a href="editor-role.html?id=<%= item.id %>">编辑</a>
+        <span class="table-line">&nbsp;-&nbsp;</span>
+        <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.role_name %>" class="j-del">删除</a>
+    </td>
+</tr>
+<% }) %>
+</script>
 <!-- end -->
 </html>
+

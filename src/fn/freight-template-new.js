@@ -6,10 +6,10 @@
         init:function(){
             this.api = Api.domain();
             this.toastrInit();
-            this.render();
             this.addEvent();
             this.verification();
             this.isGetData();
+            this.render();
         },
         //是否是修改模板
         isGetData: function() {
@@ -68,7 +68,7 @@
                     }));
                 },
                 error:function(){
-                    alert(2)
+                    toastr.error('失败','错误提示');
                 }
             })
         },
@@ -102,7 +102,7 @@
                     that.cityRender(data)
                 },
                 error:function(){
-                    alert(2)
+                    toastr.error('失败','错误提示');
                 }
             })
         },
@@ -141,6 +141,7 @@
                 $(this).parents(".odd").remove();
             });
             $("body").on("click",".city-choose",function(){
+                $(this).parents(".gradeX").attr("id","tough")
                 $("#main-tpl").css({
                     display:"block"
                 })
@@ -165,6 +166,7 @@
             $(".btn-default").click(function(){
                 $(".fade").hide();
                 $('.modal-lg').fadeOut(500);
+                $("#tough").removeAttr("id")
 
             });
             //全选
@@ -217,7 +219,7 @@
                     toastr.error('请至少选择一条信息');
                 }else {
                     e.preventDefault();
-                    that.popupUpload();
+                    $('#main-tpl').show();
                 }
             });
             //批量删除运费信息
@@ -250,6 +252,9 @@
                 e.stopPropagation();
                 $(this).parents('.cities').css({'display':'none'})
             });
+            //提交
+            $(".btn-submit").click(function(){
+            })
         },
         isCheckAll: function(){
             var the_num = $('.checkItem:checked').length;
@@ -309,7 +314,7 @@
                     $(this).parents(".choose-area").find("input").prop("checked",false)
                 }
                 for(var i = 0;i<$right.find(".area-item").length; i++){
-                    $right.find(".area-item").children("span").html($right.find(".area-item").children("span").attr("data-name"))
+                    $right.find(".area-item").eq(i).children("span").html($right.find(".area-item").children("span").eq(i).attr("data-name"))
                 }
                 $(".cities").hide();
             });

@@ -9,6 +9,7 @@
             this.addEvent();
 
         },
+        //todo 运费模板搜索没写
         /**
          * tip
          * @param data
@@ -74,7 +75,7 @@
                     that.render()
                 },
                 error:function(err){
-                    console.log(err)
+                    toastr.error('失败','错误提示');
                 }
             })
         },
@@ -109,7 +110,7 @@
         deleteCarriageTpl:function(id){
             var that=this;
             $.ajax({
-                url:that.api+"/bossmanager/freight/delete.do",
+                url:that.api+"/freight/delete.do",
                 dataType:"jsonp",
                 type:"get",
                 data:{
@@ -120,21 +121,21 @@
                     that.render()
                 },
                 error:function(){
-                    alert(2)
+                    toastr.error('失败','错误提示');
                 }
             })
         },
         render:function(){
             var that=this;
             $.ajax({
-                url:that.api + "/bossmanager/freight/query.do",
+                url:that.api + "/freight/query.do",
                 dataType:"jsonp",
                 type:"get",
                 success:function(data){
                     that.templateShow(data)
                 },
                 error:function(){
-                    alert(2)
+                    toastr.error('失败','错误提示');
                 }
             })
         },
