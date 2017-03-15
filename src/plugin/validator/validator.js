@@ -35,13 +35,13 @@ FormValidator.prototype = {
     //},
     texts: {
         invalid         : this.name + '输入非法',
-        short           : this.name + '输入框的长度不符合规范',
-        long            : this.name + '输入框的长度不符合规范',
+        short           : this.name + '输入内容长度不符合规范',
+        long            : this.name + '输入内容长度不符合规范',
         checked         : this.name + '请选择',
         empty           : this.name + '不能为空',
         select          : this.name + '请选择',
-        number_min      : this.name + '输入框的长度不符合规范',
-        number_max      : this.name + '输入框的长度不符合规范',
+        number_min      : this.name + '输入数字大小不符合规范',
+        number_max      : this.name + '输入数字大小不符合规范',
         url             : this.name + '非法',
         number          : this.name + '不是数字',
         email           : this.name + '邮箱地址非法',
@@ -111,11 +111,12 @@ FormValidator.prototype = {
             // for example 'john F kenedy' should be at least 2 words and will pass validation
             if( data.validateWords ){
                 var words = data.value.split(' ');
+                var that = this;
                 // iterate on all the words
                 var wordsLength = function(len){
                     for( var w = words.length; w--; )
                         if( words[w].length < len )
-                            return this.name + this.texts.short;
+                            return that.name + that.texts.short;
                     return true;
                 };
 
