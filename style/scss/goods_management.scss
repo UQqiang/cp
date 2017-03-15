@@ -271,8 +271,11 @@
 /****** 品牌管理 ******/
 #brandList{
   .image{
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
+    border-radius: 4px;
+    padding: 2px;
+    border: 1px solid #ccc;
   }
 }
 #brandAdd{
