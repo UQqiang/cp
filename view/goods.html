@@ -126,20 +126,16 @@
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-md tr">* 商品品牌：</label>
-                                        <select class="form-control form-control-md" required name="商品品牌">
+                                        <select class="form-control form-control-md" required name="商品品牌" id="brandList">
                                             <option>请选择商品品牌</option>
-                                            <option>A</option>
-                                            <option>B</option>
                                         </select>
                                         <span class="ml10"><a href="javascript:;">刷新</a></span>
                                         <span class="ml10 mr10"><a href="javascript:;">新建品牌</a></span>
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-md tr">* 货源地：</label>
-                                        <select class="form-control form-control-md" required name="货源地">
+                                        <select class="form-control form-control-md" required name="货源地" id="countryList">
                                             <option>请选择商品货源地</option>
-                                            <option>W</option>
-                                            <option>Q</option>
                                         </select>
                                     </div>
                                 </div>
@@ -387,6 +383,21 @@
     </ul>
 </script>
 
+<script type="text/template" id="j-template-country">
+    <option value="">请选择商品货源地</option>
+    <% _.each(items,function(item,index){ %>
+    <option value="<%= item.cName %>"><%= item.cName %></option>
+    <% }) %>
+</script>
+
+<!-- 商品品牌 -->
+<script type="text/template" id="j-template-brand">
+    <option value="">请选择商品品牌</option>
+    <% _.each(items,function(item,index){ %>
+    <option value="<%= item.id %>"><%= item.brand_name %></option>
+    <% }) %>
+</script>
+
 <!-- sku模板 - 商品规格 -->
 <script type="text/template" id="j-template-selectize">
     <div class="sku-group add-group" data-index="<%= index %>">
@@ -415,9 +426,15 @@
                 <tr>
                     <% _.each(items,function(item,index){ %>
                         <% if( index == 0 ){ %>
-                            <% _.each(item,function(n,m){ %>
+                            <% if( item.prop ){ %>
+                                <% _.each(item.prop,function(n,m){ %>
                                     <th class="tc cell-12"><%= n.prop_name %></th>
-                            <% }) %>
+                                <% }) %>
+                            <% }else{ %>
+                                <% _.each(item,function(n,m){ %>
+                                    <th class="tc cell-12"><%= n.prop_name %></th>
+                                <% }) %>
+                            <% } %>
                         <% } %>
                     <% }) %>
                     <th class="tc cell-8">最低零售价</th>
@@ -428,11 +445,17 @@
             <tbody>
                 <% _.each(items,function(item,index){ %>
                     <tr>
-                        <% _.each(item,function(n,m){ %>
-                            <td class="tc"><%= n.value_name %></td>
-                        <% }) %>
-                        <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="lowestPrice" data-index="<%= index %>"></td>
-                        <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="suggestionsPrice" data-index="<%= index %>"></td>
+                        <% if(item.prop){ %>
+                            <% _.each(item.prop,function(n,m){ %>
+                                <td class="tc"><%= n.value_name %></td>
+                            <% }) %>
+                        <% }else{ %>
+                            <% _.each(item,function(n,m){ %>
+                                <td class="tc"><%= n.value_name %></td>
+                            <% }) %>
+                        <% } %>
+                        <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="lowestPrice" data-index="<%= index %>" value="<%= (item.origin_price/100).toFixed(2) %>"></td>
+                        <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="suggestionsPrice" data-index="<%= index %>" value="<%= (item.price/100).toFixed(2) %>"></td>
                         <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="ean" data-index="<%= index %>"></td>
                     </tr>
                 <% }) %>

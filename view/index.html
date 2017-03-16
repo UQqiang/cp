@@ -12,6 +12,10 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- end -->
+
+    <!-- rev-hash -->
+    <link href="../style/css/goods_management.css" rel="stylesheet" type="text/css">
+    <!-- end -->
 </head>
 
 <body class="nav-md">
@@ -37,44 +41,43 @@
                 <div class="x_content">
                     <div class="form-inline fr">
                         <div class="form-group">
-                            <select id="heard1" class="form-control form-control-sm" required>
+                            <select id="heard1" class="form-control form-control-sm">
                                 <option value="">请选择类型</option>
                                 <option value="net">国内商品</option>
                                 <option value="press">跨境商品</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <select id="heard2" class="form-control form-control-sm" required>
+                            <select id="heard2" class="form-control form-control-sm">
                                 <option value="">请选择状态</option>
-                                <option value="press">Press</option>
-                                <option value="net">Internet</option>
-                                <option value="mouth">Word of mouth</option>
+                                <option value="press">正常</option>
+                                <option value="net">冻结</option>
+                                <option value="mouth">待审核</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <select id="heard3" class="form-control form-control-sm" required>
+                            <select id="add-goods-category-1" class="form-control form-control-sm categories">
                                 <option value="">请选择品类</option>
-                                <option value="press">Press</option>
-                                <option value="net">Internet</option>
-                                <option value="mouth">Word of mouth</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="categoryChildren">
+                            <select id="add-goods-category-2" class="form-control form-control-md categories">
+                                <option value="">请选择二级品类</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <select id="heard4" class="form-control form-control-sm" required>
+                            <select id="brandList" class="form-control form-control-sm">
                                 <option value="">请选择品牌</option>
-                                <option value="press">Press</option>
-                                <option value="net">Internet</option>
-                                <option value="mouth">Word of mouth</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" placeholder="请输入商品名称" class="form-control form-control-lg">
+                            <input type="text" placeholder="请输入商品名称" class="form-control form-control-lg" id="key">
                         </div>
                         <!--<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">-->
                             <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
                             <!--<span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>-->
                         <!--</div>-->
-                        <button type="button" class="btn btn-sm btn-success ml10">搜索</button>
+                        <button type="button" class="btn btn-sm btn-success ml10" id="search">搜索</button>
                     </div>
                 </div>
             </div>
@@ -101,158 +104,23 @@
                         <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                             <thead>
                             <tr class="headings">
-                                <th>
+                                <th class="tc cell-5">
                                     <input type="checkbox" id="check-all" class="flat">
                                 </th>
-                                <th class="column-title">Invoice </th>
-                                <th class="column-title">Invoice Date </th>
-                                <th class="column-title">Order </th>
-                                <th class="column-title">Bill to Name </th>
-                                <th class="column-title">Status </th>
-                                <th class="column-title">Amount </th>
-                                <th class="column-title no-link last"><span class="nobr">Action</span>
-                                </th>
-                                <th class="bulk-actions" colspan="7">
-                                    <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                                </th>
+                                <th class="column-title tc cell-30">商品标题</th>
+                                <th class="column-title tc cell-5">类目</th>
+                                <th class="column-title tc cell-5">类型</th>
+                                <th class="column-title tc cell-5">品牌</th>
+                                <th class="column-title tc cell-10">成本价(元)</th>
+                                <th class="column-title tc cell-5">库存</th>
+                                <th class="column-title tc cell-10">税率&nbsp;/&nbsp;起征点</th>
+                                <th class="column-title tc cell-10">状态</th>
+                                <th class="column-title tc cell-30">操作</th>
                             </tr>
                             </thead>
 
-                            <tbody>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000040</td>
-                                <td class=" ">May 23, 2014 11:47:56 PM </td>
-                                <td class=" ">121000210 <i class="success fa fa-long-arrow-up"></i></td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$7.45</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000039</td>
-                                <td class=" ">May 23, 2014 11:30:12 PM</td>
-                                <td class=" ">121000208 <i class="success fa fa-long-arrow-up"></i>
-                                </td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$741.20</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000038</td>
-                                <td class=" ">May 24, 2014 10:55:33 PM</td>
-                                <td class=" ">121000203 <i class="success fa fa-long-arrow-up"></i>
-                                </td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$432.26</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000037</td>
-                                <td class=" ">May 24, 2014 10:52:44 PM</td>
-                                <td class=" ">121000204</td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$333.21</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000040</td>
-                                <td class=" ">May 24, 2014 11:47:56 PM </td>
-                                <td class=" ">121000210</td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$7.45</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000039</td>
-                                <td class=" ">May 26, 2014 11:30:12 PM</td>
-                                <td class=" ">121000208 <i class="error fa fa-long-arrow-down"></i>
-                                </td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$741.20</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000038</td>
-                                <td class=" ">May 26, 2014 10:55:33 PM</td>
-                                <td class=" ">121000203</td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$432.26</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000037</td>
-                                <td class=" ">May 26, 2014 10:52:44 PM</td>
-                                <td class=" ">121000204</td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$333.21</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
+                            <tbody id="goodsList">
 
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000040</td>
-                                <td class=" ">May 27, 2014 11:47:56 PM </td>
-                                <td class=" ">121000210</td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$7.45</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000039</td>
-                                <td class=" ">May 28, 2014 11:30:12 PM</td>
-                                <td class=" ">121000208</td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$741.20</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -260,10 +128,10 @@
                     <!-- 页码 -->
                     <div class="widget-list clearfix ">
                         <div class="fl pagination">
-                            <button class="btn btn-sm btn-success">删除111</button>
+                            <button class="btn btn-sm btn-success">删除</button>
                         </div>
                         <div class="list-page fr">
-                            <span class="pagination-info">1111111111111111</span>
+                            <span class="pagination-info"></span>
                             <div class="ui-pagination pagination"></div>
                         </div>
                     </div>
@@ -289,6 +157,57 @@
 <!-- rev-hash -->
 <script src="../src/fn/index.js"></script>
 <!-- end -->
+<script type="text/template" id="j-template">
+    <% _.each(items,function(item,index){ %>
+        <tr class="list">
+            <td class="tc"><input type="checkbox" class="checkbox flat" data-id="<%= item.id %>"></td>
+            <td>
+                <dl>
+                    <dt><img class="goods-image" src="<%= item.icon_url %>"></dt>
+                    <dd class="ellipsis" style="-webkit-box-orient:vertical"><%= item.item_name %></dd>
+                </dl>
+            </td>
+            <td class="tc"><%= item.category_name %></td>
+            <td class="tc"><%= ['国内','跨境','-'][item.higo_mark] %></td>
+            <td class="tc">品牌名</td>
+            <td class="tc"><%= item.cost_price ? (item.cost_price/100).toFixed(2) : '-' %></td>
+            <td class="tc"><%= item.stock_num %></td>
+            <td class="tc">-</td>
+            <td class="tc">-</td>
+            <td class="tc">
+                <a href="goods.html?id=<%= item.id %>">查看</a>
+                <span>-</span>
+                <a href="goods.html?id=<%= item.id %>">编辑</a>
+                <span>-</span>
+                <a href="javascript:;">删除</a>
+                <span>-</span>
+                <a href="javascript:;">冻结</a>
+                <span>-</span>
+                <a href="javascript:;">填写成本价</a>
+                <span>-</span>
+                <a href="javascript:;">查看已关联的渠道</a>
+            </td>
+        </tr>
+    <% }) %>
+</script>
+
+<script type="text/template" id="j-template-brand">
+    <option value="">请选择品牌</option>
+    <% _.each(items,function(item,index){ %>
+        <option value="<%= item.id %>"><%= item.brand_name %></option>
+    <% }) %>
+</script>
+
+<script type="text/template" id="j-template-category">
+    <% if(type == 1){ %>
+        <option value="">请选择品类</option>
+    <% }else{ %>
+        <option value="">请选择二级品类</option>
+    <% } %>
+    <% _.each(items,function(item,index){ %>
+    <option value="<%= item.id %>" data-cate_level="<%= item.cate_level %>" data-parent_id="<%= item.parent_id %>" data-sub_cate="<%= encodeURIComponent(JSON.stringify(item.sub_categorys)) %>"><%= item.cate_name %></option>
+    <% }) %>
+</script>
 
 </body>
 </html>

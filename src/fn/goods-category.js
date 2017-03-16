@@ -224,7 +224,7 @@
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
-                    that.categoryData = data.data;
+                    //that.categoryData = data.data;
                     if (data.code === 10000) {
                         var template = _.template($('#template-category').html());
 

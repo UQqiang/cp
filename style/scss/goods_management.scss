@@ -1,3 +1,25 @@
+/****** 商品列表 *******/
+#goodsList {
+  dl{
+    clear: both;
+    dt{
+      float: left;
+    }
+    dd{
+      margin: 10px 0 0 10px;
+      float: left;
+      max-width: 150px;
+      -webkit-box-orient: vertical;
+    }
+  }
+  .goods-image{
+    width: 64px;
+    height: 64px;
+    padding: 1px;
+    border:1px solid #ccc;
+    border-radius: 4px;
+  }
+}
 /****** 添加商品 ******/
 .add-goods-step {
   padding-bottom: 25px;
