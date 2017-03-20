@@ -1,4 +1,24 @@
 @charset "UTF-8";
+/****** 商品列表 *******/
+#goodsList dl {
+  clear: both; }
+  #goodsList dl dt {
+    float: left; }
+  #goodsList dl dd {
+    margin: 10px 0 0 10px;
+    float: left;
+    max-width: 150px; }
+#goodsList .goods-image {
+  width: 64px;
+  height: 64px;
+  padding: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px; }
+
+#skuList {
+  max-height: 500px;
+  overflow: scroll; }
+
 /****** 添加商品 ******/
 .add-goods-step {
   padding-bottom: 25px; }

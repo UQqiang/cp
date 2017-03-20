@@ -145,7 +145,7 @@
         /**
          * 品牌列表
          */
-        queryBrand: function (data) {
+        queryBrand: function () {
             var that = this;
             $.ajax({
                 url: that.api + '/brand/query.do',

@@ -263,6 +263,11 @@ gulp.task('copy-plugin', function () {
         .pipe(gulp.dest(DEST + '/src/plugin'))
 });
 
+gulp.task('copy-stub', function () {
+    return gulp.src(['./src/stub/**'])
+        .pipe(gulp.dest(DEST + '/src/stub'))
+});
+
 gulp.task('copy-js', function () {
 
     if (DEST.indexOf('build') != -1) {
@@ -311,7 +316,7 @@ gulp.task('watch', function () {
 // Dev Task
 // 开发环境
 gulp.task('dev', ['build', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'copy-img', 'browser-sync', 'watch']);
+    gulp.start(['copy-plugin','copy-stub', 'copy-js', 'copy-img', 'browser-sync', 'watch']);
     console.log('============dev OK version!============')
 });
 
