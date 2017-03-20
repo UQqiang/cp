@@ -95,6 +95,16 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
+                    <div class="" role="tabpanel">
+                        <ul id="goodsTab" class="nav nav-tabs bar_tabs right" role="tablist">
+                            <li role="presentation" class="" data-type="-1">
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="回收站" aria-expanded="true">回收站</a>
+                            </li>
+                            <li role="presentation" class="active">
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="全部" aria-expanded="false">全部</a>
+                            </li>
+                        </ul>
+                    </div>
                     <div>
                         <div class="form-group">
                             <a class="btn btn-sm btn-success" href="goods.html">添加商品</a>
@@ -128,7 +138,9 @@
                     <!-- 页码 -->
                     <div class="widget-list clearfix ">
                         <div class="fl pagination">
-                            <button class="btn btn-sm btn-success">删除</button>
+                            <button class="btn btn-sm btn-success" id="j-batch-trash">加入回收站</button>
+                            <button class="btn btn-sm btn-success dpnone mr10" id="j-batch-restore">恢复</button>
+                            <button class="btn btn-sm btn-success dpnone" id="j-batch-delete">彻底删除</button>
                         </div>
                         <div class="list-page fr">
                             <span class="pagination-info"></span>
@@ -157,6 +169,8 @@
 <!-- rev-hash -->
 <script src="../src/fn/index.js"></script>
 <!-- end -->
+
+<!-- 商品列表 -->
 <script type="text/template" id="j-template">
     <% _.each(items,function(item,index){ %>
         <tr class="list">
@@ -175,22 +189,29 @@
             <td class="tc">-</td>
             <td class="tc">-</td>
             <td class="tc">
-                <a href="goods.html?id=<%= item.id %>">查看</a>
-                <span>-</span>
-                <a href="goods.html?id=<%= item.id %>">编辑</a>
-                <span>-</span>
-                <a href="javascript:;">删除</a>
-                <span>-</span>
-                <a href="javascript:;">冻结</a>
-                <span>-</span>
-                <a href="javascript:;">填写成本价</a>
-                <span>-</span>
-                <a href="javascript:;">查看已关联的渠道</a>
+                <% if(type == -1){ %>
+                    <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-restore">恢复</a>
+                    <span>-</span>
+                    <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-delete">彻底删除</a>
+                <% }else{ %>
+                    <a href="goods.html?id=<%= item.id %>">查看</a>
+                    <span>-</span>
+                    <a href="goods.html?id=<%= item.id %>">编辑</a>
+                    <span>-</span>
+                    <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-trash">加入回收站</a>
+                    <span>-</span>
+                    <a href="javascript:;">冻结</a>
+                    <span>-</span>
+                    <a href="javascript:;"  data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-edit-cost-price">填写成本价</a>
+                    <span>-</span>
+                    <a href="javascript:;">查看已关联的渠道</a>
+                <% } %>
             </td>
         </tr>
     <% }) %>
 </script>
 
+<!-- 品牌 -->
 <script type="text/template" id="j-template-brand">
     <option value="">请选择品牌</option>
     <% _.each(items,function(item,index){ %>
@@ -198,6 +219,7 @@
     <% }) %>
 </script>
 
+<!-- 品类 -->
 <script type="text/template" id="j-template-category">
     <% if(type == 1){ %>
         <option value="">请选择品类</option>
@@ -207,6 +229,56 @@
     <% _.each(items,function(item,index){ %>
     <option value="<%= item.id %>" data-cate_level="<%= item.cate_level %>" data-parent_id="<%= item.parent_id %>" data-sub_cate="<%= encodeURIComponent(JSON.stringify(item.sub_categorys)) %>"><%= item.cate_name %></option>
     <% }) %>
+</script>
+
+<!-- 商品成本价 -->
+<script type="text/template" id="j-template-sku">
+    <div class="table-responsive" id="skuList">
+    </div>
+</script>
+
+<!-- 商品成本价 - table -->
+<script type="text/template" id="j-template-sku-table">
+    <table class="table table-bordered">
+        <thead>
+        <tr class="headings">
+            <th class="column-title tc cell-20">商品名称</th>
+            <th class="column-title tc cell-60" colspan="<%= 2*(items[0].prop.length) %>">规格</th>
+            <th class="column-title tc cell-20">成本价</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(items,function(item,index){ %>
+            <% if( index == 0 ){ %>
+            <tr>
+                <td class="tc" rowspan="<%= items.length %>"><%= name %></td>
+                <% _.each(item.prop,function(n,i){ %>
+                    <td rowspan="<%= items.length %>">
+                        <span><%= n.prop_name || '-' %></span>
+                    </td>
+                    <td>
+                        <span><%= n.value_name || '-' %></span>
+                    </td>
+                <% }) %>
+                <td>
+                    <input class="form-control form-control-md">
+                </td>
+            </tr>
+            <% }else{ %>
+            <tr>
+                <% _.each(item.prop,function(n,i){ %>
+                <td>
+                    <span><%= n.value_name || '-' %></span>
+                </td>
+                <% }) %>
+                <td>
+                    <input class="form-control form-control-md">
+                </td>
+            </tr>
+            <% } %>
+        <% }) %>
+        </tbody>
+    </table>
 </script>
 
 </body>

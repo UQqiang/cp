@@ -20,6 +20,10 @@
     border-radius: 4px;
   }
 }
+#skuList{
+  max-height: 500px;
+  overflow: scroll;
+}
 /****** 添加商品 ******/
 .add-goods-step {
   padding-bottom: 25px;

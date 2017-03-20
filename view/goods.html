@@ -35,14 +35,14 @@
 
                 <div class="x_title">
                     <div class="add-goods-step clearfix">
-                        <span class="add-goods-active col-md-4 col-sm-4 col-xs-4" data-step_value="1">选择商品分类</span>
+                        <span class="col-md-4 col-sm-4 col-xs-4" data-step_value="1">选择商品分类</span>
                         <span class="col-md-4 col-sm-4 col-xs-4" data-step_value="2">编辑商品信息</span>
                         <span class="col-md-4 col-sm-4 col-xs-4" data-step_value="3">选择发货仓库</span>
                     </div>
                     <div class="clearfix"></div>
                 </div>
                 <!-- 选择类目 -->
-                <div class="x_content active-step step" data-now_step="1">
+                <div class="x_content step" data-now_step="1">
                     <div class="categories">
                         <div class="add-goods-categories mr10">
                             <!--<div class="add-goods-search">-->
@@ -111,7 +111,7 @@
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-md tr"><span>* 商品名称：</span></label>
-                                        <input class="form-control form-control-hg" id="name" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length="6,20">
+                                        <input class="form-control form-control-hg" id="name" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length="1,40">
                                     </div>
                                     <div class="item form-group">
                                         <label class="ui-label ui-label-md tr">* 商品类型：</label>
@@ -454,9 +454,15 @@
                                 <td class="tc"><%= n.value_name %></td>
                             <% }) %>
                         <% } %>
-                        <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="lowestPrice" data-index="<%= index %>" value="<%= (item.origin_price/100).toFixed(2) %>"></td>
-                        <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="suggestionsPrice" data-index="<%= index %>" value="<%= (item.price/100).toFixed(2) %>"></td>
-                        <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="ean" data-index="<%= index %>"></td>
+                        <td class="tc">
+                            <input class="form-control form-control-xs" name="skuProp" data-input_type="lowestPrice" data-index="<%= index %>" value="<%= item.lowestPrice ? (item.lowestPrice/100).toFixed(2) : '' %>">
+                        </td>
+                        <td class="tc">
+                            <input class="form-control form-control-xs" name="skuProp" data-input_type="suggestionsPrice" data-index="<%= index %>" value="<%= item.suggestionsPrice ? (item.suggestionsPrice/100).toFixed(2) : '' %>">
+                        </td>
+                        <td class="tc">
+                            <input class="form-control form-control-xs" name="skuProp" data-input_type="ean" data-index="<%= index %>">
+                        </td>
                     </tr>
                 <% }) %>
             </tbody>
@@ -481,12 +487,12 @@
             <span>
             <% _.each(items,function(item,index){ %>
                 <% if( index == 0 ){ %>
-                    <% _.each(item,function(n,m){ %>
+                    <% _.each(item.prop,function(n,m){ %>
                         <label class="ml10 mr10"><%= n.prop_name %></label>
-                        <% if( (sku_id == n.prop_value) ||  m == 0 ){ %>
-                            <input type="radio" name="radio-sku-prop" class="flat" checked="checked" data-sku_id="<%= n.prop_value %>">
+                        <% if( (sku_id == n.prop_id) ||  m == 0 ){ %>
+                            <input type="radio" name="radio-sku-prop" class="flat" checked="checked" data-sku_id="<%= n.prop_id %>">
                         <% }else{ %>
-                            <input type="radio" name="radio-sku-prop" class="flat" data-sku_id="<%= n.prop_value %>">
+                            <input type="radio" name="radio-sku-prop" class="flat" data-sku_id="<%= n.prop_id %>">
                         <% } %>
                     <% }) %>
                 <% } %>
@@ -552,7 +558,7 @@
         <thead>
         <tr>
             <th class="tc cell-20">仓库</th>
-            <th colspan="<%= (2 * sku[0].length) + 1 %>" class="tc cell-50">库存</th>
+            <th colspan="<%= (2 * sku[0].prop.length) + 1 %>" class="tc cell-50">库存</th>
             <th class="tc cell-10">运费</th>
             <th class="tc cell-10">优先级</th>
             <th class="tc cell-10">操作</th>
@@ -563,7 +569,7 @@
         <% if( index == 0 ){ %>
         <tr>
             <td class="tc" rowspan="<%= sku.length %>"><%= o.name %></td>
-            <% _.each(item,function(n,m){ %>
+            <% _.each(item.prop,function(n,m){ %>
             <td class="tc cell-12" rowspan="<%= sku.length %>"><%= n.prop_name %></td>
             <td class="tc"><%= n.value_name %></td>
             <% }) %>
@@ -591,7 +597,7 @@
         </tr>
         <% }else{ %>
         <tr>
-            <% _.each(item,function(n,m){ %>
+            <% _.each(item.prop,function(n,m){ %>
             <td class="tc"><%= n.value_name %></td>
             <% }) %>
             <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="stock" data-index="<%= index %>"></td>

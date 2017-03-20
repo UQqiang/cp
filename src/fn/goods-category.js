@@ -76,7 +76,7 @@
                 }
                 data.target = $(this);
                 data.width = 400;
-                data.position = 'bottom';
+                data.position = 'top';
                 that.tip(data, function (btn, dialog) {
                     d.category_name = $.trim($('.j-category-name').val());
                     if( that.imageUrl ){

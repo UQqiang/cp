@@ -18,21 +18,212 @@
                 positionClass: "toast-top-center"
             });
             $('#categoryChildren').hide();
-            this.addEvent();
             this.queryBrand();
             this.queryCategory();
             this.queryGoods();
+            this.addEvent();
+        },
+        popup: function(data,cb,success) {
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: 600,
+                draggable: false,
+                buttonAlign: 'right',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
+            cb && cb();
+        },
+        /**
+         * tip
+         * @param data
+         * @param success
+         * @param fail
+         */
+        tip: function (data, success, fail) {
+            this.dialogTip = jDialog.tip(data.content, {
+                target: data.target,
+                position: data.position || 'left'
+            }, {
+                width: data.width || 200,
+                closeable: false,
+                closeOnBodyClick: true,
+                buttonAlign: 'center',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        fail && fail(button, dialog)
+                    }
+                }]
+            });
         },
         addEvent: function () {
             var that = this;
 
+            // 搜索
             $('#search').click(function () {
                 that.pageId = 1;
                 that.search_key.brand_key = $('#brandList option:selected').attr('value');
                 that.search_key.category_id = that.currentCateObj['2'] ? that.currentCateObj['2'].id : '';
                 that.search_key.key = $.trim($('#key').val());
                 that.queryGoods();
-            })
+            });
+
+            // tab
+            $('#goodsTab li').click(function () {
+
+                if ($(this).hasClass('active')) {
+                    return false;
+                }
+                // 重置搜索状态
+                that.search_key = {};
+                that.search_key.item_status = $(this).attr('data-type');
+                if (that.search_key.item_status == -1) {
+                    $('#j-batch-trash').hide();
+                    $('#j-batch-restore,#j-batch-delete').show();
+                } else {
+                    $('#j-batch-trash').show();
+                    $('#j-batch-restore,#j-batch-delete').hide();
+                }
+                that.queryGoods();
+            });
+
+            // 加入回收站
+            $(document).on('click', '.j-trash', function () {
+                var data = {};
+                var name = $(this).attr('data-name');
+                var id = $(this).attr('data-id');
+                data.target = $(this);
+                data.content = '确定要将商品:' + name + '加入回收站吗?';
+                that.tip(data, function (btn, dialog) {
+                    that.trashGoods(id);
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 批量加入回收站
+            $(document).on('click', '#j-batch-trash', function () {
+                var data = {};
+                var idList = [];
+                var checkedBox = $('.checkbox:checked');
+                for (var i = 0; i < checkedBox.length; i++) {
+                    idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                data.target = $(this);
+                data.content = '确定要将选中的商品加入回收站吗?';
+                data.position = 'right';
+                that.tip(data, function (btn, dialog) {
+                    that.batchTrashGoods(JSON.stringify(idList));
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 删除
+            $(document).on('click', '.j-delete', function () {
+                var data = {};
+                var name = $(this).attr('data-name');
+                var id = $(this).attr('data-id');
+                data.target = $(this);
+                data.content = '确定要将商品:' + name + '彻底删除吗?';
+                that.tip(data, function (btn, dialog) {
+                    that.deleteGoods(id);
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 批量删除
+            $(document).on('click', '#j-batch-delete', function () {
+                var data = {};
+                var idList = [];
+                var checkedBox = $('.checkbox:checked');
+                for (var i = 0; i < checkedBox.length; i++) {
+                    idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                data.target = $(this);
+                data.content = '确定要将选中的商品彻底删除吗?';
+                data.position = 'right';
+                that.tip(data, function (btn, dialog) {
+                    that.batchDeleteGoods(JSON.stringify(idList));
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 恢复
+            $(document).on('click', '.j-restore', function () {
+                var data = {};
+                var name = $(this).attr('data-name');
+                var id = $(this).attr('data-id');
+                data.target = $(this);
+                data.content = '确定要将商品:' + name + '恢复吗?';
+                that.tip(data, function (btn, dialog) {
+                    that.recoveryGoods(id);
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 批量恢复
+            $(document).on('click', '#j-batch-restore', function () {
+                var data = {};
+                var idList = [];
+                var checkedBox = $('.checkbox:checked');
+                for (var i = 0; i < checkedBox.length; i++) {
+                    idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                data.target = $(this);
+                data.content = '确定要将选中的商品全部恢复吗?';
+                data.position = 'right';
+                that.tip(data, function (btn, dialog) {
+                    that.batchRecoveryGoods(JSON.stringify(idList));
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 成本价goodsSkuList
+            $(document).on('click', '.j-edit-cost-price', function () {
+                var data = {};
+                var name = $(this).attr('data-name');
+                var id = $(this).attr('data-id');
+                data.title = '成本价';
+                data.content = $('#j-template-sku').html();
+                data.width = 800;
+                that.popup(data, function () {
+                    that.goodsSkuList(id,name)
+                }, function () {
+
+                })
+            });
         },
         iCheck: function () {
             var that = this;
@@ -110,9 +301,9 @@
                             if (subCate && subCate != 'undefined') {
                                 subCate = JSON.parse(decodeURIComponent(subCate));
                             }
-                            if(id){
+                            if (id) {
                                 $('#categoryChildren').show();
-                            }else{
+                            } else {
                                 $('#categoryChildren').hide();
                                 that.currentCateObj = {};
                             }
@@ -192,7 +383,8 @@
                     page_size: that.page.pageSize || 20,
                     key: that.search_key.key || '',
                     brand_key: that.search_key.brand_key || '',
-                    category_id: that.search_key.category_id || ''
+                    category_id: that.search_key.category_id || '',
+                    item_status: that.search_key.item_status || ''
                 },
                 beforeSend: function () {
 
@@ -205,7 +397,8 @@
                         if (total_count > 0) {
                             var t = _.template($('#j-template').html());
                             $('#goodsList').html(t({
-                                items: data.data.data
+                                items: data.data.data,
+                                type: that.search_key.item_status
                             }));
                             that.iCheck();
                         } else {
@@ -213,6 +406,227 @@
                         }
 
                         that.pagination(data.data.total_count);
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 加入回收站
+         */
+        trashGoods: function (id) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/item/trash.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    item_id: id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('加入回收站成功', '提示');
+                        that.queryGoods();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 批量加入回收站
+         */
+        batchTrashGoods: function (idList) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/item/batch_trash.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    item_id_list: idList
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('批量加入回收站成功', '提示');
+                        that.queryGoods();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 删除
+         */
+        deleteGoods: function (id) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/item/delete.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    item_id: id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('删除成功', '提示');
+                        that.queryGoods();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 批量删除
+         */
+        batchDeleteGoods: function (idList) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/item/batch_delete.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    item_id_list: idList
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('批量删除成功', '提示');
+                        that.queryGoods();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 恢复
+         */
+        recoveryGoods: function (id) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/item/recovery.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    item_id: id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('恢复成功', '提示');
+                        that.queryGoods();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 批量恢复
+         */
+        batchRecoveryGoods: function (idList) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/item/batch_recovery.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    item_id_list: idList
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('批量恢复成功', '提示');
+                        that.queryGoods();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * sku
+         */
+        goodsSkuList: function (id,name) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/item/sku/query.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    item_id: id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        console.log(data);
+                        var template = _.template($('#j-template-sku-table').html());
+                        $('#skuList').html(template({
+                            items: data.data.skus,
+                            name:name
+                        }))
                     } else {
                         toastr.error(data.msg, '提示');
                     }

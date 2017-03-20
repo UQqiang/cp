@@ -7,14 +7,14 @@
  *  "floor":1,
  *  "value":[{
  *      "prop_name":"体型大小",
- *      "prop_value":"216",
+ *      "prop_id":"216",
  *      "value_name":"20",
  *      "value_id":94685,
  *      "thumb":""
  *      },
  *      {
  *      "prop_name":"体型大小",
- *      "prop_value":"216",
+ *      "prop_id":"216",
  *      "value_name":"30",
  *      "value_id":94686},
  *      "thumb":""
@@ -24,15 +24,13 @@
 ;(function () {
     var main = {
         init: function () {
-            this.goodsId = null;                        // 商品的id
             this.nowStep = 1;                           // 添加商品的步骤
             this.currentCateObj = {};                   // 当前选择的一二级类目对象
             this.cateId = '';                           // 当前的类目id ( 二级类目 )
-            this.index = 0;                             // index
-            this.skuHistoryArr = [];
-            this.selectizeNumber = 1;                   // 商品规格选择框的index
-            this.skuArr = {};                           // sku的对象数组
-            this.skuData = [];
+            this.index = 0;                             // index 用于创建sku
+            this.skuHistoryArr = [];                    // sku历史记录
+            this.selectizeNumber = 1;                   // 商品规格选择框的数量 开放最多三个
+            this.skuArr = {};                           // sku的对象数组 (本JS 核心对象. 数据的操作主要围绕这个对象)
             this.skuTableData = [];                     // sku表格的对象数组
             this.selectId = null;                       // 选中的sku主图的id
             this.commonGallery = [];                    // 商品主图
@@ -40,7 +38,7 @@
             this.editor = UE.getEditor('editor');       // 富文本编辑器
             this.warehouseData = [];
             this.api = Api.domain();                    // 接口请求的api
-            this.goodsId = HDL.getQuery('id');
+            this.goodsId = HDL.getQuery('id');          // 商品的id
             // 初始化提示框
             toastr.options = ({
                 progressBar: true,
@@ -51,6 +49,7 @@
                 'min-height': height + 'px'
             });
             if (this.goodsId) {
+                this.nowStep = 2;
                 $.when(
                     this.queryBrand(),
                     this.queryCountry(),
@@ -58,8 +57,8 @@
                 ).done(
                     this.getGoods()
                 );
-                this.nowStep = 2;
             }
+            this.stepShow();
             this.step();
             this.addEvent();
             this.imgModal();
@@ -132,8 +131,6 @@
                     });
                 }
                 that.skuArr[sku_id].value[index].thumb = thumb;
-                console.log('that.skuGallery :' + JSON.stringify(that.skuGallery));
-                console.log('that.skuArr :' + JSON.stringify(that.skuArr));
                 that.renderSkuGallery(sku_id, pid);
             }
         },
@@ -181,10 +178,6 @@
             var that = this;
             var validator = new FormValidator();
             validator.settings.alerts = true;
-
-            if (that.goodsId) {
-                that.stepShow();
-            }
 
             // 下一步 & 重新选择
             $('#nextStep,#nextStep2,.reselect,#submit').click(function () {
@@ -298,7 +291,7 @@
          * @returns {boolean}
          */
         validatorSkuName: function (name) {
-            for (i in this.skuArr) {
+            for (var i in this.skuArr) {
                 if (this.skuArr[i].sku_name == name) {
                     return false;
                 }
@@ -307,17 +300,6 @@
         },
         addEvent: function () {
             var that = this;
-
-            // 商品类型 切换
-            $('input[name=radio-goods]').on('ifChecked', function () {
-                if ($(this).val() == 2) {
-                    // 国内商品
-                    $('#rate').hide();
-                } else {
-                    // 跨进商品
-                    $('#rate').show();
-                }
-            });
 
             // 添加 sku 规格
             $('.j-add-sku-specifications').click(function () {
@@ -342,6 +324,7 @@
                 var sku_id = $(this).attr('data-sku_id');
                 var prop = {};
                 var isExist = false;
+
                 // 超出上限
                 if (that.skuArr[sku_id].value.length >= 8) {
                     toastr.warning('添加的sku' + sku_name + '超出上限', '警告提示');
@@ -352,7 +335,7 @@
                 data.position = 'bottom';
                 that.tip(data, function (button, dialog) {
                     prop.prop_name = sku_name;
-                    prop.prop_value = sku_id;
+                    prop.prop_id = sku_id;
                     prop.value_name = $.trim($('.prop').val());
 
                     if (prop.value_name == '') {
@@ -364,34 +347,22 @@
 
                         // 渲染sku行
                         if (that.skuArr[sku_id].value.length == 0) {
+                            (that.skuArr[prop.prop_id].value).push(prop);
                             that.renderSkuGroupCont(data.target, prop);
                         } else {
-                            // 重复的sku
+                            // 重复的sku ( 不再添加 )
                             for (var n = 0; n < that.skuArr[sku_id].value.length; n++) {
                                 if (that.skuArr[sku_id].value[n].value_name === prop.value_name) {
                                     isExist = true;
                                 }
                             }
                             if (isExist === false) {
+                                (that.skuArr[prop.prop_id].value).push(prop);
                                 that.renderSkuGroupCont(data.target, prop);
                             }
                         }
-
-                        var skuData = that.combineData();
-
-                        // sku组合
-                        that.renderSkuTable(skuData);
-                        // sku 图片select框
-                        that.renderSkuSelect(skuData, sku_id);
-                        // sku 图片
-                        that.renderSkuImage(that.skuArr, prop.prop_value);
-
-                        that.initWarehouse();
-                        that.hoverFunc();
-                        that.checkedSkuExist(skuData);
-                        // 渲染完成后 初始化下icheck
-                        that.iCheck();
-
+                        that.combineData();
+                        that.render(sku_id)
                         dialog.close();
                     });
                 }, function (button, dialog) {
@@ -418,6 +389,7 @@
                     return;
                 }
                 $('input[data-input_type=' + type + ']').val($(this).val()).change();
+                that.finishingSkuTableData();
             });
 
             // 单个输入 - sku - input
@@ -436,6 +408,7 @@
                     arr.push(Number(v));
                 });
                 hasEmpty ? $('#' + type).val('') : $('#' + type).val(arr.sort(this.sortNumber).shift().toFixed(2));
+                that.finishingSkuTableData();
             });
 
             // sku 属性切换
@@ -454,15 +427,13 @@
                     }
                 }
                 that.skuGallery = [];
-                that.renderSkuGallery(sku_id)
-                console.log(that.skuArr);
+                that.renderSkuGallery(sku_id);
             });
 
             // props 删除
             $('.goods-content').on('click', '.j-g-close.props-close', function () {
                 var sid = $(this).parent().attr('data-sid');
                 var pid = $(this).parent().attr('data-pid');
-
                 for (var key in that.skuArr) {
                     if (key == sid) {
                         for (var i = 0; i < that.skuArr[key].value.length; i++) {
@@ -473,58 +444,37 @@
                         }
                     }
                 }
+                for (var m = 0; m < that.skuTableData.length; m++) {
+                    for( var n = 0 ; n < that.skuTableData[m].prop.length; n++){
+                        if( pid == that.skuTableData[m].prop[n].value_id ){
+                            that.skuTableData.splice(m,1);
+                            m--;
+                        }
+                    }
+                }
                 $(this).parent().remove();
-                var skuData = that.combineData();
-
-                // sku组合
-                that.renderSkuTable(skuData);
-                // sku 图片select框
-                that.renderSkuSelect(skuData, sid);
-                // sku 图片
-                that.renderSkuImage(that.skuArr, sid);
-                that.checkedSkuExist(skuData);
-
-                that.initWarehouse();
-
-                // 渲染完成后 初始化下icheck
-                that.iCheck();
-
+                that.render(sid);
                 toastr.success('删除成功', '成功提示')
             });
 
             // selectize 删除
             $('.goods-content').on('click', '.j-g-close.selectize-close', function () {
                 var floor = $(this).attr('data-floor');
-
                 for (var key in that.skuArr) {
                     if (that.skuArr[key]['floor'] == floor) {
                         delete that.skuArr[key];
                     }
                 }
-
                 $(this).parents('.sku-group').remove();
-                var skuData = that.combineData();
-
-                // sku组合
-                that.renderSkuTable(skuData);
-                // sku 图片select框
-                that.renderSkuSelect(skuData);
-                // sku 图片
-                that.renderSkuImage(that.skuArr);
-                that.checkedSkuExist(skuData);
-
-                that.initWarehouse();
-
-                // 渲染完成后 初始化下icheck
-                that.iCheck();
-
+                // 因为删除的比较多 所以滞空
+                that.skuTableData = [];
+                that.combineData();
+                that.render();
                 // 减少楼层
                 that.selectizeNumber -= 1;
-
                 if (that.selectizeNumber < 4) {
                     $('.j-add-sku-specifications').parents('.sku-group').show();
                 }
-
                 toastr.success('删除成功', '成功提示');
             });
 
@@ -556,10 +506,8 @@
                             }
                         }
                     }
-                    console.log(that.skuGallery, that.skuGallery.length, JSON.stringify(that.skuArr));
                     that.renderSkuImage(that.skuArr);
                 }
-
                 toastr.success('删除成功', '成功提示');
             });
 
@@ -588,7 +536,7 @@
         /**
          * 新增sku条目
          */
-        addSku: function (cb) {
+        addSku: function (cb,onAddcb) {
             var that = this;
             var selectizeTpl = _.template($('#j-template-selectize').html());
 
@@ -605,6 +553,7 @@
                     var floor = $item.parents('.sku-group').attr('data-index');
                     var $selectize = selectize[0].selectize;
                     that.renderSkuAddButtom($selectize, floor, name, value);
+                    onAddcb && onAddcb($selectize);
                 }
             });
             var $selectize = selectize[0].selectize;
@@ -633,7 +582,6 @@
                     }
                 }
             }
-
             combineArr([], 0);
             return r
         },
@@ -649,7 +597,7 @@
                     for (var i = 0; i < that.skuArr[m].value.length; i++) {
                         dataArr[k].push({
                             prop_name: that.skuArr[m].value[i].prop_name,
-                            prop_value: that.skuArr[m].value[i].prop_value,
+                            prop_id: that.skuArr[m].value[i].prop_id,
                             value_name: that.skuArr[m].value[i].value_name,
                             value_id: that.skuArr[m].value[i].value_id
                         });
@@ -657,15 +605,31 @@
                     k++
                 }
             }
-            var skuData = that.combine(dataArr);
-            that.skuData = skuData;
-            that.skuTableData = [];
-            for (var l = 0; l < skuData.length; l++) {
-                that.skuTableData.push({
-                    prop: skuData[l]
-                })
+            var skuTableData = that.combine(dataArr);
+            for (var l = 0; l < skuTableData.length; l++) {
+                that.skuTableData[l] = {
+                    prop: skuTableData[l]
+                };
             }
-            return skuData
+            console.log(that.skuTableData)
+        },
+        render: function (sid) {
+            var that = this;
+
+            // sku组合
+            that.renderSkuTable(that.skuTableData);
+            // sku 图片select框
+            that.renderSkuSelect(that.skuTableData, sid);
+            // sku 图片
+            that.renderSkuImage(that.skuArr, sid);
+            that.checkedSkuExist(that.skuTableData);
+
+            that.initWarehouse();
+
+            // 渲染完成后 初始化下icheck
+            that.iCheck();
+
+            that.hoverFunc();
         },
         /**
          * 渲染sku 添加按钮并组合数组skuArr
@@ -712,8 +676,7 @@
          * @param prop
          */
         renderSkuGroupCont: function (target, prop) {
-            (this.skuArr[prop.prop_value].value).push(prop);
-            target.before('<span class="props" data-sid="' + prop.prop_value + '" data-pid="' + prop.value_id + '">' + prop.value_name + '<i class="fa fa-close props-close j-g-close"></i></span>');
+            target.before('<span class="props" data-sid="' + prop.prop_id + '" data-pid="' + prop.value_id + '">' + prop.value_name + '<i class="fa fa-close props-close j-g-close"></i></span>');
         },
         /**
          * 渲染sku组合表格
@@ -783,13 +746,12 @@
         renderWareHouse: function () {
             var that = this;
             var template = _.template($('#j-template-warehouse').html());
-            if (that.skuData.length > 0) {
+            if (that.skuTableData.length > 0) {
                 $('#warehouse').html(template({
                     items: that.warehouseData,
-                    sku: that.skuData
+                    sku: that.skuTableData
                 }));
             }
-            console.log(that.skuData);
         },
         /**
          * 初始化仓库
@@ -808,7 +770,7 @@
          * @param floor
          */
         delSku: function (obj, floor) {
-            for (k in obj) {
+            for (var k in obj) {
                 if (obj[k].floor == floor) {
                     delete obj[k];
                 }
@@ -816,11 +778,11 @@
         },
         /**
          * 更具楼层判断是否存在
-         * @param targetNumber
+         * @param floor
          * @returns {boolean}
          */
         isExist: function (floor) {
-            for (k in this.skuArr) {
+            for (var k in this.skuArr) {
                 if (floor == this.skuArr[k].floor) {
                     return true;
                 }
@@ -839,6 +801,17 @@
                     });
                 });
             }
+
+            // 商品类型 切换
+            $('input[name=radio-goods]').on('ifChecked', function () {
+                if ($(this).val() == 2) {
+                    // 国内商品
+                    $('#rate').hide();
+                } else {
+                    // 跨进商品
+                    $('#rate').show();
+                }
+            });
         },
         /**
          * tip
@@ -871,10 +844,25 @@
             });
         },
         checkedSkuExist: function (data) {
+            var that = this;
             if (data.length > 0) {
                 $('.stock-container,.sku-container').show();
                 $('#lowestPrice,#suggestionsPrice,#ean').prop('disabled', true);
-                $('#lowestPrice,#suggestionsPrice,#ean').val('')
+
+                var lowestPrice = [], suggestionsPrice = [], ean = [];
+                $.each(that.skuTableData, function (i, obj) {
+                    if( obj.lowestPrice ){
+                        lowestPrice.push(Number(obj.lowestPrice));
+                    }
+                    if( obj.suggestionsPrice ){
+                        suggestionsPrice.push(Number(obj.suggestionsPrice));
+                    }
+                });
+
+                lowestPrice.length > 0 ? $('#lowestPrice').val((lowestPrice.sort(that.sortNumber).shift() / 100).toFixed(2)): $('#lowestPrice').val('');
+
+                suggestionsPrice.length > 0 ? $('#suggestionsPrice').val((suggestionsPrice.sort(that.sortNumber).shift() / 100).toFixed(2)) : $('#suggestionsPrice').val('');
+
             } else {
                 $('.stock-container,.sku-container').hide();
                 $('#lowestPrice,#suggestionsPrice,#ean').prop('disabled', false);
@@ -931,7 +919,11 @@
             }
 
             this.postData.sku_props = JSON.stringify(sku_props);
+            this.finishingSkuTableData();
+            this.postData.skus = JSON.stringify(this.skuTableData);
 
+        },
+        finishingSkuTableData: function () {
             // 整理skus
             var input = $('input[name=skuProp]');
 
@@ -973,8 +965,6 @@
                     this.skuTableData[0].suggestionsPrice = ($.trim($('#suggestionsPrice').val()) * 100).toFixed(0);
                 }
             }
-            this.postData.skus = JSON.stringify(this.skuTableData);
-
         },
         /**
          * 获取类目
@@ -1080,7 +1070,7 @@
             })
         },
         /**
-         *
+         * 输入一个sku 返回一个对应的id
          */
         skuPropAdd: function (sku_id, property_name, cb) {
             var that = this;
@@ -1106,6 +1096,9 @@
                 }
             })
         },
+        /**
+         * 国家列表
+         */
         queryCountry: function () {
             var that = this;
             $.ajax({
@@ -1114,7 +1107,6 @@
                 dataType: 'json',
                 data: {},
                 beforeSend: function () {
-
                 },
                 success: function (data) {
                     if (data.code == 10000) {
@@ -1128,7 +1120,6 @@
                     }
                 },
                 complete: function () {
-
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');
@@ -1146,7 +1137,6 @@
                 dataType: 'jsonp',
                 data: {},
                 beforeSend: function () {
-
                 },
                 success: function (data) {
                     if (data.code == 10000) {
@@ -1160,7 +1150,6 @@
                     }
                 },
                 complete: function () {
-
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');
@@ -1189,7 +1178,6 @@
                 complete: function () {
                 },
                 error: function (data) {
-
                 }
             })
         },
@@ -1206,7 +1194,6 @@
                     item_id: that.goodsId
                 },
                 beforeSend: function (XMLHttpRequest) {
-
                 },
                 success: function (data) {
                     if (data.code === 10000) {
@@ -1218,10 +1205,13 @@
                 complete: function () {
                 },
                 error: function (data) {
-
                 }
             })
         },
+        /**
+         * 渲染商品详情
+         * @param data
+         */
         renderGoods: function (data) {
             var that = this;
             $.each(data, function (key, value) {
@@ -1266,6 +1256,9 @@
 
                         $.when(that.queryHistorySkuProperty()).done(function () {
                             that.selectizeNumber = data.sku_props.length;
+                            if (value[0].id == 0) {
+                                data.sku_props = [];
+                            }
                             if (data.sku_props.length > 2) {
                                 $('.j-add-sku-specifications').parents('.sku-group').hide();
                             }
@@ -1273,47 +1266,33 @@
                                 that.index++;
                                 that.addSku(function (selectize) {
                                     selectize.setValue(obj.id);
-                                });
-                                for (var i = 0; i < obj.value.length; i++) {
-                                    var props = {};
-                                    props.prop_name = obj.name;
-                                    props.prop_value = obj.id;
-                                    props.value_name = obj.value[i];
-                                    props.value_id = obj.vid[i];
-                                    that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + obj.id + ']'), props);
-                                }
-                                for (var n = 0; n < that.skuGallery.length; n++) {
-                                    for( var m = 0 ; m < that.skuArr[obj.id].value.length;m++){
-                                        if( that.skuGallery[n].id == that.skuArr[obj.id].value[m].value_id ){
-                                            that.skuArr[obj.id].value[m].thumb = that.skuGallery[n].img;
+                                    that.skuTableData = data.skus;
+                                    that.render(obj.id);
+                                }, function () {
+                                    for (var i = 0; i < obj.value.length; i++) {
+                                        var props = {};
+                                        props.prop_name = obj.name;
+                                        props.prop_id = obj.id;
+                                        props.value_name = obj.value[i];
+                                        props.value_id = obj.vid[i];
+                                        (that.skuArr[props.prop_id].value).push(props);
+                                        that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + obj.id + ']'), props);
+                                    }
+                                    for (var n = 0; n < that.skuGallery.length; n++) {
+                                        for (var m = 0; m < that.skuArr[obj.id].value.length; m++) {
+                                            if (that.skuGallery[n].id == that.skuArr[obj.id].value[m].value_id) {
+                                                that.skuArr[obj.id].value[m].thumb = that.skuGallery[n].img;
+                                            }
                                         }
                                     }
-                                }
-
-                                var skuData = that.combineData();
-                                // sku 图片select框
-                                that.renderSkuSelect(skuData, obj.id);
-                                // sku 图片
-                                that.renderSkuImage(that.skuArr, obj.id);
-
-                                that.initWarehouse();
-                                that.hoverFunc();
-                                that.checkedSkuExist(skuData);
-                                // 渲染完成后 初始化下icheck
-                                that.iCheck();
+                                });
                             });
-                            // 组装
-                            console.log(that.skuArr);
-
-
                         });
                         break;
                     case "skus":
                         that.skuTableData = value;
-                        // sku组合
-                        that.renderSkuTable(that.skuTableData);
-                        var lowestPrice = [],suggestionsPrice = [],ean = [];
-                        $.each(that.skuTableData, function (i,obj) {
+                        var lowestPrice = [], suggestionsPrice = [], ean = [];
+                        $.each(that.skuTableData, function (i, obj) {
                             lowestPrice.push(Number(obj.origin_price));
                             suggestionsPrice.push(Number(obj.price));
                         });
@@ -1323,7 +1302,6 @@
                 }
             })
         }
-
     };
     // run
     $(function () {
