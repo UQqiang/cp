@@ -154,7 +154,8 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10000; }
+  z-index: 10000;
+  display: none; }
 
 #main-tpl span {
   margin: 0 5px; }
@@ -202,3 +203,32 @@
   right: 10px;
   background: #fff;
   border: 1px solid #cdcdcd; }
+
+.batchSetup {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000; }
+
+.close1 {
+  float: right;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=20);
+  opacity: .2;
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0; }
+
+.btn-default1 {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc; }

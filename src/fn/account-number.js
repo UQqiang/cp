@@ -4,13 +4,13 @@
 ;(function(){
     var main={
         init:function(){
+            this.toastrInit();
             this.paginationCfg = {
                 pageSize: 20,
                 pageId: 1,
                 visiblePages: 10
             };
             var data = {
-
             };
             this.api = Api.domain();
             this.render(data);
@@ -19,6 +19,37 @@
         //todo search逻辑没写   禁用 删除逻辑没写
 
 
+
+        /**
+         * tip
+         * @param data
+         * @param success
+         * @param fail
+         */
+        tip: function (data, success, fail) {
+            var dialogTip = jDialog.tip(data.content, {
+                target: data.target,
+                position: data.position || 'left'
+            }, {
+                width: 200,
+                closeable: false,
+                closeOnBodyClick: true,
+                buttonAlign: 'center',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        fail && fail(button, dialog)
+                    }
+                }]
+            });
+        },
         //请求渲染接口
         render:function(data){
             var that=this;
@@ -42,33 +73,80 @@
             })
 
         },
+        /**
+         * 初始化提示框
+         */
+        toastrInit: function () {
+            toastr.options = ({
+                progressBar: true,
+                positionClass: "toast-top-center"
+            });
+        },
+
         addEvent:function(){
             var that=this;
-            $(".iCheck-helper").click(function(){
-                if ($("#check-all").is("input:checked")){
-                    $("input").prop("checked",true)
-                }else{
-                    $("input").prop("checked",false)
-                }
-            });
 
-            $('input[name=radio-goods]').on('ifChecked', function () {
-                if ($(this).val() == 2) {
-                    // 国内商品
-                    $('#rate').hide();
-                } else {
-                    // 跨进商品
-                    $('#rate').show();
-                }
+            //删除
+            $("body").on("click",".delete",function(){
+                var id = $(this).attr("data-id");
+                var data={};
+                data.target = $(this);
+                data.content = '确定要删除该运费模板吗?';
+                that.tip(data, function (btn, dialog) {
+                    that.accountDelete(id, function (data) {
+                        toastr.success('已成功删除', '提示');
+                        that.render();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
             });
-            //全选按钮逻辑
-            $(".flat").click(function(){
-                $("#check-all").prop("checked",false);
-                $(".icheckbox_flat-green").removeClass("checked")
-                if ($("input:checked").length==$("input[type='checkbox']").length-1){
-                    $("#check-all").prop("checked",true)
-                    $(".icheckbox_flat-green").addClass("checked")
+            //禁用
+            $("body").on("click",".J_disable",function(){
+                var id = $(this).attr("data-id");
+                var data={};
+                data.target = $(this);
+                data.content = '确定要禁用该运费模板吗?';
+                that.tip(data, function (btn, dialog) {
+                    that.accountDisable(id, function (data) {
+                        toastr.success('已成功禁用', '提示');
+                        that.render();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+
+            });
+            //批量删除
+            $("body").on("click","#batchDelete",function(){
+                var $checked = $("input:checked");
+                var arr = [];
+                var data={};
+                data.target = $(this);
+                data.content = '确定要批量删除吗?';
+                for (var i= 0; i < $checked.length; i++) {
+                    if ($checked.eq(i).attr("data-id")) {
+                        arr.push($checked.eq(i).attr("data-id"))
+                    }
                 }
+                that.tip(data, function (btn, dialog) {
+                    that.batchDelete(arr, function (data) {
+                        toastr.success('已成功删除', '提示');
+                        that.render();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+
             })
         },
 
@@ -84,6 +162,38 @@
                     });
                 });
             }
+            // checked
+            $('#check-all').on('ifClicked', function () {
+                if (this.checked) {
+                    $('.checkbox').iCheck('uncheck');
+                } else {
+                    $('.checkbox').iCheck('check');
+                }
+            });
+
+            $('.checkbox').on('ifChecked', function () {
+                var checkedBox = $('.checkbox:checked');
+                var checkbox = $('.checkbox');
+
+                if (checkbox.length == checkedBox.length) {
+                    $('#check-all').iCheck("check");
+                } else {
+                    $('#check-all').iCheck("uncheck");
+                }
+                $(this).parents('tr').addClass('selected');
+            });
+
+            $('.checkbox').on('ifUnchecked', function () {
+                var checkedBox = $('.checkbox:checked');
+                var checkbox = $('.checkbox');
+
+                if (checkbox.length == checkedBox.length) {
+                    $('#check-all').iCheck("check");
+                } else {
+                    $('#check-all').iCheck("uncheck");
+                }
+                $(this).parents('tr').removeClass('selected');
+            })
         },
         //渲染账号
         accountShow:function(data){
@@ -93,7 +203,7 @@
                 data:data.data.data
             }));
             this.addEvent();
-            //this.iCheck();
+            this.iCheck();
         },
         //分页
         pagination: function (total) {
@@ -115,6 +225,17 @@
                 }
             });
         },
+        //删除账号
+        accountDelete:function(id){
+            console.log(id)
+        },
+        //禁用账号
+        accountDisable:function(id){
+            console.log(id)
+        },
+        batchDelete:function(arr){
+            console.log(arr)
+        }
     };
     $(function(){
         main.init()

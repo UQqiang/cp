@@ -83,12 +83,13 @@
                 </div>
 
                 <!-- 页码 -->
-                <div class="ui-box">
-                    <div class="widget-list">
-                        <div class="list-page fr">
-                            <span class="pagination-info">1</span>
-                            <div class="ui-pagination pagination"></div>
-                        </div>
+                <div class="widget-list clearfix ">
+                    <div class="fl pagination">
+                        <button class="btn btn-sm btn-success" id="batchDelete">批量删除</button>
+                    </div>
+                    <div class="list-page fr">
+                        <span class="pagination-info"></span>
+                        <div class="ui-pagination pagination"></div>
                     </div>
                 </div>
                 <!-- /页码 -->
@@ -113,7 +114,7 @@
     <% _.each(data,function(item){ %>
     <tr class="even pointer">
         <td class="a-center ">
-            <input type="checkbox" class="flat" name="table_records">
+            <input type="checkbox" class="checkbox flat" data-id="<%= item.id %>" name="table_records">
         </td>
         <td class=" "><%= item.name %></td>
         <td class=" "><%= item.role_name || '-' %></td>
@@ -125,7 +126,7 @@
         <td class=" last"><a href="#">admin</a>
         <td class=" last"><a href="#"><%= item.gmt_created %></a>
         <td class=" last"><a href="#"><%= ['禁用','正常'][item.status] %></a>
-        <td class=" last"><a href="add-account.html?id=<%= item.id %>">编辑-<a href="#">删除-<a href="#">禁用</a>
+        <td class=" last"><a href="add-account.html?id=<%= item.id %>">编辑-<a href="#" class="delete" data-id="<%= item.id %>">删除-<a href="#" class="J_disable" data-id="<%= item.id %>">禁用</a>
         </td>
     </tr>
    <% }) %>

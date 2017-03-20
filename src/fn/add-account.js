@@ -29,7 +29,7 @@
                     id:parseInt(id)
                 },
                 success:function(data){
-                    console.log(data)
+                    console.log(data);
                     $("input[cb-node='name']").val(data.data.name);
                     //$("select[cb-node='role_id']").val(data.role);
                     $("input[cb-node='user_name']").val(data.data.user_name);
@@ -71,12 +71,47 @@
             data.post = $("input[cb-node='post']").val();
             data.phone = $("input[cb-node='phone']").val();
             data.telephone= $("input[cb-node='telephone']").val();
-            if ((window.location.search.indexOf('?id=') == -1)) {
-                alert(1)
+            var id = window.location.search.split('=')[1];
+            if ( window.location.search.indexOf('?id=') == -1) {
+                that.addAccount()
             }else{
-                alert(2)
+                that.changeAccount(id)
             }
             console.log(data);
+        },
+        //增加账号
+        addAccount:function(){
+            var that=this;
+            $.ajax({
+                url:that.api+"",
+                dataType:"",
+                type:"",
+                data:"",
+                success:function(){
+                    toastr.success('成功啦!','成功提示');
+                    //history.go(0)
+                },
+                error:function(){
+                    toastr.error('失败啦!','失败提示');
+
+                }
+            })
+        },
+        //修改账号
+        changeAccount:function(id){
+            var that=this;
+            $.ajax({
+                url:that.api+"",
+                dataType:"",
+                type:"",
+                data:"",
+                success:function(){
+                    toastr.success('成功啦!','成功提示');
+                },
+                error:function(){
+                    toastr.error('失败啦!','失败提示');
+                }
+            })
         },
         addEvent:function(){
             var that=this;

@@ -4,22 +4,23 @@
 ;(function(){
     var main={
         init:function(){
+            this.radioVal = "" ;
+            this.dataCity = "" ;
             this.api = Api.domain();
             this.toastrInit();
             this.addEvent();
             this.verification();
             this.isGetData();
             this.render();
+            setInterval(this.judge,1000)
         },
         //是否是修改模板
         isGetData: function() {
             var that = this;
             var id = window.location.search.split('=')[1];
             if (id == undefined || (window.location.search.indexOf('?id=') == -1)) {
-                // todo 新建运费模板
                 $('.title').html('新建运费模板');
             } else {
-                // todo 修改运费模板
                 $('.title').html('修改运费模板');
                 that.getData(id);
             }
@@ -27,6 +28,7 @@
         //读取模板数据
         getData:function(id){
             var that=this;
+            that.iCheck();
             $.ajax({
                 url:that.api+"/freight/get.do",
                 dataType:"jsonp",
@@ -99,6 +101,7 @@
                 type:"get",
                 success:function(data){
                     console.log(data);
+                    that.dataCity = data;
                     that.cityRender(data)
                 },
                 error:function(){
@@ -141,23 +144,22 @@
                 $(this).parents(".odd").remove();
             });
             $("body").on("click",".city-choose",function(){
-                $(this).parents(".gradeX").attr("id","tough")
+                $(this).parents(".gradeX").attr("id","tough");
+                if ($("#tough").find("em span").attr("data-main")) {
+                    for (var i = 0; i <$("#tough").find("em span").length ;i++ ) {
+                        var x = $("#tough").find("em span").eq(i).attr("data-main")
+                        $("input[data-main="+x+"]").prop("checked",true)
+                    }
+                    for ( var o =0 ;o < $(".area-item").length ; o++){
+                        if($(".area-item").eq(o).find(".cities").find("input:checked").length != 0){
+                            var y =$(".area-item").eq(o).find(".cities").find("input:checked").length
+                            $(".area-item").eq(o).find(".cityMain").html($(".area-item").eq(o).find(".cityMain").attr("data-name")+"("+y+")")
+                        }
+                    }
+                }
                 $("#main-tpl").css({
                     display:"block"
                 })
-            });
-            //计价方式
-            $('.pricing_method input[name=radio]').click(function(){
-                if( $(this).val() == 0 ) {
-                    $('.unit').text('件');
-                    $('.unit-che').text('件')
-                } else if ( $(this).val() == 2 ) {
-                    $('.unit').text('m³');
-                    $('.unit-che').text('体积')
-                } else {
-                    $('.unit').text('kg');
-                    $('.unit-che').text('重')
-                }
             });
 
             $("body").on('click','.close',function(){
@@ -165,9 +167,8 @@
             });
             $(".btn-default").click(function(){
                 $(".fade").hide();
-                $('.modal-lg').fadeOut(500);
-                $("#tough").removeAttr("id")
-
+                that.threeCity();
+                $("#tough").removeAttr("id");
             });
             //全选
             $('body').on('click', ".checkAll", function() {
@@ -219,9 +220,27 @@
                     toastr.error('请至少选择一条信息');
                 }else {
                     e.preventDefault();
-                    $('#main-tpl').show();
+                    $(".batchSetup").fadeIn(500)
                 }
             });
+            //批量设置点击确定
+            $("body").on('click','.btn-submit1',function(){
+                $('.checkItem:checked').parents(".gradeX").find(".basic_count").val($(".basic_counts").val())
+                $('.checkItem:checked').parents(".gradeX").find(".basic_charge").val($(".basic_charges").val())
+                $('.checkItem:checked').parents(".gradeX").find(".extra_count").val($(".extra_counts").val())
+                $('.checkItem:checked').parents(".gradeX").find(".extra_charge").val($(".extra_charges").val())
+                $(".batchSetup").fadeOut()
+                $(".batchSetup").find("input").val("")
+            })
+            //批量设置点击取消
+            $("body").on("click",'.btn-default1',function(){
+                $(".batchSetup").fadeOut(500)
+                $(".batchSetup").find("input").val("")
+            })
+            $(".close1").click(function(){
+                $(".btn-default1").click()
+                $(".batchSetup").find("input").val("")
+            })
             //批量删除运费信息
             $('.batch-del').click(function(){
                 $length = $('.tpl-set .ui-table tbody tr').length;
@@ -247,6 +266,7 @@
                     that.isCheckAll();
                 }
             });
+
             //点击关闭三级城市列表
             $('body').on('click','.J_close',function(e){
                 e.stopPropagation();
@@ -254,7 +274,32 @@
             });
             //提交
             $(".btn-submit").click(function(){
+                var arr= [];
+                for (var i = 0 ; i < $(".area-item").length; i++){
+                    if($(".area-item").eq(i).find("input:checked").length==$(".area-item").eq(i).find("input[type='checkbox']").length){
+                        arr.push($(".area-item").eq(i).attr("data-name"))
+                    }else{
+                        for (var x = 0; x< $(".area-item").eq(i).find("input:checked").length;x++) {
+                            arr.push($(".area-item").eq(i).find("input:checked").eq(x).attr("data-main"))
+                        }
+                    }
+                }
+                that.showCity(arr);
             })
+        },
+        //城市展示
+        showCity:function(arr){
+            var that = this ;
+            $("#tough").find("em").find("div").remove();
+            if(arr.length==0){
+                $("#tough").find('.left em').append("<div><span class='span'>未添加地区、</span></div>")
+            }else{
+                for (var i = 0; i<arr.length; i++) {
+                    $("#tough").find('.left em').append('<div><span class="span" data-main='+arr[i]+'>'+arr[i]+'、</span></div>')
+                }
+            }
+            that.threeCity();
+            $("#tough").removeAttr('id');
         },
         isCheckAll: function(){
             var the_num = $('.checkItem:checked').length;
@@ -273,7 +318,7 @@
         },
         cityRender:function(data){
             var $tpl1=$("#tpl1").html();
-            $(".modal-body").html(_.template($tpl1)({
+            $("#modal").html(_.template($tpl1)({
                 data:data.data.areas
             }));
             this.iCheck();
@@ -291,6 +336,7 @@
          * icheck定义
          */
         iCheck: function () {
+            var that = this;
             if ($("input.flat")[0]) {
                 $(document).ready(function () {
                     $('input.flat').iCheck({
@@ -299,12 +345,34 @@
                     });
                 });
             }
+            //计价方式
+            $('.pricing_method input[name=radio]').on('ifChecked', function (){
+                that.radioVal = $(this).val()
+                if( $(this).val() == 0 ) {
+                    $('.unit').text('件');
+                    $('.unit-che').text('件')
+                } else if ( $(this).val() == 2 ) {
+                    $('.unit').text('m³');
+                    $('.unit-che').text('体积')
+                } else {
+                    $('.unit').text('kg');
+                    $('.unit-che').text('重')
+                }
+            });
+
             this.chooseCity();
         },
         /**
          *城市选择
          */
         chooseCity:function(){
+            //点击地区名字显示弹窗
+            $(".area-item").find("span").click(function(){
+                $(".cities").hide();
+                if ($(this).siblings(".cities").css('display')=='none'){
+                    $(this).siblings(".cities").show();
+                }
+            })
             // 一级点击
             $(".check-areas-all").click(function(){
                 var $right=$(this).parents(".choose-area").find(".right");
@@ -366,6 +434,24 @@
                 }
             })
         },
+        //编辑如果有城市的模板添加后给三级城市也点击
+        judge:function(){
+            if ($("#tough").length != 0){
+                if ($(".check-city-all:checked").length != 0) {
+                    $(".check-city-all:checked").parents(".area-item").find(".cities").find("input[type='checkbox']").prop("checked",true)
+                }
+            }
+        },
+        //二级城市后缀的数字
+        threeCity:function(){
+            var that = this;
+            $("#main-tpl").css({
+                display:"none"
+            });
+            $(".cities").hide();
+            $("input[type='checkbox']").prop("checked",false)
+            that.cityRender(that.dataCity)
+        }
 
     };
     $(function(){

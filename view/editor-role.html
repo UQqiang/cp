@@ -13,7 +13,8 @@
     <!-- endinject -->
     <!-- end -->
     <!-- rev-hash -->
-    <link href="../style/css/add-account.css" rel="stylesheet" type="text/css">
+    <link href="../style/css/role.css" rel="stylesheet" type="text/css">
+
     <!-- end -->
 </head>
 <body class="nav-md">
@@ -33,12 +34,12 @@
                 <div class="form-inline j-super">
                     <div class="form-group field" >
                         <label>角色名称：</label>
-                        <input class="form-control form-control-lg"  type="text" maxlength="18"> </div>
+                        <input class="form-control form-control-lg name" required="required" name="名称" type="text" maxlength="18"> </div>
                 </div>
                 <div class="form-inline j-super">
                     <div class="form-group field">
                         <label>说明：</label>
-                        <input class="form-control form-control-lg" type="text" maxlength="20"> </div>
+                        <input class="form-control form-control-lg explain" required="required" name="说明" type="text" maxlength="20"> </div>
                 </div>
             </div>
         </div>
@@ -54,8 +55,27 @@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
+                <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
+                    <thead>
+                    <tr class="headings">
+                        <th>
+                            <input type="checkbox" id="check-all" class="flat">
+                        </th>
+                        <th class="column-title">菜单名称 </th>
+                        <th class="column-title tc">URL地址</th>
+                        <th class="column-title">是否是子页面</th>
+                        <th class="column-title no-link last tc"><span class="nobr">父页面名称</span></th>
+                        <th class="column-title" colspan="7">排序</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="tpl-main">
+                    </tbody>
+
+                </table>
             </div>
         </div>
+        <div class="button-group"> <a href="javascript:;" class="btn btn-success no-radius j-submit btn-save">保存</a> <a href="role-management.html" class="btn btn-default">取消</a> </div>
     </div>
     <!-- page content -->
     @@include('common/footer.html')
@@ -70,18 +90,16 @@
 
 
 <!-- rev-hash -->
-<script src="../src/fn/role-management.js"></script>
+<script src="../src/fn/editor-role.js"></script>
 <script id="tpl" type="text/template">
-    <% _.each(items,function(item){ %>
+    <% _.each(data,function(item){ %>
     <% if( item.children ){ %>
     <tr class="j-parent" data-id="<%= item.id %>">
         <% }else{ %>
     <tr data-id="<%= item.id %>">
         <%} %>
-        <td>
-            <span><input type="checkbox" name="checkbox" class="checkbox" data-id="<%= item.id %>">&nbsp;<span><%= item.menu_title %></span></span>
-            <span class="j-caret caret-right"></span>
-        </td>
+        <td class="xy_checkbox"><span><input type="checkbox" name="checkbox" class="checkbox flat" data-id="<%= item.id %>"><span></td>
+        <td class=""><span><%= item.menu_title %></span><span class="j-caret caret-right"></span></td>
         <td class="tc"><span class="one-line"><%= item.menu_url %></span></td>
         <td class="tc">
                 <span>
@@ -98,10 +116,9 @@
     <% if( item.children ){ %>
     <% _.each(item.children,function(o,i){ %>
     <tr style="display: none" class="j-children" data-id="<%= o.id %>" data-parent_id="<%= item.id %>" data-name="<%= o.menu_title %>">
-        <td style="text-indent: -30px;">
-            <span><label><input class="checkbox" type="checkbox" name="checkbox" data-id="<%= o.id %>">&nbsp;<%= o.menu_title %></label></span>
-            <span class="j-caret caret-right"></span>
-        </td>
+        <td class="xy_checkbox" style="text-indent: 20px;">
+            <span><label><input class="checkbox flat " type="checkbox" name="checkbox" data-id="<%= o.id %>"></label></span></td>
+        <td><%= o.menu_title %><span class="j-caret caret-right tc"></span></td>
         <td class="tc"><span class="one-line"><%= o.menu_url %></span></td>
         <td class="tc">
                                 <span>
@@ -112,15 +129,14 @@
                                 <% } %>
                                 </span>
         </td>
-        <td><span><%= item.menu_title %></span></td>
+        <td class="tc"><span><%= item.menu_title %></span></td>
         <td class="tc"><span><%= o.sort %></span></td>
     </tr>
     <% if( o.children ){ %>
     <% _.each(o.children,function(obj,z){ %>
     <tr style="display: none;" class="j-children-son" data-id="<%= obj.id %>" data-parent_id="<%= o.id %>" data-grandpa_id="<%= item.id %>">
-        <td style="text-indent: 30px;"><span>
-                        <span><label><input class="checkbox" type="checkbox" name="checkbox" data-id="<%= obj.id %>">&nbsp;<%= obj.menu_title %></label></span>
-        </td>
+        <td class="xy_checkbox" style="text-indent: 30px;"><span><label><input class="checkbox flat" type="checkbox" name="checkbox" data-id="<%= obj.id %>"></label></span></td>
+        <td class="tc"><%= obj.menu_title %></td>
         <td class="tc"><span class="one-line"><%= obj.menu_url %></span></td>
         <td class="tc">是</td>
         <td class="tc"><%= o.menu_title %></td>

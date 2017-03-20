@@ -38,22 +38,22 @@
                     <div class="form-inline tpl-name mb-15">
                         <div class="form-group field" >
                             <label>模板名称：</label>
-                            <input type="text" class="form-control name" required="required" name="模板名称"> </div>
+                            <input type="text" class="form-control name form-control-lg" required="required" name="模板名称" placeholder="请输入模板名称"> </div>
                     </div>
                     <div class="form-inline mb-15 pricing_method" style="margin-top: 15px;margin-bottom: 15px;">
                         <div class="form-group">
                             <label>计价方式：</label>
                         </div>
                         <div class="form-group mr-15">
-                            <input type="radio" name="radio" value="0">
+                            <input type="radio" name="radio" value="0" class="flat">
                             <label>按件数</label>
                         </div>
                         <div class="form-group mr-15">
-                            <input type="radio" name="radio" value="1" checked="checked">
+                            <input type="radio" name="radio" value="1" class="flat" checked="checked">
                             <label>按重量</label>
                         </div>
-                        <div class="form-group">
-                            <input type="radio" name="radio" value="2">
+                        <div class="form-group mr-15">
+                            <input type="radio" name="radio" value="2" class="flat">
                             <label>按体积</label>
                         </div>
                     </div>
@@ -95,9 +95,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title">批量设置</h4>
+                        <h4 class="modal-title">配送区域</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="modal">
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
@@ -105,6 +105,35 @@
                     </div>
                 </div>
             </div>
+            <!--批量设置-->
+            <div class="modal-dialog modal-lg batchSetup">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">批量设置</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-inline">
+                            <div class="form-group batch-input field">
+                                <label>默认运费：</label>
+                                <input class="form-control form-control-sm basic_counts" type="text">
+                                <span class="unit">kg</span><span>内，</span>
+                                <input class="form-control form-control-sm basic_charges" type="text">
+                                <span>元，每增加</span>
+                                <input class="form-control form-control-sm extra_counts" type="text">
+                                <span class="unit">kg</span><span>，增加运费</span>
+                                <input class="form-control form-control-sm extra_charges" type="text">
+                                <span>元</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default1 btn-sm"  data-dismiss="modal">取消</button>
+                        <button class="btn btn-success btn-sm btn-submit1">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+
             <!-- /.modal-content -->
             </div>
             <div class="ui-box button-wrapper">
@@ -192,20 +221,20 @@
     <div class="choose-area">
         <div class="area-name left">
             <!--<input type="checkbox" name="checkbox" class="check-areas-all flat">-->
-            <input type="checkbox" name="checkbox" class="check-areas-all">
+            <input type="checkbox" name="checkbox" class="check-areas-all" data-main="<%= item.area_name %>">
             <span data-area="<%= item.area_name %>"><%= item.area_name %></span>
         </div>
         <div class="right">
             <% _.each(item.provinces, function (n) { %>
             <div class="area-item" data-name="<%=n.province_name %>" data-id="<%=n.province_id %>">
                 <!--<input type="checkbox" name="checkbox" class="check-city-all flat">-->
-                <input type="checkbox" name="checkbox" class="check-city-all">
-                <span data-name="<%=n.province_name %>"><%=n.province_name %></span>
+                <input type="checkbox" name="checkbox" class="check-city-all" data-main="<%= n.province_name %>">
+                <span class="cityMain" data-name="<%=n.province_name %>"><%=n.province_name %></span>
                 <div class="cities">
                  <% _.each(n.cities, function (m) { %>
                       <div class="city">
                            <!--<input type="checkbox" name="checkbox" class="check-city flat">-->
-                           <input type="checkbox" name="checkbox" class="check-city ">
+                           <input type="checkbox" name="checkbox" class="check-city " data-main="<%= m.city_name %>">
                            <span data-name="<%=m.city_name %>" data-id="<%= m.city_id %>">
                            <%=m.city_name %>
                            </span>
