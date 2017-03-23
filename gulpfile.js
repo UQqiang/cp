@@ -195,6 +195,7 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/selectize/selectize.bootstrap3.css',
             './src/plugin/jquery.dialog/jquery.dialog.css',
             './src/plugin/select-plugin/select-plugin.css',
+            './style/css/daterangepicker.css',
             './style/css/custom.css',
             './src/plugin/jquery/js/jquery.js',
             './src/plugin/bootstrap/js/bootstrap.js',

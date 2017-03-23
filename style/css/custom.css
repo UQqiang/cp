@@ -4255,8 +4255,14 @@ ul.notifications {
 .mr15 {
   margin-right: 15px !important; }
 
+.pt5 {
+  padding-top: 5px; }
+
 .pb70 {
   padding-bottom: 70px; }
+
+.fz12 {
+  font-size: 12px; }
 
 .ui-label {
   width: 75px; }
@@ -4317,3 +4323,11 @@ a.antoo {
   text-overflow: ellipsis;
   overflow: hidden;
   -webkit-line-clamp: 2; }
+
+/****** timepicker ******/
+.timepicker {
+  margin-left: 4px;
+  background: #fff;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #ccc; }
