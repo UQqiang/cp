@@ -4,15 +4,42 @@
 ;(function(){
     var main={
         init:function(){
-            this.radioVal = "" ;
+            //this.radioVal = "" ;
             this.dataCity = "" ;
             this.api = Api.domain();
+            this.render();
             this.toastrInit();
             this.addEvent();
             this.verification();
             this.isGetData();
-            this.render();
             setInterval(this.judge,1000)
+        },
+        popup: function(data,cb,success) {
+            var that = this;
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: data.height||600,
+                draggable: false,
+                buttonAlign: 'right',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                        dialog.close();
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        dialog.close();
+                        that.threeCity();
+                    }
+                }]
+            });
+            cb && cb();
         },
         //是否是修改模板
         isGetData: function() {
@@ -39,7 +66,6 @@
                 success:function(data){
                     var $pricing_method = data.data.freight_template_dto.pricing_method;
                     var $tpl = data.data.freight_template_dto;
-                    console.log($tpl.freight_area_template_list)
                     $('.name').val( $tpl.name ) ;
                     $('.default-shipping .basic_charge').val(($tpl.basic_charge)/100);
                     $('.default-shipping .extra_charge').val(($tpl.extra_charge)/100);
@@ -100,7 +126,6 @@
                 dataType:"jsonp",
                 type:"get",
                 success:function(data){
-                    console.log(data);
                     that.dataCity = data;
                     that.cityRender(data)
                 },
@@ -109,17 +134,6 @@
                 }
             })
         },
-        //popupUpload: function () {
-        //    this.popupImgUploadModuleDialog = jDialog.dialog({
-        //        title: '请选择',
-        //        content: $('#main-tpl').html(),
-        //        width: 720,
-        //        height: 400,
-        //        draggable: false,
-        //        closeable:true,
-        //    });
-        //
-        //},
         addEvent:function(){
             var that = this;
             //添加地区渲染
@@ -145,30 +159,48 @@
             });
             $("body").on("click",".city-choose",function(){
                 $(this).parents(".gradeX").attr("id","tough");
-                if ($("#tough").find("em span").attr("data-main")) {
-                    for (var i = 0; i <$("#tough").find("em span").length ;i++ ) {
-                        var x = $("#tough").find("em span").eq(i).attr("data-main")
-                        $("input[data-main="+x+"]").prop("checked",true)
-                    }
-                    for ( var o =0 ;o < $(".area-item").length ; o++){
-                        if($(".area-item").eq(o).find(".cities").find("input:checked").length != 0){
-                            var y =$(".area-item").eq(o).find(".cities").find("input:checked").length
-                            $(".area-item").eq(o).find(".cityMain").html($(".area-item").eq(o).find(".cityMain").attr("data-name")+"("+y+")")
+                //$("#main-tpl").css({
+                //    display:"block"
+                //})
+                var data = {};
+                    var name = $(this).attr('data-name');
+                    data.title = '配送区域';
+                    data.content = $('#main-tpl').html();
+                    data.width = 880;
+                    data.height = 520;
+                    that.popup(data, function () {
+                        //成功后的回调
+                        var $areaItem = $(".j-dialog-shadow").find(".area-item");
+                        if ($("#tough").find("em span").attr("data-main")) {
+                            for (var i = 0; i <$("#tough").find("em span").length ;i++ ) {
+                                var x = $("#tough").find("em span").eq(i).attr("data-main")
+                                $(".j-dialog-shadow").find("input[data-main="+x+"]").prop("checked",true)
+                            }
+                            for ( var o =0 ;o < $(".j-dialog-shadow").find(".area-item").length ; o++){
+                                if($areaItem.eq(o).find(".cities").find("input:checked").length != 0){
+                                    var y =$areaItem.eq(o).find(".cities").find("input:checked").length
+                                    $areaItem.eq(o).find(".cityMain").html($areaItem.eq(o).find(".cityMain").attr("data-name")+"("+y+")")
+                                }
+                            }
                         }
-                    }
-                }
-                $("#main-tpl").css({
-                    display:"block"
-                })
-            });
+                        that.chooseCity();
 
-            $("body").on('click','.close',function(){
-                $(".btn-default").click();
-            });
-            $(".btn-default").click(function(){
-                $(".fade").hide();
-                that.threeCity();
-                $("#tough").removeAttr("id");
+                    },function(){
+                        //点击确定执行的
+                        var $areaItem = $(".j-dialog-shadow").find(".area-item");
+                        var arr= [];
+                        for (var i = 0 ; i < $areaItem.length; i++){
+                            if($areaItem.eq(i).find("input:checked").length==$areaItem.eq(i).find("input[type='checkbox']").length){
+                                arr.push($areaItem.eq(i).attr("data-name"))
+                            }else{
+                                for (var x = 0; x< $areaItem.eq(i).find("input:checked").length;x++) {
+                                    arr.push($areaItem.eq(i).find("input:checked").eq(x).attr("data-main"))
+                                }
+                            }
+                        }
+                        that.showCity(arr);
+                    })
+
             });
             //全选
             $('body').on('click', ".checkAll", function() {
@@ -220,18 +252,23 @@
                     toastr.error('请至少选择一条信息');
                 }else {
                     e.preventDefault();
-                    $(".batchSetup").fadeIn(500)
+                        var data = {};
+                        var name = $(this).attr('data-name');
+                        data.title = '批量设置';
+                        data.content = $('#xy_1').html();
+                        data.width = 850;
+                        data.height = 150;
+                        that.popup(data, function () {
+                        }, function () {
+                            var $parent = $('.checkItem:checked').parents(".gradeX");
+                            $parent.find(".basic_count").val($(".j-dialog-fix").find(".basic_counts").val());
+                            $parent.find(".basic_charge").val($(".j-dialog-fix").find(".basic_charges").val());
+                            $parent.find(".extra_count").val($(".j-dialog-fix").find(".extra_counts").val());
+                            $parent.find(".extra_charge").val($(".j-dialog-fix").find(".extra_charges").val());
+
+                        })
                 }
             });
-            //批量设置点击确定
-            $("body").on('click','.btn-submit1',function(){
-                $('.checkItem:checked').parents(".gradeX").find(".basic_count").val($(".basic_counts").val())
-                $('.checkItem:checked').parents(".gradeX").find(".basic_charge").val($(".basic_charges").val())
-                $('.checkItem:checked').parents(".gradeX").find(".extra_count").val($(".extra_counts").val())
-                $('.checkItem:checked').parents(".gradeX").find(".extra_charge").val($(".extra_charges").val())
-                $(".batchSetup").fadeOut()
-                $(".batchSetup").find("input").val("")
-            })
             //批量设置点击取消
             $("body").on("click",'.btn-default1',function(){
                 $(".batchSetup").fadeOut(500)
@@ -272,20 +309,6 @@
                 e.stopPropagation();
                 $(this).parents('.cities').css({'display':'none'})
             });
-            //提交
-            $(".btn-submit").click(function(){
-                var arr= [];
-                for (var i = 0 ; i < $(".area-item").length; i++){
-                    if($(".area-item").eq(i).find("input:checked").length==$(".area-item").eq(i).find("input[type='checkbox']").length){
-                        arr.push($(".area-item").eq(i).attr("data-name"))
-                    }else{
-                        for (var x = 0; x< $(".area-item").eq(i).find("input:checked").length;x++) {
-                            arr.push($(".area-item").eq(i).find("input:checked").eq(x).attr("data-main"))
-                        }
-                    }
-                }
-                that.showCity(arr);
-            })
         },
         //城市展示
         showCity:function(arr){
@@ -299,7 +322,6 @@
                 }
             }
             that.threeCity();
-            $("#tough").removeAttr('id');
         },
         isCheckAll: function(){
             var the_num = $('.checkItem:checked').length;
@@ -367,14 +389,14 @@
          */
         chooseCity:function(){
             //点击地区名字显示弹窗
-            $(".area-item").find("span").click(function(){
+            $(".j-dialog-shadow").find(".area-item").find("span").click(function(){
                 $(".cities").hide();
                 if ($(this).siblings(".cities").css('display')=='none'){
                     $(this).siblings(".cities").show();
                 }
             })
             // 一级点击
-            $(".check-areas-all").click(function(){
+            $(".j-dialog-shadow").find(".check-areas-all").click(function(){
                 var $right=$(this).parents(".choose-area").find(".right");
                 if ($(this).is(":checked")==true) {
                     $(this).parents(".choose-area").find("input").prop("checked",true)
@@ -387,7 +409,7 @@
                 $(".cities").hide();
             });
             //二级点击
-            $(".check-city-all").click(function(){
+            $(".j-dialog-shadow").find(".check-city-all").click(function(){
                 var $province=$(this).parents(".choose-area").children(".right");
                 var $cities=$(this).parents(".area-item").find(".cities");
                 if ($(this).is(":checked")==true) {
@@ -408,7 +430,7 @@
                 }
             });
             //三级点击
-            $(".check-city ").click(function(){
+            $(".j-dialog-shadow").find(".check-city ").click(function(){
                 var $cities=$(this).parents(".cities");
                 var $place=$(this).parents(".choose-area");
                 var $children=$(this).parents(".area-item").children("span");
@@ -445,14 +467,9 @@
         //二级城市后缀的数字
         threeCity:function(){
             var that = this;
-            $("#main-tpl").css({
-                display:"none"
-            });
-            $(".cities").hide();
-            $("input[type='checkbox']").prop("checked",false)
+            $("#tough").removeAttr("id");
             that.cityRender(that.dataCity)
         }
-
     };
     $(function(){
         main.init();

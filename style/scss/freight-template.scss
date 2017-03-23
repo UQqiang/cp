@@ -191,51 +191,50 @@
   z-index: 10000;
   display: none;
 }
-#main-tpl span {
+.j-dialog-shadow span {
   margin: 0 5px;
 }
 
-#main-tpl .left {
+.j-dialog-shadow .left {
   display: inline-block;
   margin: 8px;
   vertical-align: top;
   width: 10%
 }
 
-#main-tpl .right {
+.j-dialog-shadow .right {
   display: inline-block;
   width: 80%;
 }
 
-#main-tpl .choose-area .right .area-item {
+.j-dialog-shadow .choose-area .right .area-item {
   display: inline-block;
   position: relative;
   padding: 8px;
 }
 
-#main-tpl .add-class {
+.j-dialog-shadow .add-class {
   background: #CBF1FF;
 }
 
-#main-tpl .cities {
+.j-dialog-shadow .cities {
   position: absolute;
   z-index: 100000;
   left: 0;
-  top: 38px;
-  width: 390px;
+  width: 380px;
   display: none;
   background: #ffffff;
   border: 1px solid #cdcdcd;
 }
 
-#main-tpl .cities span[data-name] {
+.j-dialog-shadow .cities span[data-name] {
   display: inline-block;
   width: 75px;
 }
 
-#main-tpl .city {
+.j-dialog-shadow .city {
   text-align: center;
-  padding: 8px;
+  padding: 5px;
   display: inline-block
 }
 

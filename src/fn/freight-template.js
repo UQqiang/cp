@@ -4,6 +4,10 @@
 ;(function(){
     var main={
         init:function(){
+            //
+            //this.page.pageSize = 20;
+            //this.page.vpage = 10;
+            //this.pageId = 1;
             this.api = Api.domain();
             this.render();
             this.addEvent();
