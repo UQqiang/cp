@@ -66,6 +66,7 @@
                 },
                 success:function(data){
                     that.accountShow(data)
+                    that.pagination(data.data.total_count)
                 },
                 error:function(data){
                     toastr.error('失败啦!');

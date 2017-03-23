@@ -92,50 +92,32 @@
                 <!-- 运费模板内容结束 -->
             </div>
             <div class="modal-dialog modal-lg" id="main-tpl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title">配送区域</h4>
-                    </div>
+                <div class="modal-content1">
                     <div class="modal-body" id="modal">
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
-                        <button class="btn btn-success btn-sm btn-submit">确定</button>
                     </div>
                 </div>
             </div>
-            <!--批量设置-->
-            <div class="modal-dialog modal-lg batchSetup">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">批量设置</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-inline">
-                            <div class="form-group batch-input field">
-                                <label>默认运费：</label>
-                                <input class="form-control form-control-sm basic_counts" type="text">
-                                <span class="unit">kg</span><span>内，</span>
-                                <input class="form-control form-control-sm basic_charges" type="text">
-                                <span>元，每增加</span>
-                                <input class="form-control form-control-sm extra_counts" type="text">
-                                <span class="unit">kg</span><span>，增加运费</span>
-                                <input class="form-control form-control-sm extra_charges" type="text">
-                                <span>元</span>
-                            </div>
+
+            <div class="modal-dialog modal-lg batchSetup" id="xy_1">
+                <div class="modal-body">
+                    <div class="form-inline">
+                        <div class="form-group batch-input field">
+                            <label>默认运费：</label>
+                            <input class="form-control form-control-sm basic_counts" type="text">
+                            <span class="unit">kg</span><span>内，</span>
+                            <input class="form-control form-control-sm basic_charges" type="text">
+                            <span>元，每增加</span>
+                            <input class="form-control form-control-sm extra_counts" type="text">
+                            <span class="unit">kg</span><span>，增加运费</span>
+                            <input class="form-control form-control-sm extra_charges" type="text">
+                            <span>元</span>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-default1 btn-sm"  data-dismiss="modal">取消</button>
-                        <button class="btn btn-success btn-sm btn-submit1">确定</button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-
-            <!-- /.modal-content -->
+                </div>
             </div>
+            <!-- /.modal-content -->
+
+        </div>
             <div class="ui-box button-wrapper">
                 <div class="button-group"> <a class="btn btn-success J_submit">确定</a> <a class="btn btn-default" href="freight-template.html">返回</a> </div>
             </div>
@@ -167,9 +149,9 @@
                 <em>
                     <% _.each(item.areas,function(area){ %>
                     <% if (area.level == 1) { %>
-                    <div><span class="province" data-level="<%= area.level%>" data-id="<%= area.code%>"><%= area.name%></span>、</div>
+                    <div><span class="province" data-level="<%= area.level%>" data-id="<%= area.code%>" data-main="<%= area.name%>"><%= area.name%></span>、</div>
                     <% } else { %>
-                    <div><span class="city" data-level="<%= area.level%>" data-id="<%= area.code%>"><%= area.name%></span>、</div>
+                    <div><span class="city" data-level="<%= area.level%>" data-id="<%= area.code%>" data-main="<%= area.name%>"><%= area.name%></span>、</div>
                     <% } %>
                     <% }) %>
                 </em>
@@ -247,6 +229,8 @@
         </div>
     </div>
     <% }); %>
+</script>
+<script type="text/template">
 </script>
 <!-- end -->
 </html>
