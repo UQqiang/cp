@@ -4,10 +4,124 @@
 ;(function () {
     var main = {
         init: function () {
+            this.api = Api.domain();                    // 接口请求的api
+            this.page = {};
+            this.page.pageSize = 20;
+            this.page.vpage = 10;
+            this.pageId = 1;
+            this.search_key = {};
+            // 初始化提示框
+            toastr.options = ({
+                progressBar: true,
+                positionClass: "toast-top-center"
+            });
+            this.orderStatusData = {
+                '10': '待支付',
+                '20': '买家已取消',
+                '21': '卖家已取消',
+                '30': '已支付',
+                '40': '已发货',
+                '50': '已签收',
+                '60': '已评价',
+                '70': '退款中',
+                '80': '退款完成',
+                '90': '订单关闭'
+            };
             this.dateTimerPick();
+            this.addEvent();
+            this.queryOrderList();
         },
         addEvent: function () {
+            var that = this;
 
+            // 发货
+            $(document).on('click', '.j-send-goods', function () {
+                var orderInfo = JSON.parse(decodeURIComponent($(this).attr('data-orderinfo')));
+                var data = {};
+                data.title = '商品发货';
+                data.content = '<div id="orderInfo"></div>';
+                data.width = 800;
+                that.popup(data, function () {
+                    var template = _.template($('#j-template-send-goods').html());
+                    $('#orderInfo').html(template({
+                        item: orderInfo,
+                        orderStatus: that.orderStatusData
+                    }));
+                    that.iCheck();
+                    that.queryLogisticsCompany();
+                }, function () {
+
+                });
+                console.log(orderInfo);
+            });
+        },
+        iCheck: function () {
+            var that = this;
+            if ($("input.flat")[0]) {
+                $(document).ready(function () {
+                    $('input.flat').iCheck({
+                        checkboxClass: 'icheckbox_flat-green',
+                        radioClass: 'iradio_flat-green'
+                    });
+                });
+            }
+
+            // checked
+            $('#check-all').on('ifClicked', function () {
+                if (this.checked) {
+                    $('.checkbox').iCheck('uncheck');
+                } else {
+                    $('.checkbox').iCheck('check');
+                }
+            });
+
+            $('.checkbox').on('ifChecked', function () {
+                var checkedBox = $('.checkbox:checked');
+                var checkbox = $('.checkbox');
+
+                if (checkbox.length == checkedBox.length) {
+                    $('#check-all').iCheck("check");
+                } else {
+                    $('#check-all').iCheck("uncheck");
+                }
+                $(this).parents('tr').addClass('selected');
+            });
+
+            $('.checkbox').on('ifUnchecked', function () {
+                var checkedBox = $('.checkbox:checked');
+                var checkbox = $('.checkbox');
+
+                if (checkbox.length == checkedBox.length) {
+                    $('#check-all').iCheck("check");
+                } else {
+                    $('#check-all').iCheck("uncheck");
+                }
+                $(this).parents('tr').removeClass('selected');
+            })
+        },
+        popup: function (data, cb, success) {
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: 600,
+                draggable: false,
+                buttonAlign: 'right',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
+            cb && cb();
         },
         timepicker: function () {
             //$('#timepicker').daterangepicker({
@@ -93,6 +207,121 @@
             //$('#destroy').click(function () {
             //    $('#reportrange').data('daterangepicker').remove();
             //});
+        },
+        /**
+         * 订单列表
+         */
+        queryOrderList: function () {
+            var that = this;
+            $.ajax({
+                url: that.api + '/order/query.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {
+                    current_page: that.pageId,
+                    page_size: that.page.pageSize,
+                    order_sn: '',
+                    consignee_mobile: '',
+                    start_time: '',
+                    end_time: '',
+                    order_status: '',
+                    consignee: '',
+                    user_mobile: '',
+                    payment_id: '',
+                    asterisk_mark: '',
+                    print_mark: ''
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        if(data.data.total_count > 0){
+                            var tpl = _.template($('#j-template-order').html());
+                            $('#orderList').html(tpl({
+                                items: data.data.data,
+                                orderStatus: that.orderStatusData
+                            }));
+                        }else{
+                            $('#orderList').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                        }
+                        that.pagination(data.data.total_count);
+                    } else {
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        /**
+         * 获取物流公司.
+         */
+        queryLogisticsCompany: function () {
+            var that = this;
+            $.ajax({
+                url: that.api + '/order/queryLogisticsCompany.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {},
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        var tpl = _.template($('#j-template-logistics').html());
+                        $('#logisticsList').html(tpl({
+                            items: data.data
+                        }));
+                    }
+                    // 物流属性切换
+                    $('input[name=logistics]').on('ifChecked', function () {
+                        var value = $(this).attr('data-value');
+                        if (value == 1) {
+                            // 需要物流
+                            $('.logistics-info').show();
+                        } else {
+                            // 不需要物流
+                            $('.logistics-info').hide();
+                        }
+                    })
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        pagination: function (total) {
+            var that = this;
+            var pagination = $('.ui-pagination')
+            pagination.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.pageId,                                        // 设置当前的页码
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.pageId = num;
+                    if (type == 'change') {
+                        that.queryOrderList();
+                    }
+                }
+            });
+            $('#check-all').iCheck("uncheck");
+            var n = $('#orderList').find('table').length;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
         }
     };
     // run

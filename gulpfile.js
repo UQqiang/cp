@@ -101,6 +101,8 @@ gulp.task('scripts', function () {
         // html
         return gulp.src([
                 './src/fn/common/smartresize.js',
+                './src/fn/common/api.js',
+                './src/fn/common/handle.js',
                 './src/fn/common/common.js'
             ])
             .pipe(concat('common.js'))
@@ -225,6 +227,10 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/daterangepicker/css/daterangepicker.min.css',
             './src/plugin/iCheck/skins/flat/green.min.css',
             './src/plugin/toastr/toastr.min.css',
+            './src/plugin/selectize/selectize.bootstrap3.css',
+            './src/plugin/jquery.dialog/jquery.dialog.css',
+            './src/plugin/select-plugin/select-plugin.css',
+            './style/css/daterangepicker.css',
             './style/css/custom.css',
             './src/plugin/jquery/js/jquery.min.js',
             './src/plugin/bootstrap/js/bootstrap.min.js',
@@ -234,6 +240,14 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/nprogress/js/nprogress.min.js',
             './src/plugin/jquery.paginator/jqPaginator.min.js',
             './src/plugin/toastr/toastr.min.js',
+            './src/plugin/validator/validator.js',
+            './src/plugin/selectize/selectize.js',
+            './src/plugin/underscore/underscore.js',
+            './src/plugin/jquery.dialog/jquery.dialog.js',
+            './src/plugin/jquery.dialog/jquery.mask.js',
+            './src/plugin/uploadify/webuploader.js',
+            './src/plugin/uploadify/imgUploadModal.js',
+            './src/plugin/select-plugin/select-plugin.js',
             './src/fn/common/common.js'
         ];
     }

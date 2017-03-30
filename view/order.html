@@ -12,6 +12,10 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- end -->
+
+    <!-- rev-hash -->
+    <link href="../style/css/order.css" rel="stylesheet" type="text/css">
+    <!-- end -->
 </head>
 
 <body class="nav-md">
@@ -138,163 +142,20 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
+                        <table class="table table-striped jambo_table bulk_action table-bordered">
                             <thead>
-                            <tr class="headings">
-                                <th>
-                                    <input type="checkbox" id="check-all" class="flat">
-                                </th>
-                                <th class="column-title">Invoice </th>
-                                <th class="column-title">Invoice Date </th>
-                                <th class="column-title">Order </th>
-                                <th class="column-title">Bill to Name </th>
-                                <th class="column-title">Status </th>
-                                <th class="column-title">Amount </th>
-                                <th class="column-title no-link last"><span class="nobr">Action</span>
-                                </th>
-                                <th class="bulk-actions" colspan="7">
-                                    <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th class="tc cell-40">商品</th>
+                                    <th class="tc cell-10">单价</th>
+                                    <th class="tc cell-10">数量</th>
+                                    <th class="tc cell-10">买家</th>
+                                    <th class="tc cell-10">支付方式</th>
+                                    <th class="tc cell-10">实付款</th>
+                                    <th class="tc cell-10">状态</th>
+                                </tr>
                             </thead>
-
-                            <tbody>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000040</td>
-                                <td class=" ">May 23, 2014 11:47:56 PM </td>
-                                <td class=" ">121000210 <i class="success fa fa-long-arrow-up"></i></td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$7.45</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000039</td>
-                                <td class=" ">May 23, 2014 11:30:12 PM</td>
-                                <td class=" ">121000208 <i class="success fa fa-long-arrow-up"></i>
-                                </td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$741.20</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000038</td>
-                                <td class=" ">May 24, 2014 10:55:33 PM</td>
-                                <td class=" ">121000203 <i class="success fa fa-long-arrow-up"></i>
-                                </td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$432.26</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000037</td>
-                                <td class=" ">May 24, 2014 10:52:44 PM</td>
-                                <td class=" ">121000204</td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$333.21</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000040</td>
-                                <td class=" ">May 24, 2014 11:47:56 PM </td>
-                                <td class=" ">121000210</td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$7.45</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000039</td>
-                                <td class=" ">May 26, 2014 11:30:12 PM</td>
-                                <td class=" ">121000208 <i class="error fa fa-long-arrow-down"></i>
-                                </td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$741.20</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000038</td>
-                                <td class=" ">May 26, 2014 10:55:33 PM</td>
-                                <td class=" ">121000203</td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$432.26</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000037</td>
-                                <td class=" ">May 26, 2014 10:52:44 PM</td>
-                                <td class=" ">121000204</td>
-                                <td class=" ">Mike Smith</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$333.21</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-
-                            <tr class="even pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000040</td>
-                                <td class=" ">May 27, 2014 11:47:56 PM </td>
-                                <td class=" ">121000210</td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$7.45</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            <tr class="odd pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat" name="table_records">
-                                </td>
-                                <td class=" ">121000039</td>
-                                <td class=" ">May 28, 2014 11:30:12 PM</td>
-                                <td class=" ">121000208</td>
-                                <td class=" ">John Blank L</td>
-                                <td class=" ">Paid</td>
-                                <td class="a-right a-right ">$741.20</td>
-                                <td class=" last"><a href="#">View</a>
-                                </td>
-                            </tr>
-                            </tbody>
                         </table>
+                        <div id="orderList"></div>
                     </div>
 
                     <!-- 页码 -->
@@ -303,7 +164,7 @@
                             <button class="btn btn-sm btn-success">删除</button>
                         </div>
                         <div class="list-page fr">
-                            <span class="pagination-info">1111111111111111</span>
+                            <span class="pagination-info"></span>
                             <div class="ui-pagination pagination"></div>
                         </div>
                     </div>
@@ -330,5 +191,121 @@
 <script src="../src/fn/order.js"></script>
 <!-- end -->
 
+<!-- 订单列表 -->
+<script type="text/template" id="j-template-order">
+    <% _.each(items,function(item,index){ %>
+        <table class="table table-bordered">
+            <thead class="order-header">
+                <tr>
+                    <th colspan="1"><span>订单号：</span><a href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>"><%= item.order_sn %></a></th>
+                    <th colspan="2"><span>下单时间：<%= item.order_time_str %></span></th>
+                    <th colspan="2"><span>发货仓库：<%= item.order_time_str %></span></th>
+                    <th colspan="2"><span>渠道商：<%= item.order_time_str %></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% _.each(item.order_items,function(o,i){ %>
+                    <% if( o.item_type != 11 ){ %>
+                        <tr>
+                            <td class="cell-40">
+                                <dl>
+                                    <dt><img style="width:60px;height: 60px;" src="<%= o.item_image_url %>"></dt>
+                                    <dd>
+                                        <p><%= o.item_name %></p>
+                                        <p class="sku"><%= o.item_sku_desc %></p>
+                                    </dd>
+                                </dl>
+                            </td>
+                            <td class="cell-10"><span><%= o.unit_price_str %></span></td>
+                            <td class="cell-10 tc"><span><%= o.number %></span></td>
+                            <% if( i == 0 ){ %>
+                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.order_consignee_d_t_o.mobile %></span></td>
+                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= ['优惠折扣','支付宝APP支付','微信APP支付','银联APP支付','支付宝wap支付','微信wap支付','银联wap支付','统统付APP支付','统统付wap支付','余额支付'][item.payment_id] %></span></td>
+                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.total_amount_str %></span></td>
+                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>">
+                                <p><%= orderStatus[item.order_status] %></p>
+                                <% if( item.order_status == 30 ){ %>
+                                <p>
+                                    <a class="j-send-goods btn btn-sm btn-success" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>">发货</a>
+                                </p>
+                                <% } %>
+                            </td>
+                            <% } %>
+                        </tr>
+                    <% } %>
+                <% }) %>
+            </tbody>
+        </table>
+    <% }) %>
+</script>
+
+<!-- 发货 -->
+<script type="text/template" id="j-template-send-goods">
+    <table class="table table-bordered">
+        <thead class="order-header">
+        <tr>
+            <th class="tc cell-10"> <input type="checkbox" id="check-all" class="flat"></th>
+            <th class="tc cell-50"><span>商品</span></th>
+            <th class="tc cell-10"><span>数量</span></th>
+            <th class="tc cell-10"><span>物流公司</span></th>
+            <th class="tc cell-20"><span>快递单号</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(item.order_items,function(o,i){ %>
+            <% if( o.item_type != 11 ){ %>
+            <tr>
+                <td class="tc"><input type="checkbox" class="checkbox flat" data-id="<%= item.id %>"></span></td>
+                <td>
+                    <dl>
+                        <dt><img style="width:60px;height: 60px;" src="<%= o.item_image_url %>"></dt>
+                        <dd>
+                            <p><%= o.item_name %></p>
+                            <p class="sku"><%= o.item_sku_desc %></p>
+                        </dd>
+                    </dl>
+                </td>
+                <td class="tc"><span><%= o.number %></span></td>
+                <td class="tc"><span>-</span></td>
+                <td class="tc"><span>-</span></td>
+            </tr>
+            <% } %>
+        <% }) %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <div class="form-group">
+                        <label class="ui-label ui-label-md">收货地址：</label>
+                        <span><%= item.order_consignee_d_t_o.province %><%= item.order_consignee_d_t_o.city %><%= item.order_consignee_d_t_o.area %><%= item.order_consignee_d_t_o.address %></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="ui-label ui-label-md">发货方式：</label>
+                        <label><input type="radio" name="logistics" class="flat" checked="checked" data-value="1">&nbsp;需要物流</label>
+                        <label><input type="radio" name="logistics" class="flat" data-value="0">&nbsp;无需物流</label>
+                    </div>
+                    <div class="form-group logistics-info">
+                        <label class="ui-label ui-label-md">物流公司：</label>
+                        <select class="form-control form-control-lg" id="logisticsList">
+                            <option>请选择物流公司</option>
+                        </select>
+                    </div>
+                    <div class="form-group logistics-info">
+                        <label class="ui-label ui-label-md">物流单号：</label>
+                        <input class="form-control form-control-lg">
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</script>
+
+<!-- 物流公司 -->
+<script type="text/template" id="j-template-logistics">
+    <option>请选择物流公司</option>
+    <% _.each(items,function(item,index){ %>
+        <option value="<%= item.code %>"><%= item.name %></option>
+    <% }) %>
+</script>
 </body>
 </html>
