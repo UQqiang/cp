@@ -1,6 +1,16 @@
 #orderList, #orderInfo {
   .order-header {
     background: #f8f8f8;
+    box-shadow: 1px 1px 5px #ccc;
+  }
+  .fa{
+    font-size: 16px;
+    display: inline-block;
+    margin-right: 5px;
+    cursor: pointer;
+    &.fa-star{
+      color: red;
+    }
   }
   dl {
     clear: both;
@@ -93,6 +103,7 @@
 }
 
 /**** 维权详情 ***/
+
 #orderRefund {
   .item-goods{
     display: inline-block;

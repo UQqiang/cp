@@ -2132,8 +2132,8 @@ a.btn-success, a.btn-primary, a.btn-warning, a.btn-danger {
 textarea {
   padding: 10px;
   vertical-align: top;
-  width: 200px;
-  min-height: 200px; }
+  width: 150px;
+  min-height: 150px; }
 
 textarea:focus {
   outline-style: solid;
@@ -4329,8 +4329,14 @@ a.antoo {
 
 /****** timepicker ******/
 .timepicker {
+  position: relative;
+  width: 200px;
   margin-left: 4px;
   background: #fff;
   cursor: pointer;
   padding: 5px 10px;
   border: 1px solid #ccc; }
+  .timepicker .caret {
+    position: absolute;
+    right: 5px;
+    top: 13px; }

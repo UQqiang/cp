@@ -136,11 +136,11 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <div>
-                        <div class="form-group">
-                            <a class="btn btn-sm btn-success" href="goods.html">添加商品</a>
-                        </div>
-                    </div>
+                    <!--<div>-->
+                        <!--<div class="form-group">-->
+                            <!--<a class="btn btn-sm btn-success" href="goods.html">添加商品</a>-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div class="table-responsive">
                         <table class="table table-striped jambo_table bulk_action table-bordered">
                             <thead>
@@ -161,7 +161,6 @@
                     <!-- 页码 -->
                     <div class="widget-list clearfix ">
                         <div class="fl pagination">
-                            <button class="btn btn-sm btn-success">删除</button>
                         </div>
                         <div class="list-page fr">
                             <span class="pagination-info"></span>
@@ -197,7 +196,19 @@
         <table class="table table-bordered">
             <thead class="order-header">
                 <tr>
-                    <th colspan="1"><span>订单号：</span><a href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>"><%= item.order_sn %></a></th>
+                    <th colspan="1">
+                        <% if( item.asterisk_mark == 1 ){ %>
+                        <span>
+                            <i class="fa fa-star j-star" data-asterisk_mark="<%= item.asterisk_mark %>" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>"></i>
+                        </span>
+                        <% }else{ %>
+                        <span>
+                            <i class="fa fa-star-o j-star" data-asterisk_mark="<%= item.asterisk_mark %>" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>"></i>
+                        </span>
+                        <% } %>
+                        <span>订单号：</span>
+                        <a href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>" target="_blank"><%= item.order_sn %></a>
+                    </th>
                     <th colspan="2"><span>下单时间：<%= item.order_time_str %></span></th>
                     <th colspan="2"><span>发货仓库：<%= item.order_time_str %></span></th>
                     <th colspan="2"><span>渠道商：<%= item.order_time_str %></span></th>
@@ -221,12 +232,17 @@
                             <% if( i == 0 ){ %>
                             <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.order_consignee_d_t_o.mobile %></span></td>
                             <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= ['优惠折扣','支付宝APP支付','微信APP支付','银联APP支付','支付宝wap支付','微信wap支付','银联wap支付','统统付APP支付','统统付wap支付','余额支付'][item.payment_id] %></span></td>
-                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.total_amount_str %></span></td>
+                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>">
+                                <p><%= item.total_amount_str %></p>
+                                <% if( item.delivery_fee ){ %>
+                                <p>(含运费 <%= (item.delivery_fee/100).toFixed(2) %>)元</p>
+                                <% } %>
+                            </td>
                             <td class="cell-10 tc" rowspan="<%= item.order_items.length %>">
                                 <p><%= orderStatus[item.order_status] %></p>
                                 <% if( item.order_status == 30 ){ %>
                                 <p>
-                                    <a class="j-send-goods btn btn-sm btn-success" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>">发货</a>
+                                    <a class="j-send-goods btn btn-sm btn-success" data-order_id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-refund_mark="<%= item.refund_mark %>" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>">发货</a>
                                 </p>
                                 <% } %>
                             </td>
@@ -235,6 +251,18 @@
                     <% } %>
                 <% }) %>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="18">
+                        <% if( item.seller_memo ){ %>
+                        <a class="j-add-comment" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-memo="<%= item.seller_memo %>" href="javascript:;">修改备注：</a>
+                        <span><%= item.seller_memo %></span>
+                        <% }else{ %>
+                        <a class="j-add-comment" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>" href="javascript:;">备注</a>
+                        <% } %>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     <% }) %>
 </script>
@@ -255,7 +283,13 @@
         <% _.each(item.order_items,function(o,i){ %>
             <% if( o.item_type != 11 ){ %>
             <tr>
-                <td class="tc"><input type="checkbox" class="checkbox flat" data-id="<%= item.id %>"></span></td>
+                <td class="tc">
+                    <% if( o.delivery_mark != 1 ){ %>
+                    <input type="checkbox" class="checkbox flat" data-mark="<%= o.delivery_mark || 0 %>" data-id="<%= o.id %>">
+                    <% }else{ %>
+                    <span>已发货</span>
+                    <% } %>
+                </td>
                 <td>
                     <dl>
                         <dt><img style="width:60px;height: 60px;" src="<%= o.item_image_url %>"></dt>
@@ -287,12 +321,12 @@
                     <div class="form-group logistics-info">
                         <label class="ui-label ui-label-md">物流公司：</label>
                         <select class="form-control form-control-lg" id="logisticsList">
-                            <option>请选择物流公司</option>
+                            <option value="">请选择物流公司</option>
                         </select>
                     </div>
                     <div class="form-group logistics-info">
                         <label class="ui-label ui-label-md">物流单号：</label>
-                        <input class="form-control form-control-lg">
+                        <input class="form-control form-control-lg" id="logisticCode">
                     </div>
                 </td>
             </tr>

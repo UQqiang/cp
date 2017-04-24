@@ -34,9 +34,47 @@
         addEvent: function () {
             var that = this;
 
+            // 加星
+            $(document).on('click', '.j-star', function () {
+                var data = {};
+                data.order_id = $(this).attr('data-id');
+                data.user_id = $(this).attr('data-user_id');
+                data.asterisk_marks = $(this).attr('data-asterisk_mark') == 1 ? 'n' : 'y';
+                that.addStar(data);
+            });
+
+            // 备注
+            $(document).on('click', '.j-add-comment', function () {
+                var sendData = {};
+                var config = {};
+                var memo = $(this).attr('data-memo');
+                sendData.order_id = $(this).attr('data-id');
+                sendData.user_id = $(this).attr('data-user_id');
+                config.target = $(this);
+                config.position = 'right';
+                config.content = '<div><textarea class="form-control form-control-md j-memo" maxlength="200">' + memo + '</textarea></div>';
+                that.tip(config, function (btn, dialog) {
+                    sendData.memo = $.trim($('.j-memo').val());
+                    that.addMemo(sendData);
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                })
+            });
+
             // 发货
             $(document).on('click', '.j-send-goods', function () {
                 var orderInfo = JSON.parse(decodeURIComponent($(this).attr('data-orderinfo')));
+                var refundMark = $(this).attr('data-refund_mark');
+                var order_id = $(this).attr('data-order_id');
+                var user_id = $(this).attr('data-user_id');
+
+                // 发货的时候存在 维权商品
+                if (refundMark && refundMark == 1) {
+                    toastr.error('订单中的部分商品，买家已提交了维权申请，您需要先处理（同意或拒绝）买家退款申请后，才能够进行发货操作。', '提示');
+                    return false;
+                }
+
                 var data = {};
                 data.title = '商品发货';
                 data.content = '<div id="orderInfo"></div>';
@@ -49,10 +87,50 @@
                     }));
                     that.iCheck();
                     that.queryLogisticsCompany();
-                }, function () {
+                }, function (btn, dialog) {
+                    // 确定操作
+                    var sendGoodsData = {};
+                    var checkedBox = $('.checkbox:checked');
+                    var needLogistics = $('input[name=logistics]:checked').attr('data-value');
+                    var delivery_company = $('#logisticsList').val();
+                    var delivery_code = $.trim($('#logisticCode').val());
+                    var orderItem_ids = [];
 
+                    if (checkedBox.length < 1) {
+                        toastr.error('请选择要发货的商品', '提示');
+                        return false;
+                    }
+
+                    if (needLogistics == 1) {
+                        // 需要物流
+                        if (delivery_company == '请选择物流公司' || delivery_company == '') {
+                            toastr.error('请选择物流公司', '提示');
+                            return false;
+                        }
+
+                        if (delivery_code == '') {
+                            toastr.error('请填写物流单号', '提示');
+                            return false;
+                        }
+                        sendGoodsData.delivery_company = delivery_company;
+                        sendGoodsData.delivery_code = delivery_code;
+                    }
+
+                    for (var i = 0; i < checkedBox.length; i++) {
+                        orderItem_ids.push(checkedBox.eq(i).attr('data-id'));
+                    }
+
+
+                    sendGoodsData.need_delivery = (needLogistics == 1 ? 'y' : 'n');
+                    sendGoodsData.order_id = order_id;
+                    sendGoodsData.user_id = user_id;
+                    sendGoodsData.orderItem_ids = orderItem_ids.toString();
+
+                    console.log(sendGoodsData);
+                    that.sendGoods(sendGoodsData, function () {
+                        dialog.close();
+                    });
                 });
-                console.log(orderInfo);
             });
         },
         iCheck: function () {
@@ -99,6 +177,36 @@
                 $(this).parents('tr').removeClass('selected');
             })
         },
+        /**
+         * tip
+         * @param data
+         * @param success
+         * @param fail
+         */
+        tip: function (data, success, fail) {
+            this.dialogTip = jDialog.tip(data.content, {
+                target: data.target,
+                position: data.position || 'left'
+            }, {
+                width: data.width || 200,
+                closeable: false,
+                closeOnBodyClick: true,
+                buttonAlign: 'center',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        fail && fail(button, dialog)
+                    }
+                }]
+            });
+        },
         popup: function (data, cb, success) {
             this.popupDialog = jDialog.dialog({
                 title: data.title,
@@ -138,6 +246,9 @@
             //    console.log(start.toISOString(), end.toISOString(), label);
             //});
         },
+        /**
+         * 时间选择插件
+         */
         dateTimerPick: function () {
             var optionSet1 = {
                 singleClasses: "picker_3",
@@ -236,13 +347,13 @@
                 },
                 success: function (data) {
                     if (data.code == 10000) {
-                        if(data.data.total_count > 0){
+                        if (data.data.total_count > 0) {
                             var tpl = _.template($('#j-template-order').html());
                             $('#orderList').html(tpl({
                                 items: data.data.data,
                                 orderStatus: that.orderStatusData
                             }));
-                        }else{
+                        } else {
                             $('#orderList').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
                         }
                         that.pagination(data.data.total_count);
@@ -297,6 +408,91 @@
                 }
             });
         },
+        /**
+         * 加星
+         * @param data
+         */
+        addStar: function (data) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/order/updateAsteriskMark.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: data,
+                beforeSend: function () {
+
+                },
+                success: function (d) {
+                    if (d.code == 10000) {
+                        that.queryOrderList();
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        /**
+         * 备注
+         */
+        addMemo: function (data) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/order/updateMemo.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: data,
+                beforeSend: function () {
+
+                },
+                success: function (d) {
+                    if (d.code == 10000) {
+                        that.queryOrderList();
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        /**
+         * 发货api
+         */
+        sendGoods: function (sendData, cb) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/order/delivery.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: sendData,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('发货成功', '提示');
+                        that.queryOrderList();
+                        cb && cb(data);
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        /**
+         * 翻页
+         * @param total 总数据量
+         */
         pagination: function (total) {
             var that = this;
             var pagination = $('.ui-pagination')

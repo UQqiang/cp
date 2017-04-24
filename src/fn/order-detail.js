@@ -122,55 +122,100 @@
         addEvent: function () {
             var that = this;
 
-            // search
-            $('#search').click(function () {
-                that.search_key = $.trim($('#keywords').val());
-                that.pageId = 1;
-                that.queryBrand();
-            });
+            // 发货
+            $(document).on('click', '.j-send-goods', function () {
+                var orderInfo = JSON.parse(decodeURIComponent($(this).attr('data-orderinfo')));
+                var refundMark = $(this).attr('data-refund_mark');
+                var order_id = $(this).attr('data-order_id');
+                var user_id = $(this).attr('data-user_id');
 
-            $('#batchDelete').click(function () {
-                var checkedBox = $('.checkbox:checked');
-                var idList = [];
-                for (var i = 0; i < checkedBox.length; i++) {
-                    idList.push(checkedBox.eq(i).attr('data-id'));
+                // 发货的时候存在 维权商品
+                if (refundMark && refundMark == 1) {
+                    toastr.error('订单中的部分商品，买家已提交了维权申请，您需要先处理（同意或拒绝）买家退款申请后，才能够进行发货操作。', '提示');
+                    return false;
                 }
+
                 var data = {};
-                data.target = $(this);
-                data.content = '确定要批量删除品牌吗?';
-                that.tip(data, function (btn, dialog) {
-                    console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
-                    dialog.close();
-                }, function (btn, dialog) {
-                    dialog.close();
+                data.title = '商品发货';
+                data.content = '<div id="orderInfo"></div>';
+                data.width = 800;
+                that.popup(data, function () {
+                    var template = _.template($('#j-template-send-goods').html());
+                    $('#orderInfo').html(template({
+                        item: orderInfo,
+                        orderStatus: that.orderStatusData
+                    }));
+                    that.iCheck();
+                    that.queryLogisticsCompany();
+                }, function (btn,dialog) {
+                    // 确定操作
+                    var sendGoodsData = {};
+                    var checkedBox = $('.checkbox:checked');
+                    var needLogistics = $('input[name=logistics]:checked').attr('data-value');
+                    var delivery_company = $('#logisticsList').val();
+                    var delivery_code = $.trim($('#logisticCode').val());
+                    var orderItem_ids = [];
+
+                    if (checkedBox.length < 1) {
+                        toastr.error('请选择要发货的商品', '提示');
+                        return false;
+                    }
+
+                    if (needLogistics == 1) {
+                        // 需要物流
+                        if (delivery_company == '请选择物流公司' || delivery_company == '') {
+                            toastr.error('请选择物流公司', '提示');
+                            return false;
+                        }
+
+                        if (delivery_code == '') {
+                            toastr.error('请填写物流单号', '提示');
+                            return false;
+                        }
+                        sendGoodsData.delivery_company = delivery_company;
+                        sendGoodsData.delivery_code = delivery_code;
+                    }
+
+                    for (var i = 0; i < checkedBox.length; i++) {
+                        orderItem_ids.push(checkedBox.eq(i).attr('data-id'));
+                    }
+
+
+                    sendGoodsData.need_delivery = (needLogistics == 1 ? 'y' : 'n');
+                    sendGoodsData.order_id = order_id;
+                    sendGoodsData.user_id = user_id;
+                    sendGoodsData.orderItem_ids = orderItem_ids.toString();
+
+                    console.log(sendGoodsData);
+                    that.sendGoods(sendGoodsData, function () {
+                        dialog.close();
+                    });
                 });
             });
-
-            // delete
-            $(document).on('click', '.j-brand-delete', function () {
-                var id = $(this).attr('data-id');
-                var name = $(this).attr('data-name');
-                var data = {};
-                data.target = $(this);
-                data.content = '确定要删除品牌' + name + '吗?';
-                that.tip(data, function (btn, dialog) {
-                    that.deleteBrand(id, function (data) {
-                        toastr.success('已成功删除' + name, '提示');
-                        that.queryBrand();
-                    }, function (data) {
-                        toastr.error(data.msg)
-                    });
-                    dialog.close();
-                }, function (btn, dialog) {
-                    dialog.close();
-                });
-            })
+        },
+        popup: function (data, cb, success) {
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: 600,
+                draggable: false,
+                buttonAlign: 'right',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
+            cb && cb();
         },
         /**
          * 订单详情
@@ -196,7 +241,8 @@
                         var t = _.template($('#j-template').html());
                         $('#orderDetail').html(t({
                             items: data.data,
-                            orderStatus: that.payTypeData
+                            payment: that.payTypeData,
+                            orderStatus: that.orderStatusData
                         }));
                         that.order_sn = data.data.order_sn;
 
@@ -220,10 +266,10 @@
         getOrderLogistic: function () {
             var that = this;
             $.ajax({
-                //url: that.api + '/order/delivery/query.do',
-                url: '../src/stub/order_pxress.json',
+                url: that.api + '/order/delivery/query.do',
+                //url: '../src/stub/order_pxress.json',
                 type: 'get',
-                dataType: 'json',
+                dataType: 'jsonp',
                 data: {
                     order_id: that.order_id,
                     user_id: that.user_id
@@ -280,6 +326,75 @@
                             item: data.data.data[0],
                             orderStatus: that.orderStatusData
                         }));
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        /**
+         * 获取物流公司.
+         */
+        queryLogisticsCompany: function () {
+            var that = this;
+            $.ajax({
+                url: that.api + '/order/queryLogisticsCompany.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: {},
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        var tpl = _.template($('#j-template-logistics').html());
+                        $('#logisticsList').html(tpl({
+                            items: data.data
+                        }));
+                    }
+                    // 物流属性切换
+                    $('input[name=logistics]').on('ifChecked', function () {
+                        var value = $(this).attr('data-value');
+                        if (value == 1) {
+                            // 需要物流
+                            $('.logistics-info').show();
+                        } else {
+                            // 不需要物流
+                            $('.logistics-info').hide();
+                        }
+                    })
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        /**
+         * 发货api
+         */
+        sendGoods: function (sendData, cb) {
+            var that = this;
+            $.ajax({
+                url: that.api + '/order/delivery.do',
+                type: 'get',
+                dataType: 'jsonp',
+                data: sendData,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if( data.code == 10000){
+                        toastr.success('发货成功','提示');
+                        that.getOrderDetail();
+                        that.getOrderLogistic();
+                        cb && cb(data);
                     }
                 },
                 complete: function () {

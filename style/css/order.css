@@ -1,0 +1,119 @@
+@charset "UTF-8";
+#orderList .order-header, #orderInfo .order-header {
+  background: #f8f8f8;
+  box-shadow: 1px 1px 5px #ccc; }
+#orderList .fa, #orderInfo .fa {
+  font-size: 16px;
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer; }
+  #orderList .fa.fa-star, #orderInfo .fa.fa-star {
+    color: red; }
+#orderList dl, #orderInfo dl {
+  clear: both; }
+  #orderList dl dt, #orderInfo dl dt {
+    float: left;
+    padding: 2px;
+    border: 1px solid #ccc;
+    margin: 0 10px; }
+  #orderList dl dd, #orderInfo dl dd {
+    float: left; }
+    #orderList dl dd p, #orderInfo dl dd p {
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+    #orderList dl dd p.sku, #orderInfo dl dd p.sku {
+      font-size: 12px;
+      color: #ccc; }
+
+#orderInfo {
+  max-height: 550px;
+  overflow: scroll; }
+
+/**** 订单详情 ***/
+#order, #orderRefund {
+  padding: 20px;
+  /* border: 1px solid #ccc; */
+  background: #f8f8f8;
+  border-radius: 4px;
+  margin-top: 50px; }
+
+#orderLogistic {
+  overflow: hidden; }
+  #orderLogistic .tab-pane {
+    padding: 20px; }
+    #orderLogistic .tab-pane .parcel-info {
+      padding: 20px 0;
+      border-bottom: 1px solid #73879C;
+      border-top: 1px solid #73879C; }
+  #orderLogistic .thirdparty-list:nth-child(3) {
+    color: #26B99A; }
+    #orderLogistic .thirdparty-list:nth-child(3) .cycle {
+      background: #26B99A;
+      border: #26B99A; }
+    #orderLogistic .thirdparty-list:nth-child(3) .logistic-time {
+      border-bottom: 1px dashed #26B99A !important; }
+  #orderLogistic .thirdparty-list {
+    color: #ccc;
+    position: relative; }
+    #orderLogistic .thirdparty-list .cycle {
+      border-radius: 100%;
+      border: 1px solid #ccc;
+      width: 8px;
+      height: 8px;
+      background: #ccc;
+      display: inline-block;
+      margin-right: 10px;
+      position: absolute;
+      top: 40px; }
+    #orderLogistic .thirdparty-list .logistic-content {
+      margin-left: 20px;
+      margin-top: 20px;
+      width: 600px;
+      display: inline-block; }
+      #orderLogistic .thirdparty-list .logistic-content .logistic-time {
+        padding-bottom: 5px;
+        border-bottom: 1px dashed #999; }
+      #orderLogistic .thirdparty-list .logistic-content .logistic-detail {
+        margin-top: 5px;
+        margin-bottom: 10px; }
+
+/**** 维权详情 ***/
+#orderRefund .item-goods {
+  display: inline-block;
+  width: 150px; }
+
+#orderRefundList .refund-list:nth-child(1) {
+  color: #26B99A; }
+  #orderRefundList .refund-list:nth-child(1) .cycle {
+    background: #26B99A;
+    border: #26B99A; }
+  #orderRefundList .refund-list:nth-child(1) .refund-time {
+    border-bottom: 1px dashed #26B99A !important; }
+#orderRefundList .refund-list {
+  color: #ccc;
+  position: relative; }
+  #orderRefundList .refund-list .cycle {
+    border-radius: 100%;
+    border: 1px solid #ccc;
+    width: 8px;
+    height: 8px;
+    background: #ccc;
+    display: inline-block;
+    margin-right: 10px;
+    position: absolute;
+    top: 40px;
+    left: 0px; }
+  #orderRefundList .refund-list .refund-content {
+    margin-left: 20px;
+    margin-top: 20px;
+    width: 100%;
+    padding-right: 40px;
+    display: inline-block; }
+    #orderRefundList .refund-list .refund-content .refund-time {
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #999; }
+    #orderRefundList .refund-list .refund-content .refund-detail {
+      margin-top: 5px;
+      margin-bottom: 10px; }
