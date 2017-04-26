@@ -1,4 +1,5 @@
-/****** 商品列表 *******/
+/******************************** 商品列表 ******************************/
+
 #goodsList {
   dl{
     clear: both;
@@ -24,7 +25,9 @@
   max-height: 500px;
   overflow: scroll;
 }
-/****** 添加商品 ******/
+
+/******************************** 添加商品 ******************************/
+
 .add-goods-step {
   padding-bottom: 25px;
   span {
@@ -294,7 +297,9 @@
     text-align: center;
   }
 }
-/****** 品牌管理 ******/
+
+/******************************** 品牌管理 ******************************/
+
 #brandList{
   .image{
     width: 45px;
@@ -324,7 +329,8 @@
   }
 }
 
-/****** 品类管理 ******/
+/******************************** 品类管理 ******************************/
+
 .categories{
   .category-title{
     padding: 5px;
@@ -408,5 +414,76 @@
     display: inline-block;
     vertical-align: top;
     margin-top: 16px;
+  }
+}
+
+/******************************** 运费模板 ******************************/
+
+#freightTemplate{
+  .carriage-title{
+    padding: 10px;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+  }
+  .template-set{
+    margin-left: 34px;
+    /* margin-top: 20px; */
+    border: 1px solid #ddd;
+    padding: 10px;
+    .left{
+    }
+    .right{
+      margin-top: 5px;
+    }
+    .check-item{
+      display: none;
+    }
+    .check-item.check-show{
+      display: inline-block;
+    }
+    .the-batch{
+      display: none;
+      margin-bottom: 5px;
+    }
+    .areas-contain{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+      max-width: 300px;
+      vertical-align: middle;
+    }
+  }
+}
+#areaTpl{
+  .area{
+    .area-name{
+      padding: 15px 15px;
+      margin-right: 20px;
+    }
+    .area-item{
+      display: inline-block;
+      padding: 15px 15px;
+      position: relative;
+    }
+    .city-item{
+      display: none;
+      position: absolute;
+      background: #CBF1FF;
+      padding: 20px;
+      width: 300px;
+      z-index: 100;
+      .city{
+        display: inline-block;
+        width: 120px;
+        padding: 5px 0;
+      }
+      .j-city-close{
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+      }
+    }
   }
 }

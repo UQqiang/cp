@@ -226,8 +226,10 @@
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
                 visiblePages: that.page.vpage,                                   // 设置最多显示的页码数
                 currentPage: that.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
                 prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
                 next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
                 page: '<a href="javascript:;">{{page}}<\/a>',
                 onPageChange: function (num, type) {
                     that.pageId = num;

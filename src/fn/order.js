@@ -34,6 +34,29 @@
         addEvent: function () {
             var that = this;
 
+            // 搜索
+            $('#j-search').click(function () {
+                that.pageId = 1;
+                that.search_key.order_sn = $.trim($('#order_sn').val());
+                that.search_key.consignee = $.trim($('#consignee').val());
+                that.search_key.order_status = $('#order_status').val() == '0' ? '' : $('#order_status').val();
+                that.search_key.consignee_mobile = $.trim($('#consignee_mobile').val());
+                that.search_key.payment_id = $('#payment_id').val() == '0' ? '' : $('#payment_id').val();
+                that.queryOrderList();
+            });
+
+            $('#goodsTab li').click(function () {
+
+                if ($(this).hasClass('active')) {
+                    return false;
+                }
+                // 重置搜索状态
+                that.search_key.asterisk_mark = $(this).attr('data-type');
+                // 重置页码
+                that.pageId = 1;
+                that.queryOrderList();
+            });
+
             // 加星
             $(document).on('click', '.j-star', function () {
                 var data = {};
@@ -52,7 +75,8 @@
                 sendData.user_id = $(this).attr('data-user_id');
                 config.target = $(this);
                 config.position = 'right';
-                config.content = '<div><textarea class="form-control form-control-md j-memo" maxlength="200">' + memo + '</textarea></div>';
+                config.width = '250';
+                config.content = '<div><textarea class="form-control form-control-lg j-memo" maxlength="200" style="min-height: 100px;">' + (memo == undefined ? '' : memo) + '</textarea></div>';
                 that.tip(config, function (btn, dialog) {
                     sendData.memo = $.trim($('.j-memo').val());
                     that.addMemo(sendData);
@@ -250,6 +274,7 @@
          * 时间选择插件
          */
         dateTimerPick: function () {
+            var that = this;
             var optionSet1 = {
                 singleClasses: "picker_3",
                 startDate: moment().subtract(1, 'days'),
@@ -294,10 +319,14 @@
             $('#timepicker').daterangepicker(optionSet1, function (start, end, label) {
                 console.log(start.toISOString(), end.toISOString(), label);
                 $('#timepicker span').text(start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD'));
+                that.search_key.start_time = start.format('YYYY-MM-DD');
+                that.search_key.end_time = end.format('YYYY-MM-DD');
             });
 
             $('#timepicker').on('cancel.daterangepicker', function (ev, picker) {
                 $(this).find('span').text('请选择相应的时间');
+                that.search_key.start_time = '';
+                that.search_key.end_time = '';
             });
 
             //$('#reportrange').on('show.daterangepicker', function () {
@@ -331,15 +360,15 @@
                 data: {
                     current_page: that.pageId,
                     page_size: that.page.pageSize,
-                    order_sn: '',
-                    consignee_mobile: '',
-                    start_time: '',
-                    end_time: '',
-                    order_status: '',
-                    consignee: '',
+                    order_sn: that.search_key.order_sn || '',
+                    consignee_mobile: that.search_key.consignee_mobile || '',
+                    start_time: that.search_key.start_time || '',
+                    end_time: that.search_key.end_time || '',
+                    order_status: that.search_key.order_status || '',
+                    consignee: that.search_key.consignee || '',
                     user_mobile: '',
-                    payment_id: '',
-                    asterisk_mark: '',
+                    payment_id: that.search_key.payment_id || '',
+                    asterisk_mark: that.search_key.asterisk_mark || '',
                     print_mark: ''
                 },
                 beforeSend: function () {
@@ -424,6 +453,7 @@
                 },
                 success: function (d) {
                     if (d.code == 10000) {
+                        toastr.success('加星成功','提示');
                         that.queryOrderList();
                     }
                 },
@@ -501,8 +531,10 @@
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
                 visiblePages: that.page.vpage,                                   // 设置最多显示的页码数
                 currentPage: that.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
                 prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
                 next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
                 page: '<a href="javascript:;">{{page}}<\/a>',
                 onPageChange: function (num, type) {
                     that.pageId = num;

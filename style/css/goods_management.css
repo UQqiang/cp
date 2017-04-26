@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/****** 商品列表 *******/
+/******************************** 商品列表 ******************************/
 #goodsList dl {
   clear: both; }
   #goodsList dl dt {
@@ -19,7 +19,7 @@
   max-height: 500px;
   overflow: scroll; }
 
-/****** 添加商品 ******/
+/******************************** 添加商品 ******************************/
 .add-goods-step {
   padding-bottom: 25px; }
   .add-goods-step span {
@@ -235,7 +235,7 @@
     min-width: 150px;
     text-align: center; }
 
-/****** 品牌管理 ******/
+/******************************** 品牌管理 ******************************/
 #brandList .image {
   width: 45px;
   height: 45px;
@@ -258,7 +258,7 @@
   height: 90px;
   position: relative; }
 
-/****** 品类管理 ******/
+/******************************** 品类管理 ******************************/
 .categories .category-title {
   padding: 5px;
   background: #169F85;
@@ -325,3 +325,54 @@
   display: inline-block;
   vertical-align: top;
   margin-top: 16px; }
+
+/******************************** 运费模板 ******************************/
+#freightTemplate .carriage-title {
+  padding: 10px;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd; }
+#freightTemplate .template-set {
+  margin-left: 34px;
+  /* margin-top: 20px; */
+  border: 1px solid #ddd;
+  padding: 10px; }
+  #freightTemplate .template-set .right {
+    margin-top: 5px; }
+  #freightTemplate .template-set .check-item {
+    display: none; }
+  #freightTemplate .template-set .check-item.check-show {
+    display: inline-block; }
+  #freightTemplate .template-set .the-batch {
+    display: none;
+    margin-bottom: 5px; }
+  #freightTemplate .template-set .areas-contain {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 300px;
+    vertical-align: middle; }
+
+#areaTpl .area .area-name {
+  padding: 15px 15px;
+  margin-right: 20px; }
+#areaTpl .area .area-item {
+  display: inline-block;
+  padding: 15px 15px;
+  position: relative; }
+#areaTpl .area .city-item {
+  display: none;
+  position: absolute;
+  background: #CBF1FF;
+  padding: 20px;
+  width: 300px;
+  z-index: 100; }
+  #areaTpl .area .city-item .city {
+    display: inline-block;
+    width: 120px;
+    padding: 5px 0; }
+  #areaTpl .area .city-item .j-city-close {
+    position: absolute;
+    right: 10px;
+    bottom: 10px; }

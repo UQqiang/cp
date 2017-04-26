@@ -42,7 +42,7 @@
                     <div class="form-inline">
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">订单号：</label>
-                            <input class="form-control form-control-lg">
+                            <input class="form-control form-control-lg" id="order_sn">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr pt5">下单时间：</label>
@@ -54,23 +54,27 @@
                     <br/>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">收货人姓名：</label>
-                            <input class="form-control form-control-lg">
+                            <input class="form-control form-control-lg" id="consignee">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">订单状态：</label>
-                            <select id="heard2" class="form-control form-control-lg" required>
-                                <option value="">请选择订单状态</option>
-                                <option value="press">待付款</option>
-                                <option value="net">待发货</option>
-                                <option value="mouth">已发货</option>
-                                <option value="mouth">已完成</option>
-                                <option value="mouth">已关闭</option>
-                                <option value="mouth">维权中</option>
+                            <select id="order_status" class="form-control form-control-lg">
+                                <option value="0">请选择订单状态</option>
+                                <option value="10">待支付</option>
+                                <option value="20">买家已取消</option>
+                                <option value="21">卖家已取消</option>
+                                <option value="30">已支付</option>
+                                <option value="40">已发货</option>
+                                <option value="50">已签收</option>
+                                <option value="60">已评价</option>
+                                <option value="70">退款中</option>
+                                <option value="80">退款完成</option>
+                                <option value="90">订单关闭</option>
                             </select>
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">所属仓库：</label>
-                            <select id="heard2" class="form-control form-control-lg" required>
+                            <select id="heard" class="form-control form-control-lg" required>
                                 <option value="">请选择订单状态</option>
                                 <option value="press">待付款</option>
                                 <option value="net">待发货</option>
@@ -84,15 +88,21 @@
                     <br/>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">收货人手机：</label>
-                            <input class="form-control form-control-lg">
+                            <input class="form-control form-control-lg" id="consignee_mobile">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">付款方式：</label>
-                            <select id="heard2" class="form-control form-control-lg" required>
-                                <option value="">请选择付款方式</option>
-                                <option value="press">支付宝</option>
-                                <option value="net">微信</option>
-                                <option value="mouth">银联</option>
+                            <select id="payment_id" class="form-control form-control-lg" required>
+                                <option value="0">请选择付款方式</option>
+                                <option value="1">支付宝APP支付</option>
+                                <option value="2">微信支付APP支付</option>
+                                <option value="3">银联支付APP支付</option>
+                                <option value="4">支付宝wap支付</option>
+                                <option value="5">微信wap支付</option>
+                                <option value="6">银联wap支付</option>
+                                <option value="7">统统付APP</option>
+                                <option value="8">统统wap</option>
+                                <option value="9">余额支付</option>
                             </select>
                         </div>
                     <br/>
@@ -118,7 +128,7 @@
                         <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
                         <!--<span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>-->
                         <!--</div>-->
-                        <button type="button" class="btn btn-sm btn-success ml10 mb10">搜索</button>
+                        <button type="button" class="btn btn-sm btn-success ml10 mb10" id="j-search">搜索</button>
                     </div>
                 </div>
             </div>
@@ -136,6 +146,16 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
+                    <div class="" role="tabpanel">
+                        <ul id="goodsTab" class="nav nav-tabs bar_tabs right" role="tablist">
+                            <li role="presentation" class="" data-type="1">
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="加星" aria-expanded="true">加星</a>
+                            </li>
+                            <li role="presentation" class="active">
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="全部" aria-expanded="false">全部</a>
+                            </li>
+                        </ul>
+                    </div>
                     <!--<div>-->
                         <!--<div class="form-group">-->
                             <!--<a class="btn btn-sm btn-success" href="goods.html">添加商品</a>-->
@@ -255,10 +275,10 @@
                 <tr>
                     <td colspan="18">
                         <% if( item.seller_memo ){ %>
-                        <a class="j-add-comment" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-memo="<%= item.seller_memo %>" href="javascript:;">修改备注：</a>
+                        <a class="j-add-comment" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-memo="<%= item.seller_memo %>" href="javascript:;">卖家备注（修改）：</a>
                         <span><%= item.seller_memo %></span>
                         <% }else{ %>
-                        <a class="j-add-comment" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>" href="javascript:;">备注</a>
+                        <a class="j-add-comment" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>" href="javascript:;">添加备注</a>
                         <% } %>
                     </td>
                 </tr>

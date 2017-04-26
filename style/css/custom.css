@@ -3176,6 +3176,9 @@ a.hiddenanchor {
 .left {
   float: left; }
 
+.right {
+  float: right; }
+
 .alignleft {
   float: left;
   margin-right: 15px; }
@@ -4340,3 +4343,8 @@ a.antoo {
     position: absolute;
     right: 5px;
     top: 13px; }
+
+/*************************** icheck ***************************/
+.icheckbox_flat-green,
+.iradio_flat-green {
+  vertical-align: top; }

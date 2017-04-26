@@ -803,7 +803,7 @@
             }
 
             // 商品类型 切换
-            $('input[name=radio-goods]').on('ifChecked', function () {
+            $('input[name=radio-goods]').on('ifCheck', function () {
                 if ($(this).val() == 2) {
                     // 国内商品
                     $('#rate').hide();
