@@ -2498,6 +2498,9 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
   -moz-animation: .7s 1 shake linear;
   -webkit-animation: 0.7s 1 shake linear;
 }
+.field{
+  position: relative;
+}
 
 .item input, .item textarea {
   -webkit-transition: 0.42s;
@@ -2515,13 +2518,15 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
   color: #FFF;
   border-radius: 3px 4px 4px 3px;
   background-color: #CE5454;
-  max-width: 200px;
+  width: 150px;
   white-space: pre;
-  position: relative;
-  left: -15px;
+  position: absolute;
   opacity: 0;
   z-index: 1;
   transition: 0.15s ease-out;
+  top: 1px;
+  /* right: inherit; */
+  right: -160px;
 }
 
 .item .alert::after {
@@ -2538,7 +2543,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
 }
 
 .item.bad .alert {
-  left: 0;
+  //right: 0;
   opacity: 1;
 }
 

@@ -155,7 +155,7 @@
 <script type="text/template" id="tpl">
     <% if( items ){ %>
     <% _.each(items,function(item){ %>
-    <tr class="template-tr field item" data-arr="<%= encodeURIComponent(JSON.stringify(item.areas)) %>">
+    <tr class="template-tr" data-arr="<%= encodeURIComponent(JSON.stringify(item.areas)) %>">
         <td class="cell-40">
             <div class="left">
                     <% if( batchType && batchType == 1 ){ %>
@@ -173,25 +173,33 @@
                 <a class="j-city-choose" href="javascript:;">编辑</a>
             </div>
         </td>
-        <td class="field item">
-            <% if( status == 0 ){ %>
-            <input type="text" class="form-control form-control-sm basic_count" value="<%= item.basic_count %>" required="required" name="数据" pattern="numeric">
-            <% }else{ %>
-            <input type="text" class="form-control form-control-sm basic_count" value="<%= (item.basic_count / 10) %>" required="required" name="数据" pattern="decimalOne">
-            <% } %>
+        <td>
+            <div class="field item">
+                <% if( status == 0 ){ %>
+                <input type="text" class="form-control form-control-sm basic_count" value="<%= item.basic_count %>" required="required" name="数据" pattern="numeric">
+                <% }else{ %>
+                <input type="text" class="form-control form-control-sm basic_count" value="<%= (item.basic_count / 10) %>" required="required" name="数据" pattern="decimalOne">
+                <% } %>
+            </div>
         </td>
-        <td class="field item">
-            <input type="text" class="form-control form-control-sm basic_charge" value="<%= (item.basic_charge / 100).toFixed(2) %>" required="required" name="数据" pattern="decimal">
+        <td>
+            <div class="field item">
+                <input type="text" class="form-control form-control-sm basic_charge" value="<%= (item.basic_charge / 100).toFixed(2) %>" required="required" name="数据" pattern="decimal">
+            </div>
         </td>
-        <td class="field item">
-            <% if( status == 0 ){ %>
-            <input type="text" class="form-control form-control-sm extra_count" value="<%= (item.extra_count) %>" required="required" name="数据" pattern="numeric">
-            <% }else{ %>
-            <input type="text" class="form-control form-control-sm extra_count" value="<%= (item.extra_count / 10) %>" required="required" name="数据" pattern="decimalOne">
-            <% } %>
+        <td>
+            <div class="field item">
+                <% if( status == 0 ){ %>
+                <input type="text" class="form-control form-control-sm extra_count" value="<%= (item.extra_count) %>" required="required" name="数据" pattern="numeric">
+                <% }else{ %>
+                <input type="text" class="form-control form-control-sm extra_count" value="<%= (item.extra_count / 10) %>" required="required" name="数据" pattern="decimalOne">
+                <% } %>
+            </div>
         </td>
-        <td class="field item">
-            <input type="text" class="form-control form-control-sm extra_charge" value="<%= (item.extra_charge / 100).toFixed(2) %>" required="required" name="数据" pattern="decimal">
+        <td>
+            <div class="field item">
+                <input type="text" class="form-control form-control-sm extra_charge" value="<%= (item.extra_charge / 100).toFixed(2) %>" required="required" name="数据" pattern="decimal">
+            </div>
         </td>
         <td><a class="j-del" href="javascript:;">删除</a></td>
     </tr>
@@ -211,25 +219,33 @@
                 <a class="j-city-choose" href="javascript:;">编辑</a>
             </div>
         </td>
-        <td class="field item">
-            <% if( status == 0 ){ %>
-            <input type="text" class="form-control form-control-sm basic_count" required="required" pattern="numeric" name="数据">
-            <% }else{ %>
-            <input type="text" class="form-control form-control-sm basic_count" required="required" pattern="decimalOne" name="数据">
-            <% } %>
+        <td>
+            <div class="field item">
+                <% if( status == 0 ){ %>
+                <input type="text" class="form-control form-control-sm basic_count" required="required" pattern="numeric" name="数据">
+                <% }else{ %>
+                <input type="text" class="form-control form-control-sm basic_count" required="required" pattern="decimalOne" name="数据">
+                <% } %>
+            </div>
         </td>
-        <td class="field item">
-            <input type="text" class="form-control form-control-sm basic_charge" required="required" pattern="decimal" name="数据">
+        <td>
+            <div class="field item">
+                <input type="text" class="form-control form-control-sm basic_charge" required="required" pattern="decimal" name="数据">
+            </div>
         </td>
-        <td class="field item">
-            <% if( status == 0 ){ %>
-            <input type="text" class="form-control form-control-sm extra_count" required="required" pattern="numeric" name="数据">
-            <% }else{ %>
-            <input type="text" class="form-control form-control-sm extra_count" required="required" pattern="decimalOne" name="数据">
-            <% } %>
+        <td>
+            <div class="field item">
+                <% if( status == 0 ){ %>
+                <input type="text" class="form-control form-control-sm extra_count" required="required" pattern="numeric" name="数据">
+                <% }else{ %>
+                <input type="text" class="form-control form-control-sm extra_count" required="required" pattern="decimalOne" name="数据">
+                <% } %>
+            </div>
         </td>
-        <td class="field item">
-            <input type="text" class="form-control form-control-sm extra_charge" required="required" pattern="decimal" name="数据">
+        <td>
+            <div class="field item">
+                <input type="text" class="form-control form-control-sm extra_charge" required="required" pattern="decimal" name="数据">
+            </div>
         </td>
         <td><a class="j-del" href="javascript:;">删除</a></td>
     </tr>

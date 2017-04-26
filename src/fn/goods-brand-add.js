@@ -14,7 +14,7 @@
                 positionClass: "toast-top-center"
             });
             this.brand_id = HDL.getQuery('id');
-            var height = window.innerHeight - 200;
+            var height = window.innerHeight - 100;
             var contentHeight = $('.x_panel').height();
             $('.x_panel').css({
                 'min-height': (height > contentHeight ? height : contentHeight) + 'px'

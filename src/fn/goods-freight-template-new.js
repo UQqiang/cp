@@ -9,7 +9,7 @@
             this.isAjax = false;
 
             // 填充高度
-            var height = window.innerHeight - 200;
+            var height = window.innerHeight - 100;
             var contentHeight = $('.x_panel').height();
             $('.x_panel').css({
                 'min-height': (height > contentHeight ? height : contentHeight) + 'px'
@@ -162,6 +162,13 @@
                     var result = validator.checkField.call(validator, required.eq(i));
                     if (result.valid === false) {
                         isValid = false;
+                        return;
+                    }
+                }
+                for( var n = 0 ; n < $('.template-tr').length; n ++ ){
+                    if( !$('.template-tr').eq(n).attr('data-arr') ){
+                        toastr.error('暂未选择地区','提示');
+                        return;
                     }
                 }
                 if (isValid == true) {
@@ -600,7 +607,6 @@
             if (this.template_id) {
                 this.postData.id = this.template_id;
             }
-            ;
             this.postData.name = $.trim($('#name').val());
             this.postData.pricing_method = $('input[name=radio]:checked').attr('data-value');
             this.postData.basic_charge = (Number($.trim($('.default-shipping .basic_charge').val())) * 100).toFixed(0);
