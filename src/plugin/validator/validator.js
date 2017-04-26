@@ -59,6 +59,7 @@ FormValidator.prototype = {
             phone        : /^\+?([0-9]|[-|' '])+$/i,
             numeric      : /^[0-9]+$/i,
             decimal      : /^\d+(\.\d{2})?$/,
+            decimalOne   : /^\d*\.{0,1}\d{0,1}$/,
             alphanumeric : /^[a-zA-Z0-9]+$/i,
             email        : {
                 illegalChars : /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
@@ -151,16 +152,19 @@ FormValidator.prototype = {
 
                 switch( data.pattern ){
                     case 'alphanumeric' :
-                        regex = this.settings.regex.alphanumeric
+                        regex = this.settings.regex.alphanumeric;
                         break;
                     case 'numeric' :
-                        regex = this.settings.regex.numeric
+                        regex = this.settings.regex.numeric;
                         break;
                     case 'phone' :
-                        regex = this.settings.regex.phone
+                        regex = this.settings.regex.phone;
                         break;
                     case 'decimal':
                         regex = this.settings.regex.decimal;
+                        break;
+                    case 'decimalOne':
+                        regex = this.settings.regex.decimalOne;
                         break;
                     default :
                         regex = data.pattern;

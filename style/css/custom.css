@@ -4279,6 +4279,9 @@ ul.notifications {
 .ui-label.ui-label-lg {
   width: 140px; }
 
+.inline {
+  display: inline-block; }
+
 /****** pagination ******/
 .ui-pagination a {
   display: inline-block;

@@ -4,7 +4,6 @@
 ;(function () {
     var main = {
         init: function () {
-            this.api = Api.domain();                    // 接口请求的api
             this.page = {};
             this.page.pageSize = 20;
             this.page.vpage = 10;
@@ -353,10 +352,8 @@
          */
         queryOrderList: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/query.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/query.do',
                 data: {
                     current_page: that.pageId,
                     page_size: that.page.pageSize,
@@ -375,19 +372,16 @@
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        if (data.data.total_count > 0) {
-                            var tpl = _.template($('#j-template-order').html());
-                            $('#orderList').html(tpl({
-                                items: data.data.data,
-                                orderStatus: that.orderStatusData
-                            }));
-                        } else {
-                            $('#orderList').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
-                        }
-                        that.pagination(data.data.total_count);
+                    if (data.data.total_count > 0) {
+                        var tpl = _.template($('#j-template-order').html());
+                        $('#orderList').html(tpl({
+                            items: data.data.data,
+                            orderStatus: that.orderStatusData
+                        }));
                     } else {
+                        $('#orderList').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
                     }
+                    that.pagination(data.data.total_count);
                 },
                 complete: function () {
 
@@ -402,21 +396,17 @@
          */
         queryLogisticsCompany: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/queryLogisticsCompany.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/queryLogisticsCompany.do',
                 data: {},
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        var tpl = _.template($('#j-template-logistics').html());
-                        $('#logisticsList').html(tpl({
-                            items: data.data
-                        }));
-                    }
+                    var tpl = _.template($('#j-template-logistics').html());
+                    $('#logisticsList').html(tpl({
+                        items: data.data
+                    }));
                     // 物流属性切换
                     $('input[name=logistics]').on('ifChecked', function () {
                         var value = $(this).attr('data-value');
@@ -443,19 +433,15 @@
          */
         addStar: function (data) {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/updateAsteriskMark.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/updateAsteriskMark.do',
                 data: data,
                 beforeSend: function () {
 
                 },
                 success: function (d) {
-                    if (d.code == 10000) {
-                        toastr.success('加星成功','提示');
-                        that.queryOrderList();
-                    }
+                    toastr.success('加星成功', '提示');
+                    that.queryOrderList();
                 },
                 complete: function () {
 
@@ -470,18 +456,14 @@
          */
         addMemo: function (data) {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/updateMemo.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/updateMemo.do',
                 data: data,
                 beforeSend: function () {
 
                 },
                 success: function (d) {
-                    if (d.code == 10000) {
-                        that.queryOrderList();
-                    }
+                    that.queryOrderList();
                 },
                 complete: function () {
 
@@ -496,20 +478,16 @@
          */
         sendGoods: function (sendData, cb) {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/delivery.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/delivery.do',
                 data: sendData,
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        toastr.success('发货成功', '提示');
-                        that.queryOrderList();
-                        cb && cb(data);
-                    }
+                    toastr.success('发货成功', '提示');
+                    that.queryOrderList();
+                    cb && cb(data);
                 },
                 complete: function () {
 

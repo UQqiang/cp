@@ -37,7 +37,6 @@
             this.skuGallery = [];                       // sku主图
             this.editor = UE.getEditor('editor');       // 富文本编辑器
             this.warehouseData = [];
-            this.api = Api.domain();                    // 接口请求的api
             this.goodsId = HDL.getQuery('id');          // 商品的id
             // 初始化提示框
             toastr.options = ({
@@ -445,9 +444,9 @@
                     }
                 }
                 for (var m = 0; m < that.skuTableData.length; m++) {
-                    for( var n = 0 ; n < that.skuTableData[m].prop.length; n++){
-                        if( pid == that.skuTableData[m].prop[n].value_id ){
-                            that.skuTableData.splice(m,1);
+                    for (var n = 0; n < that.skuTableData[m].prop.length; n++) {
+                        if (pid == that.skuTableData[m].prop[n].value_id) {
+                            that.skuTableData.splice(m, 1);
                             m--;
                         }
                     }
@@ -536,7 +535,7 @@
         /**
          * 新增sku条目
          */
-        addSku: function (cb,onAddcb) {
+        addSku: function (cb, onAddcb) {
             var that = this;
             var selectizeTpl = _.template($('#j-template-selectize').html());
 
@@ -582,6 +581,7 @@
                     }
                 }
             }
+
             combineArr([], 0);
             return r
         },
@@ -851,15 +851,15 @@
 
                 var lowestPrice = [], suggestionsPrice = [], ean = [];
                 $.each(that.skuTableData, function (i, obj) {
-                    if( obj.lowestPrice ){
+                    if (obj.lowestPrice) {
                         lowestPrice.push(Number(obj.lowestPrice));
                     }
-                    if( obj.suggestionsPrice ){
+                    if (obj.suggestionsPrice) {
                         suggestionsPrice.push(Number(obj.suggestionsPrice));
                     }
                 });
 
-                lowestPrice.length > 0 ? $('#lowestPrice').val((lowestPrice.sort(that.sortNumber).shift() / 100).toFixed(2)): $('#lowestPrice').val('');
+                lowestPrice.length > 0 ? $('#lowestPrice').val((lowestPrice.sort(that.sortNumber).shift() / 100).toFixed(2)) : $('#lowestPrice').val('');
 
                 suggestionsPrice.length > 0 ? $('#suggestionsPrice').val((suggestionsPrice.sort(that.sortNumber).shift() / 100).toFixed(2)) : $('#suggestionsPrice').val('');
 
@@ -971,68 +971,66 @@
          */
         queryCategory: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/category/query.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/category/query.do',
                 data: {},
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
                     that.categoryData = data.data;
-                    if (data.code === 10000) {
-                        var template = _.template($('#template-category').html());
 
-                        // 渲染一级类目
-                        $('#add-goods-category-1').html(template({
-                            items: data.data,
-                            level: 1
-                        }));
+                    var template = _.template($('#template-category').html());
 
-                        // 类目的点击事件
-                        $('.categories').on('click', '.category-list li', function () {
-                            var id = $(this).attr('data-id');
-                            var parent_id = $(this).attr('data-parent_id');
-                            var name = $.trim($(this).text());
-                            var level = $(this).attr('data-cate_level');
+                    // 渲染一级类目
+                    $('#add-goods-category-1').html(template({
+                        items: data.data,
+                        level: 1
+                    }));
 
-                            if (parent_id == 0) {
-                                // 点击的是一级类目
-                                // 一级类目移除active
-                                $('.category-list li[data-parent_id=' + parent_id + ']').removeClass('active');
-                                $('#add-goods-category-2').html(template({
-                                    items: data.data,
-                                    parent_id: id,
-                                    level: 2
-                                }));
-                                that.currentCateObj = {};
-                            } else {
-                                // 点击的是二级类目
-                                $('.category-list li[data-parent_id!=0]').removeClass('active');
-                            }
+                    // 类目的点击事件
+                    $('.categories').on('click', '.category-list li', function () {
+                        var id = $(this).attr('data-id');
+                        var parent_id = $(this).attr('data-parent_id');
+                        var name = $.trim($(this).text());
+                        var level = $(this).attr('data-cate_level');
 
-                            that.currentCateObj[level] = {
-                                id: id,
-                                parent_id: parent_id,
-                                name: name,
-                                level: level
-                            };
-                            $(this).addClass('active');
+                        if (parent_id == 0) {
+                            // 点击的是一级类目
+                            // 一级类目移除active
+                            $('.category-list li[data-parent_id=' + parent_id + ']').removeClass('active');
+                            $('#add-goods-category-2').html(template({
+                                items: data.data,
+                                parent_id: id,
+                                level: 2
+                            }));
+                            that.currentCateObj = {};
+                        } else {
+                            // 点击的是二级类目
+                            $('.category-list li[data-parent_id!=0]').removeClass('active');
+                        }
 
-                            console.log('that.currentCateObj :' + that.currentCateObj);
+                        that.currentCateObj[level] = {
+                            id: id,
+                            parent_id: parent_id,
+                            name: name,
+                            level: level
+                        };
+                        $(this).addClass('active');
 
-                            if (that.currentCateObj['2']) {
-                                that.cateId = that.currentCateObj['2'].id;
-                                var cate_1 = that.currentCateObj['1'].name;
-                                var cate_2 = that.currentCateObj['2'].name;
-                                $('.currentCategory').html(cate_1 + '&nbsp;-&nbsp;' + cate_2);
-                                $('#nextStep').removeAttr('disabled').text('下一步');
-                            } else {
-                                $('#nextStep').attr('disabled', 'disabled').text('请选择类目');
-                                $('.currentCategory').html('');
-                            }
-                        })
-                    }
+                        console.log('that.currentCateObj :' + that.currentCateObj);
+
+                        if (that.currentCateObj['2']) {
+                            that.cateId = that.currentCateObj['2'].id;
+                            var cate_1 = that.currentCateObj['1'].name;
+                            var cate_2 = that.currentCateObj['2'].name;
+                            $('.currentCategory').html(cate_1 + '&nbsp;-&nbsp;' + cate_2);
+                            $('#nextStep').removeAttr('disabled').text('下一步');
+                        } else {
+                            $('#nextStep').attr('disabled', 'disabled').text('请选择类目');
+                            $('.currentCategory').html('');
+                        }
+                    })
+
                 },
                 complete: function () {
                 },
@@ -1046,10 +1044,8 @@
          */
         queryHistorySkuProperty: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/property/sku/query.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/property/sku/query.do',
                 data: {},
                 beforeSend: function (XMLHttpRequest) {
                 },
@@ -1074,10 +1070,8 @@
          */
         skuPropAdd: function (sku_id, property_name, cb) {
             var that = this;
-            $.ajax({
-                url: that.api + '/property/sku_property/add.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/property/sku_property/add.do',
                 data: {
                     sku_id: sku_id,
                     property_name: property_name
@@ -1085,9 +1079,7 @@
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        cb && cb(data.data.id)
-                    }
+                    cb && cb(data.data.id)
                 },
                 complete: function () {
                 },
@@ -1101,23 +1093,16 @@
          */
         queryCountry: function () {
             var that = this;
-            $.ajax({
+            Api.get({
                 url: '../src/stub/flag.json',
-                type: 'get',
-                dataType: 'json',
                 data: {},
                 beforeSend: function () {
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        var t = _.template($('#j-template-country').html());
-                        $('#countryList').html(t({
-                            items: data.data.item_list
-                        }));
-
-                    } else {
-                        toastr.error(data.msg, '提示');
-                    }
+                    var t = _.template($('#j-template-country').html());
+                    $('#countryList').html(t({
+                        items: data.data.item_list
+                    }));
                 },
                 complete: function () {
                 },
@@ -1131,23 +1116,16 @@
          */
         queryBrand: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/brand/query.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/brand/query.do',
                 data: {},
                 beforeSend: function () {
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        var t = _.template($('#j-template-brand').html());
-                        $('#brandList').html(t({
-                            items: data.data.data
-                        }));
-
-                    } else {
-                        toastr.error(data.msg, '提示');
-                    }
+                    var t = _.template($('#j-template-brand').html());
+                    $('#brandList').html(t({
+                        items: data.data.data
+                    }));
                 },
                 complete: function () {
                 },
@@ -1161,19 +1139,13 @@
          */
         addGoods: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/item/add.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/item/add.do',
                 data: that.postData,
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
-                    if (data.code === 10000) {
-
-                    } else {
-                        toastr.error(data.msg, '错误提示')
-                    }
+                    // todo 添加商品
                 },
                 complete: function () {
                 },
@@ -1186,21 +1158,15 @@
          */
         getGoods: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/item/get.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/item/get.do',
                 data: {
                     item_id: that.goodsId
                 },
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
-                    if (data.code === 10000) {
-                        that.renderGoods(data.data)
-                    } else {
-                        toastr.error(data.msg, '错误提示')
-                    }
+                    that.renderGoods(data.data)
                 },
                 complete: function () {
                 },

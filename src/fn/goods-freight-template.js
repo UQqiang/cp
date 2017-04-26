@@ -4,7 +4,6 @@
 ;(function () {
     var main = {
         init: function () {
-            this.api = Api.domain();
             this.render();
             this.addEvent();
 
@@ -74,18 +73,12 @@
         // 复制模板
         copyCarriageTpl: function (data) {
             var that = this;
-            $.ajax({
-                url: that.api + "/freight/copy.do",
-                dataType: "jsonp",
-                type: "get",
+            Api.get({
+                url: "/freight/copy.do",
                 data: data,
                 success: function (d) {
-                    if (d.code == 10000) {
-                        toastr.success('复制成功', '提示');
-                        that.render()
-                    } else {
-                        toastr.error(d.msg, '提示')
-                    }
+                    toastr.success('复制成功', '提示');
+                    that.render()
                 },
                 error: function (d) {
                     toastr.error(d.msg, '提示');
@@ -122,37 +115,35 @@
         // 删除模板
         deleteCarriageTpl: function (id) {
             var that = this;
-            $.ajax({
-                url: that.api + "/freight/delete.do",
-                dataType: "jsonp",
-                type: "get",
+            Api.get({
+                url: '/freight/delete.do',
                 data: {
                     id: id
                 },
-                success: function (d) {
-                    if (d.code == 10000) {
-                        toastr.success('删除成功', '提示');
-                        that.render()
-                    } else {
-                        toastr.error(d.msg, '提示')
-                    }
+                success: function (data) {
+                    toastr.success('删除成功', '提示');
+                    that.render()
                 },
-                error: function (d) {
-                    toastr.error(d.msg, '提示');
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
                 }
-            })
+            });
         },
         render: function () {
             var that = this;
-            $.ajax({
-                url: that.api + "/freight/query.do",
-                dataType: "jsonp",
-                type: "get",
+            Api.get({
+                url: "/freight/query.do",
                 success: function (data) {
                     that.templateShow(data)
                 },
-                error: function (d) {
-                    toastr.error(d.msg, '错误提示');
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
                 }
             })
         },

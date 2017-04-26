@@ -1,7 +1,6 @@
 ;(function () {
     var main = {
         init: function () {
-            this.api = Api.domain();                    // 接口请求的api
             this.page = {};
             this.page.pageSize = 20;
             this.page.vpage = 10;
@@ -175,10 +174,8 @@
          */
         getRefundDetail: function (cb) {
             var that = this;
-            $.ajax({
-                url: that.api + '/refund//detail.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/refund//detail.do',
                 data: {
                     order_id: that.order_id,
                     user_id: that.user_id,
@@ -188,28 +185,24 @@
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        // 滚动条自动回顶部
-                        document.getElementsByTagName('body')[0].scrollTop = 0;
 
-                        var t = _.template($('#j-template').html());
-                        $('#orderRefundDetail').html(t({
-                            items: data.data.return_items,
-                            data:data.data,
-                            orderStatus: that.payTypeData
-                        }));
+                    // 滚动条自动回顶部
+                    document.getElementsByTagName('body')[0].scrollTop = 0;
 
-                        var t2 = _.template($('#j-template-refund').html());
-                        $('#orderRefundList').html(t2({
-                            items: data.data.return_items
-                        }));
-                        that.order_sn = data.data.order_sn;
+                    var t = _.template($('#j-template').html());
+                    $('#orderRefundDetail').html(t({
+                        items: data.data.return_items,
+                        data: data.data,
+                        orderStatus: that.payTypeData
+                    }));
 
-                        cb && cb();
+                    var t2 = _.template($('#j-template-refund').html());
+                    $('#orderRefundList').html(t2({
+                        items: data.data.return_items
+                    }));
+                    that.order_sn = data.data.order_sn;
 
-                    } else {
-                        toastr.error(data.msg, '提示');
-                    }
+                    cb && cb();
                 },
                 complete: function () {
 

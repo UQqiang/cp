@@ -1,7 +1,6 @@
 ;(function () {
     var main = {
         init: function () {
-            this.api = Api.domain();                    // 接口请求的api
             this.page = {};
             this.page.pageSize = 20;
             this.page.vpage = 10;
@@ -147,7 +146,7 @@
                     }));
                     that.iCheck();
                     that.queryLogisticsCompany();
-                }, function (btn,dialog) {
+                }, function (btn, dialog) {
                     // 确定操作
                     var sendGoodsData = {};
                     var checkedBox = $('.checkbox:checked');
@@ -222,10 +221,8 @@
          */
         getOrderDetail: function (cb) {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/get.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/get.do',
                 data: {
                     order_id: that.order_id,
                     user_id: that.user_id
@@ -234,23 +231,18 @@
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        // 滚动条自动回顶部
-                        document.getElementsByTagName('body')[0].scrollTop = 0;
+                    // 滚动条自动回顶部
+                    document.getElementsByTagName('body')[0].scrollTop = 0;
 
-                        var t = _.template($('#j-template').html());
-                        $('#orderDetail').html(t({
-                            items: data.data,
-                            payment: that.payTypeData,
-                            orderStatus: that.orderStatusData
-                        }));
-                        that.order_sn = data.data.order_sn;
+                    var t = _.template($('#j-template').html());
+                    $('#orderDetail').html(t({
+                        items: data.data,
+                        payment: that.payTypeData,
+                        orderStatus: that.orderStatusData
+                    }));
+                    that.order_sn = data.data.order_sn;
 
-                        cb && cb();
-
-                    } else {
-                        toastr.error(data.msg, '提示');
-                    }
+                    cb && cb();
                 },
                 complete: function () {
 
@@ -265,11 +257,9 @@
          */
         getOrderLogistic: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/delivery/query.do',
+            Api.get({
+                url: '/order/delivery/query.do',
                 //url: '../src/stub/order_pxress.json',
-                type: 'get',
-                dataType: 'jsonp',
                 data: {
                     order_id: that.order_id,
                     user_id: that.user_id
@@ -278,23 +268,20 @@
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        // 滚动条自动回顶部
-                        document.getElementsByTagName('body')[0].scrollTop = 0;
 
-                        var template = _.template($('#j-template-logistic').html());
-                        $('#orderLogistic').html(template({
-                            items: data.data
-                        }));
+                    // 滚动条自动回顶部
+                    document.getElementsByTagName('body')[0].scrollTop = 0;
 
-                        $('#orderLogistic a').click(function (e) {
-                            e.preventDefault();
-                            $(this).tab('show')
-                        })
+                    var template = _.template($('#j-template-logistic').html());
+                    $('#orderLogistic').html(template({
+                        items: data.data
+                    }));
 
-                    } else {
-                        toastr.error(data.msg, '提示');
-                    }
+                    $('#orderLogistic a').click(function (e) {
+                        e.preventDefault();
+                        $(this).tab('show')
+                    })
+
                 },
                 complete: function () {
 
@@ -309,10 +296,8 @@
          */
         queryOrderList: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/query.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/query.do',
                 data: {
                     order_sn: that.order_sn
                 },
@@ -320,13 +305,11 @@
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        var tpl = _.template($('#j-template-order').html());
-                        $('#orderList').html(tpl({
-                            item: data.data.data[0],
-                            orderStatus: that.orderStatusData
-                        }));
-                    }
+                    var tpl = _.template($('#j-template-order').html());
+                    $('#orderList').html(tpl({
+                        item: data.data.data[0],
+                        orderStatus: that.orderStatusData
+                    }));
                 },
                 complete: function () {
 
@@ -341,21 +324,17 @@
          */
         queryLogisticsCompany: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/order/queryLogisticsCompany.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/order/queryLogisticsCompany.do',
                 data: {},
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        var tpl = _.template($('#j-template-logistics').html());
-                        $('#logisticsList').html(tpl({
-                            items: data.data
-                        }));
-                    }
+                    var tpl = _.template($('#j-template-logistics').html());
+                    $('#logisticsList').html(tpl({
+                        items: data.data
+                    }));
                     // 物流属性切换
                     $('input[name=logistics]').on('ifChecked', function () {
                         var value = $(this).attr('data-value');
@@ -381,21 +360,17 @@
          */
         sendGoods: function (sendData, cb) {
             var that = this;
-            $.ajax({
+            Api.get({
                 url: that.api + '/order/delivery.do',
-                type: 'get',
-                dataType: 'jsonp',
                 data: sendData,
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    if( data.code == 10000){
-                        toastr.success('发货成功','提示');
-                        that.getOrderDetail();
-                        that.getOrderLogistic();
-                        cb && cb(data);
-                    }
+                    toastr.success('发货成功', '提示');
+                    that.getOrderDetail();
+                    that.getOrderLogistic();
+                    cb && cb(data);
                 },
                 complete: function () {
 

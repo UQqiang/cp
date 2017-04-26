@@ -7,7 +7,6 @@
             this.areas = '';                // 地区的数组
             this.batch_type = 0;            // 批量操作的开关
             this.isAjax = false;
-            this.api = Api.domain();
 
             // 填充高度
             var height = window.innerHeight - 200;
@@ -16,9 +15,14 @@
                 'min-height': (height > contentHeight ? height : contentHeight) + 'px'
             });
 
+            this.template_id = HDL.getQuery('id');
+
+            if (this.template_id) {
+                this.getData();
+            }
+
             this.toastrInit();
             this.addEvent();
-            this.iCheck();
             this.verification();
         },
         /**
@@ -37,28 +41,28 @@
             var that = this;
 
             if ($("input.flat")[0]) {
-                $(document).ready(function () {
-                    $('input.flat').iCheck({
-                        checkboxClass: 'icheckbox_flat-green',
-                        radioClass: 'iradio_flat-green'
-                    });
+                $('input.flat').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_flat-green'
                 });
             }
 
             // 计价方式
             $('input[name=radio]').on('ifChecked', function () {
-                //that.radioVal = $(this).val();
-                alert(1);
-                //if ($(this).val() == 0) {
-                //    $('.unit').text('件');
-                //    $('.unit-che').text('件')
-                //} else if ($(this).val() == 2) {
-                //    $('.unit').text('m³');
-                //    $('.unit-che').text('体积')
-                //} else {
-                //    $('.unit').text('kg');
-                //    $('.unit-che').text('重')
-                //}
+                var radioVal = $(this).attr('data-value');
+                if (radioVal == 0) {
+                    $('.unit').text('件');
+                    $('.unit-che').text('件');
+                    $('.basic_count,.extra_count').attr('pattern', 'numeric')
+                } else if (radioVal == 2) {
+                    $('.unit').text('m³');
+                    $('.unit-che').text('体积');
+                    $('.basic_count,.extra_count').attr('pattern', 'decimalOne')
+                } else {
+                    $('.unit').text('kg');
+                    $('.unit-che').text('重');
+                    $('.basic_count,.extra_count').attr('pattern', 'decimalOne')
+                }
             });
         },
         /**
@@ -123,23 +127,26 @@
                 }]
             });
         },
+        /**
+         * 表格
+         */
         isCheckAll: function () {
-            var the_num = $('.check-item:checked').length;
-            if (the_num == $('.check-item').length) {
+            // todo 检查是否选中
+            var checkedItem = $('.check-item:checked').length;
+            if (checkedItem == $('.check-item').length) {
                 $(".check-all").prop('checked', true);
             } else {
                 $(".check-all").prop('checked', false);
             }
         },
-        // 是否是修改模板
-        isGetData: function () {
-            var that = this;
-            var id = window.location.search.split('=')[1];
-            if (id == undefined || (window.location.search.indexOf('?id=') == -1)) {
-                $('.title').html('新建运费模板');
+        /**
+         *
+         */
+        isCheckAreaAll: function (checkbox, num_1, num_2) {
+            if (num_1.length == num_2.length) {
+                checkbox.prop('checked', true);
             } else {
-                $('.title').html('修改运费模板');
-                that.getData(id);
+                checkbox.prop('checked', false);
             }
         },
         // 验证表格是否输入
@@ -158,16 +165,25 @@
                     }
                 }
                 if (isValid == true) {
-                    that.submit();
+                    if (that.template_id) {
+                        that.update();
+                    } else {
+                        that.submit();
+                    }
                 }
             });
         },
         addEvent: function () {
             var that = this;
 
+            $(document).on('ready', function () {
+                that.iCheck();
+            });
+
             // 添加地区渲染
             $('#j-add-area').click(function () {
-                that.renderBorder();
+                var status = $('input[name=radio]:checked').attr('data-value');
+                that.renderBorder('', status);
                 that.isCheckAll();
             });
 
@@ -308,9 +324,31 @@
                                 for (var n = 0; n < dataArr.length; n++) {
                                     if (dataArr[n].code == $(checkbox[x]).attr('data-id')) {
                                         $(checkbox[x]).prop('checked', true);
+
+                                        // 是省份
+                                        if (dataArr[n].level == 1) {
+                                            $(checkbox[x]).parents('.area-item').find('.check-city').prop('checked', true);
+                                        }
+                                        // 展示选中的个数
+                                        var number = $(checkbox[x]).parents('.area-item').find('.check-city:checked').length;
+                                        $(checkbox[x]).parents('.area-item').find('.city-length').text('(' + number + ')');
                                     }
                                 }
                             }
+                        }
+                        var area = $('.area');
+                        for (var i = 0; i < area.length; i++) {
+                            var domArea = $('.area').eq(i).find('.check-areas-all');
+                            var numArea = $('.area').eq(i).find('.check-city-all:checked');
+                            var numAreaChecked = $('.area').eq(i).find('.check-city-all');
+                            that.isCheckAreaAll(domArea, numArea, numAreaChecked);
+                        }
+                        var city = $('.area-item');
+                        for (var m = 0; m < city.length; m++) {
+                            var domCity = city.eq(m).find('.check-city-all');
+                            var numCity = city.eq(m).find('.check-city');
+                            var numCityChecked = city.eq(m).find('.check-city:checked');
+                            that.isCheckAreaAll(domCity, numCity, numCityChecked);
                         }
                     });
                     that.chooseCity();
@@ -412,7 +450,6 @@
                     areaItem.find('.check-city').prop('checked', false);
                     $cityLength.text('');
                 }
-
                 // 地区选择
                 if (checkCityAll.length == checkedCityAll.length) {
                     area.find('.check-areas-all').prop('checked', true);
@@ -457,12 +494,13 @@
                 $(this).find('.city-item').show();
             });
         },
-        renderBorder: function (data) {
+        renderBorder: function (data, status) {
             var that = this;
             var template = _.template($('#tpl').html());
             $('#template-list').append(template({
                 items: data || '',
-                batchType: that.batch_type
+                batchType: that.batch_type,
+                status: status || '1'
             }));
         },
         /**
@@ -470,10 +508,8 @@
          */
         renderArea: function (cb) {
             var that = this;
-            $.ajax({
-                url: that.api + "/freight/queryAreas.do",
-                dataType: "jsonp",
-                type: "get",
+            Api.get({
+                url: "/freight/queryAreas.do",
                 success: function (data) {
                     that.areas = data;
                     that.renderCity(data);
@@ -492,20 +528,20 @@
             this.iCheck();
         },
         // 读取模板数据
-        getData: function (id) {
+        getData: function () {
             var that = this;
             that.iCheck();
-            $.ajax({
-                url: that.api + "/freight/get.do",
-                dataType: "jsonp",
-                type: "get",
+            Api.get({
+                url: "/freight/get.do",
                 data: {
-                    id: id
+                    id: that.template_id
                 },
                 success: function (data) {
                     var $pricing_method = data.data.freight_template_dto.pricing_method;
                     var $tpl = data.data.freight_template_dto;
-                    $('.name').val($tpl.name);
+                    $('#name').val($tpl.name);
+
+                    // 渲染默认运费
                     $('.default-shipping .basic_charge').val(($tpl.basic_charge) / 100);
                     $('.default-shipping .extra_charge').val(($tpl.extra_charge) / 100);
                     if ($pricing_method == 0) {
@@ -515,24 +551,38 @@
                         $('.default-shipping .basic_count').val(($tpl.basic_count) / 10);
                         $('.default-shipping .extra_count').val(($tpl.extra_count) / 10)
                     }
+
+                    // 渲染radio
                     if ($pricing_method == 0) {
-                        $('.pricing_method input[value=0] ').attr('checked', 'checked');
+                        $('input[name=radio][data-value=0]').attr('checked', 'checked');
                         $('.unit').text('件');
                         $('.unit-che').text('件')
+                        $('.basic_count,.extra_count').attr('pattern', 'numeric')
                     } else if ($pricing_method == 1) {
-                        $('.pricing_method input[value=1] ').attr('checked', 'checked');
+                        $('input[name=radio][data-value=1]').attr('checked', 'checked');
                         $('.unit').text('kg');
-                        $('.unit-che').text('重')
+                        $('.unit-che').text('重');
+                        $('.basic_count,.extra_count').attr('pattern', 'decimalOne')
                     } else {
-                        $('.pricing_method input[value=2] ').attr('checked', 'checked');
+                        $('input[name=radio][data-value=2] ').attr('checked', 'checked');
                         $('.unit').text('m³');
-                        $('.unit-che').text('体积')
+                        $('.unit-che').text('体积');
+                        $('.basic_count,.extra_count').attr('pattern', 'decimalOne')
                     }
-                    var template = _.template($('#tpl').html());
-                    $('.J_tpl_list').html(template({
-                        items: $tpl.freight_area_template_list,
-                        status: $pricing_method
-                    }));
+
+                    // 提交的数据和获取到的不太一样.需要处理下
+                    for (var i = 0; i < $tpl.freight_area_template_list.length; i++) {
+                        for (var n = 0; n < $tpl.freight_area_template_list[i].areas.length; n++) {
+                            var areas = {
+                                code: $tpl.freight_area_template_list[i].areas[n].code,
+                                name: $tpl.freight_area_template_list[i].areas[n].name,
+                                level: $tpl.freight_area_template_list[i].areas[n].level
+                            };
+                            $tpl.freight_area_template_list[i].areas[n] = areas;
+                        }
+                    }
+
+                    that.renderBorder($tpl.freight_area_template_list, $pricing_method);
                 },
                 complete: function () {
 
@@ -547,6 +597,10 @@
          */
         setPostData: function () {
             this.postData = {};
+            if (this.template_id) {
+                this.postData.id = this.template_id;
+            }
+            ;
             this.postData.name = $.trim($('#name').val());
             this.postData.pricing_method = $('input[name=radio]:checked').attr('data-value');
             this.postData.basic_charge = (Number($.trim($('.default-shipping .basic_charge').val())) * 100).toFixed(0);
@@ -576,17 +630,36 @@
             }
             that.isAjax = true;
             that.setPostData();
-            $.ajax({
-                url: that.api + "/freight/add.do",
-                dataType: "jsonp",
-                type: "get",
+            Api.get({
+                url: "/freight/add.do",
                 data: {
                     freight_template_dto: that.postData
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        toastr.success('添加成功!', '提示')
-                    }
+                    toastr.success('添加成功!', '提示')
+                },
+                complete: function () {
+                    that.isAjax = false;
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            })
+        },
+        update: function () {
+            var that = this;
+            if (that.isAjax === true) {
+                return;
+            }
+            that.isAjax = true;
+            that.setPostData();
+            Api.get({
+                url: "/freight/update.do",
+                data: {
+                    freight_template_dto: that.postData
+                },
+                success: function (data) {
+                    toastr.success('编辑成功!', '提示')
                 },
                 complete: function () {
                     that.isAjax = false;

@@ -1,7 +1,6 @@
 ;(function () {
     var main = {
         init: function () {
-            this.api = Api.domain();                    // 接口请求的api
             this.page = {};
             this.page.pageSize = 20;
             this.page.vpage = 10;
@@ -147,10 +146,8 @@
          */
         queryBrand: function () {
             var that = this;
-            $.ajax({
-                url: that.api + '/brand/query.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/brand/query.do',
                 data: {
                     current_page: that.pageId || 1,
                     page_size: that.page.pageSize || 20,
@@ -160,24 +157,20 @@
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        // 滚动条自动回顶部
-                        document.getElementsByTagName('body')[0].scrollTop = 0;
-                        var total_count = data.data.total_count;
-                        if (total_count > 0) {
-                            var t = _.template($('#j-template').html());
-                            $('#brandList').html(t({
-                                items: data.data.data
-                            }));
-                            that.iCheck();
-                        } else {
-                            $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
-                        }
-
-                        that.pagination(data.data.total_count);
+                    // 滚动条自动回顶部
+                    document.getElementsByTagName('body')[0].scrollTop = 0;
+                    var total_count = data.data.total_count;
+                    if (total_count > 0) {
+                        var t = _.template($('#j-template').html());
+                        $('#brandList').html(t({
+                            items: data.data.data
+                        }));
+                        that.iCheck();
                     } else {
-                        toastr.error(data.msg, '提示');
+                        $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
                     }
+
+                    that.pagination(data.data.total_count);
                 },
                 complete: function () {
 
@@ -192,10 +185,8 @@
          */
         deleteBrand: function (id, success, error) {
             var that = this;
-            $.ajax({
-                url: that.api + '/brand/delete.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/brand/delete.do',
                 data: {
                     brand_id: id
                 },
@@ -203,11 +194,7 @@
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        success && success(data);
-                    } else {
-                        error && error(data);
-                    }
+                    success && success(data);
                 },
                 complete: function () {
 

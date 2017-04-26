@@ -8,7 +8,6 @@
             this.categoryId = '';
             this.imageUrl = '';
             this.isAjax = false;
-            this.api = Api.domain();                    // 接口请求的api
             // 初始化提示框
             toastr.options = ({
                 progressBar: true,
@@ -170,10 +169,8 @@
          */
         getBrand: function (data, success, error) {
             var that = this;
-            $.ajax({
-                url: that.api + '/brand/get.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/brand/get.do',
                 data: {
                     brand_id: data
                 },
@@ -200,20 +197,14 @@
          */
         addBrand: function (success, error) {
             var that = this;
-            $.ajax({
-                url: that.api + '/brand/add.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/brand/add.do',
                 data: that.postData,
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        success && success(data);
-                    } else {
-                        error && error(data);
-                    }
+                    success && success(data);
                 },
                 complete: function () {
 
@@ -228,20 +219,14 @@
          */
         updateBrand: function (success, error) {
             var that = this;
-            $.ajax({
-                url: that.api + '/brand/update.do',
-                type: 'get',
-                dataType: 'jsonp',
+            Api.get({
+                url: '/brand/update.do',
                 data: that.postData,
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        success && success(data);
-                    } else {
-                        error && error(data);
-                    }
+                    success && success(data);
                 },
                 complete: function () {
 
