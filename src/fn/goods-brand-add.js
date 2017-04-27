@@ -8,11 +8,6 @@
             this.categoryId = '';
             this.imageUrl = '';
             this.isAjax = false;
-            // 初始化提示框
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
             this.brand_id = HDL.getQuery('id');
             var height = window.innerHeight - 100;
             var contentHeight = $('.x_panel').height();

@@ -4,7 +4,6 @@
 ;(function(){
     var main={
         init:function(){
-            this.toastrInit();
             this.paginationCfg = {
                 pageSize: 20,
                 pageId: 1,
@@ -73,15 +72,6 @@
                 }
             })
 
-        },
-        /**
-         * 初始化提示框
-         */
-        toastrInit: function () {
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
         },
 
         addEvent:function(){

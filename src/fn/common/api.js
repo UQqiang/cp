@@ -8,7 +8,8 @@
             return this;
         },
         domain: function () {
-            this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+            //this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+            this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
             return this.ajaxDomain;
         },
         post: function (opts) {
@@ -25,6 +26,9 @@
                 dataType: type == 'post' ? 'json' : 'jsonp',
                 type: type,
                 data: opts.data || '',
+                beforeSend: function () {
+
+                },
                 success: function (data) {
                     if (data.code == 40000) {
                         console.log('登录已过期');

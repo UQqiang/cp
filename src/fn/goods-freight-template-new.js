@@ -26,15 +26,6 @@
             this.verification();
         },
         /**
-         * 初始化提示框
-         */
-        toastrInit: function () {
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
-        },
-        /**
          * icheck定义
          */
         iCheck: function () {

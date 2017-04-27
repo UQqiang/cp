@@ -13,6 +13,37 @@
             this.iCheck();
             //this.dateTimerPick();
             window.ossDomain = 'http://media.mockuai.com/';
+            this.toastrInit();
+            var username = $.cookie('username');
+            if(username){
+                $('.sidebar-username').text(username);
+            }
+        },
+        logout: function () {
+            Api.get({
+                url: '/user/logout.do',
+                success: function (data) {
+                    // remove cookie
+                    $.removeCookie('username',{path: '/'});
+                    $.removeCookie('seller_id', {path: '/'});
+                    $.removeCookie('user_id', {path: '/'});
+
+                    location.href = 'login.html'
+                },
+                complete: function () {
+
+                },
+                error: function () {
+
+                }
+            })
+        },
+        toastrInit: function () {
+            // 初始化提示框
+            toastr.options = ({
+                progressBar: true,
+                positionClass: "toast-top-center"
+            });
         },
         addEvent: function () {
             var current_url = window.location.href.split('#')[0].split('?')[0],
@@ -125,6 +156,10 @@
                     container: 'body'
                 });
             });
+
+            $('.logout').click(function () {
+                that.logout();
+            })
 
         },
         // 设置高度

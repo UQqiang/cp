@@ -4,18 +4,8 @@
 ;(function(){
     var main={
         init:function(){
-            this.toastrInit();
             this.api = Api.domain();
             this.render()
-        },
-        /**
-         * 初始化提示框
-         */
-        toastrInit: function () {
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
         },
         /**
          * tip

@@ -11,11 +11,6 @@
             this.search_key = {};
             this.categoryId = '';
             this.currentCateObj = {};
-            // 初始化提示框
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
             $('#categoryChildren').hide();
             this.queryBrand();
             this.queryCategory();

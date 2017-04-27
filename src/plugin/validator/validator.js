@@ -339,7 +339,7 @@ FormValidator.prototype = {
         data.valid   = true             // initialize validity of field
         data.type    = $field.attr('type');   // every field starts as 'valid=true' until proven otherwise
         data.pattern = $field.attr('pattern');
-        data.name    = $field.attr('name');
+        data.name    = $field.attr('name') || $field.attr('data-name');
 
         this.name = data.name || '';
 

@@ -38,11 +38,6 @@
             this.editor = UE.getEditor('editor');       // 富文本编辑器
             this.warehouseData = [];
             this.goodsId = HDL.getQuery('id');          // 商品的id
-            // 初始化提示框
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
             var height = window.innerHeight - 200;
             $('.step').css({
                 'min-height': height + 'px'

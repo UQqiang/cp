@@ -6,7 +6,6 @@
         init:function(){
             this.api = Api.domain();
             this.verification();
-            this.toastrInit();
         },
         verification:function(){
             var that=this;
@@ -24,15 +23,6 @@
                 if( isValid == true ){
                     that.submit();
                 }
-            });
-        },
-        /**
-         * 初始化提示框
-         */
-        toastrInit: function () {
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
             });
         },
 

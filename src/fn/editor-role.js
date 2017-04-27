@@ -5,19 +5,8 @@
     var main={
         init:function(){
             this.api = Api.domain();
-            this.toastrInit();
             this.Verification();
             this.render();
-        },
-
-        /**
-         * 初始化提示框
-         */
-        toastrInit: function () {
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
         },
         //判断是否是修改
         isGetData: function() {

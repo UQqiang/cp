@@ -16,6 +16,15 @@
     <!-- rev-hash -->
     <link href="../style/css/login.css" rel="stylesheet" type="text/css">
     <!-- end -->
+
+    <!-- rev-hash -->
+    <!-- inject:js -->
+    <!-- endinject -->
+    <!-- end -->
+
+    <!-- rev-hash -->
+    <script src="../src/fn/login.js"></script>
+    <!-- end -->
 </head>
 
 <body class="login">
@@ -28,18 +37,22 @@
             <section class="login_content">
                 <form>
                     <h1>登录</h1>
-                    <div>
-                        <input type="text" class="form-control" placeholder="请输入用户名" required="" />
+                    <div class="item field">
+                        <input type="text" class="form-control" placeholder="请输入用户名" required="required" data-name="用户名" id="username"/>
+                    </div>
+                    <div class="item field">
+                        <input type="password" class="form-control" placeholder="请输入密码" required="required" data-name="密码" id="password"/>
+                    </div>
+                    <div class="item field">
+                        <input type="text" class="form-control form-control-lg verify-input" id="verify" placeholder="请输入验证码" required="required" data-name="验证码">
+                        <span class="verify">
+                             <script>
+                                 document.write('<img id="verifyCode" title="看不清？换一张" src="'+ Api.domain() + '/verify_code.do" />')
+                             </script>
+                        </span>
                     </div>
                     <div>
-                        <input type="password" class="form-control" placeholder="请输入密码" required="" />
-                    </div>
-                    <div>
-                        <input type="text" class="form-control form-control-lg verify-input" placeholder="请输入验证码">
-                        <span class="verify">1123</span>
-                    </div>
-                    <div>
-                        <a class="btn btn-default submit" href="index.html">登录</a>
+                        <a class="btn btn-default submit" href="javascript:;" id="j-submit">登录</a>
                         <!--<a class="btn btn-default to_register" href="#signup">注册</a>-->
                         <!--<a class="reset_pass" href="#">Lost your password?</a>-->
                     </div>
@@ -104,15 +117,6 @@
         <!--</div>-->
     </div>
 </div>
-
-<!-- rev-hash -->
-<!-- inject:js -->
-<!-- endinject -->
-<!-- end -->
-
-<!-- rev-hash -->
-<script src="../src/fn/login.js"></script>
-<!-- end -->
 
 </body>
 </html>

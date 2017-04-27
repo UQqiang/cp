@@ -6,11 +6,6 @@
             this.page.vpage = 10;
             this.pageId = 1;
             this.search_key = {};
-            // 初始化提示框
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
             this.addEvent();
             this.queryBrand();
         },

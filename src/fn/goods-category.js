@@ -7,11 +7,6 @@
             this.currentCateObj = {};                   // 当前选择的一二级类目对象
             this.categoryId = '';
             this.imageUrl = '';
-            // 初始化提示框
-            toastr.options = ({
-                progressBar: true,
-                positionClass: "toast-top-center"
-            });
             var height = window.innerHeight - 200;
             $('.category-list').css({
                 'min-height': height + 'px'
