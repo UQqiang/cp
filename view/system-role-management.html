@@ -26,7 +26,7 @@
     <!-- page content -->
 
     <!-- 内容部分 -->
-    <div class="right_col" role="main">
+    <div class="right_col" role="main" id="role">
 
         <!-- 搜索 -->
         <!--<div class="x_panel">-->
@@ -57,9 +57,9 @@
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                         <thead>
                         <tr class="headings">
-                            <th class="tc">
-                                <input type="checkbox" id="check-all" class="flat">
-                            </th>
+                            <!--<th class="tc">-->
+                                <!--<input type="checkbox" id="check-all" class="flat">-->
+                            <!--</th>-->
                             <th class="column-title tl">角色名称 </th>
                             <th class="column-title tl">角色说明</th>
                             <th class="column-title tc">角色人数</th>
@@ -78,7 +78,7 @@
                 <!-- 页码 -->
                 <div class="widget-list clearfix ">
                     <div class="fl pagination">
-                        <button class="btn btn-sm btn-success" id="batchDelete">批量删除</button>
+                        <!--<button class="btn btn-sm btn-success" id="batchDelete">批量删除</button>-->
                     </div>
                     <div class="list-page fr">
                         <span class="pagination-info"></span>
@@ -106,9 +106,9 @@
 <script type="text/template" id="tpl">
 <% _.each(data,function(item){ %>
 <tr class="even pointer">
-    <td class="a-center tc">
-        <input type="checkbox" class="checkbox flat" name="table_records" data-id="<%= item.id %>">
-    </td>
+    <!--<td class="a-center tc">-->
+        <!--<input type="checkbox" class="checkbox flat" name="table_records" data-id="<%= item.id %>">-->
+    <!--</td>-->
     <td class="tl"><%= item.role_name %></td>
     <td class="tl"><%= item.role_desc %> </td>
     <td class="tc"><%= item.total || '0' %></td>
