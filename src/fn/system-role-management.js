@@ -1,10 +1,9 @@
 /**
  * Created by kyn on 17/3/1.
  */
-;(function(){
-    var main={
-        init:function(){
-            this.api = Api.domain();
+;(function () {
+    var main = {
+        init: function () {
             this.render()
         },
         /**
@@ -40,7 +39,6 @@
         /**
          * icheck定义
          */
-
         iCheck: function () {
             if ($("input.flat")[0]) {
                 $(document).ready(function () {
@@ -83,12 +81,13 @@
                 $(this).parents('tr').removeClass('selected');
             })
         },
-        addEvent:function(){
-            var that=this;
-            //删除
-            $("body").on("click",".j-del",function(){
+        addEvent: function () {
+            var that = this;
+
+            // 删除
+            $("body").on("click", ".j-del", function () {
                 var id = $(this).attr("data-id");
-                var data={};
+                var data = {};
                 data.target = $(this);
                 data.content = '确定要删除该角色吗?';
                 that.tip(data, function (btn, dialog) {
@@ -103,15 +102,15 @@
                     dialog.close();
                 });
             });
-            //批量删除
-            $("body").on("click","#batchDelete",function(){
+            // 批量删除
+            $("body").on("click", "#batchDelete", function () {
                 var $checked = $("input:checked");
-                var data={};
+                var data = {};
                 data.target = $(this);
                 data.content = '确定要批量删除吗?';
-                var arr=[];
-                for (var i = 0; i<$checked.length ; i++) {
-                    if ($checked.eq(i).attr("data-id")){
+                var arr = [];
+                for (var i = 0; i < $checked.length; i++) {
+                    if ($checked.eq(i).attr("data-id")) {
                         arr.push($checked.eq(i).attr("data-id"))
                     }
                 }
@@ -129,56 +128,52 @@
             })
 
         },
-        render:function(){
-            var that=this;
-            $.ajax({
-                url:that.api+"/userRole/query.do",
-                dataType:"jsonp",
-                type:"get",
-                success:function(data){
-                    that.mainShow(data)
+        render: function () {
+            var that = this;
+            Api.get({
+                url: "/userRole/query.do",
+                success: function (data) {
+                    that.mainShow(data);
                     that.iCheck();
                 },
-                error:function(){
-                    toastr.error('网络错误');
+                error: function (data) {
+                    toastr.error(data.msg,'提示');
 
                 }
             })
         },
         //页面渲染
-        mainShow:function(data){
-            var that=this;
-            var tpl=$("#tpl").html()
+        mainShow: function (data) {
+            var that = this;
+            var tpl = $("#tpl").html();
             $("#tpl-main").html(_.template(tpl)({
-                data:data.data.data
+                data: data.data.data
             }));
             that.addEvent();
         },
         //角色删除
-        roleDelete:function(id){
-            var that=this;
-            $.ajax({
-                url:that.api+"/userRole/delete.do",
-                dataType:"jsonp",
-                type:"get",
-                data:{
-                    id:id
+        roleDelete: function (id) {
+            var that = this;
+            Api.get({
+                url: "/userRole/delete.do",
+                data: {
+                    id: id
                 },
-                success:function(data){
-                    toastr.success("删除成功","成功提示");
+                success: function (data) {
+                    toastr.success("删除成功", "提示");
                     that.render();
                 },
-                error:function(){
-                    toastr.error("删除失败","失败提示")
+                error: function () {
+                    toastr.error("删除失败", "提示")
                 }
             })
         },
-        //批量删除
-        batchDelete:function(arr){
+        // 批量删除
+        batchDelete: function (arr) {
             console.log(arr)
         }
     };
-    $(function(){
+    $(function () {
         main.init()
     })
 })();

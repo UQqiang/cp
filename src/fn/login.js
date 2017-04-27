@@ -59,6 +59,12 @@
                     $.cookie('seller_id', data.data.seller_id, {path: '/'});
                     $.cookie('user_id', data.data.user_id, {path: '/'});
 
+                    if (!window.localStorage) {
+                        toastr.error('游览器不支持localStorage')
+                    } else {
+                        localStorage.setItem('root_role', data.data.root_role)
+                    }
+
                     console.log(data);
                     location.href = 'index.html';
                 },

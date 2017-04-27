@@ -21,7 +21,6 @@
                 this.getData();
             }
 
-            this.toastrInit();
             this.addEvent();
             this.verification();
         },

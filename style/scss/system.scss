@@ -1,14 +1,10 @@
 .container {
-  position: relative; }
+  position: relative;
+}
 
 .form-group .form-control {
-  margin-top: 5px; }
-
-.form-group label {
-  width: 100px;
-  display: inline-block;
-  margin-right: 30px;
-  text-align: right; }
+  margin-top: 5px;
+}
 
 .form-control {
   height: 40px;
@@ -18,11 +14,13 @@
   color: #555;
   background-color: #fff;
   width: 100%;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; }
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
 
 .btn-search {
   margin-top: 5px;
-  border-radius: 0; }
+  border-radius: 0;
+}
 
 /* aelrt */
 .alert {
@@ -37,7 +35,8 @@
   position: relative;
   left: -15px;
   z-index: 1;
-  transition: 0.15s ease-out; }
+  transition: 0.15s ease-out;
+}
 
 .alert::after {
   content: '';
@@ -49,8 +48,10 @@
   border-width: 11px 7px;
   position: absolute;
   left: -13px;
-  top: 1px; }
+  top: 1px;
+}
 
+//底部按钮
 .button-group {
   position: absolute;
   left: 230px;
@@ -58,8 +59,10 @@
   right: 20px;
   background: #f8f8f8;
   text-align: center;
-  bottom: 50px; }
+  bottom: 50px;
+}
 
+//小箭头
 .caret-bottom {
   color: red;
   display: inline-block;
@@ -69,7 +72,8 @@
   vertical-align: middle;
   border-top: 4px solid;
   border-right: 4px solid transparent;
-  border-left: 4px solid transparent; }
+  border-left: 4px solid transparent;
+}
 
 .caret-right {
   display: inline-block;
@@ -79,4 +83,5 @@
   vertical-align: middle;
   border-left: 4px solid;
   border-bottom: 4px solid transparent;
-  border-top: 4px solid transparent; }
+  border-top: 4px solid transparent;
+}
