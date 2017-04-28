@@ -68,7 +68,7 @@
                 var data = {};
                 data.target = $(this);
                 data.position = 'right';
-                data.content = '确定要取消?';
+                data.content = '未保存的数据将会丢失，确定要离开吗?';
                 data.closeOnBodyClick = true;
                 that.tip(data, function (btn, dialog) {
                     dialog.close();
