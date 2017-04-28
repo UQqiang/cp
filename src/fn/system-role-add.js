@@ -148,7 +148,7 @@
             var that = this;
             var validator = new FormValidator();
             validator.settings.alerts = true;
-            $('.btn-save').click(function () {
+            $('#j-submit').click(function () {
                 var isValid = true;
                 for (var i = 0; i < $('[required]').length; i++) {
                     var required = $('[required]');
@@ -182,9 +182,55 @@
                 }
             });
         },
+        /**
+         * tip
+         * @param data
+         * @param success
+         * @param fail
+         */
+        tip: function (data, success, fail) {
+            this.dialogTip = jDialog.tip(data.content, {
+                target: data.target,
+                position: data.position || 'left'
+            }, {
+                width: data.width || 200,
+                closeable: false,
+                closeOnBodyClick: data.closeOnBodyClick,
+                buttonAlign: 'center',
+                buttons: [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        fail && fail(button, dialog)
+                    }
+                }]
+            });
+        },
         addEvent: function () {
-            // 子菜单折叠和展现
             var that = this;
+
+            // 取消
+            $('#j-cancel').click(function () {
+                var data = {};
+                data.target = $(this);
+                data.position = 'right';
+                data.content = '未保存的数据将会丢失，确定要离开吗?';
+                data.closeOnBodyClick = true;
+                that.tip(data, function (btn, dialog) {
+                    dialog.close();
+                    location.href = 'system-role-management.html';
+                }, function (btn, dialog) {
+                    dialog.close();
+                })
+            });
+
+            // 子菜单折叠和展现
             $(document).on('click', '.j-parent', function (e) {
                 e.stopPropagation();
                 var $this = $(this);

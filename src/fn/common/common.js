@@ -15,7 +15,7 @@
             window.ossDomain = 'http://media.mockuai.com/';
             this.toastrInit();
 
-            var height = window.innerHeight - 100;
+            var height = window.innerHeight - 200;
             var contentHeight = $('#editorContent').height();
             $('#editorContent').css({
                 'min-height': (height > contentHeight ? height : contentHeight) + 'px',

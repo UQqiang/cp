@@ -221,6 +221,12 @@
                     }
                 }
             });
+            var n = $('#j-list').find('tr.list').length;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
         },
         // 删除账号
         accountDelete: function (id) {

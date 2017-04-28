@@ -9,11 +9,6 @@
             this.imageUrl = '';
             this.isAjax = false;
             this.brand_id = HDL.getQuery('id');
-            var height = window.innerHeight - 100;
-            var contentHeight = $('.x_panel').height();
-            $('.x_panel').css({
-                'min-height': (height > contentHeight ? height : contentHeight) + 'px'
-            });
             if (this.brand_id) {
                 var that = this;
                 this.getBrand(this.brand_id, function (data) {

@@ -12,8 +12,9 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- end -->
+
     <!-- rev-hash -->
-    <link href="../style/css/channel.css" rel="stylesheet" type="text/css">
+    <link href="../style/css/goods_management.css" rel="stylesheet" type="text/css">
     <!-- end -->
 </head>
 <body class="nav-md">
@@ -29,16 +30,30 @@
 
         <!-- 搜索 -->
         <div class="x_panel">
+            <div class="x_title">
+                <h2><small>搜索框</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="fr">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
             <div class="x_content">
-                <div class="col-md-4 col-sm-12 col-xs-12 form-group pull-right field">
-                    <button type="button" class="btn btn-sm btn-success pull-right btn-search">搜索</button>
-                    <input type="text" required="required" pattern="decimal" name="渠道名称" placeholder="请输入HS编码/行邮税号" class="form-control form-control-lg pull-right">
+                <div class="col-md-4 col-sm-12 col-xs-12 form-group pull-right">
+                    <div class="input-group">
+                        <input type="text" placeholder="请输入HS编码 / 行邮税号" class="form-control form-control-lg pull-right">
+                        <span class="input-group-btn">
+                              <button type="button" class="btn btn-sm btn-success pull-right" id="j-search">搜索</button>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>        <!-- 姓名角色-->
+        </div>
+
         <div class="x_panel">
             <div class="x_title">
-                <h2>渠道商品选择</h2>
+                <h2><small>税率模板列表</small></h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="fr">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -113,6 +128,7 @@
                 <!-- /页码 -->
             </div>
         </div>
+
     </div>
     <!-- page content -->
     @@include('common/footer.html')
@@ -127,6 +143,6 @@
 
 
 <!-- rev-hash -->
-<script src="../src/fn/tax-template.js"></script>
+<script src="../src/fn/goods-tax-template.js"></script>
 <!-- end -->
 </html>
