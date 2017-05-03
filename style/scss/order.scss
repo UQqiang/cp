@@ -1,3 +1,5 @@
+@import "_mixin.scss";
+
 #orderList, #orderInfo {
   .order-header {
     background: #f8f8f8;
@@ -17,8 +19,12 @@
     dt {
       float: left;
       padding: 2px;
-      border: 1px solid #ccc;
       margin: 0 10px;
+      @include border-image();
+      .order-image{
+        width:64px;
+        height: 64px;
+      }
     }
     dd {
       float: left;

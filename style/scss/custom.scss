@@ -5512,3 +5512,20 @@ a.antoo{
 .iradio_flat-green{
  vertical-align: top;
 }
+.mask{
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1024;
+  .mask-wrapper{
+    text-align: center;
+  }
+  .mask-img{
+    border-radius: 100%;
+    width: 80px;
+  }
+}

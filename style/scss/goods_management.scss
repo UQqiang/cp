@@ -1,4 +1,5 @@
 /******************************** 商品列表 ******************************/
+@import "_mixin.scss";
 
 #goodsList {
   dl{
@@ -17,8 +18,7 @@
     width: 64px;
     height: 64px;
     padding: 1px;
-    border:1px solid #ccc;
-    border-radius: 4px;
+    @include border-image()
   }
 }
 #skuList{

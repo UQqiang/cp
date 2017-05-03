@@ -158,7 +158,7 @@ gulp.task('sass', function () {
     var url = ['./style/scss/*.{scss,sass}'];
 
     if (DEST.indexOf('build') != -1) {
-        return compileCommonSASS({}, url);
+        return compileCommonSASS({style: 'expanded'}, url);
     } else {
         //return compileCommonSASS({}, url);
         return compileCommonSASS({style: 'compressed'}, url);

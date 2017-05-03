@@ -64,8 +64,9 @@
             <div class="x_content">
                 <!-- 关联-->
                 <div class="form-group ">
-                    <a class="btn btn-sm btn-success " href="add-taxtemplate.html">添加</a>
-                    <a class="btn btn-sm btn-success " href="##">导入</a>
+                    <a class="btn btn-sm btn-success " href="goods-tax-template-add.html">添加</a>
+                    <a class="btn btn-sm btn-success " href="javascript:;">导入</a>
+                    <a class="btn btn-sm btn-success " href="javascript:;">导出</a>
                 </div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
@@ -87,31 +88,7 @@
                         </tr>
                         </thead>
 
-                        <tbody>
-                        <tr class="even pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class="tc">名称名称</td>
-                            <td class="tc">20%</td>
-                            <td class="tc">￥0.00</td>
-                            <td class="tc">123456789</td>
-                            <td class="tc">987654321</td>
-                            <td class="tc"><a href="#">编辑-删除</a>
-                            </td>
-                        </tr>
-                        <tr class="odd pointer">
-                            <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
-                            </td>
-                            <td class="tc">名称名称</td>
-                            <td class="tc">20%</td>
-                            <td class="tc">￥0.00</td>
-                            <td class="tc">123456789</td>
-                            <td class="tc">987654321</td>
-                            <td class="tc"><a href="#">编辑-删除</a>
-                            </td>
-                        </tr>
+                        <tbody id="j-list">
                         </tbody>
                     </table>
                 </div>
@@ -141,8 +118,25 @@
 <!-- endinject -->
 <!-- end -->
 
-
 <!-- rev-hash -->
 <script src="../src/fn/goods-tax-template.js"></script>
 <!-- end -->
+
+<script type="text/template" id="j-template">
+    <tr class="odd pointer">
+        <td class="a-center ">
+            <input type="checkbox" class="checkbox flat" name="table_records">
+        </td>
+        <td class="tc">名称名称</td>
+        <td class="tc">20%</td>
+        <td class="tc">￥0.00</td>
+        <td class="tc">123456789</td>
+        <td class="tc">987654321</td>
+        <td class="tc">
+            <a href="goods-tax-template-add.html">编辑</a>
+            <span> - </span>
+            <a href="javascript:;" class="j-delete">删除</a>
+        </td>
+    </tr>
+</script>
 </html>

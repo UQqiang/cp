@@ -21,13 +21,17 @@
         ajax: function (opts, type) {
             var that = this;
             console.log(that.ajaxDomain);
+            var height = (window.innerHeight - 40)/2;
+            $('.mask-img').css({
+                'margin-top': height
+            });
             $.ajax({
                 url: that.ajaxDomain + opts.url,
                 dataType: type == 'post' ? 'json' : 'jsonp',
                 type: type,
                 data: opts.data || '',
                 beforeSend: function () {
-
+                    $('.mask').fadeIn();
                 },
                 success: function (data) {
                     if (data.code == 40000) {
@@ -40,6 +44,9 @@
                     }
                 },
                 complete: function (data) {
+                    setTimeout(function () {
+                        $('.mask').fadeOut();
+                    }, 1000);
                     opts.complete && opts.complete(data);
                 },
                 error: function (data) {
