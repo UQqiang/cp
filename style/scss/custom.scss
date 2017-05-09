@@ -2393,6 +2393,14 @@ span.section {
   border-bottom: 1px solid #e5e5e5;
 }
 
+select.form-control{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(../images/arrowdown.png) no-repeat 95% 50%;
+  background-size: 9px 5px;
+}
+
 .form-control {
   border-radius: 0;
   width: 100%;
