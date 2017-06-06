@@ -135,7 +135,7 @@ gulp.task('sass-minify', function() {
 
 不懂sass的同学[点击这里](http://www.sasschina.com/guide/). 当然也可自行百度
 
->.< 当然你也可以直接在`scss`文件中编写`css`!
+ >.< 当然你也可以直接在`scss`文件中编写`css`!
 
 > How to develop html ?
 
