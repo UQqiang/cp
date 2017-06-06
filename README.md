@@ -126,3 +126,55 @@ gulp.task('sass-minify', function() {
      ● compact：每条样式占一行
      ● compressed：整个压缩成一行
 ```
+
+> 管控平台开发指南
+
+写在前面的话: 管控使用`jquery + bootstrap + sass`开发简单易懂上手就会.
+
+模板使用的是[点击这里](https://github.com/puikinsh/gentelella).
+
+不懂sass的同学[点击这里](http://www.sasschina.com/guide/). 当然也可自行百度
+
+>.< 当然你也可以直接在`scss`文件中编写`css`!
+
+> How to develop html ?
+
+首先`html`命名上根据功能模块来, 例如商品就以`goods`打头:`goods-list.html`.
+
+如果不知道页面上的内容请在 `view/common/default.html` 下复制内容.然后放在自己新建的页面里面,会生成一个默认的html,再按照自己要实现的功能来写.
+
+> How to develop scss ?
+
+根据功能模块命名即可.
+
+> How to develop js ?
+
+根据功能模块命名即可.
+
+> Introduce the plug-in
+
+>.< 用到的插件不详细描述了,这里只列出名称和功能,相信你一定是个大牛! 去github看看介绍,so easy!
+
+* `animate` - css3动画
+* `bootstrap` - oh ~
+* `daterangepicker` - 时间和日期选择空间
+* `font-awesome` - 当然是`icon`和`font`啦!
+* `iCheck` - 选择插件,提供皮肤和方法
+* `jquery` - oh ~
+* `jquery-dialog` - 弹窗插件
+* `jquery-paginator` - 翻页插件
+* `moment` - 时间处理插件
+* `nprogress` - 进度条插件
+* `select-plugin` - 这个我就要说了, 自主研发的弹窗选择插件.
+* `selectize` - 选择框插件
+* `toastr` - 错误成功提示插件
+* `ueditor` - 百度的富文本
+* `underscore` - 模板引擎
+* `uploadify` - 这个我又要说了,是基于百度的webuploader自主研发的图片选择插件
+* `validator` - 表单验证插件(自己更改过了)
+
+
+#### 未完待续...
+
+
+

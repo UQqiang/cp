@@ -12,9 +12,6 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- end -->
-    <!-- rev-hash -->
-    <link href="../style/css/channel.css" rel="stylesheet" type="text/css">
-    <!-- end -->
 </head>
 <body class="nav-md">
 <div class="container body">
@@ -29,16 +26,26 @@
 
         <!-- 搜索 -->
         <div class="x_panel">
+            <div class="x_title">
+                <h2><small>搜索框</small></h2>
+                <div class="clearfix"></div>
+            </div>
             <div class="x_content">
-                <div class="col-md-4 col-sm-12 col-xs-12 form-group pull-right field">
-                    <button type="button" class="btn btn-sm btn-success pull-right btn-search">搜索</button>
-                    <input type="text" required="required" pattern="decimal" name="渠道名称" placeholder="请输入渠道商名称" class="form-control form-control-lg pull-right">
+                <div class="form-inline fr">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" placeholder="请输入渠道商名称" class="form-control form-control-lg" id="keywords">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-success" id="search">搜索</button>
+                                </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>        <!-- 姓名角色-->
         <div class="x_panel">
             <div class="x_title">
-                <h2>渠道商品选择</h2>
+                <h2><small>渠道列表</small></h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="fr">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -49,20 +56,21 @@
             <div class="x_content">
                 <!-- 关联-->
                 <div class="form-group ">
-                    <a class="btn btn-sm btn-success " href="related-commodity.html">关联</a>
+                    <a class="btn btn-sm btn-success" href="channel-add.html">添加</a>
                 </div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                         <thead>
                         <tr class="headings">
-                            <th>
+                            <th class="tc">
                                 <input type="checkbox" id="check-all" class="flat">
                             </th>
-                            <th class="column-title">渠道商id </th>
-                            <th class="column-title">渠道商名称</th>
-                            <th class="column-title">商品数</th>
-                            <th class="column-title">渠道商状态</th>
-                            <th class="column-title no-link last"><span class="nobr">操作</span>
+                            <th class="column-title tc">渠道商ID</th>
+                            <th class="column-title tc">渠道商名称</th>
+                            <th class="column-title tc">spu数</th>
+                            <th class="column-title tc">sku数</th>
+                            <th class="column-title tc">渠道商状态</th>
+                            <th class="column-title tc no-link last"><span class="nobr">操作</span>
                             </th>
                             <th class="bulk-actions" colspan="7">
                                 <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
@@ -70,27 +78,43 @@
                         </tr>
                         </thead>
 
-                        <tbody>
-                        <tr class="even pointer">
+                        <tbody id="warehouseList">
+                        <tr class="even pointer list">
                             <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
+                                <input type="checkbox" class="flat checkbox" name="table_records">
                             </td>
                             <td class=" ">张三</td>
                             <td class=" ">管理员1 </td>
                             <td class=" ">111111111</td>
+                            <td class=" ">111111111</td>
                             <td class=" ">激活</td>
-                            <td class=" last"><a href="#">编辑-删除-禁用</a>
+                            <td class=" last">
+                                <a href="javascript:;">编辑</a>
+                                <span>-</span>
+                                <a href="javascript:;" class="j-channel-delete">删除</a>
+                                <span>-</span>
+                                <a href="javascript:;" class="j-channel-freeze">关闭</a>
+                                <span>-</span>
+                                <a href="javascript:;">查看详情</a>
                             </td>
                         </tr>
-                        <tr class="odd pointer">
+                        <tr class="odd pointer list">
                             <td class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">
+                                <input type="checkbox" class="flat checkbox" name="table_records">
                             </td>
                             <td class=" ">李四</td>
                             <td class=" ">管理员2</td>
                             <td class=" ">111111</td>
+                            <td class=" ">111111111</td>
                             <td class=" ">激活</td>
-                            <td class=" last"><a href="#">编辑-删除-应用</a>
+                            <td class=" last">
+                                <a href="javascript:;">编辑</a>
+                                <span>-</span>
+                                <a href="javascript:;" class="j-channel-delete">删除</a>
+                                <span>-</span>
+                                <a href="javascript:;" class="j-channel-freeze">关闭</a>
+                                <span>-</span>
+                                <a href="javascript:;">查看详情</a>
                             </td>
                         </tr>
                         </tbody>
@@ -98,12 +122,15 @@
                 </div>
 
                 <!-- 页码 -->
-                <div class="ui-box">
-                    <div class="widget-list">
-                        <div class="list-page fr">
-                            <span class="pagination-info">1</span>
-                            <div class="ui-pagination pagination"></div>
-                        </div>
+                <div class="widget-list clearfix ">
+                    <div class="fl pagination">
+                        <button class="btn btn-sm btn-success" id="batchDelete" >删除</button>
+                        <button class="btn btn-sm btn-success" id="batchunFreeze" >激活</button>
+                        <button class="btn btn-sm btn-success" id="batchFreeze" >关闭</button>
+                    </div>
+                    <div class="list-page fr">
+                        <span class="pagination-info"></span>
+                        <div class="ui-pagination pagination"></div>
                     </div>
                 </div>
                 <!-- /页码 -->
@@ -123,6 +150,6 @@
 
 
 <!-- rev-hash -->
-<script src="../src/fn/account-number.js"></script>
+<script src="../src/fn/channel-goods.js"></script>
 <!-- end -->
 </html>

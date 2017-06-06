@@ -24,10 +24,18 @@
             <% if( type == 2 ){ %>
             <div class="form-group">
                 <select class="form-control" id="j-select-plugin-coupon_lifecycle">
+                    <% if( needFailureInfo === true ){ %>
                     <option data-value="0">全部</option>
+                    <% } %>
                     <option data-value="1">未开始</option>
+                    <% if( needFailureInfo === true ){ %>
                     <option data-value="2">已开始</option>
-                    <option data-value="3">已过期</option>
+                    <% }else{ %>
+                    <option data-value="2" selected="selected">已开始</option>
+                    <% } %>
+                    <% if( needFailureInfo === true ){ %>
+                    <option data-value="3">已结束</option>
+                    <% } %>
                 </select>
             </div>
             <% } %>
@@ -57,13 +65,16 @@
             </tr>
             <% }else if( type == 1 ){ %>
             <tr>
+                <th class="tc">ID</th>
                 <th class="tc">用户名</th>
                 <th class="tc">账号<a href="javascript:;" class="j-select-plugin-refresh-<%= type %>">&nbsp;&nbsp;刷新&nbsp;</a></th>
+                <th class="tc">注册时间</th>
                 <th class="tc">操作</th>
             </tr>
             <% }else if( type == 2 ){ %>
             <tr>
                 <th class="tc">优惠券名称</th>
+                <th class="tc">面值（元）</th>
                 <th class="tc">创建时间</th>
                 <th class="tc">状态</th>
                 <th class="tc">类型</th>
@@ -158,13 +169,16 @@
     </tr>
     <% }else if( type == 1 ){ %>
     <tr class="j-select-plugin-box">
-        <td class="tc"><span><%= item.user_name %></span></td>
+        <td class="tc"><span><%= item.id %></span></td>
+        <td class="tc"><span><%= item.name %></span></td>
         <td class="tc"><span><%= item.mobile %></span></td>
+        <td class="tc"><span><%= item.gmt_created %></span></td>
         <td class="tc"><a class="selectDialogPlugin select-group-goods j-select-plugin-g-<%= type %>" data-status="0" data-id="<%= item.id %>" data-info="<%= encodeURIComponent(JSON.stringify(item)) %>">选择</a></td>
     </tr>
     <% }else if( type == 2 ){ %>
     <tr class="j-select-plugin-box">
         <td class="tc"><span><%= item.name %></span></td>
+        <td class="tc"><span><%= (item.discount_amount / 100).toFixed(2) %></span></td>
         <td class="tc"><span><%= item.gmt_created %></span></td>
         <td class="tc"><% if( item.status == 2 ){ %>
             <span>已失效</span>
@@ -174,7 +188,7 @@
             <% }else if( item.market_activity.lifecycle == 2 ){ %>
             <span>已开始</span>
             <% }else if( item.market_activity.lifecycle == 3){ %>
-            <span>已过期</span>
+            <span>已结束</span>
             <% } %>
             <% } %></td>
         <td class="tc">

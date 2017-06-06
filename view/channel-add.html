@@ -28,98 +28,217 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <div class="add-goods-step clearfix">
-                    <span class="col-md-6 col-sm-6 col-xs-6" data-step_value="1">渠道基本信息</span>
+                <div class="add-channel-step clearfix">
+                    <span class="col-md-6 col-sm-6 col-xs-6 add-channel-active" data-step_value="1">渠道基本信息</span>
                     <span class="col-md-6 col-sm-6 col-xs-6" data-step_value="2">账户开通信息</span>
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <div class="x_content" id="editorContent">
-                <div class="common-part p20 mt-25">
-                    <div class="form-inline">
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">渠道商ID：</label>
-                            <input class="form-control form-control-410" required="required" data-name="渠道商ID" cb-node="name" type="text" maxlength="18" placeholder="请输入渠道商ID"  pattern="decimal" name="ID">
-                        </div>
-                        <br/>
-                        <div class="form-group field item mb10" >
-                            <label class="ui-label ui-label-md tr">渠道商名称：</label>
-                            <input class="form-control form-control-410" required="required" data-name="渠道商名称" cb-node="user_name" type="text" maxlength="18" placeholder="请输入渠道商名称" pattern="decimal" name="名称"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">公司名称：</label>
-                            <input class="form-control form-control-410" required="required" pattern="decimal" data-name="公司名称" cb-node="company" type="text" maxlength="20" placeholder="请输入公司名称" pattern="decimal" name="公司名称"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">联系人：</label>
-                            <input class="form-control form-control-410" required="required" pattern="decimal" data-name="联系人" cb-node="people" type="text" maxlength="18" placeholder="请输入联系人" pattern="decimal" name="联系人" > </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">联系电话：</label>
-                            <input class="form-control form-control-410" required="required" pattern="decimal" data-name="联系人电话" cb-node="phone" type="text" maxlength="18" placeholder="请输入联系人电话" pattern="decimal" name="联系人电话"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">联系地址：</label>
-                            <select class="form-control form-control-sm">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                            <select class="form-control form-control-sm">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                            <select class="form-control form-control-sm">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                            <select class="form-control form-control-sm">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">详细地址：</label>
-                            <input class="form-control form-control-410" required="required" pattern="decimal" data-name="详细地址" cb-node="address" type="text" maxlength="18" placeholder="请输入电话" pattern="decimal" name="电话"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">备注：</label>
-                            <input class="form-control form-control-410" required="required" data-name="备注" cb-node="note" type="text" maxlength="18" placeholder="请输入备注" pattern="decimal" name="备注"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">商城中文名：</label>
-                            <input class="form-control form-control-410" required="required" data-name="中文名" cb-node="Chinses" type="text" maxlength="18" placeholder="请输入商城中文名" pattern="decimal" name="中文名"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">商城英文名：</label>
-                            <input class="form-control form-control-410" required="required" data-name="英文名" cb-node="English" type="text" maxlength="18" placeholder="请输入商城英文名" pattern="decimal" name="英文名"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">商城账号：</label>
-                            <input class="form-control form-control-410" required="required" data-name="账号" cb-node="account" type="text" maxlength="18" placeholder="请输入商城账号" pattern="decimal" name="账号"> </div>
-                        <br/>
-                        <div class="form-group field item mb10">
-                            <label class="ui-label ui-label-md tr">初始密码：</label>
-                            <input class="form-control form-control-410" required="required" data-name="密码" cb-node="password" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal" name="密码"> </div>
+
+            <!-- 渠道基本信息 -->
+            <div class="x_content step editorContent" data-now_step="1">
+                <div class="form-inline">
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">渠道商ID：</label>
+                        <input class="form-control form-control-410" required="required" data-name="渠道商ID" type="text" maxlength="18" placeholder="请输入渠道商ID"  pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10" >
+                        <label class="ui-label ui-label-hg tr">渠道商名称：</label>
+                        <input class="form-control form-control-410" required="required" data-name="渠道商名称" type="text" maxlength="18" placeholder="请输入渠道商名称" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">公司名称：</label>
+                        <input class="form-control form-control-410" required="required" data-name="公司名称" type="text" maxlength="20" placeholder="请输入公司名称" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">联系人：</label>
+                        <input class="form-control form-control-410" required="required" data-name="联系人" type="text" maxlength="18" placeholder="请输入联系人" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">联系电话：</label>
+                        <input class="form-control form-control-410" required="required" data-name="联系人电话" type="text" maxlength="18" placeholder="请输入联系人电话" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group j-no-super field item mb10">
+                        <label class="ui-label ui-label-hg tr"><span class="ui-form-required">*</span>联系地址：</label>
+                        <select class="form-control form-control-sm" id="areaList-country" data-nextName="province">
+                            <option value="null">国家</option>
+                        </select>
+                        <select class="form-control form-control-sm" id="areaList-province" data-nextName="city">
+                            <option value="null">省</option>
+                        </select>
+
+                        <select class="form-control form-control-sm" id="areaList-city" data-nextName="area">
+                            <option value="null">市</option>
+                        </select>
+
+                        <select class="form-control form-control-sm" id="areaList-area" data-nextName="">
+                            <option value="null">区</option>
+                        </select>
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">详细地址：</label>
+                        <input class="form-control form-control-410" required="required" data-name="详细地址" type="text" maxlength="18" placeholder="请输入电话" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">备注：</label>
+                        <input class="form-control form-control-410" required="required" data-name="备注" type="text" maxlength="18" placeholder="请输入备注" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">商城中文名：</label>
+                        <input class="form-control form-control-410" required="required" data-name="中文名" type="text" maxlength="18" placeholder="请输入商城中文名" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">商城英文名：</label>
+                        <input class="form-control form-control-410" required="required" data-name="英文名" type="text" maxlength="18" placeholder="请输入商城英文名" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">商城账号：</label>
+                        <input class="form-control form-control-410" required="required" data-name="账号" type="text" maxlength="18" placeholder="请输入商城账号" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group field item mb10">
+                        <label class="ui-label ui-label-hg tr">初始密码：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                </div>
+                <div class="footer-btn-group">
+                    <a href="javascript:;" class="btn btn-success btn-sm mr10" id="j-next" data-type="2">下一步</a>
+                    <a href="javascript:;" class="btn btn-default btm-sm mr10" id="j-cancel">取消</a>
+                </div>
+            </div>
+
+            <!-- 账户开通信息 -->
+            <div class="x_content step editorContent" data-now_step="2">
+                <div class="form-inline">
+                    <div class="small-title">
+                        <h3>支付配置信息</h3>
+                    </div>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">支付宝商户号：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">支付宝账号：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">支付宝商户私钥：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">支付宝公钥：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付H5端APPID：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付H5端密钥：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付H5端商户号：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付H5端商户Key：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付app端APPID：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付app端密钥：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付app商户号：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信支付app商户Key：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">银联商户号：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                </div>
+                <div class="form-inline">
+                    <div class="small-title">
+                        <h3>登录配置信息</h3>
+                    </div>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信登录H5端APPID：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信登录H5端密钥：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信登录APP端APPID：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">微信登录APP端密钥：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+
+                </div>
+                <div class="form-inline">
+                    <div class="small-title">
+                        <h3>其他配置信息</h3>
+                    </div>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">客服电话：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">在线客服链接：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
+                    </div>
+                    <br/>
+                    <div class="form-group filed item mb10">
+                        <label class="ui-label ui-label-hg tr">关于我们链接：</label>
+                        <input class="form-control form-control-410" required="required" data-name="密码" type="password" maxlength="18" placeholder="请输入商城密码" pattern="decimal">
                     </div>
                 </div>
                 <div class="footer-btn-group">
                     <a href="javascript:;" class="btn btn-success btn-sm mr10" id="j-submit">保存</a>
-                    <a href="javascript:;" class="btn btn-default btm-sm ml10" id="j-cancel">取消</a>
+                    <a href="javascript:;" class="btn btn-default btn-sm mr10" id="j-back" data-type="1">返回</a>
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -136,8 +255,17 @@
 <!-- endinject -->
 <!-- end -->
 
-
 <!-- rev-hash -->
-<script src="../src/fn/add-channel.js"></script>
+<script src="../src/fn/channel-add.js"></script>
 <!-- end -->
+
+<!-- channel area option -->
+<script type="text/template" id="j-template">
+    <option value="null"><%= parent_name %></option>
+    <% _.each(items,function(item,index){ %>
+    <option value="<%= item.id %>" data-region_level="<%= item.region_level %>" data-code="<%= item.code %>">
+        <%= item.name %>
+    </option>
+    <% }) %>
+</script>
 </html>

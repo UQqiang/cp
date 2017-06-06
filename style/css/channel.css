@@ -1,15 +1,29 @@
-.add-goods-step {
+.add-channel-step {
   padding-bottom: 25px;
 }
-.add-goods-step span {
+.add-channel-step span {
   display: inline-block;
   padding: 10px 25px;
   text-align: center;
   background: #e5e5e5;
   border: 1px solid #e5e5e5;
 }
-.add-goods-step span.add-goods-active {
+.add-channel-step span.add-channel-active {
   color: #73879C;
   background: #fff;
   border-bottom: none;
+}
+
+.step[data-now_step='2'] {
+  display: none;
+}
+
+.small-title h3 {
+  position: relative;
+  background: #f8f8f8;
+  padding: 10px;
+  color: #ccc;
+  font-size: 16px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }

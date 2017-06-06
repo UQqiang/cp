@@ -16,8 +16,8 @@
             this.toastrInit();
 
             var height = window.innerHeight - 200;
-            var contentHeight = $('#editorContent').height();
-            $('#editorContent').css({
+            var contentHeight = $('.editorContent').height();
+            $('.editorContent').css({
                 'min-height': (height > contentHeight ? height : contentHeight) + 'px',
                 'padding-bottom': '80px'
             });
