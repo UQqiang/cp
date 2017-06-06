@@ -133,9 +133,7 @@ gulp.task('sass-minify', function() {
 
 模板使用的是[点击这里](https://github.com/puikinsh/gentelella).
 
-不懂sass的同学[点击这里](http://www.sasschina.com/guide/). 当然也可自行百度
-
- >.< 当然你也可以直接在`scss`文件中编写`css`!
+不懂sass的同学[点击这里](http://www.sasschina.com/guide/). 当然也可自行百度. >.< 当然你也可以直接在`scss`文件中编写`css`!
 
 > How to develop html ?
 
