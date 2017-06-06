@@ -363,6 +363,7 @@
                     asterisk_mark: that.search_key.asterisk_mark || '',
                     print_mark: ''
                 },
+                mask: true,
                 beforeSend: function () {
 
                 },

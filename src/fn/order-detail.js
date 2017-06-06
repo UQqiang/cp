@@ -222,6 +222,7 @@
                     order_id: that.order_id,
                     user_id: that.user_id
                 },
+                mask: true,
                 beforeSend: function () {
 
                 },

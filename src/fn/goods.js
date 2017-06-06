@@ -969,6 +969,7 @@
             Api.get({
                 url: '/category/query.do',
                 data: {},
+                mask: true,
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
@@ -1158,6 +1159,7 @@
                 data: {
                     item_id: that.goodsId
                 },
+                mask: true,
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {

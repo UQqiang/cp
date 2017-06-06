@@ -86,6 +86,11 @@
         addEvent: function () {
             var that = this;
 
+            // iCheck
+            $(document).on('ready', function () {
+                that.iCheck();
+            });
+
             // search
             $('#search').click(function () {
                 that.search_key = $.trim($('#keywords').val());
@@ -93,6 +98,7 @@
                 that.queryBrand();
             });
 
+            // batch delete
             $('#batchDelete').click(function () {
                 var checkedBox = $('.checkbox:checked');
                 var idList = [];
@@ -117,12 +123,12 @@
             });
 
             // delete
-            $(document).on('click', '.j-brand-delete', function () {
+            $(document).on('click', '.j-channel-delete', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
                 var data = {};
                 data.target = $(this);
-                data.content = '确定要删除品牌' + name + '吗?';
+                data.content = '确定要删除仓库' + name + '吗?';
                 that.tip(data, function (btn, dialog) {
                     that.deleteBrand(id, function (data) {
                         toastr.success('已成功删除' + name, '提示');
@@ -134,7 +140,69 @@
                 }, function (btn, dialog) {
                     dialog.close();
                 });
-            })
+            });
+
+            // 关闭 & 激活
+            $(document).on('click', '.j-channel-freeze', function () {
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
+                that.tip({
+                    target: $(this),
+                    content: '确定要关闭' + name + '吗?'
+                }, function (btn, dialog) {
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                })
+            });
+
+            // 批量关闭
+            $('#batchFreeze').click(function () {
+                var checkedBox = $('.checkbox:checked');
+                var idList = [];
+                for (var i = 0; i < checkedBox.length; i++) {
+                    idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                that.tip({
+                    target: $(this),
+                    content: '确定要批量关闭仓库吗?'
+                }, function (btn, dialog) {
+                    console.log(idList);
+                    //that.deleteBrand(idList, function (data) {
+                    //    toastr.success('已成功批量删除', '提示');
+                    //    that.queryBrand();
+                    //}, function (data) {
+                    //    toastr.error(data.msg)
+                    //});
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 批量激活
+            $('#batchunFreeze').click(function () {
+                var checkedBox = $('.checkbox:checked');
+                var idList = [];
+                for (var i = 0; i < checkedBox.length; i++) {
+                    idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                that.tip({
+                    target: $(this),
+                    content: '确定要批量激活仓库吗?'
+                }, function (btn, dialog) {
+                    console.log(idList);
+                    //that.deleteBrand(idList, function (data) {
+                    //    toastr.success('已成功批量删除', '提示');
+                    //    that.queryBrand();
+                    //}, function (data) {
+                    //    toastr.error(data.msg)
+                    //});
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
         },
         /**
          * 品牌列表
@@ -157,10 +225,10 @@
                     document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
-                        var t = _.template($('#j-template').html());
-                        $('#brandList').html(t({
-                            items: data.data.data
-                        }));
+                        //var t = _.template($('#j-template').html());
+                        //$('#brandList').html(t({
+                        //    items: data.data.data
+                        //}));
                         that.iCheck();
                     } else {
                         $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
@@ -222,7 +290,7 @@
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#brandList').find('tr.list').length;
+            var n = $('#warehouseList').find('tr.list').length;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

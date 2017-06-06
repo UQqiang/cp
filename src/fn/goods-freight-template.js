@@ -136,6 +136,7 @@
             var that = this;
             Api.get({
                 url: "/freight/query.do",
+                mask: true,
                 success: function (data) {
                     that.templateShow(data)
                 },

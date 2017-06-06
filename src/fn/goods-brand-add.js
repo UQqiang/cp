@@ -164,6 +164,7 @@
                 data: {
                     brand_id: data
                 },
+                mask: true,
                 beforeSend: function () {
 
                 },

@@ -370,6 +370,7 @@
                     category_id: that.search_key.category_id || '',
                     item_status: that.search_key.item_status || ''
                 },
+                mask: true,
                 beforeSend: function () {
 
                 },

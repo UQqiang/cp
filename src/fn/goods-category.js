@@ -213,6 +213,7 @@
             Api.get({
                 url: '/category/leaf/query.do',
                 data: {},
+                mask: true,
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {

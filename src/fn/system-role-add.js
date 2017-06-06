@@ -24,6 +24,7 @@
                 data: {
                     id: parseInt(id)
                 },
+                mask: true,
                 success: function (data) {
                     $(".name").val(data.data.role_name);
                     $(".explain").val(data.data.role_desc);

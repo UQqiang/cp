@@ -115,6 +115,7 @@
                 data: {
                     id: that.id
                 },
+                mask: true,
                 success: function (data) {
                     that.renderDataFunc(data.data)
                 },

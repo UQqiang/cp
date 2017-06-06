@@ -533,6 +533,7 @@
                 data: {
                     id: that.template_id
                 },
+                mask: true,
                 success: function (data) {
                     var $pricing_method = data.data.freight_template_dto.pricing_method;
                     var $tpl = data.data.freight_template_dto;

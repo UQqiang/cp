@@ -31,7 +31,10 @@
                 type: type,
                 data: opts.data || '',
                 beforeSend: function () {
-                    $('.mask').fadeIn();
+                    // 遮罩层改为配置项
+                    if( opts.mask && opts.mask === true ){
+                        $('.mask').fadeIn();
+                    }
                 },
                 success: function (data) {
                     if (data.code == 40000) {

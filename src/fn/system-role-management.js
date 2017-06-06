@@ -132,6 +132,7 @@
             var that = this;
             Api.get({
                 url: "/userRole/query.do",
+                mask: true,
                 success: function (data) {
                     that.mainShow(data);
                     that.iCheck();

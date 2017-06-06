@@ -56,6 +56,7 @@
                     name: that.search_key.name || '',
                     status: that.search_key.status || ''
                 },
+                mask: true,
                 success: function (data) {
                     var total_count = data.data.total_count;
                     if( total_count > 0 ){

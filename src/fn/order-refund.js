@@ -176,6 +176,7 @@
                     user_id: that.user_id,
                     order_item_id: that.order_item_id
                 },
+                mask: true,
                 beforeSend: function () {
 
                 },
