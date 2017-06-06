@@ -151,7 +151,7 @@ gulp.task('sass-minify', function() {
 
 > Introduce the plug-in
 
->.< 用到的插件不详细描述了,这里只列出名称和功能,相信你一定是个大牛! 去github看看介绍,so easy!
+哈哈, >.< 用到的插件不详细描述了,这里只列出名称和功能,相信你一定是个大牛! 去github看看介绍,so easy!
 
 * `animate` - css3动画
 * `bootstrap` - oh ~
