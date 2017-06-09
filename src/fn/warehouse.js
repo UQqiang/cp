@@ -1,3 +1,7 @@
+/**
+ * 仓库功能
+ * 添加仓库 / 仓库查询 / 仓库删除
+ */
 ;(function () {
     var main = {
         init: function () {
@@ -7,7 +11,7 @@
             this.pageId = 1;
             this.search_key = {};
             this.addEvent();
-            this.queryBrand();
+            this.queryWarehouse();
         },
         /**
          * tip
@@ -93,9 +97,10 @@
 
             // search
             $('#search').click(function () {
-                that.search_key = $.trim($('#keywords').val());
+                that.search_key.storage_id = $.trim($('#storageId').val());
+                that.search_key.storage_short_name = $.trim($('#storageShortName').val());
                 that.pageId = 1;
-                that.queryBrand();
+                that.queryWarehouse();
             });
 
             // batch delete
@@ -105,14 +110,14 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
-                var data = {};
-                data.target = $(this);
-                data.content = '确定要批量删除品牌吗?';
-                that.tip(data, function (btn, dialog) {
+                that.tip({
+                    target: $(this),
+                    content: '确定要批量删除仓库吗?'
+                }, function (btn, dialog) {
                     console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
+                    //that.deleteWarehouse(idList, function (data) {
                     //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
+                    //    that.queryWarehouse();
                     //}, function (data) {
                     //    toastr.error(data.msg)
                     //});
@@ -126,16 +131,19 @@
             $(document).on('click', '.j-warehouse-delete', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
-                var data = {};
-                data.target = $(this);
-                data.content = '确定要删除仓库' + name + '吗?';
-                that.tip(data, function (btn, dialog) {
-                    that.deleteBrand(id, function (data) {
-                        toastr.success('已成功删除' + name, '提示');
-                        that.queryBrand();
-                    }, function (data) {
-                        toastr.error(data.msg)
-                    });
+                var idList = [];
+                idList.push(id);
+                that.tip({
+                    target: $(this),
+                    content: '确定要删除仓库' + name + '吗?'
+                }, function (btn, dialog) {
+                    console.log(idList);
+                    //that.deleteWarehouse(id, function (data) {
+                    //    toastr.success('已成功删除' + name, '提示');
+                    //    that.queryWarehouse();
+                    //}, function (data) {
+                    //    toastr.error(data.msg)
+                    //});
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -145,11 +153,15 @@
             // 关闭 & 激活
             $(document).on('click', '.j-warehouse-freeze', function () {
                 var id = $(this).attr('data-id');
+                var status = $(this).attr('data-status');
                 var name = $(this).attr('data-name');
+                var idList = [];
+                idList.push(id);
                 that.tip({
                     target: $(this),
                     content: '确定要关闭' + name + '吗?'
                 }, function (btn, dialog) {
+                    console.log(idList);
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -163,6 +175,7 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                var status = 2;
                 that.tip({
                     target: $(this),
                     content: '确定要批量关闭仓库吗?'
@@ -170,7 +183,7 @@
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {
                     //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
+                    //    that.queryWarehouse();
                     //}, function (data) {
                     //    toastr.error(data.msg)
                     //});
@@ -187,6 +200,7 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                var status = 1;
                 that.tip({
                     target: $(this),
                     content: '确定要批量激活仓库吗?'
@@ -194,7 +208,7 @@
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {
                     //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
+                    //    that.queryWarehouse();
                     //}, function (data) {
                     //    toastr.error(data.msg)
                     //});
@@ -205,16 +219,17 @@
             });
         },
         /**
-         * 品牌列表
+         * 仓库列表
          */
-        queryBrand: function () {
+        queryWarehouse: function () {
             var that = this;
             Api.get({
-                url: '/brand/query.do',
+                url: '/storage/query.do',
                 data: {
+                    storage_id: that.search_key.storage_id,
+                    storage_short_name: that.search_key.storage_short_name,
                     current_page: that.pageId || 1,
-                    page_size: that.page.pageSize || 20,
-                    keywords: that.search_key || ''
+                    page_size: that.page.pageSize || 20
                 },
                 mask: true,
                 beforeSend: function () {
@@ -245,14 +260,14 @@
             });
         },
         /**
-         * 删除品牌
+         * 删除仓库
          */
-        deleteBrand: function (id, success, error) {
+        deleteWarehouse: function (idList, success, error) {
             var that = this;
             Api.get({
                 url: '/brand/delete.do',
                 data: {
-                    brand_id: id
+                    id_list: JSON.stringify(idList)
                 },
                 beforeSend: function () {
 
@@ -285,7 +300,7 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        that.queryBrand()
+                        that.queryWarehouse()
                     }
                 }
             });

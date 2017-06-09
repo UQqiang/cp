@@ -121,6 +121,14 @@
       flex: 7;
   background: #f8f8f8;
 }
+.goods-content .country-selectize-wrapper {
+  display: inline-block;
+  width: 140px;
+  vertical-align: middle;
+}
+.goods-content .rate-template {
+  display: none;
+}
 .goods-content .sku-wrapper {
   border: 1px solid #dedede;
   padding: 10px;
@@ -142,6 +150,8 @@
   padding: 6px 10px;
   margin-right: 10px;
   position: relative;
+  margin-bottom: 5px;
+  display: inline-block;
 }
 .goods-content .sku-wrapper .props-close {
   display: none;
@@ -217,6 +227,13 @@
 }
 .goods-content .sku-gallery dl dd {
   text-align: center;
+}
+.goods-content .sku-gallery dl dd span {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 70px;
 }
 .goods-content #main-gallery {
   display: inline-block;
@@ -313,6 +330,13 @@
 }
 
 /******************************** 品类管理 ******************************/
+.categories .sortable-handle {
+  margin-right: 10px;
+  font: bold 16px Sans-Serif;
+  display: inline-block;
+  cursor: move;
+  cursor: -webkit-grabbing;
+}
 .categories .category-title {
   padding: 5px;
   background: #169F85;

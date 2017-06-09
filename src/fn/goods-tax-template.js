@@ -1,21 +1,17 @@
+/**
+ * 仓库功能
+ * 添加仓库 / 仓库查询 / 仓库删除
+ */
 ;(function () {
     var main = {
         init: function () {
+            this.page = {};
+            this.page.pageSize = 20;
+            this.page.vpage = 10;
+            this.pageId = 1;
+            this.search_key = {};
             this.addEvent();
-            this.getData();
-        },
-        addEvent: function () {
-            var that = this;
-            $(document).on('click', '.j-delete', function () {
-                var config = {};
-                config.content = '确定要删除吗?';
-                config.target = $(this);
-                that.tip(config, function (btn, dialog) {
-                    dialog.close();
-                }, function (btn, dialog) {
-                    dialog.close();
-                })
-            })
+            this.queryTax();
         },
         /**
          * tip
@@ -91,18 +87,141 @@
                 $(this).parents('tr').removeClass('selected');
             })
         },
-        getData: function () {
+        addEvent: function () {
             var that = this;
-            var template = _.template($('#j-template').html());
-            $('#j-list').html(template({
-                items: ''
-            }));
 
+            // iCheck
             $(document).on('ready', function () {
                 that.iCheck();
-            })
+            });
+
+            // search
+            $('#search').click(function () {
+                that.search_key.storage_id = $.trim($('#storageId').val());
+                that.search_key.storage_short_name = $.trim($('#storageShortName').val());
+                that.pageId = 1;
+                that.queryTax();
+            });
+
+            // delete
+            $(document).on('click', '.j-tax-delete', function () {
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
+                var idList = [];
+                idList.push(id);
+                that.tip({
+                    target: $(this),
+                    content: '确定要删除仓库' + name + '吗?'
+                }, function (btn, dialog) {
+                    console.log(idList);
+                    //that.deleteTax(id, function (data) {
+                    //    toastr.success('已成功删除' + name, '提示');
+                    //    that.queryTax();
+                    //}, function (data) {
+                    //    toastr.error(data.msg)
+                    //});
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+        },
+        /**
+         * 税率列表
+         */
+        queryTax: function () {
+            var that = this;
+            Api.get({
+                url: '/brand/query.do',
+                data: {
+                    storage_id: that.search_key.storage_id,
+                    storage_short_name: that.search_key.storage_short_name,
+                    current_page: that.pageId || 1,
+                    page_size: that.page.pageSize || 20
+                },
+                mask: true,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    // 滚动条自动回顶部
+                    document.getElementsByTagName('body')[0].scrollTop = 0;
+                    var total_count = data.data.total_count;
+                    if (total_count > 0) {
+                        var t = _.template($('#j-template').html());
+                        $('#taxList').html(t({
+                            items: ''
+                        }));
+                        that.iCheck();
+                    } else {
+                        $('#taxList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
+                    }
+
+                    that.pagination(data.data.total_count);
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 删除仓库
+         */
+        deleteTax: function (idList, success, error) {
+            var that = this;
+            Api.get({
+                url: '/brand/delete.do',
+                data: {
+                    id_list: JSON.stringify(idList)
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+        pagination: function (total) {
+            var that = this;
+            var pagination = $('.ui-pagination')
+            pagination.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.pageId = num;
+                    if (type == 'change') {
+                        that.queryTax()
+                    }
+                }
+            });
+            $('#check-all').iCheck("uncheck");
+            var n = $('#taxList').find('tr.list').length;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
         }
     };
+    // run
     $(function () {
         main.init();
     })

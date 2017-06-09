@@ -96,15 +96,17 @@
 <!-- end -->
 
 <!-- rev-hash -->
+<script src="../src/plugin/sortable/jquery.fn.sortable.js"></script>
 <script src="../src/fn/goods-category.js"></script>
 <!-- end -->
 
 <!-- 类目模板 -->
 <script type="text/template" id="template-category">
-    <ul>
+    <ul id="sortable-level-<%= items[0].parent_id %>">
         <% _.each(items,function(item,index){ %>
             <li class="clear" data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>" data-name="<%= item.cate_name %>" data-img="<%= item.image_url %>" data-sub_cate="<%= encodeURIComponent(JSON.stringify(item.sub_categorys)) %>">
-                <% if( item.image_url ){ %>
+                <span class="sortable-handle mr10">☰</span>
+                <% if( item.image_url && item.cate_level != 1 ){ %>
                     <span><img class="category-img-icon" src="<%= item.image_url %>"></span>
                 <% } %>
                 <span><%= item.cate_name %></span>

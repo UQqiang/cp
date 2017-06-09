@@ -20,19 +20,30 @@
         },
         ajax: function (opts, type) {
             var that = this;
-            console.log(that.ajaxDomain);
-            var height = (window.innerHeight - 40)/2;
+            var height = (window.innerHeight - 40) / 2;
+            var dataType;
+
             $('.mask-img').css({
                 'margin-top': height
             });
+
+            if (opts.dataType) {
+                dataType = opts.dataType
+            } else {
+                if (type == 'post') {
+                    dataType = 'json'
+                } else {
+                    dataType = 'jsonp'
+                }
+            }
             $.ajax({
-                url: that.ajaxDomain + opts.url,
-                dataType: type == 'post' ? 'json' : 'jsonp',
+                url: opts.absoluteUrl ? opts.absoluteUrl : (that.ajaxDomain + opts.url),
+                dataType: dataType,
                 type: type,
                 data: opts.data || '',
                 beforeSend: function () {
                     // 遮罩层改为配置项
-                    if( opts.mask && opts.mask === true ){
+                    if (opts.mask && opts.mask === true) {
                         $('.mask').fadeIn();
                     }
                 },

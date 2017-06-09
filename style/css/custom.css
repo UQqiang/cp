@@ -2327,8 +2327,9 @@ select.form-control {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: url(../images/arrowdown.png) no-repeat 95% 50%;
-  background-size: 9px 5px;
+  position: relative;
+  background: #fff url(../images/arrowdown.png) no-repeat 92% 50%;
+  background-size: 11px 5px;
 }
 
 .form-control {

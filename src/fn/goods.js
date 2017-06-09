@@ -295,6 +295,11 @@
         addEvent: function () {
             var that = this;
 
+            // iCheck
+            $(document).on('ready', function () {
+                that.iCheck();
+            });
+
             // 添加 sku 规格
             $('.j-add-sku-specifications').click(function () {
                 // 沿用老的 最多添加三个规格
@@ -324,7 +329,7 @@
                     toastr.warning('添加的sku' + sku_name + '超出上限', '警告提示');
                     return false;
                 }
-                data.content = '<input type="text" class="form-control prop">';
+                data.content = '<input type="text" class="form-control prop" placeholder="最多支持16个字符汉子" maxlength="16">';
                 data.target = $(this);
                 data.position = 'bottom';
                 that.tip(data, function (button, dialog) {
@@ -373,7 +378,7 @@
             });
 
             // 批量设置 - sku - input
-            $('.goods-content').on('blur', 'input[data-type=lowestPrice],input[data-type=suggestionsPrice],input[data-type=ean]', function () {
+            $('.goods-content').on('blur', 'input[data-type=lowestPrice],input[data-type=suggestionsPrice],input[data-type=costPrice],input[data-type=ean]', function () {
                 var type = $(this).attr('data-type');
 
                 $(this).hide();
@@ -387,7 +392,7 @@
             });
 
             // 单个输入 - sku - input
-            $('.goods-content').on('change', 'input[data-input_type=lowestPrice],input[data-input_type=suggestionsPrice],input[data-input_type=ean]', function () {
+            $('.goods-content').on('change', 'input[data-input_type=lowestPrice],input[data-input_type=suggestionsPrice],input[data-input_type=costPrice],input[data-input_type=ean]', function () {
                 var type = $(this).attr('data-input_type');
                 var arr = [], hasEmpty = false;
                 if ($(this).val() == '') {
@@ -798,8 +803,8 @@
             }
 
             // 商品类型 切换
-            $('input[name=radio-goods]').on('ifCheck', function () {
-                if ($(this).val() == 2) {
+            $('[name=radio-goods]').on('ifClicked', function () {
+                if ($(this).val() != 1) {
                     // 国内商品
                     $('#rate').hide();
                 } else {
@@ -807,6 +812,17 @@
                     $('#rate').show();
                 }
             });
+
+            // 税率 切换
+            $('[name=radio-rate]').on('ifClicked', function () {
+                if ($(this).val() == 1) {
+                    $('.rate-table').show();
+                    $('.rate-template').hide()
+                } else {
+                    $('.rate-template').show();
+                    $('.rate-table').hide();
+                }
+            })
         },
         /**
          * tip
@@ -838,13 +854,17 @@
                 }]
             });
         },
+        /**
+         * 检查sku是否存在.如果不存在用总的
+         * @param data
+         */
         checkedSkuExist: function (data) {
             var that = this;
             if (data.length > 0) {
                 $('.stock-container,.sku-container').show();
-                $('#lowestPrice,#suggestionsPrice,#ean').prop('disabled', true);
+                $('#lowestPrice,#suggestionsPrice,#ean,#costPrice').prop('disabled', true);
 
-                var lowestPrice = [], suggestionsPrice = [], ean = [];
+                var lowestPrice = [], suggestionsPrice = [], ean = [], costPrice = [];
                 $.each(that.skuTableData, function (i, obj) {
                     if (obj.lowestPrice) {
                         lowestPrice.push(Number(obj.lowestPrice));
@@ -852,15 +872,20 @@
                     if (obj.suggestionsPrice) {
                         suggestionsPrice.push(Number(obj.suggestionsPrice));
                     }
+                    if (obj.costPrice) {
+                        costPrice.push(Number(obj.costPrice));
+                    }
                 });
 
                 lowestPrice.length > 0 ? $('#lowestPrice').val((lowestPrice.sort(that.sortNumber).shift() / 100).toFixed(2)) : $('#lowestPrice').val('');
 
                 suggestionsPrice.length > 0 ? $('#suggestionsPrice').val((suggestionsPrice.sort(that.sortNumber).shift() / 100).toFixed(2)) : $('#suggestionsPrice').val('');
 
+                costPrice.length > 0 ? $('#costPrice').val((costPrice.sort(that.sortNumber).shift() / 100).toFixed(2)) : $('#costPrice').val('');
+
             } else {
                 $('.stock-container,.sku-container').hide();
-                $('#lowestPrice,#suggestionsPrice,#ean').prop('disabled', false);
+                $('#lowestPrice,#suggestionsPrice,#ean,#costPrice').prop('disabled', false);
             }
         },
         hoverFunc: function () {
@@ -892,8 +917,9 @@
             this.postData.name = $.trim($('#name').val());                              // 商品名称
             this.postData.cate_id = this.cateId;                                        // 二级类目id
             this.postData.gallery = JSON.stringify(this.commonGallery.concat(this.skuGallery));       // 商品图片
-            this.postData.lowest_price = $.trim($('#lowestPrice').val());               // 最近零售价
-            this.postData.suggestions_price = $.trim($('#suggestionsPrice').val());     // 建议售价
+            this.postData.lowest_price = $.trim($('#lowestPrice').val());               // 最近售价
+            this.postData.suggestions_price = $.trim($('#suggestionsPrice').val());     // 建议零售价
+            this.postData.cost_price = $.trim($('#costPrice').val());                   // 成本价
             this.postData.description = this.editor.getContent();                       // 商品详情
 
             // 整理sku_props
@@ -934,6 +960,9 @@
                         case 'suggestionsPrice':
                             this.skuTableData[idx].suggestionsPrice = (val == '' ? '' : (val * 100).toFixed(0));
                             break;
+                        case 'costPrice':
+                            this.skuTableData[idx].costPrice = (val == '' ? '' : (val * 100).toFixed(0));
+                            break;
                         case 'ean':
                             this.skuTableData[idx].ean = val;
                             break;
@@ -946,6 +975,7 @@
                         ean: $.trim($('#ean').val()),
                         lowestPrice: ($.trim($('#lowestPrice').val()) * 100).toFixed(0),
                         suggestionsPrice: ($.trim($('#suggestionsPrice').val()) * 100).toFixed(0),
+                        costPrice: ($.trim($('#costPrice').val()) * 100).toFixed(0),
                         prop: [{
                             prop_id: 0,
                             prop_name: "",
@@ -958,6 +988,7 @@
                     this.skuTableData[0].ean = $.trim($('#ean').val());
                     this.skuTableData[0].lowestPrice = ($.trim($('#lowestPrice').val()) * 100).toFixed(0);
                     this.skuTableData[0].suggestionsPrice = ($.trim($('#suggestionsPrice').val()) * 100).toFixed(0);
+                    this.skuTableData[0].costPrice = ($.trim($('#costPrice').val()) * 100).toFixed(0);
                 }
             }
         },
@@ -1090,15 +1121,32 @@
         queryCountry: function () {
             var that = this;
             Api.get({
-                url: '../src/stub/flag.json',
+                absoluteUrl: '../src/stub/flag.json',
+                dataType: 'json',
                 data: {},
                 beforeSend: function () {
                 },
                 success: function (data) {
-                    var t = _.template($('#j-template-country').html());
-                    $('#countryList').html(t({
-                        items: data.data.item_list
-                    }));
+                    //var t = _.template($('#j-template-country').html());
+                    //$('#countryList').html(t({
+                    //    items: data.data.item_list
+                    //}));
+                    var arr = [];
+                    for (var i = 0; i < data.data.item_list.length; i++) {
+                        var obj = {};
+                        obj.text = data.data.item_list[i].cName;
+                        obj.value = data.data.item_list[i].cName;
+                        arr.push(obj);
+                    }
+                    $('#countrySelectize').selectize({
+                        options: arr,
+                        placeholder: '请选择商品货源地',
+                        create: false,
+                        onItemAdd: function (value, $item) {
+                            // 选择sku事件
+                            console.log(value);
+                        }
+                    });
                 },
                 complete: function () {
                 },
@@ -1254,13 +1302,15 @@
                         break;
                     case "skus":
                         that.skuTableData = value;
-                        var lowestPrice = [], suggestionsPrice = [], ean = [];
+                        var lowestPrice = [], suggestionsPrice = [], ean = [], costPrice = [];
                         $.each(that.skuTableData, function (i, obj) {
                             lowestPrice.push(Number(obj.origin_price));
                             suggestionsPrice.push(Number(obj.price));
+                            costPrice.push(Number(obj.cost_price))
                         });
                         $('#lowestPrice').val((lowestPrice.sort(that.sortNumber).shift() / 100).toFixed(2));
                         $('#suggestionsPrice').val((suggestionsPrice.sort(that.sortNumber).shift() / 100).toFixed(2));
+                        $('#costPrice').val((costPrice.sort(that.sortNumber).shift() / 100).toFixed(2));
                         break;
                 }
             })

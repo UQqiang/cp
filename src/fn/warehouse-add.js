@@ -10,14 +10,10 @@
                 "area": "区"
             };
             if (this.id) {
-                this.getArea($('#areaList-province'), function () {
-                    that.getData();
-                })
-            } else {
-                this.getArea($('#areaList-province'));
+                that.getData();
             }
             this.addEvent();
-            this.Verification();
+            this.verification();
         },
         /**
          * tip
@@ -66,28 +62,37 @@
                 })
             });
 
-            //
+            // 省 市 区 选择
             $(document).on('change', 'select', function () {
                 var name = $(this).attr('data-nextName');
                 var code = $(this).find('option:selected').attr('data-code');
-                that.parent_name = name;
-                that.parent_code = code;
+                var parent_cfg = {};
+                parent_cfg.parent_name = name;
+                parent_cfg.parent_code = code;
                 switch (name) {
                     // 国家
                     case 'country':
                         break;
                     // 省
                     case 'province':
+                        if (code == 'cn') {
+                            that.getArea($('#areaList-province'), parent_cfg, function () {
+                            });
+                            $('#areaList-province,#areaList-city,#areaList-area').attr('required', 'required');
+                        } else {
+                            $('#areaList-province,#areaList-city,#areaList-area').removeAttr('required');
+                            that.areaInit(['#areaList-province', '#areaList-city', '#areaList-area']);
+                        }
                         break;
                     // 市
                     case 'city':
-                        that.getArea($('#areaList-' + name), function () {
+                        that.getArea($('#areaList-' + name), parent_cfg, function () {
                             that.areaInit(['#areaList-area']);
                         });
                         break;
                     // 区
                     case 'area':
-                        that.getArea($('#areaList-' + name), function () {
+                        that.getArea($('#areaList-' + name), parent_cfg, function () {
 
                         });
                         break;
@@ -96,7 +101,7 @@
 
         },
         //验证
-        Verification: function () {
+        verification: function () {
             var that = this;
             var validator = new FormValidator();
             validator.settings.alerts = true;
@@ -110,40 +115,34 @@
                         return;
                     }
                 }
-                if ($('#roleList').val() == 'null') {
-                    toastr.error('请选择角色', '提示');
-                    isValid = false;
-                    return;
-                }
-
-                if ($('#password').val() != $('#password_v').val()) {
-                    toastr.error('两次输入的密码不一样', '提示');
-                    $('#password').val('');
-                    $('#password_v').val('');
-                    isValid = false;
-                    return false;
-                }
 
                 if (isValid == true) {
                     that.setPostData();
+
+                    if (!that.id) {
+                        that.addAccount()
+                    } else {
+                        that.postData.id = that.id;
+                        that.changeAccount()
+                    }
                 }
             });
         },
         /**
          * 获取地区信息
          */
-        getArea: function (area, cb) {
+        getArea: function (area, parent_cfg, cb) {
             var that = this;
             Api.get({
                 url: "/store/region/list.do",
                 data: {
-                    parent_code: that.parent_code || 'CN'
+                    parent_code: parent_cfg.parent_code || 'CN'
                 },
                 success: function (data) {
                     var template = _.template($('#j-template').html());
                     $(area).html(template({
                         items: data.data.region_list,
-                        parent_name: that.parent_name_map[that.parent_name] || '省'
+                        parent_name: that.parent_name_map[parent_cfg.parent_name] || '省'
                     }));
 
                     cb && cb(data);
@@ -156,7 +155,7 @@
         areaInit: function (arr) {
             for (var i = 0; i < arr.length; i++) {
                 var type = arr[i].split('-')[1];
-                $(arr[i]).html('<option value="null">'+ this.parent_name_map[type] +'</option>')
+                $(arr[i]).html('<option value="null">' + this.parent_name_map[type] + '</option>')
             }
         },
         //获取数据
@@ -168,6 +167,16 @@
                     id: that.id
                 },
                 success: function (data) {
+                    // todo 先渲染省市区
+                    if (data) {
+                        var parent_cfg = {};
+                        that.getArea($('#areaList-province'), parent_cfg, function () {
+                        });
+                        that.getArea($('#areaList-city'), parent_cfg, function () {
+                        });
+                        that.getArea($('#areaList-area'), parent_cfg, function () {
+                        });
+                    }
                     that.renderDataFunc(data.data)
                 },
                 error: function (data) {
@@ -179,39 +188,65 @@
             var that = this;
             $.each(data, function (key, value) {
                 switch (key) {
-                    case 'user_name':
-                        $('#user_name').val(value);
+                    case 'storage_id':
+                        $('#storageId').val(value);
                         break;
-                    //case 'password':
-                    //    that.$.password.val(value);
-                    //    that.$.password_v.val(value);
-                    //    break;
-                    case 'name':
-                        $('#name').val(value);
+                    case 'storage_short_name':
+                        $('#storageShortName').val(value);
                         break;
-                    case 'role_id':
-                        $('#roleList').find('option[value=' + value + ']').prop('selected', true);
+                    case 'storage_name':
+                        $('#storageName').val(value);
                         break;
-                    case 'status':
-                        $('input[name=radio][value=' + value + ']').prop('checked', true);
+                    case 'supplier_name':
+                        $('#supplierName').val(value);
+                        break;
+                    case 'link_man':
+                        $('#linkMan').val(value);
+                        break;
+                    case 'mobile':
+                        $('#mobile').val(value);
+                        break;
+                    case 'address_country':
+                        $('#areaList-country option[data-value=' + value + ']').prop('selected', true);
+                        break;
+                    case 'address_province':
+                        $('#areaList-province option[data-value=' + value + ']').prop('selected', true);
+                        break;
+                    case 'address_city':
+                        $('#areaList-city option[data-value=' + value + ']').prop('selected', true);
+                        break;
+                    case 'address_district':
+                        $('#areaList-district option[data-value=' + value + ']').prop('selected', true);
+                        break;
+                    case 'address_street':
+                        $('#street').val(value);
+                        break;
+                    case 'storage_type':
+                        $('#storageType option[data-value=' + value + ']').prop('selected', true);
                         break;
                 }
             });
         },
+        /**
+         * 设置要提交的数据
+         * this.postData
+         */
         setPostData: function () {
             this.postData = {};
-            this.postData.name = $.trim($('#name').val());
-            this.postData.password = $.trim($('#password').val());
-            this.postData.user_name = $.trim($('#user_name').val());
-            this.postData.role_id = $('#roleList').val() || '0';
-            this.postData.status = $('input[name=radio]:checked').attr('data-value');
-
-            if (!this.id) {
-                this.addAccount()
-            } else {
-                this.postData.id = this.id;
-                this.changeAccount()
-            }
+            this.postData.storage_id = $.trim($('#storageId').val());                                       // 仓库ID
+            this.postData.storage_short_name = $.trim($('#storageShortName').val());                        // 仓库简称
+            this.postData.storage_name = $.trim($('#storageName').val());                                   // 仓库名称
+            this.postData.supplier_name = $.trim($('#supplierName').val());                                 // 供应商名称
+            this.postData.link_man = $.trim($('#linkMan').val());                                            // 联系人
+            this.postData.mobile = $.trim($('#mobile').val());                                              // 联系电话
+            this.postData.address_country = $('#areaList-country option:selected').attr('data-value');     // 国家
+            this.postData.address_province = $('#areaList-province option:selected').attr('data-value');    // 省
+            this.postData.address_city = $('#areaList-city option:selected').attr('data-value');            // 市
+            this.postData.address_district = $('#areaList-area option:selected').attr('data-value');        // 区
+            this.postData.address_street = $.trim($('#street').val());                                      // 街道 - 详细地址
+            this.postData.storage_type = $('#storageType option:selected').attr('data-value');              // 仓库类型
+            this.postData.cost = 0;                                                                         // 仓库费用 默认0
+            this.postData.status = 1;                                                                       // 仓里状态 默认激活1
         },
         //增加账号
         addAccount: function () {

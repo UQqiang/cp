@@ -129,6 +129,15 @@
     flex: 7;
     background: #f8f8f8;
   }
+  .country-selectize-wrapper{
+    display: inline-block;
+    width: 140px;
+    vertical-align: middle;
+
+  }
+  .rate-template{
+    display: none;
+  }
   .sku-wrapper {
     border: 1px solid #dedede;
     padding: 10px;
@@ -151,6 +160,8 @@
       padding: 6px 10px;
       margin-right: 10px;
       position: relative;
+      margin-bottom: 5px;
+      display: inline-block;
     }
     .props-close{
       display: none;
@@ -227,6 +238,13 @@
       }
       dd {
         text-align: center;
+        span{
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 70px;
+        }
       }
     }
   }
@@ -332,6 +350,13 @@
 /******************************** 品类管理 ******************************/
 
 .categories{
+  .sortable-handle{
+    margin-right: 10px;
+    font: bold 16px Sans-Serif;
+    display: inline-block;
+    cursor: move;
+    cursor: -webkit-grabbing;
+  }
   .category-title{
     padding: 5px;
     background: #169F85;

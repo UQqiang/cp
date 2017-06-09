@@ -41,7 +41,7 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <!-- 选择类目 -->
+                <!-- 选择类目 第一步 -->
                 <div class="x_content step" data-now_step="1">
                     <div class="categories">
                         <div class="add-goods-categories mr10">
@@ -93,7 +93,7 @@
                 </div>
                 <!-- 选择类目 end -->
 
-                <!-- 添加商品 -->
+                <!-- 添加商品 第二步 -->
                 <div class="x_content step" data-now_step="2">
                     <div>
                         <!-- 基本信息 -->
@@ -115,14 +115,26 @@
                                     </div>
                                     <div class="item form-group">
                                         <label class="ui-label ui-label-md tr">* 商品类型：</label>
+
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="1" checked="checked"/>
                                         <label for="goodsType-1" class="ml5 mr5">
                                             跨境商品
                                         </label>
-                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="1"/>
+
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-2" value="2" />
                                         <label for="goodsType-2" class="ml5 mr5">
+                                            海外直邮
+                                        </label>
+
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-3" value="3" />
+                                        <label for="goodsType-3" class="ml5 mr5">
                                             国内商品
                                         </label>
-                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-2" value="2" />
+
+                                        <input type="radio" class="flat" name="radio-goods" id="goodsType-4" value="4" />
+                                        <label for="goodsType-4" class="ml5 mr5">
+                                            一般贸易
+                                        </label>
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-md tr">* 商品品牌：</label>
@@ -134,9 +146,12 @@
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-md tr">* 货源地：</label>
-                                        <select class="form-control form-control-md" required name="货源地" id="countryList">
-                                            <option>请选择商品货源地</option>
-                                        </select>
+                                        <!--<select class="form-control form-control-md" required name="货源地" id="countryList">-->
+                                            <!--<option>请选择商品货源地</option>-->
+                                        <!--</select>-->
+                                        <div class="country-selectize-wrapper">
+                                            <select id="countrySelectize"></select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -251,8 +266,12 @@
                                         <input class="form-control form-control-md" id="lowestPrice" required="required" placeholder="请输入最低售价" name="最低售价" type="text" pattern="decimal">
                                     </div>
                                     <div class="item form-group field">
-                                        <label class="ui-label ui-label-md tr"><span>* 建议售价：</span></label>
-                                        <input class="form-control form-control-md" id="suggestionsPrice" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal">
+                                        <label class="ui-label ui-label-md tr"><span>* 建议零售价：</span></label>
+                                        <input class="form-control form-control-md" id="suggestionsPrice" required="required" placeholder="请输入建议零售价" name="建议零售价" type="text" pattern="decimal">
+                                    </div>
+                                    <div class="item form-group field">
+                                        <label class="ui-label ui-label-md tr"><span>* 成本价：</span></label>
+                                        <input class="form-control form-control-md" id="costPrice" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal">
                                     </div>
                                     <div class="item form-group field">
                                         <label class="ui-label ui-label-md tr"><span>* EAN：</span></label>
@@ -327,7 +346,7 @@
                 </div>
                 <!-- 添加商品 end -->
 
-                <!-- 选择仓库 -->
+                <!-- 选择仓库 第三步 -->
                 <div class="x_content step" data-now_step="3">
                     <div class="mb10 select-warehouse-wrapper">
                         <button id="selectPluginButtonWarehouse" class="btn btn-success btn-sm">选择仓库</button>
@@ -428,18 +447,19 @@
                         <% if( index == 0 ){ %>
                             <% if( item.prop ){ %>
                                 <% _.each(item.prop,function(n,m){ %>
-                                    <th class="tc cell-12"><%= n.prop_name %></th>
+                                    <th class="tc cell-8"><%= n.prop_name %></th>
                                 <% }) %>
                             <% }else{ %>
                                 <% _.each(item,function(n,m){ %>
-                                    <th class="tc cell-12"><%= n.prop_name %></th>
+                                    <th class="tc cell-8"><%= n.prop_name %></th>
                                 <% }) %>
                             <% } %>
                         <% } %>
                     <% }) %>
-                    <th class="tc cell-8">最低零售价</th>
-                    <th class="tc cell-8">建议售价</th>
-                    <th class="tc cell-10">EAN</th>
+                    <th class="tc cell-8">最低售价</th>
+                    <th class="tc cell-8">建议零售价</th>
+                    <th class="tc cell-8">成本价</th>
+                    <th class="tc cell-8">EAN</th>
                 </tr>
             </thead>
             <tbody>
@@ -461,6 +481,9 @@
                             <input class="form-control form-control-xs" name="skuProp" data-input_type="suggestionsPrice" data-index="<%= index %>" value="<%= item.suggestionsPrice ? (item.suggestionsPrice/100).toFixed(2) : '' %>">
                         </td>
                         <td class="tc">
+                            <input class="form-control form-control-xs" name="skuProp" data-input_type="costPrice" data-index="<%= index %>" value="<%= item.costPrice ? (item.costPrice/100).toFixed(2) : '' %>">
+                        </td>
+                        <td class="tc">
                             <input class="form-control form-control-xs" name="skuProp" data-input_type="ean" data-index="<%= index %>">
                         </td>
                     </tr>
@@ -470,8 +493,9 @@
                 <tr>
                     <td colspan="10">
                         <label class="ui-label tl">批量设置：</label>
-                        <span class="j-batch btn btn-sm" data-type="lowestPrice">最低零售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="lowestPrice"></span>
-                        <span class="j-batch btn btn-sm" data-type="suggestionsPrice">建议售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="suggestionsPrice"></span>
+                        <span class="j-batch btn btn-sm" data-type="lowestPrice">最低售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="lowestPrice"></span>
+                        <span class="j-batch btn btn-sm" data-type="suggestionsPrice">建议零售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="suggestionsPrice"></span>
+                        <span class="j-batch btn btn-sm" data-type="costPrice">成本价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="costPrice"></span>
                         <span class="j-batch btn btn-sm" data-type="ean">EAN</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="ean"></span>
                     </td>
                 </tr>

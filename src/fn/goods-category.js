@@ -224,6 +224,7 @@
                     $('#add-goods-category-1').html(template({
                         items: data.data
                     }));
+                    that.initSortable(0);
 
                     if (cateLevel == 1) {
                         $('#add-goods-category-2').html('');
@@ -253,6 +254,7 @@
                                 items: subCate
                             }));
                             that.currentCateObj = {};
+                            that.initSortable(subCate[0].parent_id);
 
                         } else {
                             // 点击的是二级类目
@@ -353,7 +355,72 @@
                     error && error(data);
                 }
             });
-        }
+        },
+        initSortable: function (parent_id) {
+            var that = this;
+            if (!parent_id) {
+                parent_id = 0;
+            }
+            $('#sortable-level-' + parent_id).sortable({
+                animation: 150,
+                handle: '.sortable-handle',
+                onChoose: function (evt) {
+                    console.log('onChoose', evt);
+                },
+                onStart: function (evt) {
+                    console.log('onStart', evt);
+                },
+                onEnd: function (evt) {
+                    console.log('onEnd', evt);
+                },
+                onAdd: function (evt) {
+                    console.log('onAdd', evt);
+                },
+                onUpdate: function (evt) {
+                    console.log('onUpdate', evt);
+                },
+                onSort: function (evt) {
+                    console.log('onSort', evt);
+                    var cate_id = $(evt.from).attr('id').split('-')[2];
+                    var obj = {};
+                    var li = $(evt.from).find('li');
+                    for (var n = 0; n < li.length; n++) {
+                        var id = li.eq(n).attr('data-id');
+                        obj[id] = (li.eq(n).index()).toString();
+                    }
+                    console.log(obj);
+                    that.sort(obj);
+                },
+                onRemove: function (evt) {
+                    console.log('onRemove', evt);
+                }
+
+            });
+        },
+        /**
+         * 排序
+         */
+        sort: function (obj) {
+            var that = this;
+            Api.get({
+                url: '/category/sort.do',
+                data: {
+                    sort_map: JSON.stringify(obj)
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error('排序出错','提示')
+                }
+            });
+        },
     };
     // run
     $(function () {
