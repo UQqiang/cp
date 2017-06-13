@@ -1,7 +1,9 @@
 /**
  * Created by lijiahao on 16/8/16.
  * 选择插件 selectPlugin
- * 当前使用到的地方: 拼团.幸运大抽奖.直播.分享合伙人
+ * 当前使用到的地方:
+ *      渠道后台: 拼团.幸运大抽奖.直播.分享合伙人
+ *      管控后台: 商品添加,渠道关联商品
  */
 
 ;(function ($, window, document) {
@@ -21,6 +23,9 @@
      * @type {string}  ajaxType                     // ajax的请求类型默认 post
      * @type {string}  ajaxDataType                 // ajax的请求数据类型默认 json
      * @type {boolean} needFailureInfo              // 是否展示已经失效的东西-垃圾数据 ( 默认情况下是展示 )
+     * @type {Array}   categoryList                 // 需要展示的类目列表
+     * @type {Array}   brandList                    // 需要展示的品牌列表
+     * @type {boolean} showCateAndBrand             // 是否展示类目列表和品牌列表的搜索 ( 默认false )
      * function selectSuccess                       // 成功选择之后的回调 返回选择的数据data,和当前选择弹框的指针
      * function selectError                         // 失败选择之后的回调 返回一条错误信息info
      * function ajaxError                           // 接口请求报错后的回调
@@ -45,6 +50,9 @@
             ajaxType: 'post',                           // ajax的请求类型默认 post
             ajaxDataType: 'json',                       // ajax的请求数据类型默认 json
             needFailureInfo: true,                      // 是否展示已经失效的东西-垃圾数据 ( 默认情况下是展示 )
+            categoryList: [],                           // 需要展示的二级类目列表
+            brandList: [],                              // 需要展示的品牌列表
+            showCateAndBrand: false,                    // 是否展示类目列表和品牌列表的搜索 ( 默认false )
             selectSuccess: function (data, target) {    // 成功选择之后的回调 返回选择的数据data,和当前选择弹框的指针
             },
             selectError: function (info) {              // 失败选择之后的回调 返回一条错误信息info
@@ -136,26 +144,22 @@
 
             this.selected_list = [];
 
-            // api
-            // todo dome json数据
-            this.ajaxApi = {
-                item: '../src/plugin/select-plugin/stub/demo.json',
-                item_sku: '../src/plugin/select-plugin/stub/demo_sku.json',
-                item_users: '../src/plugin/select-plugin/stub/demo_users.json',
-                item_coupon: '../src/plugin/select-plugin/stub/demo_coupon.json',
-                item_warehouse: '../src/plugin/select-plugin/stub/demo_warehouse.json'
-            };
-
-            if (location.host.indexOf('dev') == 0) {
-                //this.ajaxApi = {
-                //    item: '../stub/demo.json',
-                //    item_sku:'../stub/demo_sku.json'
-                //}
+            if (location.host.indexOf('localhost') == 0) {
+                this.ajaxApi = {
+                    item: 'http://boss.mockuai.net:8080/bossmanager/item/query.do',
+                    item_sku: 'http://boss.mockuai.net:8080/bossmanager/item/sku/query.do',
+                    item_users: 'http://boss.mockuai.net:8080/bossmanager/user/query.do',
+                    item_coupon: 'http://boss.mockuai.net:8080/bossmanager/market/activity_coupon/query.do',
+                    item_warehouse: ''
+                }
             } else {
-                //this.ajaxApi = {
-                //    item: '../stub/demo.json',
-                //    item_sku:'../stub/demo_sku.json'
-                //}
+                this.ajaxApi = {
+                    item: 'http://' + location.host + '/bossmanager/item/query.do',
+                    item_sku: 'http://' + location.host + '/bossmanager/item/sku/query.do',
+                    item_users: 'http://' + location.host + '/bossmanager/user/query.do',
+                    item_coupon: 'http://' + location.host + '/bossmanager/market/activity_coupon/query.do',
+                    item_warehouse: ''
+                }
             }
 
         },
@@ -168,6 +172,7 @@
 
             // 显示弹窗
             $(that.body).on('click', that.$element, function () {
+                console.log(that.options.brandList);
                 if (that.options.selectedList.length > 0) {
                     that.selected_list = that.options.selectedList
                 }
@@ -189,6 +194,8 @@
                 switch (that.options.type) {
                     case 0:
                         that.search_key.key = value;
+                        that.search_key.brand_key = that.brand_key || '';
+                        that.search_key.cate_key = that.cate_key || '';
                         break;
                     case 1:
                         that.search_key.user_key = value;
@@ -345,16 +352,23 @@
                 title: that.options.title,
                 content: blankContent,
                 width: 850,
-                height: 450,
+                height: 500,
                 draggable: false
             });
             $('#select-plugin-dialog-content').html(dialogHtml.content({
                 type: that.options.type,
-                needFailureInfo: that.options.needFailureInfo
+                needFailureInfo: that.options.needFailureInfo,
+                showCateAndBrand: that.options.showCateAndBrand
             }));
             that.checkSingle();
             that.checkSelectAllButton();
             that.prepareHttpRequest(dialogHtml.template);
+
+            // 如果是商品
+            if (that.options.type == 0) {
+                that.renderBrand();
+                that.renderCategory();
+            }
         },
 
         /**
@@ -388,10 +402,10 @@
                 case 0:
                     api = that.ajaxApi.item;
                     var itemStatus;
-                    if( that.options.needFailureInfo == true ){
+                    if (that.options.needFailureInfo == true) {
                         // 需要下架商品
                         itemStatus = that.statusKey || ''
-                    }else{
+                    } else {
                         // 不需要下架商品
                         itemStatus = that.statusKey || 4
                     }
@@ -399,7 +413,9 @@
                         current_page: that.pageConfig.pageId || 1,
                         page_size: that.pageConfig.pageSize,
                         item_status: itemStatus,
-                        key: that.search_key.key
+                        key: that.search_key.key,
+                        brand_key: that.search_key.brand_key || '',
+                        category_id: that.search_key.cate_key || ''
                     };
 
                     that.ajax(api, obj, function (data) {
@@ -431,10 +447,10 @@
                 case 2:
                     api = that.ajaxApi.item_coupon;
                     var coupon_lifecycle;
-                    if( that.options.needFailureInfo === true ){
+                    if (that.options.needFailureInfo === true) {
                         // 需要展示过期信息
                         coupon_lifecycle = that.search_key.coupon_lifecycle || 0
-                    }else{
+                    } else {
                         // 不展示过期信息
                         coupon_lifecycle = that.search_key.coupon_lifecycle || 2
                     }
@@ -534,9 +550,9 @@
                 success: function (data) {
                     if (data.code == 10000) {
                         callback && callback(data)
-                    } else if( data.code == 40000 ) {
-                       location.href = '../seller_info/seller_login.html'
-                    } else{
+                    } else if (data.code == 40000) {
+                        location.href = '../seller_info/seller_login.html'
+                    } else {
                         console.log(data.msg);
                         that.options.ajaxError(data);
                     }
@@ -591,6 +607,88 @@
                     console.log(data.msg)
                 }
             });
+        },
+        /**
+         * 如果是商品 可以根据品牌进行搜索
+         */
+        renderBrand: function () {
+
+            var that = this;
+
+            if (this.options.brandList.length > 0) {
+                // 拿到数据了
+                //var template = _.template($('#j-select-plugin-brand'));
+                //$('#select-plugin-brand').html(template({
+                //    item: this.options.brandList
+                //}))
+                $('#select-plugin-brand-selectize').selectize({
+                    options: this.options.brandList,
+                    placeholder: '请选择品牌',
+                    create: false,
+                    onItemAdd: function (value, $item) {
+                        // 选择品牌
+                        console.log(value);
+                        that.brand_key = value;
+                    },
+                    onItemRemove: function (value) {
+                        that.brand_key = '';
+                        console.log(that.brand_key,value)
+                    }
+                });
+            } else {
+                // 没有拿到数据 可能对方的接口还没有返回
+                var timer = setInterval(function () {
+                    if( !that.timer ){
+                        that.timer = 0
+                    }else{
+                        if( that.timer > 5 ){
+                            clearInterval(timer)
+                        }else{
+                            that.timer += 1;
+                            that.renderBrand();
+                        }
+                    }
+                }, 1000)
+            }
+        },
+        /**
+         * 如果是商品 可以根据类目进行搜索
+         */
+        renderCategory: function () {
+
+            var that = this;
+
+            if (this.options.categoryList.length > 0) {
+                // 拿到数据了
+                $('#select-plugin-category-selectize').selectize({
+                    options: this.options.categoryList,
+                    placeholder: '请选择二级类目',
+                    create: false,
+                    onItemAdd: function (value, $item) {
+                        // 选择品牌
+                        console.log(value);
+                        that.cate_key = value;
+                    },
+                    onItemRemove: function (value) {
+                        that.cate_key = '';
+                        console.log(that.cate_key,value)
+                    }
+                });
+            } else {
+                // 没有拿到数据 可能对方的接口还没有返回
+                var timer = setInterval(function () {
+                    if( !that.timerCate ){
+                        that.timerCate = 0
+                    }else{
+                        if( that.timerCate > 5 ){
+                            clearInterval(timer)
+                        }else{
+                            that.timerCate += 1;
+                            that.renderCategory();
+                        }
+                    }
+                }, 1000)
+            }
         },
         /**
          * 验证是否全选了本页

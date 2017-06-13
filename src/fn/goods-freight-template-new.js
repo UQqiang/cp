@@ -634,9 +634,14 @@
                 },
                 success: function (data) {
                     toastr.success('添加成功!', '提示')
+                    setTimeout(function () {
+                        location.href = 'goods-freight-template.html'
+                    }, 1000)
                 },
                 complete: function () {
-                    that.isAjax = false;
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000)
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');
@@ -656,10 +661,15 @@
                     freight_template_dto: that.postData
                 },
                 success: function (data) {
-                    toastr.success('编辑成功!', '提示')
+                    toastr.success('编辑成功!', '提示');
+                    setTimeout(function () {
+                        location.href = 'goods-freight-template.html'
+                    }, 1000)
                 },
                 complete: function () {
-                    that.isAjax = false;
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000)
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');

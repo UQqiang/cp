@@ -97,8 +97,7 @@
 
             // search
             $('#search').click(function () {
-                that.search_key.storage_id = $.trim($('#storageId').val());
-                that.search_key.storage_short_name = $.trim($('#storageShortName').val());
+                that.search_key.keywords = $.trim($('#keywords').val());
                 that.pageId = 1;
                 that.queryWarehouse();
             });
@@ -114,13 +113,15 @@
                     target: $(this),
                     content: '确定要批量删除仓库吗?'
                 }, function (btn, dialog) {
+
                     console.log(idList);
-                    //that.deleteWarehouse(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryWarehouse();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.deleteWarehouse(idList, function (data) {
+                        toastr.success('已成功批量删除', '提示');
+                        that.queryWarehouse();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -137,13 +138,15 @@
                     target: $(this),
                     content: '确定要删除仓库' + name + '吗?'
                 }, function (btn, dialog) {
+
                     console.log(idList);
-                    //that.deleteWarehouse(id, function (data) {
-                    //    toastr.success('已成功删除' + name, '提示');
-                    //    that.queryWarehouse();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.deleteWarehouse(idList, function (data) {
+                        toastr.success('已成功删除' + name, '提示');
+                        that.queryWarehouse();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -159,9 +162,20 @@
                 idList.push(id);
                 that.tip({
                     target: $(this),
-                    content: '确定要关闭' + name + '吗?'
+                    content: status == 2 ? ('确定要关闭' + name + '吗?') : ('确定要激活' + name + '吗?')
                 }, function (btn, dialog) {
+
                     console.log(idList);
+                    that.freezeWarehouse(idList, status, function () {
+
+                        var msg = (status == 2 ? ('已成功关闭' + name) : ('已成功激活' + name));
+                        toastr.success(msg, '提示');
+                        that.queryWarehouse();
+
+                    }, function () {
+
+                    });
+
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -180,13 +194,15 @@
                     target: $(this),
                     content: '确定要批量关闭仓库吗?'
                 }, function (btn, dialog) {
+
                     console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryWarehouse();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.freezeWarehouse(idList, status, function () {
+                        toastr.success('已成功批量关闭仓库', '提示');
+                        that.queryWarehouse();
+                    }, function () {
+
+                    });
+
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -205,13 +221,15 @@
                     target: $(this),
                     content: '确定要批量激活仓库吗?'
                 }, function (btn, dialog) {
+
                     console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryWarehouse();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.freezeWarehouse(idList, status, function () {
+                        toastr.success('已成功批量激活仓库', '提示');
+                        that.queryWarehouse();
+                    }, function () {
+
+                    });
+
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -226,10 +244,12 @@
             Api.get({
                 url: '/storage/query.do',
                 data: {
-                    storage_id: that.search_key.storage_id,
-                    storage_short_name: that.search_key.storage_short_name,
-                    current_page: that.pageId || 1,
-                    page_size: that.page.pageSize || 20
+                    storage_qto: JSON.stringify({
+                        keywords: that.search_key.keywords,
+                        current_page: that.pageId || 1,
+                        page_size: that.page.pageSize || 20,
+                        need_paging: true
+                    })
                 },
                 mask: true,
                 beforeSend: function () {
@@ -237,16 +257,16 @@
                 },
                 success: function (data) {
                     // 滚动条自动回顶部
-                    document.getElementsByTagName('body')[0].scrollTop = 0;
+                    //document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
-                        //var t = _.template($('#j-template').html());
-                        //$('#brandList').html(t({
-                        //    items: data.data.data
-                        //}));
+                        var t = _.template($('#j-template-warehouse').html());
+                        $('#warehouseList').html(t({
+                            items: data.data.data
+                        }));
                         that.iCheck();
                     } else {
-                        $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
+                        $('#warehouseList').html('<tr><td class="tc" colspan="17">没有任何记录!</td></tr>')
                     }
 
                     that.pagination(data.data.total_count);
@@ -260,12 +280,39 @@
             });
         },
         /**
+         * 激活 & 关闭仓库
+         */
+        freezeWarehouse: function (idList, status, success, error) {
+            var that = this;
+            Api.get({
+                url: '/storage/change_status.do',
+                data: {
+                    id_list: JSON.stringify(idList),
+                    status: status
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+        /**
          * 删除仓库
+         * /storage/change_status.do
          */
         deleteWarehouse: function (idList, success, error) {
             var that = this;
             Api.get({
-                url: '/brand/delete.do',
+                url: '/storage/delete.do',
                 data: {
                     id_list: JSON.stringify(idList)
                 },

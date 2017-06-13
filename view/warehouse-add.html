@@ -69,15 +69,15 @@
                     <div class="form-group field item mb10">
                         <label class="ui-label ui-label-lg tr"><span class="ui-form-required">*</span>联系电话：</label>
                         <input class="form-control form-control-410" id="mobile" required="required" data-name="联系电话"
-                               type="text" maxlength="11" placeholder="请输入联系电话">
+                               type="text" maxlength="11" placeholder="请输入联系电话" pattern="alphanumeric">
                     </div>
                     <br/>
                     <div class="form-group j-no-super field item mb10">
                         <label class="ui-label ui-label-lg tr"><span class="ui-form-required">*</span>联系地址：</label>
                         <select class="form-control form-control-sm" required="required" data-name="国家" id="areaList-country" data-nextName="province">
                             <option>国家</option>
-                            <option data-code="cn">中国</option>
-                            <option data-code="other">国外</option>
+                            <option data-value="中国" data-code="cn">中国</option>
+                            <!--<option data-value="other">国外</option>-->
                         </select>
                         <select class="form-control form-control-sm" required="required" data-name="省" id="areaList-province" data-nextName="city">
                             <option>省</option>
@@ -147,7 +147,7 @@
 <script type="text/template" id="j-template">
     <option value="null"><%= parent_name %></option>
     <% _.each(items,function(item,index){ %>
-    <option data-value="<%= item.id %>" data-region_level="<%= item.region_level %>" data-code="<%= item.code %>">
+    <option data-value="<%= item.name %>" data-region_level="<%= item.region_level %>" data-code="<%= item.code %>">
         <%= item.name %>
     </option>
     <% }) %>

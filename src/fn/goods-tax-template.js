@@ -132,12 +132,14 @@
         queryTax: function () {
             var that = this;
             Api.get({
-                url: '/brand/query.do',
+                url: '/tax_template/query.do',
                 data: {
-                    storage_id: that.search_key.storage_id,
-                    storage_short_name: that.search_key.storage_short_name,
-                    current_page: that.pageId || 1,
-                    page_size: that.page.pageSize || 20
+                    tax_tmpl_qto: JSON.stringify({
+                        keywords: that.search_key.keywords,
+                        current_page: that.pageId || 1,
+                        page_size: that.page.pageSize || 20,
+                        need_paging: true
+                    })
                 },
                 mask: true,
                 beforeSend: function () {

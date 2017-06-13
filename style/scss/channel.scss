@@ -25,3 +25,11 @@
   box-shadow: 1px 1px 10px rgba(0,0,0,0.1);
   margin-bottom: 20px;
 }
+
+.goods-name{
+  display: block;
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
