@@ -11,7 +11,9 @@
             this.addEvent();
             this.queryBrand();
             this.queryCategory();
+            this.selectPluginBrand();
             this.selectPluginGoods();
+            this.selectPluginCategory();
         },
         /**
          * tip
@@ -81,6 +83,7 @@
                 title: '商品选择',
                 selectLength: 0,
                 selectedList: that.selectList,
+                ajaxUrl: Api.domain() + '/item/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
                 categoryList: that.categoryList || [],
@@ -90,6 +93,60 @@
                     that.selectList = data;
                     // 选择商品进行渲染
                     that.renderGoods();
+                    console.log(that.selectList);
+                },
+                selectError: function (info) {
+                }
+            })
+        },
+        /**
+         * 调用弹窗选择插件
+         * 选择品牌
+         */
+        selectPluginBrand: function () {
+            var that = this;
+            $('#selectPluginBrand').selectPlugin({
+                single: false,
+                isSku: false,
+                isSelectAll: true,
+                type: 4,
+                title: '品牌选择',
+                selectLength: 0,
+                selectedList: that.selectList,
+                ajaxUrl: Api.domain() + '/brand/query.do',
+                ajaxType: 'get',
+                ajaxDataType: 'jsonp',
+                selectSuccess: function (data) {
+                    that.selectList = data;
+                    // 选择商品进行渲染
+                    //that.renderGoods();
+                    console.log(that.selectList);
+                },
+                selectError: function (info) {
+                }
+            })
+        },
+        /**
+         * 调用弹窗选择插件
+         * 选择类目
+         */
+        selectPluginCategory: function () {
+            var that = this;
+            $('#selectPluginCategory').selectPlugin({
+                single: false,
+                isSku: false,
+                isSelectAll: true,
+                type: 5,
+                title: '类目选择',
+                selectLength: 0,
+                selectedList: that.selectList,
+                ajaxUrl: Api.domain() + '/category/leaf/query.do',
+                ajaxType: 'get',
+                ajaxDataType: 'jsonp',
+                selectSuccess: function (data) {
+                    that.selectList = data;
+                    // 选择商品进行渲染
+                    //that.renderGoods();
                     console.log(that.selectList);
                 },
                 selectError: function (info) {

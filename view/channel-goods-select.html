@@ -29,7 +29,7 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>渠道商：渠道A，渠道B</h2>
+                <h2><small>渠道关联商品</small></h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="fr">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -39,8 +39,43 @@
             </div>
             <div class="x_content editorContent">
                 <!-- 关联-->
-                <div class="form-group">
-                    <a class="btn btn-sm btn-success " href="javascript:;" id="selectPluginGoods">关联</a>
+                <div class="form-inline">
+                    <div class="form-group mb10">
+                        <label class="ui-label ui-label-md tl">渠道商：</label>
+                        <span></span>
+                    </div>
+                    <br/>
+                    <div class="form-group mb10">
+                        <label class="ui-label ui-label-md tl">关联范围：</label>
+                        <div class="inl-bl">
+                            <label class="ui-label ui-label-md">
+                                全部
+                                <input type="radio" class="flat" name="radio" id="channelAll" value="2" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                品牌
+                                <input type="radio" class="flat" name="radio" id="channelBrand" value="2" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                类目
+                                <input type="radio" class="flat" name="radio" id="channelCategory" value="2" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                商品
+                                <input type="radio" class="flat" name="radio" id="channelGoods" value="2" checked="checked"/>
+                            </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="form-group mb10">
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectAll">关联全部</a>
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginGoods">关联商品</a>
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginBrand">关联品牌</a>
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginCategory">关联类目</a>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
@@ -97,6 +132,7 @@
 <script src="../src/fn/channel-goods-select.js"></script>
 <!-- end -->
 
+<!-- 关联后的商品展示 -->
 <script type="text/template" id="j-template-goods">
     <% if( items.length > 0 ){ %>
     <% _.each(items,function(item, index){ %>

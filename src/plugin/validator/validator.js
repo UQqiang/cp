@@ -58,7 +58,7 @@ FormValidator.prototype = {
             url          : /^(https?:\/\/)?([\w\d\-_]+\.+[A-Za-z]{2,})+\/?/,
             phone        : /^\+?([0-9]|[-|' '])+$/i,
             numeric      : /^[0-9]+$/i,
-            decimal      : /^\d+(\.\d{2})?$/,
+            decimal      : /^\d+(\.\d{1,2})?$/,
             decimalOne   : /^\d*\.{0,1}\d{0,1}$/,
             alphanumeric : /^[a-zA-Z0-9]+$/i,
             email        : {

@@ -9,8 +9,8 @@
         },
         domain: function () {
             // 172.16.0.98
-            this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
-            //this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
+            //this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+            this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
             return this.ajaxDomain;
         },
         post: function (opts) {

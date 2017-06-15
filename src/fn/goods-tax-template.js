@@ -96,9 +96,8 @@
             });
 
             // search
-            $('#search').click(function () {
-                that.search_key.storage_id = $.trim($('#storageId').val());
-                that.search_key.storage_short_name = $.trim($('#storageShortName').val());
+            $('#j-search').click(function () {
+                that.search_key.keywords = $.trim($('#keywords').val());
                 that.pageId = 1;
                 that.queryTax();
             });
@@ -111,15 +110,41 @@
                 idList.push(id);
                 that.tip({
                     target: $(this),
-                    content: '确定要删除仓库' + name + '吗?'
+                    content: '确定要删除税率模板' + name + '吗?'
                 }, function (btn, dialog) {
                     console.log(idList);
-                    //that.deleteTax(id, function (data) {
-                    //    toastr.success('已成功删除' + name, '提示');
-                    //    that.queryTax();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.deleteTax(idList, function (data) {
+                        toastr.success('已成功删除' + name, '提示');
+                        that.queryTax();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // batch delete
+            $('#batchDelete').click(function () {
+                var checkedBox = $('.checkbox:checked');
+                var idList = [];
+                for (var i = 0; i < checkedBox.length; i++) {
+                    idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                that.tip({
+                    target: $(this),
+                    content: '确定要批量删除税率模板吗?'
+                }, function (btn, dialog) {
+
+                    console.log(idList);
+                    that.deleteTax(idList, function (data) {
+                        toastr.success('已成功批量删除', '提示');
+                        that.queryTax();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -147,12 +172,12 @@
                 },
                 success: function (data) {
                     // 滚动条自动回顶部
-                    document.getElementsByTagName('body')[0].scrollTop = 0;
+                    //document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
                         var t = _.template($('#j-template').html());
                         $('#taxList').html(t({
-                            items: ''
+                            items: data.data.data
                         }));
                         that.iCheck();
                     } else {
@@ -170,12 +195,12 @@
             });
         },
         /**
-         * 删除仓库
+         * 删除税率模板
          */
         deleteTax: function (idList, success, error) {
             var that = this;
             Api.get({
-                url: '/brand/delete.do',
+                url: '/tax_template/delete.do',
                 data: {
                     id_list: JSON.stringify(idList)
                 },
