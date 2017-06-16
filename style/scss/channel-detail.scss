@@ -1,6 +1,26 @@
 /******************************** 渠道详情 ******************************/
 @import "_mixin.scss";
 
+#shopList {
+  dl{
+    clear: both;
+    dt{
+      float: left;
+    }
+    dd{
+      margin: 10px 0;
+      float: left;
+      max-width: 100px;
+      -webkit-box-orient: vertical;
+    }
+  }
+  .goods-image{
+    width: 40px;
+    height: 40px;
+    padding: 1px;
+    @include border-image()
+  }
+}
 #goodsList {
   dl{
     clear: both;
