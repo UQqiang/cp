@@ -5,12 +5,12 @@
     background: #f8f8f8;
     box-shadow: 1px 1px 5px #ccc;
   }
-  .fa{
+  .fa {
     font-size: 16px;
     display: inline-block;
     margin-right: 5px;
     cursor: pointer;
-    &.fa-star{
+    &.fa-star {
       color: red;
     }
   }
@@ -21,8 +21,8 @@
       padding: 2px;
       margin: 0 10px;
       @include border-image();
-      .order-image{
-        width:64px;
+      .order-image {
+        width: 64px;
         height: 64px;
       }
     }
@@ -49,7 +49,7 @@
 
 /**** 订单详情 ***/
 
-#order,#orderRefund{
+#order, #orderRefund {
   padding: 20px;
   /* border: 1px solid #ccc; */
   background: #f8f8f8;
@@ -59,9 +59,9 @@
 
 #orderLogistic {
   overflow: hidden;
-  .tab-pane{
+  .tab-pane {
     padding: 20px;
-    .parcel-info{
+    .parcel-info {
       padding: 20px 0;
       border-bottom: 1px solid #73879C;
       border-top: 1px solid #73879C;
@@ -69,12 +69,12 @@
   }
   .thirdparty-list:nth-child(3) {
     color: #26B99A;
-    .cycle{
+    .cycle {
       background: #26B99A;
       border: #26B99A;
     }
     .logistic-time {
-      border-bottom: 1px dashed #26B99A!important;
+      border-bottom: 1px dashed #26B99A !important;
     }
   }
   .thirdparty-list {
@@ -89,7 +89,7 @@
       display: inline-block;
       margin-right: 10px;
       position: absolute;
-      top:40px;
+      top: 40px;
     }
     .logistic-content {
       margin-left: 20px;
@@ -111,20 +111,21 @@
 /**** 维权详情 ***/
 
 #orderRefund {
-  .item-goods{
+  .item-goods {
     display: inline-block;
     width: 150px;
   }
 }
+
 #orderRefundList {
-  .refund-list:nth-child(1){
+  .refund-list:nth-child(1) {
     color: #26B99A;
-    .cycle{
+    .cycle {
       background: #26B99A;
       border: #26B99A;
     }
-    .refund-time{
-      border-bottom: 1px dashed #26B99A!important;
+    .refund-time {
+      border-bottom: 1px dashed #26B99A !important;
     }
   }
   .refund-list {
@@ -139,7 +140,7 @@
       display: inline-block;
       margin-right: 10px;
       position: absolute;
-      top:40px;
+      top: 40px;
       left: 0px;
     }
     .refund-content {

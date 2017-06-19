@@ -2455,7 +2455,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
   white-space: pre;
   position: absolute;
   opacity: 0;
-  z-index: 1;
+  z-index: 10;
   transition: 0.15s ease-out;
   top: 1px;
   /* right: inherit; */

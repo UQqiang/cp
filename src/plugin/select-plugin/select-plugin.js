@@ -20,6 +20,8 @@
      * @type {boolean} isSelectAll                  // 判断是否显示全选按钮
      * @type {boolean} isRefresh                    // 判断是否显示刷新按钮
      * @type {Array}   selectedList                 // 选择的列表
+     * @type {string}  ajaxUrl                      // 请求的接口
+     * @type {string}  ajaxSkuUrl                   // 请求的SKU接口
      * @type {string}  ajaxType                     // ajax的请求类型默认 post
      * @type {string}  ajaxDataType                 // ajax的请求数据类型默认 json
      * @type {boolean} needFailureInfo              // 是否展示已经失效的东西-垃圾数据 ( 默认情况下是展示 )
@@ -86,7 +88,7 @@
                 return;
             }
 
-            if( this.options.isSku === true && this.options.ajaxUrl == '' ){
+            if (this.options.isSku === true && this.options.ajaxUrl == '') {
                 console.error('error: the ajaxSkuUrl is null please check it again !');
                 return;
             }
@@ -120,12 +122,12 @@
             this.body = 'body';
             this.selectPluginBox = 'j-select-plugin-box';                                   // 一条商品
             this.templatePopupDialog = 'j-select-plugin-popup-dialog';                      // 弹窗模板
-            this.selectPluginSaveBtn = 'j-select-plugin-save-' + this.options.type;         // 确定使用按钮
-            this.selectPluginSelectAllBtn = 'j-select-plugin-gsa-' + this.options.type;     // 全选本页按钮
-            this.selectPluginCancelAllBtn = 'j-select-plugin-gca-' + this.options.type;     // 取消本页全选按钮
-            this.selectPluginSearchBtn = 'j-select-plugin-search-' + this.options.type;     // 搜索按钮
-            this.selectPluginSelectBtn = 'j-select-plugin-g-' + this.options.type;          // 选择按钮
-            this.refreshBtn = 'j-select-plugin-refresh-' + this.options.type;               // 刷新
+            this.selectPluginSaveBtn = 'j-select-plugin-save';                              // 确定使用按钮
+            this.selectPluginSelectAllBtn = 'j-select-plugin-gsa';                          // 全选本页按钮
+            this.selectPluginCancelAllBtn = 'j-select-plugin-gca';                          // 取消本页全选按钮
+            this.selectPluginSearchBtn = 'j-select-plugin-search';                          // 搜索按钮
+            this.selectPluginSelectBtn = 'j-select-plugin-g';                               // 选择按钮
+            this.refreshBtn = 'j-select-plugin-refresh';                                    // 刷新
 
             if (this.options.type !== 5) {
                 this.templateRenderArea = 'j-select-plugin-render';                         // 模板渲染的地方
@@ -148,21 +150,67 @@
              * coupon
              */
             this.coupon_lifecycle = 'j-select-plugin-coupon_lifecycle';
-
-            this.addEvent();
-
-            // 根据type 进行初始化设置
-            switch (this.options.type) {
-                case 0:
-                    this.goodsAddEvent();
-                    break;
-            }
-
             this.selected_list = [];
-
             // 请求的api
             this.ajaxApi = this.options.ajaxUrl;
+            // 请求的skuApi
             this.ajaxSkuApi = this.options.ajaxSkuUrl;
+            this.initDialog();
+        },
+        /**
+         * 初始化弹框按钮点击事件 弹出弹框
+         */
+        initDialog: function () {
+            var that = this;
+            // 显示弹窗
+            $(that.body).on('click', that.$element, function () {
+                if (that.options.selectedList.length > 0) {
+                    that.selected_list = that.options.selectedList
+                }
+                that.target = $(this);
+
+                // 清空上次的查询条件
+                for(var key in that.search_key){
+                    delete that.search_key[key];
+                }
+                that.pageConfig.pageId = 1;
+                that.addEventOff();
+                that.addEvent();
+
+                // 根据type 进行初始化设置
+                switch (that.options.type) {
+                    case 0:
+                        that.brand_key = '';
+                        that.cate_key = '';
+                        that.goodsAddEvent();
+                        break;
+                }
+                that.popupDialog();
+            });
+        },
+        /**
+         * 每次点击事件绑定前off一下
+         */
+        addEventOff: function () {
+            var that = this;
+            // 刷新
+            $(that.body).off('click', ('.' + that.refreshBtn));
+            // 搜索
+            $(document).off('click', ('#' + that.selectPluginSearchBtn));
+            // 确定使用
+            $(document).off('click', ('.' + that.selectPluginSaveBtn));
+            // 弹窗 全选本页
+            $(document).off('click', ('.' + that.selectPluginSelectAllBtn));
+            // 弹窗选择&取消选择
+            $(document).off('click', ('.' + that.selectPluginSelectBtn));
+
+            // 点击一级类目出来二级类目
+            $(document).off('click', '.select-plugin-category-list');
+
+            // 只要上架
+            $(document).off('click', ('.' + that.goodsCheckboxType4));
+
+            $(document).off('click', ('.' + that.goodsOpenSku));
         },
         /**
          * 公共的默认事件监听
@@ -170,16 +218,6 @@
         addEvent: function () {
             var that = this;
             var selectedInfo;
-
-            // 显示弹窗
-            $(that.body).on('click', that.$element, function () {
-                console.log(that.options.brandList);
-                if (that.options.selectedList.length > 0) {
-                    that.selected_list = that.options.selectedList
-                }
-                that.target = $(this);
-                that.popupDialog();
-            });
 
             // 刷新
             $(that.body).on('click', '.' + that.refreshBtn, function () {
@@ -238,7 +276,7 @@
 
             // 弹窗 全选本页
             $(document).on('click', '.' + that.selectPluginSelectAllBtn, function () {
-                var selectBtn, selectBtn1, selectBtn0
+                var selectBtn, selectBtn1, selectBtn0;
                 selectBtn = $('.' + that.selectPluginSelectBtn);
                 selectBtn1 = $('.' + that.selectPluginSelectBtn + '[data-status=1]');
                 selectBtn0 = $('.' + that.selectPluginSelectBtn + '[data-status=0]');
@@ -300,7 +338,9 @@
                         // 判断是单选还是多选
                         if (that.options.single === true) {
                             that.options.selectSuccess(selectedList, that.target);
-                            that.dialog.close();
+                            if( that.dialog ){
+                                that.dialog.close();
+                            }
 
                         }
                     } else {
@@ -328,7 +368,9 @@
                         // 判断是单选还是多选
                         if (that.options.single === true) {
                             that.options.selectSuccess(selectedList, that.target);
-                            that.dialog.close();
+                            if( that.dialog ){
+                                that.dialog.close();
+                            }
 
                         }
                         if (level) {
@@ -402,8 +444,8 @@
                             }
                         }
                     }
-                    that.checkGsa();
                 }
+                that.checkGsa();
             });
 
             // 点击一级类目出来二级类目
@@ -670,7 +712,7 @@
                 if (total_count && total_count != 0) {
                     $render.html(template(option));
                 } else {
-                    that.noData(total_count);
+                    that.noData(total_count, option);
                 }
                 that.pagination(total_count);
             } else if (option.type == 5) {

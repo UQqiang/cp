@@ -49,7 +49,7 @@ FormValidator.prototype = {
         date            : this.name + '日期非法',
         password_repeat : this.name + '密码不匹配',
         no_match        : this.name + '不匹配',
-        complete        : this.name + '输入框未满足条件'
+        complete        : this.name + '输入未满足条件'
     },
 
     // default settings
