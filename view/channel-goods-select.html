@@ -21,24 +21,15 @@
     <div class="main_container">
         @@include('common/sidebar.html')
         @@include('common/header.html')
+        @@include('../src/plugin/select-plugin/select-plugin.html')
     </div>
     <!-- page content -->
 
     <!-- 内容部分 -->
     <div class="right_col" role="main">
-
-        <!-- 搜索 -->
-        <div class="x_panel">
-            <div class="x_content">
-                <div class="col-md-4 col-sm-12 col-xs-12 form-group pull-right field">
-                    <button type="button" class="btn btn-sm btn-success pull-right btn-search">搜索</button>
-                    <input type="text" required="required" pattern="decimal" name="渠道名称" placeholder="请输入渠道商名称" class="form-control form-control-lg pull-right">
-                </div>
-            </div>
-        </div>        <!-- 姓名角色-->
         <div class="x_panel">
             <div class="x_title">
-                <h2>渠道商：渠道A，渠道B</h2>
+                <h2><small>渠道关联商品</small></h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="fr">
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -46,72 +37,84 @@
                 </ul>
                 <div class="clearfix"></div>
             </div>
-            <div class="x_content">
+            <div class="x_content editorContent">
                 <!-- 关联-->
-                <div class="form-group">
-                    <a class="btn btn-sm btn-success " href="javascript:;" id="associatedGoods">关联</a>
+                <div class="form-inline">
+                    <div class="form-group mb10">
+                        <label class="ui-label ui-label-md tl">渠道商：</label>
+                        <span></span>
+                    </div>
+                    <br/>
+                    <div class="form-group mb10">
+                        <label class="ui-label ui-label-md tl">关联范围：</label>
+                        <div class="inl-bl">
+                            <label class="ui-label ui-label-md">
+                                全部
+                                <input type="radio" class="flat" name="radio" id="channelAll" value="2" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                品牌
+                                <input type="radio" class="flat" name="radio" id="channelBrand" value="2" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                类目
+                                <input type="radio" class="flat" name="radio" id="channelCategory" value="2" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                商品
+                                <input type="radio" class="flat" name="radio" id="channelGoods" value="2" checked="checked"/>
+                            </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="form-group mb10">
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectAll">关联全部</a>
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginGoods">关联商品</a>
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginBrand">关联品牌</a>
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginCategory">关联类目</a>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                         <thead>
-                        <tr class="headings">
-                            <th>
-                                <input type="checkbox" id="check-all" class="flat">商品名称
-                            </th>
-                            <th colspan="2" class="column-title">规格 </th>
-                            <th class="column-title">成本价</th>
-                            <th class="column-title">结算价</th>
-                            <th class="column-title">最低售价</th>
-                            <th class="column-title">建议售价</th>
-                            <th class="column-title no-link last"><span class="nobr">操作</span>
-                            </th>
-                            <th class="bulk-actions" colspan="7">
-                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                            </th>
-                        </tr>
+                            <tr class="headings">
+                                <th class="column-title tc">
+                                    <input type="checkbox" id="check-all" class="flat">
+                                </th>
+                                <th class="column-title tc">商品名称</th>
+                                <th class="column-title tc">成本价(元)</th>
+                                <th class="column-title tc">最低售价(元)</th>
+                                <th class="column-title tc">建议零售价(元)</th>
+                                <th class="column-title tc">状态</th>
+                                <th class="column-title tc">操作</th>
+                            </tr>
                         </thead>
 
-                        <tbody>
-                        <tr class="even pointer">
-                            <td rowspan="2" class="a-center ">
-                                <input type="checkbox" class="flat" name="table_records">商品名称
-                            </td>
-                            <td  rowspan="2" class=" ">红色</td>
-                            <td class="a-center">XL</td>
-                            <td class="a-center">111元</td>
-                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
-                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
-                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
-                            <td class=" last"><a href="#">编辑-删除-禁用</a>
-                            </td>
-                        </tr>
-                        <tr class="odd pointer">
-                            <td class=" ">XL</td>
-                            <td class=" ">111元</td>
-                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
-                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
-                            <td class=" "><input type="text"class="form-control form-control-sm"></td>
-
-                            <td class=" last"><a href="#">编辑-删除-应用</a>
-                            </td>
-                        </tr>
+                        <tbody id="goodsList">
+                            <tr>
+                                <td colspan="18" class="tc">没有关联任何商品哦~</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="form-group ">
-                    <button class="btn btn-sm btn-success " >删除</button>
-                    <button class="btn btn-sm btn-success " >批量设置</button>
-                </div>
                 <!-- 页码 -->
-                <div class="ui-box">
-                    <div class="widget-list">
-                        <div class="list-page fr">
-                            <span class="pagination-info">1</span>
-                            <div class="ui-pagination pagination"></div>
-                        </div>
+                <div class="widget-list">
+                    <div class="fl pagination">
+                        <button class="btn btn-sm btn-success" id="batchDelete">批量删除</button>
+                    </div>
+                    <div class="list-page fr">
+                        <span class="pagination-info"></span>
+                        <div class="ui-pagination pagination"></div>
                     </div>
                 </div>
                 <!-- /页码 -->
+                <div class="footer-btn-group">
+                    <a class="btn btn-success btn-sm mr10 j-submit">保存</a>
+                    <a class="btn btn-default btn-sm ml10 j-cancel">取消</a>
+                </div>
             </div>
         </div>
     </div>
@@ -126,6 +129,83 @@
 
 
 <!-- rev-hash -->
-<script src="../src/fn/account-number.js"></script>
+<script src="../src/fn/channel-goods-select.js"></script>
 <!-- end -->
+
+<!-- 关联后的商品展示 -->
+<script type="text/template" id="j-template-goods">
+    <% if( items.length > 0 ){ %>
+    <% _.each(items,function(item, index){ %>
+    <tr>
+        <th class="column-title tc">
+            <input type="checkbox" class="flat checkbox" data-id="<%= item.id %>">
+        </th>
+        <td><span class="goods-name"><%= item.item_name %></span></td>
+        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
+        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
+        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
+        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
+        <td class="tc">
+            <a href="javascript:;" class="j-edit-price" data-id="<%= item.id %>" data-name="<%= item.item_name %>">编辑结算价</a>
+            <span>-</span>
+            <a href="javascript:;" class="j-channel-delete" data-id="<%= item.id %>" data-name="<%= item.item_name %>">删除</a>
+        </td>
+    </tr>
+    <% }) %>
+    <% }else{ %>
+    <tr>
+        <td colspan="18" class="tc">没有关联任何商品哦~</td>
+    </tr>
+    <% } %>
+</script>
+
+<!-- 商品成本价 -->
+<script type="text/template" id="j-template-sku">
+    <div class="table-responsive" id="skuList">
+    </div>
+</script>
+
+<!-- 商品成本价 - table -->
+<script type="text/template" id="j-template-sku-table">
+    <table class="table table-bordered">
+        <thead>
+        <tr class="headings">
+            <th class="column-title tc cell-20">商品名称</th>
+            <th class="column-title tc cell-60" colspan="<%= 2*(items[0].prop.length) %>">规格</th>
+            <th class="column-title tc cell-20">结算价</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(items,function(item,index){ %>
+        <% if( index == 0 ){ %>
+        <tr>
+            <td class="tc" rowspan="<%= items.length %>"><%= name %></td>
+            <% _.each(item.prop,function(n,i){ %>
+            <td rowspan="<%= items.length %>">
+                <span><%= n.prop_name || '-' %></span>
+            </td>
+            <td>
+                <span><%= n.value_name || '-' %></span>
+            </td>
+            <% }) %>
+            <td>
+                <input class="form-control form-control-md">
+            </td>
+        </tr>
+        <% }else{ %>
+        <tr>
+            <% _.each(item.prop,function(n,i){ %>
+            <td>
+                <span><%= n.value_name || '-' %></span>
+            </td>
+            <% }) %>
+            <td>
+                <input class="form-control form-control-md">
+            </td>
+        </tr>
+        <% } %>
+        <% }) %>
+        </tbody>
+    </table>
+</script>
 </html>

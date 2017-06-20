@@ -102,24 +102,32 @@
 
 <!-- 类目模板 -->
 <script type="text/template" id="template-category">
+    <% if( items.length > 0 ){ %>
     <ul id="sortable-level-<%= items[0].parent_id %>">
         <% _.each(items,function(item,index){ %>
-            <li class="clear" data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>" data-name="<%= item.cate_name %>" data-img="<%= item.image_url %>" data-sub_cate="<%= encodeURIComponent(JSON.stringify(item.sub_categorys)) %>">
-                <span class="sortable-handle mr10">☰</span>
-                <% if( item.image_url && item.cate_level != 1 ){ %>
-                    <span><img class="category-img-icon" src="<%= item.image_url %>"></span>
-                <% } %>
-                <span><%= item.cate_name %></span>
-                <% if( item.image_url ){ %>
-                    <a class="j-edit-category edit-category has-icon" href="javascript:;"><i class="fa fa-edit"></i></a>
-                    <a class="j-delete-category delete-category has-icon" href="javascript:;"><i class="fa fa-trash"></i></a>
-                <% }else{ %>
-                    <a class="j-edit-category edit-category" href="javascript:;"><i class="fa fa-edit"></i></a>
-                    <a class="j-delete-category delete-category" href="javascript:;"><i class="fa fa-trash"></i></a>
-                <% } %>
-            </li>
+        <li class="clear" data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>" data-name="<%= item.cate_name %>" data-img="<%= item.image_url %>" data-sub_cate="<%= encodeURIComponent(JSON.stringify(item.sub_categorys)) %>">
+            <span class="sortable-handle mr10">☰</span>
+            <% if( item.image_url && item.cate_level != 1 ){ %>
+            <span><img class="category-img-icon" src="<%= item.image_url %>"></span>
+            <% } %>
+            <span><%= item.cate_name %></span>
+            <% if( item.image_url ){ %>
+            <a class="j-edit-category edit-category has-icon" href="javascript:;"><i class="fa fa-edit"></i></a>
+            <a class="j-delete-category delete-category has-icon" href="javascript:;"><i class="fa fa-trash"></i></a>
+            <% }else{ %>
+            <a class="j-edit-category edit-category" href="javascript:;"><i class="fa fa-edit"></i></a>
+            <a class="j-delete-category delete-category" href="javascript:;"><i class="fa fa-trash"></i></a>
+            <% } %>
+        </li>
         <% }) %>
     </ul>
+    <% }else{ %>
+    <ul>
+        <li class="tc">
+            <a href="javascript:;">当前一级类目下无二级类目~</a>
+        </li>
+    </ul>
+    <% } %>
 </script>
 </body>
 </html>

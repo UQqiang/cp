@@ -4,11 +4,11 @@
 ;(function () {
     var main = {
         init: function () {
+            this.search_key = {};
             this.render();
             this.addEvent();
 
         },
-        //todo 运费模板搜索没写
         /**
          * tip
          * @param data
@@ -41,6 +41,12 @@
         },
         addEvent: function () {
             var that = this;
+
+            // 搜索
+            $('#search').click(function () {
+                that.search_key.keywords = $.trim($('#keywords').val());
+                that.render();
+            });
 
             // 复制
             $('body').on('click', '.J_copy', function (e) {
@@ -136,6 +142,9 @@
             var that = this;
             Api.get({
                 url: "/freight/query.do",
+                data: {
+                    keywords: that.search_key.keywords
+                },
                 mask: true,
                 success: function (data) {
                     that.templateShow(data)

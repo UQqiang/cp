@@ -104,16 +104,18 @@
                                 </div>
                             </div>
                             <div class="add-goods-content">
-                                <div class="add-goods-inner">
-                                    <div class="form-group">
+                                <div class="add-goods-inner form-inline">
+                                    <div class="form-group mb10">
                                         <label class="ui-label ui-label-md tr">* 商品类目：</label>
                                         <span class="currentCategory"></span><span class="ml10"><a href="javascript:;" class="reselect" data-type="back">重新选择</a></span>
                                     </div>
-                                    <div class="item form-group field">
+                                    <br/>
+                                    <div class="form-group mb10 field item">
                                         <label class="ui-label ui-label-md tr"><span>* 商品名称：</span></label>
-                                        <input class="form-control form-control-hg" id="name" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length="1,40">
+                                        <input class="form-control form-control-hg" id="name" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length-range=1,40">
                                     </div>
-                                    <div class="item form-group">
+                                    <br/>
+                                    <div class="form-group mb10 item">
                                         <label class="ui-label ui-label-md tr">* 商品类型：</label>
 
                                         <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="1" checked="checked"/>
@@ -136,20 +138,24 @@
                                             一般贸易
                                         </label>
                                     </div>
-                                    <div class="item form-group field">
+                                    <br/>
+                                    <div class="form-group mb10 field item">
                                         <label class="ui-label ui-label-md tr">* 商品品牌：</label>
-                                        <select class="form-control form-control-md" required name="商品品牌" id="brandList">
-                                            <option>请选择商品品牌</option>
+                                        <div class="the-selectize-wrapper">
+                                        <select required="required" name="商品品牌" id="brand-selectize">
+                                            <!--<option>请选择商品品牌</option>-->
                                         </select>
+                                        </div>
                                         <span class="ml10"><a href="javascript:;">刷新</a></span>
                                         <span class="ml10 mr10"><a href="javascript:;">新建品牌</a></span>
                                     </div>
-                                    <div class="item form-group field">
+                                    <br/>
+                                    <div class="form-group mb10 field item">
                                         <label class="ui-label ui-label-md tr">* 货源地：</label>
                                         <!--<select class="form-control form-control-md" required name="货源地" id="countryList">-->
                                             <!--<option>请选择商品货源地</option>-->
                                         <!--</select>-->
-                                        <div class="country-selectize-wrapper">
+                                        <div class="the-selectize-wrapper">
                                             <select id="countrySelectize"></select>
                                         </div>
                                     </div>
@@ -213,11 +219,11 @@
                                                     <input type="radio" class="flat" name="radio-rate" id="rate-2" value="2"/>
                                                 </div>
                                                 <div class="rate-template">
-                                                    <select class="form-control form-control-md" id="rateTemplate">
-                                                        <option>请选择税率模板</option>
-                                                        <option value="1">模板一</option>
-                                                        <option value="2">模板二</option>
-                                                    </select>
+                                                    <div class="the-selectize-wrapper">
+                                                        <select required="required" name="税率模板" id="rate-template-selectize">
+
+                                                        </select>
+                                                    </div>
                                                     <span class="ml10"><a href="javascript:;">刷新</a></span>
                                                     <span class="ml10 mr10"><a href="javascript:;">新建模板</a></span>
                                                 </div>
@@ -261,21 +267,26 @@
 
                                         </div>
                                     </div>
-                                    <div class="item form-group field">
-                                        <label class="ui-label ui-label-md tr"><span>* 最低售价：</span></label>
-                                        <input class="form-control form-control-md" id="lowestPrice" required="required" placeholder="请输入最低售价" name="最低售价" type="text" pattern="decimal">
-                                    </div>
-                                    <div class="item form-group field">
-                                        <label class="ui-label ui-label-md tr"><span>* 建议零售价：</span></label>
-                                        <input class="form-control form-control-md" id="suggestionsPrice" required="required" placeholder="请输入建议零售价" name="建议零售价" type="text" pattern="decimal">
-                                    </div>
-                                    <div class="item form-group field">
-                                        <label class="ui-label ui-label-md tr"><span>* 成本价：</span></label>
-                                        <input class="form-control form-control-md" id="costPrice" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal">
-                                    </div>
-                                    <div class="item form-group field">
-                                        <label class="ui-label ui-label-md tr"><span>* EAN：</span></label>
-                                        <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="decimal">
+                                    <div class="form-inline">
+                                        <div class="form-group mb10 field item">
+                                            <label class="ui-label ui-label-md tr"><span>* 最低售价：</span></label>
+                                            <input class="form-control form-control-md" id="promotion_price" required="required" placeholder="请输入最低售价" name="最低售价" type="text" pattern="decimal">
+                                        </div>
+                                        <br/>
+                                        <div class="form-group mb10 field item">
+                                            <label class="ui-label ui-label-md tr"><span>* 建议零售价：</span></label>
+                                            <input class="form-control form-control-md" id="market_price" required="required" placeholder="请输入建议零售价" name="建议零售价" type="text" pattern="decimal">
+                                        </div>
+                                        <br/>
+                                        <div class="form-group mb10 field item">
+                                            <label class="ui-label ui-label-md tr"><span>* 成本价：</span></label>
+                                            <input class="form-control form-control-md" id="cost_price" required="required" placeholder="请输入成本价" name="成本价" type="text" pattern="decimal">
+                                        </div>
+                                        <br/>
+                                        <div class="form-group mb10 field item">
+                                            <label class="ui-label ui-label-md tr"><span>* EAN：</span></label>
+                                            <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="decimal">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -320,7 +331,7 @@
                                         <div class="item form-group field mb10">
                                             <label class="ui-label ui-label-md tr mb10"><span>物品体积：</span></label>
                                             <div class="input-group">
-                                                <input class="form-control form-control-md" required="required" placeholder="请输入物品体积" name="物品体积" type="text">
+                                                <input class="form-control form-control-md" required="required" placeholder="请输入物品体积" name="物品体积" type="text" pattern="decimal" id="weight">
                                                 <span class="input-group-addon">m3</span>
                                             </div>
                                         </div>
@@ -329,7 +340,7 @@
                                         <div class="item form-group field mb10">
                                             <label class="ui-label ui-label-md tr mb10"><span>物品重量：</span></label>
                                             <div class="input-group">
-                                                <input class="form-control form-control-md" required="required" placeholder="请输入物品重量" name="物品重量" type="text">
+                                                <input class="form-control form-control-md" required="required" placeholder="请输入物品重量" name="物品重量" type="text" pattern="decimal" id="volume">
                                                 <span class="input-group-addon">kg</span>
                                             </div>
                                         </div>
@@ -445,13 +456,13 @@
                 <tr>
                     <% _.each(items,function(item,index){ %>
                         <% if( index == 0 ){ %>
-                            <% if( item.prop ){ %>
-                                <% _.each(item.prop,function(n,m){ %>
-                                    <th class="tc cell-8"><%= n.prop_name %></th>
+                            <% if( item.sku_property_dto_list ){ %>
+                                <% _.each(item.sku_property_dto_list,function(n,m){ %>
+                                    <th class="tc cell-8"><%= n.name %></th>
                                 <% }) %>
                             <% }else{ %>
                                 <% _.each(item,function(n,m){ %>
-                                    <th class="tc cell-8"><%= n.prop_name %></th>
+                                    <th class="tc cell-8"><%= n.name %></th>
                                 <% }) %>
                             <% } %>
                         <% } %>
@@ -465,26 +476,34 @@
             <tbody>
                 <% _.each(items,function(item,index){ %>
                     <tr>
-                        <% if(item.prop){ %>
-                            <% _.each(item.prop,function(n,m){ %>
-                                <td class="tc"><%= n.value_name %></td>
+                        <% if(item.sku_property_dto_list){ %>
+                            <% _.each(item.sku_property_dto_list,function(n,m){ %>
+                                <td class="tc"><%= n.value %></td>
                             <% }) %>
                         <% }else{ %>
                             <% _.each(item,function(n,m){ %>
-                                <td class="tc"><%= n.value_name %></td>
+                                <td class="tc"><%= n.value %></td>
                             <% }) %>
                         <% } %>
                         <td class="tc">
-                            <input class="form-control form-control-xs" name="skuProp" data-input_type="lowestPrice" data-index="<%= index %>" value="<%= item.lowestPrice ? (item.lowestPrice/100).toFixed(2) : '' %>">
+                            <div class="field item">
+                                <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="promotion_price" data-index="<%= index %>" value="<%= item.promotion_price ? (item.promotion_price/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                            </div>
                         </td>
                         <td class="tc">
-                            <input class="form-control form-control-xs" name="skuProp" data-input_type="suggestionsPrice" data-index="<%= index %>" value="<%= item.suggestionsPrice ? (item.suggestionsPrice/100).toFixed(2) : '' %>">
+                            <div class="field item">
+                                <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="market_price" data-index="<%= index %>" value="<%= item.market_price ? (item.market_price/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                            </div>
                         </td>
                         <td class="tc">
-                            <input class="form-control form-control-xs" name="skuProp" data-input_type="costPrice" data-index="<%= index %>" value="<%= item.costPrice ? (item.costPrice/100).toFixed(2) : '' %>">
+                            <div class="field item">
+                                <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="cost_price" data-index="<%= index %>" value="<%= item.cost_price ? (item.cost_price/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                            </div>
                         </td>
                         <td class="tc">
-                            <input class="form-control form-control-xs" name="skuProp" data-input_type="ean" data-index="<%= index %>">
+                            <div class="field item">
+                                <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="ean" data-index="<%= index %>" pattern="decimal">
+                            </div>
                         </td>
                     </tr>
                 <% }) %>
@@ -493,9 +512,9 @@
                 <tr>
                     <td colspan="10">
                         <label class="ui-label tl">批量设置：</label>
-                        <span class="j-batch btn btn-sm" data-type="lowestPrice">最低售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="lowestPrice"></span>
-                        <span class="j-batch btn btn-sm" data-type="suggestionsPrice">建议零售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="suggestionsPrice"></span>
-                        <span class="j-batch btn btn-sm" data-type="costPrice">成本价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="costPrice"></span>
+                        <span class="j-batch btn btn-sm" data-type="promotion_price">最低售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="promotion_price"></span>
+                        <span class="j-batch btn btn-sm" data-type="market_price">建议零售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="market_price"></span>
+                        <span class="j-batch btn btn-sm" data-type="cost_price">成本价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="cost_price"></span>
                         <span class="j-batch btn btn-sm" data-type="ean">EAN</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="ean"></span>
                     </td>
                 </tr>
@@ -511,12 +530,12 @@
             <span>
             <% _.each(items,function(item,index){ %>
                 <% if( index == 0 ){ %>
-                    <% _.each(item.prop,function(n,m){ %>
-                        <label class="ml10 mr10"><%= n.prop_name %></label>
-                        <% if( (sku_id == n.prop_id) ||  m == 0 ){ %>
-                            <input type="radio" name="radio-sku-prop" class="flat" checked="checked" data-sku_id="<%= n.prop_id %>">
+                    <% _.each(item.sku_property_dto_list,function(n,m){ %>
+                        <label class="ml10 mr10"><%= n.name %></label>
+                        <% if( (sku_id == n.sku_property_tmpl_id) ||  m == 0 ){ %>
+                            <input type="radio" name="radio-sku-prop" class="flat" checked="checked" data-sku_id="<%= n.sku_property_tmpl_id %>">
                         <% }else{ %>
-                            <input type="radio" name="radio-sku-prop" class="flat" data-sku_id="<%= n.prop_id %>">
+                            <input type="radio" name="radio-sku-prop" class="flat" data-sku_id="<%= n.sku_property_tmpl_id %>">
                         <% } %>
                     <% }) %>
                 <% } %>
@@ -533,25 +552,25 @@
         <% _.each(value['value'],function(item,index){ %>
             <% if( value['sku_id'] == sku_id){ %>
                 <dl class="dl-active" data-sku_id="<%= key %>">
-                    <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value_name %>" data-pid="<%= item.value_id %>" data-index="<%= index %>">
+                    <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value %>" data-pid="<%= item.property_value_id %>" data-index="<%= index %>">
                         <% if( item.thumb ){ %>
                             <img class="image" src="<%= item.thumb %>">
                             <i class="fa fa-close img-close j-g-close"></i>
                         <% } %>
                         <i class="fa fa-plus"></i>
                     </dt>
-                    <dd><span><%= item.value_name %></span></dd>
+                    <dd><span><%= item.value %></span></dd>
                 </dl>
             <% }else{ %>
                 <dl data-sku_id="<%= key %>">
-                    <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value_name %>" data-pid="<%= item.value_id %>" data-index="<%= index %>">
+                    <dt class="imgUploadBtn" data-type="sku" data-name="<%= item.value %>" data-pid="<%= item.property_value_id %>" data-index="<%= index %>">
                         <% if( item.thumb ){ %>
                         <img class="image" src="<%= item.thumb %>">
                         <i class="fa fa-close img-close j-g-close"></i>
                         <% } %>
                         <i class="fa fa-plus"></i>
                     </dt>
-                    <dd><span><%= item.value_name %></span></dd>
+                    <dd><span><%= item.value %></span></dd>
                 </dl>
             <% } %>
         <% }) %>
@@ -562,7 +581,7 @@
 <script type="text/template" id="j-template-common-gallery">
         <% _.each(items,function(item,index){ %>
             <li class="imgUploadBtn" data-type="common">
-                <img class="image" src="<%= item.img %>">
+                <img class="image" src="<%= item.image_url %>">
                 <i class="fa fa-close img-close j-g-close"></i>
                 <i class="fa fa-plus"></i>
             </li>
@@ -582,52 +601,112 @@
         <thead>
         <tr>
             <th class="tc cell-20">仓库</th>
-            <th colspan="<%= (2 * sku[0].prop.length) + 1 %>" class="tc cell-50">库存</th>
+            <% if(sku && sku.length > 0 && sku[0].sku_property_dto_list[0].value != ''){ %>
+            <th colspan="<%= (2 * sku[0].sku_property_dto_list.length) + 1 %>" class="tc cell-50">库存</th>
             <th class="tc cell-10">运费</th>
+            <% }else{ %>
+            <th class="tc cell-10">库存</th>
+            <th class="tc cell-30">运费</th>
+            <% } %>
             <th class="tc cell-10">优先级</th>
             <th class="tc cell-10">操作</th>
         </tr>
         </thead>
         <tbody>
-        <% _.each(sku,function(item,index){ %>
-        <% if( index == 0 ){ %>
-        <tr>
-            <td class="tc" rowspan="<%= sku.length %>"><%= o.name %></td>
-            <% _.each(item.prop,function(n,m){ %>
-            <td class="tc cell-12" rowspan="<%= sku.length %>"><%= n.prop_name %></td>
-            <td class="tc"><%= n.value_name %></td>
-            <% }) %>
-            <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="stock" data-index="<%= index %>"></td>
-            <td rowspan="<%= sku.length %>">
-                <div class="form-inline">
-                    <div class="form-group mb10">
-                        <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked">&nbsp;统一运费</label>
-                        <div class="input-group">
-                            <input class="form-control form-control-sm">
-                            <span class="input-group-addon">元</span>
+        <% if(sku && sku.length > 0 && sku[0].sku_property_dto_list[0].value != ''){ %>
+            <% _.each(sku,function(item,index){ %>
+            <% if( index == 0 ){ %>
+            <tr>
+                <td rowspan="<%= sku.length %>"><%= o.storage_name %></td>
+                <% _.each(item.sku_property_dto_list,function(n,m){ %>
+                <td class="tc cell-12" rowspan="<%= sku.length %>"><%= n.name %></td>
+                <td class="tc"><%= n.value %></td>
+                <% }) %>
+                <td class="tc">
+                    <div class="field item inl-bl">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
+                    </div>
+                </td>
+                <td rowspan="<%= sku.length %>">
+                    <div class="form-inline">
+                        <div class="form-group mb10">
+                            <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked" data-value="1">&nbsp;统一运费</label>
+                            <div class="input-group">
+                                <input class="form-control form-control-sm common-freight-<%= o.id %>">
+                                <span class="input-group-addon">元</span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" data-value="2">&nbsp;运费模板</label>
+                            <select class="form-control form-control-md  template-freight-<%= o.id %>">
+                                <option value="">请选择运费模板</option>
+                                <% _.each(freight,function(f, z){ %>
+                                    <option data-value="<%= f.id %>"><%= f.name %></option>
+                                <% }) %>
+                            </select>
                         </div>
                     </div>
-                    <br/>
-                    <div class="form-group">
-                        <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" >&nbsp;运费模板</label>
-                        <select class="form-control form-control-md">
-                            <option>请选择运费模板</option>
-                        </select>
+                </td>
+                <td rowspan="<%= sku.length %>" class="tc">
+                    <div class="field item inl-bl">
+                        <input class="form-control form-control-xs" data-name="优先级" required="required" pattern="decimal" id="priority-<%= o.id %>">
                     </div>
-                </div>
-            </td>
-            <td rowspan="<%= sku.length %>" class="tc"><input class="form-control form-control-xs"></td>
-            <td rowspan="<%= sku.length %>" class="tc"><a class="j-delete-warehouse" href="javascript:;" data-warehouse_id="<%= o.id %>" data-name="<%= o.name %>">删除</a></td>
-        </tr>
-        <% }else{ %>
-        <tr>
-            <% _.each(item.prop,function(n,m){ %>
-            <td class="tc"><%= n.value_name %></td>
+                </td>
+                <td rowspan="<%= sku.length %>" class="tc"><a class="j-delete-warehouse" href="javascript:;" data-warehouse_id="<%= o.id %>" data-name="<%= o.storage_name %>">删除</a></td>
+            </tr>
+            <% }else{ %>
+            <tr>
+                <% _.each(item.sku_property_dto_list,function(n,m){ %>
+                <td class="tc"><%= n.value %></td>
+                <% }) %>
+                <td class="tc">
+                    <div class="field item inl-bl">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" data-name="库存" required="required" pattern="decimal" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
+                    </div>
+                </td>
+            </tr>
+            <% } %>
             <% }) %>
-            <td class="tc"><input class="form-control form-control-xs" name="skuProp" data-input_type="stock" data-index="<%= index %>"></td>
-        </tr>
+        <% }else{ %>
+            <tr>
+                <td><%= o.storage_name %></td>
+                <td class="tc">
+                    <div class="field item inl-bl">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" data-name="库存" required="required" pattern="decimal" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-inline">
+                        <div class="form-group mb10">
+                            <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked" data-value="1">&nbsp;统一运费</label>
+                            <div class="input-group">
+                                <input class="form-control form-control-sm common-freight-<%= o.id %>">
+                                <span class="input-group-addon">元</span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" data-value="2">&nbsp;运费模板</label>
+                            <select class="form-control form-control-md template-freight-<%= o.id %>">
+                                <option value="">请选择运费模板</option>
+                                <% _.each(freight,function(f, z){ %>
+                                <option data-value="<%= f.id %>"><%= f.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+                <td class="tc">
+                    <div class="field item inl-bl">
+                        <input class="form-control form-control-xs" data-name="优先级" required="required" pattern="decimal" id="priority-<%= o.id %>">
+                    </div>
+                </td>
+                <td class="tc">
+                        <a class="j-delete-warehouse" href="javascript:;" data-warehouse_id="<%= o.id %>" data-name="<%= o.storage_name %>">删除</a>
+                </td>
+            </tr>
         <% } %>
-        <% }) %>
         </tbody>
     </table>
     <% }) %>

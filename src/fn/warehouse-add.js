@@ -9,6 +9,7 @@
                 "city": "市",
                 "area": "区"
             };
+            this.isAjax = false;
             if (this.id) {
                 that.getData();
             }
@@ -162,22 +163,30 @@
         getData: function () {
             var that = this;
             Api.get({
-                url: "/employee/get.do",
+                url: "/storage/get.do",
                 data: {
                     id: that.id
                 },
                 success: function (data) {
                     // todo 先渲染省市区
                     if (data) {
-                        var parent_cfg = {};
-                        that.getArea($('#areaList-province'), parent_cfg, function () {
-                        });
-                        that.getArea($('#areaList-city'), parent_cfg, function () {
-                        });
-                        that.getArea($('#areaList-area'), parent_cfg, function () {
+                        that.getArea($('#areaList-province'), {
+                            parent_name: 'province',
+                            parent_code: data.data.address_country.split('|')[1]
+                        }, function () {
+                            that.getArea($('#areaList-city'), {
+                                parent_name: 'city',
+                                parent_code: data.data.address_province.split('|')[1]
+                            }, function () {
+                                that.getArea($('#areaList-area'), {
+                                    parent_name: 'area',
+                                    parent_code: data.data.address_city.split('|')[1]
+                                }, function () {
+                                    that.renderDataFunc(data.data)
+                                });
+                            });
                         });
                     }
-                    that.renderDataFunc(data.data)
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');
@@ -207,16 +216,16 @@
                         $('#mobile').val(value);
                         break;
                     case 'address_country':
-                        $('#areaList-country option[data-value=' + value + ']').prop('selected', true);
+                        $('#areaList-country option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
                         break;
                     case 'address_province':
-                        $('#areaList-province option[data-value=' + value + ']').prop('selected', true);
+                        $('#areaList-province option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
                         break;
                     case 'address_city':
-                        $('#areaList-city option[data-value=' + value + ']').prop('selected', true);
+                        $('#areaList-city option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
                         break;
                     case 'address_district':
-                        $('#areaList-district option[data-value=' + value + ']').prop('selected', true);
+                        $('#areaList-area option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
                         break;
                     case 'address_street':
                         $('#street').val(value);
@@ -239,10 +248,10 @@
             this.postData.supplier_name = $.trim($('#supplierName').val());                                 // 供应商名称
             this.postData.link_man = $.trim($('#linkMan').val());                                            // 联系人
             this.postData.mobile = $.trim($('#mobile').val());                                              // 联系电话
-            this.postData.address_country = $('#areaList-country option:selected').attr('data-value');     // 国家
-            this.postData.address_province = $('#areaList-province option:selected').attr('data-value');    // 省
-            this.postData.address_city = $('#areaList-city option:selected').attr('data-value');            // 市
-            this.postData.address_district = $('#areaList-area option:selected').attr('data-value');        // 区
+            this.postData.address_country = $('#areaList-country option:selected').attr('data-value') + '|' + $('#areaList-country option:selected').attr('data-code');     // 国家
+            this.postData.address_province = $('#areaList-province option:selected').attr('data-value') + '|' + $('#areaList-province option:selected').attr('data-code');    // 省
+            this.postData.address_city = $('#areaList-city option:selected').attr('data-value') + '|' + $('#areaList-city option:selected').attr('data-code');            // 市
+            this.postData.address_district = $('#areaList-area option:selected').attr('data-value') + '|' + $('#areaList-area option:selected').attr('data-code');        // 区
             this.postData.address_street = $.trim($('#street').val());                                      // 街道 - 详细地址
             this.postData.storage_type = $('#storageType option:selected').attr('data-value');              // 仓库类型
             this.postData.cost = 0;                                                                         // 仓库费用 默认0
@@ -251,26 +260,53 @@
         //增加账号
         addAccount: function () {
             var that = this;
+            if( this.isAjax == true ){
+                return;
+            }
+            this.isAjax = true;
             Api.get({
-                url: "/employee/add.do",
-                data: that.postData,
+                url: "/storage/add.do",
+                data: {
+                    storage_dto: JSON.stringify(that.postData)
+                },
                 success: function () {
-                    toastr.success('添加成功', '提示');
+                    toastr.success('添加成功!', '提示');
+                    setTimeout(function () {
+                        location.href = 'warehouse.html';
+                    }, 1000)
+                },
+                complete: function () {
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000)
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');
-
                 }
             })
         },
         //修改账号
         changeAccount: function () {
             var that = this;
+            if( this.isAjax == true ){
+                return;
+            }
+            this.isAjax = true;
             Api.get({
-                url: '/employee/update.do',
-                data: that.postData,
+                url: '/storage/update.do',
+                data: {
+                    storage_dto: JSON.stringify(that.postData)
+                },
                 success: function () {
-                    toastr.success('修改成功', '提示');
+                    toastr.success('修改成功!', '提示');
+                    setTimeout(function () {
+                        location.href = 'warehouse.html';
+                    }, 1000)
+                },
+                complete: function () {
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000)
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');

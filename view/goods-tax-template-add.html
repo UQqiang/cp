@@ -34,26 +34,26 @@
                 <div class="form-inline">
                     <div class="form-group field item mb10">
                         <label class="ui-label ui-label-lg tr"><span class="ui-form-required">*</span>模板名称：</label>
-                        <input class="form-control form-control-lg" required="required" data-name="模板名称" id="name" type="text" placeholder="请输入模板名称">
+                        <input class="form-control form-control-lg" required="required" data-name="模板名称" id="tax_template_name" type="text" placeholder="请输入模板名称">
                     </div>
                     <br/>
                     <div class="form-group field item mb10">
                         <label class="ui-label ui-label-lg tr"><span class="ui-form-required">*</span>起征点（元）：</label>
-                        <input class="form-control form-control-lg"type="text" disabled="disabled" value="￥0.00"> </div>
+                        <input class="form-control form-control-lg" type="text" disabled="disabled" value="0.00"> </div>
                     <br/>
                     <div class="form-group field item mb10">
                         <label class="ui-label ui-label-lg tr"><span class="ui-form-required">*</span>税率（%）：</label>
-                        <input class="form-control form-control-lg" required="required" pattern="decimal" data-name="税率" id="taxRate" type="text" placeholder="请输入税率">
+                        <input class="form-control form-control-lg" required="required" pattern="decimal" data-name="税率" id="rate" type="text" placeholder="请输入税率">
                     </div>
                     <br/>
                     <div class="form-group field item mb10">
                         <label class="ui-label ui-label-lg tr"><span class="ui-form-required">*</span>HS编码：</label>
-                        <input class="form-control form-control-lg" required="required" pattern="decimal" data-name="HS编码" id="post" type="text" placeholder="请输入编码">
+                        <input class="form-control form-control-lg" required="required" pattern="alphanumeric" data-name="HS编码" id="hs_code" type="text" placeholder="请输入编码">
                     </div>
                     <br/>
                     <div class="form-group field item mb10">
                         <label class="ui-label ui-label-lg tr"><span class="ui-form-required">*</span>行邮税号：</label>
-                        <input class="form-control form-control-lg" required="required" pattern="decimal" data-name="行邮税号" id="tax" type="text" placeholder="请输入税号">
+                        <input class="form-control form-control-lg" required="required" pattern="alphanumeric" data-name="行邮税号" id="postal_number" type="text" placeholder="请输入税号">
                     </div>
                 </div>
                 <div class="footer-btn-group">

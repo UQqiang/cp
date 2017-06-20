@@ -167,7 +167,7 @@
                         }
                         that.queryCategory(cateLevel);
                     }, function (d) {
-                        toastr.error(d.msg || d, '提示');
+                        toastr.error(d.msg, '提示');
                     });
                     dialog.close();
                 }, function (btn, dialog) {
@@ -254,7 +254,10 @@
                                 items: subCate
                             }));
                             that.currentCateObj = {};
-                            that.initSortable(subCate[0].parent_id);
+                            if( subCate.length > 0 ){
+                                that.initSortable(subCate[0].parent_id);
+                            }
+
 
                         } else {
                             // 点击的是二级类目
@@ -293,6 +296,7 @@
                 data: {
                     category_id: id
                 },
+                dataType: 'jsonp',
                 beforeSend: function () {
 
                 },
@@ -306,8 +310,7 @@
                 complete: function () {
 
                 },
-                error: function (data, msg) {
-                    console.log(data, msg);
+                error: function (data) {
                     error && error(data);
                 }
             });
@@ -330,7 +333,7 @@
 
                 },
                 error: function (data) {
-                    error && error(data);
+                    error && error(data.msg);
                 }
             });
         },
@@ -352,7 +355,7 @@
 
                 },
                 error: function (data) {
-                    error && error(data);
+                    error && error(data.msg);
                 }
             });
         },

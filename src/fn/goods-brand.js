@@ -104,12 +104,14 @@
                 data.content = '确定要批量删除品牌吗?';
                 that.tip(data, function (btn, dialog) {
                     console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+
+                    that.deleteBrand(idList, function (data) {
+                        toastr.success('已成功批量删除', '提示');
+                        that.queryBrand();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
+
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -120,13 +122,17 @@
             $(document).on('click', '.j-brand-delete', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
-                var data = {};
-                data.target = $(this);
-                data.content = '确定要删除品牌' + name + '吗?';
-                that.tip(data, function (btn, dialog) {
-                    that.deleteBrand(id, function (data) {
+                var idList = [];
+                idList.push(id);
+                that.tip({
+                    target: $(this),
+                    content: '确定要删除品牌' + name + '吗?'
+                }, function (btn, dialog) {
+                    that.deleteBrand(idList, function (data) {
+
                         toastr.success('已成功删除' + name, '提示');
                         that.queryBrand();
+
                     }, function (data) {
                         toastr.error(data.msg)
                     });
@@ -179,12 +185,12 @@
         /**
          * 删除品牌
          */
-        deleteBrand: function (id, success, error) {
+        deleteBrand: function (idList, success, error) {
             var that = this;
             Api.get({
                 url: '/brand/delete.do',
                 data: {
-                    brand_id: id
+                    id_list: JSON.stringify(idList)
                 },
                 beforeSend: function () {
 

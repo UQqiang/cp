@@ -39,9 +39,9 @@
                 <div class="form-inline fr">
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="text" placeholder="请输入仓库ID" class="form-control form-control-lg mr10" id="storageId">
-                            <input type="text" placeholder="请输入仓库简称" class="form-control form-control-lg mr10" id="storageShortName">
-                            <input type="text" placeholder="请输入联系方式" class="form-control form-control-lg" id="storageLinkMan">
+                            <!--<input type="text" placeholder="请输入仓库ID" class="form-control form-control-lg mr10" id="storageId">-->
+                            <!--<input type="text" placeholder="请输入仓库简称" class="form-control form-control-lg mr10" id="storageShortName">-->
+                            <input type="text" placeholder="请输入仓库ID或仓库简称或联系方式" class="form-control form-control-hg" id="keywords">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-sm btn-success" id="search">搜索</button>
                                 </span>
@@ -88,44 +88,44 @@
                         </thead>
 
                         <tbody id="warehouseList">
-                        <tr class="even pointer list">
-                            <td class="a-center tc">
-                                <input type="checkbox" class="flat checkbox" name="table_records">
-                            </td>
-                            <td class="tc">张三</td>
-                            <td class="tc">管理员1 </td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">激活</td>
-                            <td class="last tc">
-                                <a href="javascript:;">编辑</a> -
-                                <a href="javascript:;" class="j-warehouse-delete">
-                                    删除
-                                </a> -
-                                <a href="javascript:;" class="j-warehouse-freeze">关闭</a>
-                            </td>
-                        </tr>
-                        <tr class="odd pointer list">
-                            <td class="a-center tc">
-                                <input type="checkbox" class="flat checkbox" name="table_records">
-                            </td>
-                            <td class="tc">李四</td>
-                            <td class="tc">管理员2</td>
-                            <td class="tc">111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">激活</td>
-                            <td class="last tc">
-                                <a href="javascript:;">编辑</a> -
-                                <a href="javascript:;" class="j-warehouse-delete">
-                                     删除
-                                </a> -
-                                <a href="javascript:;" class="j-warehouse-freeze">关闭</a>
-                            </td>
-                        </tr>
+                        <!--<tr class="even pointer list">-->
+                            <!--<td class="a-center tc">-->
+                                <!--<input type="checkbox" class="flat checkbox" name="table_records">-->
+                            <!--</td>-->
+                            <!--<td class="tc">张三</td>-->
+                            <!--<td class="tc">管理员1 </td>-->
+                            <!--<td class="tc">111111111</td>-->
+                            <!--<td class="tc">111111111</td>-->
+                            <!--<td class="tc">111111111</td>-->
+                            <!--<td class="tc">111111111</td>-->
+                            <!--<td class="tc">激活</td>-->
+                            <!--<td class="last tc">-->
+                                <!--<a href="javascript:;">编辑</a> - -->
+                                <!--<a href="javascript:;" class="j-warehouse-delete">-->
+                                    <!--删除-->
+                                <!--</a> - -->
+                                <!--<a href="javascript:;" class="j-warehouse-freeze">关闭</a>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--<tr class="odd pointer list">-->
+                            <!--<td class="a-center tc">-->
+                                <!--<input type="checkbox" class="flat checkbox" name="table_records">-->
+                            <!--</td>-->
+                            <!--<td class="tc">李四</td>-->
+                            <!--<td class="tc">管理员2</td>-->
+                            <!--<td class="tc">111111</td>-->
+                            <!--<td class="tc">111111111</td>-->
+                            <!--<td class="tc">111111111</td>-->
+                            <!--<td class="tc">111111111</td>-->
+                            <!--<td class="tc">激活</td>-->
+                            <!--<td class="last tc">-->
+                                <!--<a href="javascript:;">编辑</a> - -->
+                                <!--<a href="javascript:;" class="j-warehouse-delete">-->
+                                     <!--删除-->
+                                <!--</a> - -->
+                                <!--<a href="javascript:;" class="j-warehouse-freeze">关闭</a>-->
+                            <!--</td>-->
+                        <!--</tr>-->
                         </tbody>
                     </table>
                 </div>
@@ -164,24 +164,27 @@
 
 <script type="text/template" id="j-template-warehouse">
 <% _.each(items, function(item, index){ %>
-    <tr>
+    <tr class="list">
+        <td class="tc">
+            <input type="checkbox" class="flat checkbox" data-id="<%= item.id %>">
+        </td>
         <td class="tc"><%= item.storage_id %></td>
         <td class="tc"><%= item.storage_short_name %></td>
         <td class="tc"><%= item.storage_name %></td>
-        <td class="tc"><%= item.storage_link_man %></td>
-        <td class="tc"><%= item.storage_mobile %></td>
-        <td class="tc"><%= item.address_country %><%= item.address_province %><%= item.address_city %><%= item.address_district %><%= item.address_street %></td>
+        <td class="tc"><%= item.link_man %></td>
+        <td class="tc"><%= item.mobile %></td>
+        <td class="tc"><%= (item.address_country).split('|')[0] %><%= (item.address_province).split('|')[0] %><%= (item.address_city).split('|')[0] %><%= (item.address_district).split('|')[0] %><%= item.address_street %></td>
         <td class="tc"><%= ['-','激活','关闭'][item.status] %></td>
         <td class="tc">
-            <a href="javascript:;">编辑</a>
+            <a href="warehouse-add.html?id=<%= item.id %>">编辑</a>
             <span>-</span>
             <a href="javascript:;" class="j-warehouse-delete" data-id="<%= item.id %>" data-name="<%= item.storage_name %>">删除</a>
             <span>-</span>
             <% if( item.status == 2 ){ %>
             <a href="javascript:;" class="j-warehouse-freeze" data-id="<%= item.id %>" data-name="<%= item.storage_name %>" data-status="1">激活</a>
-            <% }else{
+            <% }else{ %>
             <a href="javascript:;" class="j-warehouse-freeze" data-id="<%= item.id %>" data-name="<%= item.storage_name %>" data-status="2">关闭</a>
-            } %>
+            <% } %>
         </td>
     </tr>
 <% }) %>

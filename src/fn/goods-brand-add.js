@@ -97,21 +97,25 @@
                     that.setPostData();
                     if (that.brand_id) {
                         that.updateBrand(function (data) {
-                            toastr.success(data.msg, '提示');
-                            that.isAjax = false;
-                            location.href = 'goods-brand.html';
+
+                            toastr.success('修改成功!', '提示');
+                            setTimeout(function () {
+                                location.href = 'goods-brand.html';
+                            }, 1000);
+
                         }, function (data) {
                             toastr.error(data.msg, '提示');
-                            that.isAjax = false;
                         });
                     } else {
                         that.addBrand(function (data) {
-                            toastr.success(data.msg, '提示');
-                            that.isAjax = false;
-                            location.href = 'goods-brand.html';
+
+                            toastr.success('添加成功!', '提示');
+                            setTimeout(function () {
+                                location.href = 'goods-brand.html';
+                            }, 1000);
+
                         }, function (data) {
                             toastr.error(data.msg, '提示');
-                            that.isAjax = false;
                         });
                     }
                 }
@@ -122,7 +126,9 @@
             this.postData.logo = $('.logo-image').attr('src');
             this.postData.brand_name = $.trim($('#brandName').val());
             this.postData.brand_desc = $.trim($('#brandDesc').val());
-            this.postData.brand_id = this.brand_id;
+            if( this.brand_id ){
+                this.postData.brand_id = this.brand_id;
+            }
         },
         /**
          * tip
@@ -162,7 +168,7 @@
             Api.get({
                 url: '/brand/get.do',
                 data: {
-                    brand_id: data
+                    id: data
                 },
                 mask: true,
                 beforeSend: function () {
@@ -190,7 +196,9 @@
             var that = this;
             Api.get({
                 url: '/brand/add.do',
-                data: that.postData,
+                data: {
+                    brand_dto:  JSON.stringify(that.postData)
+                },
                 beforeSend: function () {
 
                 },
@@ -198,7 +206,9 @@
                     success && success(data);
                 },
                 complete: function () {
-
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000);
                 },
                 error: function (data) {
                     error && error(data);
@@ -212,7 +222,9 @@
             var that = this;
             Api.get({
                 url: '/brand/update.do',
-                data: that.postData,
+                data: {
+                    brand_dto:  JSON.stringify(that.postData)
+                },
                 beforeSend: function () {
 
                 },
@@ -220,7 +232,9 @@
                     success && success(data);
                 },
                 complete: function () {
-
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000);
                 },
                 error: function (data) {
                     error && error(data);
