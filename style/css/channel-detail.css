@@ -1,11 +1,5 @@
 @charset "UTF-8";
 /******************************** 渠道详情 ******************************/
-#shopList td p {
-  max-width: 60px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 #shopList dl {
   clear: both;
 }
