@@ -29,7 +29,7 @@
     dd {
       float: left;
       p {
-        max-width: 250px;
+        max-width: 150px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -62,9 +62,9 @@
   .tab-pane {
     padding: 20px;
     .parcel-info {
-      padding: 20px 0;
+      padding: 0 0 20px 0;
       border-bottom: 1px solid #73879C;
-      border-top: 1px solid #73879C;
+    //   border-top: 1px solid #73879C;
     }
   }
   .thirdparty-list:nth-child(3) {

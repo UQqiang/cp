@@ -79,24 +79,24 @@
             <li>
                 <a href="javascript:;" class="<%if(items[0].refund_status >= 1 ){%><%='done'%><%}else{%><%='disabled'%><%}%>">
                     <span class="step_no">1</span>
-                    <span class="step_descr">买家发起维权申请<br/>
-                        <small></small>
+                    <span class="step_descr">买家申请维权<br/>
+                        <small><%= items.pay_time || items.order_time + '以后' %></small>
                     </span>
                 </a>
             </li>
             <li>
                 <a href="javascript:;" class="<%if(items[0].refund_status >= 2){%><%='done'%><%}else{%><%='disabled'%><%}%>">
                     <span class="step_no">2</span>
-                    <span class="step_descr">商家处理退款申请<br/>
-                        <small></small>
+                    <span class="step_descr">商家处理维权<br/>
+                        <small><%= items.pay_time || items.order_time + '以后' %></small>
                     </span>
                 </a>
             </li>
             <li>
                 <a href="javascript:;" class="<%if(items[0].refund_status >= 4){%><%='done'%><%}else{%><%='disabled'%><%}%>">
                     <span class="step_no">3</span>
-                    <span class="step_descr">商家处理退款完成<br/>
-                        <small></small>
+                    <span class="step_descr">维权完成<br/>
+                        <small><%= items.pay_time || items.order_time + '以后' %></small>
                     </span>
                 </a>
             </li>
