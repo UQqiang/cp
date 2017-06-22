@@ -1,9 +1,13 @@
 @import "_mixin.scss";
 
-#orderList, #orderInfo {
-  .order-header {
+#orderList, #orderInfo, #changePriceInfo {
+  .order-header, .price-header {
     background: #f8f8f8;
     box-shadow: 1px 1px 5px #ccc;
+    th {
+        border-right: none;
+        border-left: none;
+    }
   }
   .fa {
     font-size: 16px;
@@ -11,7 +15,7 @@
     margin-right: 5px;
     cursor: pointer;
     &.fa-star {
-      color: red;
+      color: #1ABB9C;
     }
   }
   dl {

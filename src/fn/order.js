@@ -150,7 +150,103 @@
                     });
                 });
             });
+
+            // 修改价格
+            $('body').on('click', '.j-change-cost', function () {
+                // 依赖数据
+                var $this = $(this);
+                var order_id = $(this).attr('data-order_id');
+                var user_id = $(this).attr('data-user_id');
+                var orderInfo = JSON.parse(decodeURIComponent($this.attr('data-orderinfo')));
+
+                var data = {};
+                data.title = '修改价格';
+                data.content = '<div id="changePriceInfo"></div>';
+                data.width = 800;
+                that.popup(data, function () {
+                    var template = _.template($('#j-template-change-price').html());
+                    $('#changePriceInfo').html(template({
+                        item: orderInfo,
+                        orderStatus: that.orderStatusData
+                    }));
+                }, function (btn, dialog) {
+                    // 确定操作
+                    var changePriceData = {};
+                    postChangePriceData = {
+                        order_id: order_id,
+                        user_id: user_id,
+                        floating_price: +Number($('input[name=change]').val() * 100).toFixed(0)
+                    }
+
+                    that.changePrice(postChangePriceData, function () {
+                        dialog.close();
+                    });
+                });
+
+                // 增加事件监听
+                $('input[name=change]').on('change', function () {
+                    var diff = +$(this).val();
+                    var origin = +$('.js-order-originpay').html();
+                    var delivery = +$('.js-order-delivery-fee').html();
+                    var money;
+                    // if (that.higo_mark == 1) {
+                        var tax = +$('.js-order-tax-fee').html();
+                        money = Number(origin + delivery + tax + diff).toFixed(2);
+                    // } else {
+                    //     money = Number(origin + delivery + diff).toFixed(2);
+                    // }
+                    if (isNaN(Number(diff)) == true) {
+                        toastr.error('输入的价格有误', '提示');
+                        that.floatMoney = '';
+                        that.newPrice = '';
+                        that.changeMoneyStatus = false;
+                        return false;
+                    }
+
+                    // 增加修改的价格判断。如果修改的价格为0 则失败 增加一个改价失败的标记
+                    if (money < 0) {
+                        toastr.error('修改价格失败，修改后的合计价格不能小于0', '提示');
+                        that.floatMoney = '';
+                        that.newPrice = '';
+                        that.changeMoneyStatus = false;
+                        return false;
+                    }
+
+                    if (diff > 0) { // 涨价
+                        $('.js-order-change').html('+ ' + Number(Math.abs(diff)).toFixed(2));
+                    } else { // 减价
+                        $('.js-order-change').html('- ' + Number(Math.abs(diff)).toFixed(2));
+                    }
+
+                    $('.js-order-realpay').html(money);
+                    that.changeMoneyStatus = true;
+                })
+            });
         },
+
+        // 修改价格
+        changePrice: function (postChangePriceData, cb) {
+            var that = this;
+            Api.get({
+                url: '/order/update_price.do',
+                data: postChangePriceData,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('修改成功', '提示');
+                    that.queryOrderList();
+                    cb && cb(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
         iCheck: function () {
             var that = this;
             if ($("input.flat")[0]) {

@@ -87,6 +87,7 @@
                                 <option value="mouth">已完成</option>
                                 <option value="mouth">已关闭</option>
                                 <option value="mouth">维权中</option>
+                                <option value="mouth">维权完成</option>
                             </select>
                         </div>
                         <div class="form-group mb10">
@@ -175,24 +176,22 @@
                                 <a href="#" role="tab" data-toggle="tab" aria-controls="已取消" aria-expanded="true">已取消</a>
                             </li>
                             <p>
-                                <i></i>
-                                <a href="#">订单类型简介及管理方法</a>
+                                <a href="#/question-circle" class="pull-right text-muted"><i class="fa fa-question-circle"></i>&nbsp;订单类型简介及管理方法</a>
                             </p>
-
                         </ul>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-striped jambo_table bulk_action table-bordered">
+                        <table class="table table-striped jambo_table bulk_action table-bordered table-condensed">
                             <thead>
                                 <tr>
                                     <th class="tc cell-30">商品</th>
                                     <th class="tc cell-10">单价／数量</th>
                                     <th class="tc cell-10">税费</th>
+                                    <th class="tc cell-10">实付金额</th>
                                     <th class="tc cell-10">买家</th>
                                     <th class="tc cell-10">下单时间</th>
-                                    <th class="tc cell-10">订单状态</th>
                                     <th class="tc cell-10">支付方式</th>
-                                    <th class="tc cell-10">实付金额</th>
+                                    <th class="tc cell-10">订单状态</th>
                                 </tr>
                             </thead>
                         </table>
@@ -237,7 +236,7 @@
         <table class="table table-bordered">
             <thead class="order-header">
                 <tr>
-                    <th colspan="1">
+                    <th colspan="3">
                         <% if( item.asterisk_mark == 1 ){ %>
                         <span>
                             <i class="fa fa-star j-star" data-asterisk_mark="<%= item.asterisk_mark %>" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>"></i>
@@ -247,12 +246,12 @@
                             <i class="fa fa-star-o j-star" data-asterisk_mark="<%= item.asterisk_mark %>" data-id="<%= item.id %>" data-user_id="<%= item.user_id %>"></i>
                         </span>
                         <% } %>
-                        <span>订单号：</span>
-                        <a href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>" target="_blank"><%= item.order_sn %></a>
+                        <a href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>" target="_blank" class="" style="hover:pointer">
+                            <span>订单号：</span><%= item.order_sn %> <small class="green ml10">查看订单详情<i class="fa fa-angle-right ml10"></i></small>
+                        </a>
                     </th>
-                    <th colspan="2"><span>发货仓库：北京</span></th>
+                    <th colspan="3"><span>发货仓库：北京</span></th>
                     <th colspan="2"><span>渠道商：<%= item.order_time_str %></span></th>
-                    <th colspan="3"><a href="#">查看详情</a>-<a href="#">备注</a>-<a href="#">加星</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -271,19 +270,23 @@
                             <td class="cell-10 tc"><span><%= o.unit_price_str %></span><br/><span>（3件）<span></td>
                             <td class="cell-10 tc"><span><%= o.unit_price_str %></span></td>
                             <% if( i == 0 ){ %>
-                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= o.number %></span></td>
-                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.order_consignee_d_t_o.mobile %></span></td>
-                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>">
-                                <p><%= orderStatus[item.order_status] %></p>
-                                <% if( item.order_status == 30 ){ %>
-                                <p>
-                                    （含运费 5.00）
-                                </p>
-                                <% } %>
-                            </td>
-                            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= ['优惠折扣','支付宝APP支付','微信APP支付','银联APP支付','支付宝wap支付','微信wap支付','银联wap支付','统统付APP支付','统统付wap支付','余额支付'][item.payment_id] %></span></td>
-                            <td class="cell-8 tc" rowspan="<%= item.order_items.length %>"><span>hehe</span></td>
-
+                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>">
+                                    <span><%= item.total_amount_str %></span>
+                                    <% if( item.order_status == 10 ){ %>
+                                        <br/><a href="javascript:;" class="btn btn-sm btn-success j-change-cost green" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>" data-order_id="<%= item.id %>" data-user_id="<%= item.user_id %>">修改价格</a>
+                                    <% } %>
+                                </td>
+                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= o.user_mobile %></span></td>
+                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.order_time_str %></span></td>
+                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= ['优惠折扣','支付宝APP支付','微信APP支付','银联APP支付','支付宝wap支付','微信wap支付','银联wap支付','统统付APP支付','统统付wap支付','余额支付'][item.payment_id] %></span></td>
+                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>">
+                                    <p><%= orderStatus[item.order_status] %></p>
+                                    <% if( item.order_status == 30 ){ %>
+                                    <p>
+                                        <a class="j-send-goods btn btn-sm btn-success" data-order_id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-refund_mark="<%= item.refund_mark %>" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>">发货</a>
+                                    </p>
+                                    <% } %>
+                                </td>
                             <% } %>
                         </tr>
                     <% } %>
@@ -305,45 +308,55 @@
     <% }) %>
 </script>
 
-<!-- 发货 -->
-<script type="text/template" id="j-template-send-goods">
+<!-- 发货弹框 -->
+<script type = "text/template" id = "j-template-send-goods">
     <table class="table table-bordered">
         <thead class="order-header">
-        <tr>
-            <th class="tc cell-10"> <input type="checkbox" id="check-all" class="flat"></th>
-            <th class="tc cell-50"><span>商品</span></th>
-            <th class="tc cell-10"><span>数量</span></th>
-            <th class="tc cell-10"><span>物流公司</span></th>
-            <th class="tc cell-20"><span>快递单号</span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <% _.each(item.order_items,function(o,i){ %>
-            <% if( o.item_type != 11 ){ %>
             <tr>
-                <td class="tc">
-                    <% if( o.delivery_mark != 1 ){ %>
-                    <input type="checkbox" class="checkbox flat" data-mark="<%= o.delivery_mark || 0 %>" data-id="<%= o.id %>">
-                    <% }else{ %>
-                    <span>已发货</span>
-                    <% } %>
-                </td>
-                <td>
-                    <dl>
-                        <dt><img style="width:60px;height: 60px;" src="<%= o.item_image_url %>"></dt>
-                        <dd>
-                            <p><%= o.item_name %></p>
-                            <p class="sku"><%= o.item_sku_desc %></p>
-                        </dd>
-                    </dl>
-                </td>
-                <td class="tc"><span><%= o.number %></span></td>
-                <td class="tc"><span>-</span></td>
-                <td class="tc"><span>-</span></td>
+                <th class="tc cell-10">
+                    <input type="checkbox" id="check-all" class="flat">
+                </th>
+                <th class="tc cell-50">
+                    <span>商品</span>
+                </th>
+                <th class="tc cell-10">
+                    <span>数量</span>
+                </th>
+                <th class="tc cell-10">
+                    <span>物流公司</span>
+                </th>
+                <th class="tc cell-20">
+                    <span>快递单号</span>
+                </th>
             </tr>
-            <% } %>
-        <% }) %>
-        </tbody>
+        </thead>
+    <tbody>
+    <% _.each(item.order_items,function(o,i){ %>
+        <% if( o.item_type != 11 ){ %>
+        <tr>
+            <td class="tc">
+                <% if( o.delivery_mark != 1 ){ %>
+                <input type="checkbox" class="checkbox flat" data-mark="<%= o.delivery_mark || 0 %>" data-id="<%= o.id %>">
+                <% }else{ %>
+                <span>已发货</span>
+                <% } %>
+            </td>
+            <td>
+                <dl>
+                    <dt><img style="width:60px;height: 60px;" src="<%= o.item_image_url %>"></dt>
+                    <dd>
+                        <p><%= o.item_name %></p>
+                        <p class="sku"><%= o.item_sku_desc %></p>
+                    </dd>
+                </dl>
+            </td>
+            <td class="tc"><span><%= o.number %></span></td>
+            <td class="tc"><span>-</span></td>
+            <td class="tc"><span>-</span></td>
+        </tr>
+        <% } %>
+    <% }) %>
+    </tbody>
         <tfoot>
             <tr>
                 <td colspan="5">
@@ -353,8 +366,12 @@
                     </div>
                     <div class="form-group">
                         <label class="ui-label ui-label-md">发货方式：</label>
-                        <label><input type="radio" name="logistics" class="flat" checked="checked" data-value="1">&nbsp;需要物流</label>
-                        <label><input type="radio" name="logistics" class="flat" data-value="0">&nbsp;无需物流</label>
+                        <label>
+                            <input type="radio" name="logistics" class="flat" checked="checked" data-value="1">&nbsp;需要物流
+                        </label>
+                        <label>
+                            <input type="radio" name="logistics" class="flat" data-value="0">&nbsp;无需物流
+                        </label>
                     </div>
                     <div class="form-group logistics-info">
                         <label class="ui-label ui-label-md">物流公司：</label>
@@ -371,6 +388,67 @@
         </tfoot>
     </table>
 </script>
+
+<!-- 修改价格弹框 -->
+<script type="text/template" id="j-template-change-price">
+    <table class="table table-bordered">
+        <thead class="price-header">
+        <tr>
+            <th class="tc cell-50"><span>商品</span></th>
+            <th class="tc cell-10"><span>单价（元）</span></th>
+            <th class="tc cell-10"><span>数量</span></th>
+            <th class="tc cell-10"><span>小计（元）</span></th>
+            <th class="tc cell-10"><span>运费</span></th>
+            <th class="tc cell-10"><span>税费</span></th>
+            <th class="tc cell-10"><span>店铺优惠</span></th>
+            <th class="tc cell-20"><span>涨价或减价</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(item.order_items,function(o,i){ %>
+            <% if( o.item_type != 11 ){ %>
+            <tr>
+                <td class="tb-name">
+                    <dl>
+                        <dt><img style="width:60px;height: 60px;" src="<%= o.item_image_url %>"></dt>
+                        <dd>
+                            <p><%= o.item_name %></p>
+                            <p class="sku"><%= o.item_sku_desc %></p>
+                        </dd>
+                    </dl>
+                </td>
+                <td class="tc"><span><%= o.unit_price_str %></span></td>
+                <td class="tc"><span><%= o.number %></span></td>
+                <td class="tc" ><span><%= o.unit_price*o.number/100 %></span></td>
+                <% if(i == 0) { %>
+                    <td class="tc" rowspan="<%= item.order_items.length %>"><span><%= (item.delivery_fee/100).toFixed(2) %></span></td>
+                    <td class="tc" rowspan="<%= item.order_items.length %>"><span><%= (item.tax_fee/100).toFixed(2) %></span></td>
+                    <td class="tc" rowspan="<%= item.order_items.length %>"><span><%= (item.discount_amount/100).toFixed(2) %></span></td>
+                    <td class="tc" rowspan="<%= item.order_items.length %>">
+                        <input class="dialog-price form-control form-control-md" placeholder="<%= (item.floating_price/100).toFixed(2) %>" name="change"/>
+                    </td>
+                <%}%>
+            </tr>
+            <% } %>
+        <% }) %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                    <p class="help-block">买家实付：
+                        <span class="js-order-originpay"><%= ((item.total_price - item.discount_amount)/100).toFixed(2) %></span> +
+                        <span class="js-order-delivery-fee"><%= (item.delivery_fee/100).toFixed(2) %></span> +
+                        <span class="js-order-tax-fee"><%= (item.tax_fee/100).toFixed(2) %></span>
+                        <span class="decrease-color js-order-change"><%= item.floating_price > 0 ? '+' : '-' %>&nbsp;<%= Math.abs(item.floating_price/100) %></span> =
+                        <span class="price-color js-order-realpay"><%= item.total_amount_str %></span>
+                     </p>
+                    <p class="help-block"><small>买家实付：现价 ＋ 运费 ＋ 税费 ＋ 涨价或减价</small></p>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</script>
+
 
 <!-- 物流公司 -->
 <script type="text/template" id="j-template-logistics">
