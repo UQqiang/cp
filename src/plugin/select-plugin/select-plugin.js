@@ -640,10 +640,12 @@
                 // 仓库
                 case 3:
                     obj = {
-                        current_page: that.pageConfig.pageId || 1,
-                        page_size: that.pageConfig.pageSize,
-                        has_code: 0,
-                        name: that.search_key.warehouse_key
+                        storage_qto: JSON.stringify({
+                            current_page: that.pageConfig.pageId || 1,
+                            page_size: that.pageConfig.pageSize,
+                            need_paging: true,
+                            keywords: that.search_key.warehouse_key
+                        })
                     };
                     that.ajax(that.ajaxApi, obj, function (data) {
                         that.renderOption = {

@@ -13,10 +13,7 @@
             this.currentCateObj = {};
             this.warehouseList = [];
             $('#categoryChildren').hide();
-            this.queryBrand();
-            this.queryCategory();
             this.queryGoods();
-            this.queryWarehouse();
             this.addEvent();
         },
         popup: function (data, cb, success) {
@@ -449,7 +446,7 @@
         queryGoods: function () {
             var that = this;
             Api.get({
-                url: '/item/query.do',
+                absoluteUrl: '../src/stub/goods-sku-price.json',
                 data: {
                     item_qto: JSON.stringify({
                         current_page: that.pageId || 1,
@@ -464,18 +461,19 @@
                     })
                 },
                 mask: true,
+                dataType: 'json',
                 beforeSend: function () {
 
                 },
                 success: function (data) {
+                    console.log(data);
                     // 滚动条自动回顶部
                     document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
                         var t = _.template($('#j-template').html());
                         $('#goodsList').html(t({
-                            items: data.data.data,
-                            type: that.search_key.item_status
+                            items: data.data.item_list
                         }));
                         that.iCheck();
                     } else {
@@ -645,7 +643,7 @@
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#goodsList').find('tr.list').length;
+            var n = $('#goodsList').find('.list').length;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

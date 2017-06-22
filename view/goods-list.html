@@ -41,18 +41,19 @@
                 <div class="x_content">
                     <div class="form-inline fr">
                         <div class="form-group">
-                            <select id="heard1" class="form-control form-control-sm">
+                            <select id="deliveryType" class="form-control form-control-sm">
                                 <option value="">请选择类型</option>
-                                <option value="net">国内商品</option>
-                                <option value="press">跨境商品</option>
+                                <option value="1">跨境商品</option>
+                                <option value="2">海外直邮</option>
+                                <option value="3">国内商品</option>
+                                <option value="4">一般贸易</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <select id="heard2" class="form-control form-control-sm">
+                            <select id="freezeStatus" class="form-control form-control-sm">
                                 <option value="">请选择状态</option>
-                                <option value="press">正常</option>
-                                <option value="net">冻结</option>
-                                <option value="mouth">待审核</option>
+                                <option value="1">正常</option>
+                                <option value="2">冻结</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -71,12 +72,11 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <select id="storage-template-selectize"></select>
+                        </div>
+                        <div class="form-group">
                             <input type="text" placeholder="请输入商品名称" class="form-control form-control-lg" id="key">
                         </div>
-                        <!--<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">-->
-                        <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
-                        <!--<span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>-->
-                        <!--</div>-->
                         <button type="button" class="btn btn-sm btn-success ml10" id="search">搜索</button>
                     </div>
                 </div>
@@ -182,12 +182,12 @@
             </dl>
         </td>
         <td class="tc"><%= item.category_name %></td>
-        <td class="tc"><%= ['国内','跨境','-'][item.higo_mark] %></td>
-        <td class="tc">品牌名</td>
+        <td class="tc"><%= ['-','跨境商品','海外直邮','国内商品','一般贸易'][item.delivery_type] %></td>
+        <td class="tc"><%= item.brand_name %></td>
         <td class="tc"><%= item.cost_price ? (item.cost_price/100).toFixed(2) : '-' %></td>
         <td class="tc"><%= item.stock_num %></td>
-        <td class="tc">-</td>
-        <td class="tc">-</td>
+        <td class="tc"><%= item.tax_rate %>&nbsp;/&nbsp;<%= item.tax_threshold %></td>
+        <td class="tc"><%= ['-','正常','冻结'][item.freeze] %></td>
         <td class="tc">
             <% if(type == -1){ %>
             <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-restore">恢复</a>
@@ -200,9 +200,13 @@
             <span>-</span>
             <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-trash">加入回收站</a>
             <span>-</span>
-            <a href="javascript:;">冻结</a>
-            <span>-</span>
-            <a href="javascript:;"  data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-edit-cost-price">填写成本价</a>
+            <% if( item.freeze == 1 ){ %>
+            <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.item_name %>" data-freeze="<%= item.freeze %>" class="j-freeze">冻结</a>
+            <% }else{ %>
+            <a href="javascript:;" data-id="<%= item.id %>" data-name="<%= item.item_name %>" data-freeze="<%= item.freeze %>" class="j-freeze">解冻</a>
+            <% } %>
+            <!--<span>-</span>-->
+            <!--<a href="javascript:;"  data-id="<%= item.id %>" data-name="<%= item.item_name %>" class="j-edit-cost-price">填写成本价</a>-->
             <span>-</span>
             <a href="javascript:;">查看已关联的渠道</a>
             <% } %>
