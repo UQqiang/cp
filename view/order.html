@@ -126,8 +126,8 @@
                         <br/>
                         <div class="form-group right">
                             <button type="button" class="btn btn-sm btn-success ml10 mb10" id="j-search">搜索</button>
-                            <button type="button" class="btn btn-sm btn-success ml10 mb10" id="j-search">导出</button>
-                            <button type="button" class="btn btn-sm btn-success ml10 mb10" id="j-search">查看已生成报表</button>
+                            <button type="button" class="btn btn-sm btn-success ml10 mb10" id="j-exportOrderList">导出订单</button>
+                            <button type="button" class="btn btn-sm btn-success ml10 mb10" id="j-checkOrderList">查看已生成报表</button>
                         </div>
                     </div>
                 </div>
@@ -200,8 +200,6 @@
 
                     <!-- 页码 -->
                     <div class="widget-list clearfix ">
-                        <div class="fl pagination">
-                        </div>
                         <div class="list-page fr">
                             <span class="pagination-info"></span>
                             <div class="ui-pagination pagination"></div>
@@ -387,6 +385,57 @@
             </tr>
         </tfoot>
     </table>
+</script>
+
+<!-- 查看已生成报表弹框 -->
+<script type = "text/template" id = "j-template-check-orderlist">
+    <table class="table table-bordered">
+        <thead class="order-header">
+            <tr>
+                <th class="tc"><span>导出时间</span></th>
+                <th class="tc"><span>状态</span></th>
+                <th class="tc">下载<a></th>
+            </tr>
+        </thead>
+    <tbody>
+        <% _.each(item,function(o,i){%>
+        <tr>
+            <td class="tc cell-30">
+                <span><%= o.create_time %></span>
+            </td>
+            <td class="tc cell-30">
+                <span>
+                    <% switch(o.task_status) {
+                        case 2: %>
+                        导出中
+                        <% case 3: %>
+                        导出成功
+                        <% case 4: %>
+                        导出失败
+                    <%}%>
+                </span>
+            </td>
+            <td class="tc cell-10">
+                <span>
+                    <% if(o.task_status == 2 || o.task_status == 4) { %>
+                        --
+                    <% }else { %>
+                        <a href="/bossmanager/export/download.do?oss_bucket_name=<%= o.oss_bucket_name %>&oss_object_key=<%= o.oss_object_key%>" target="_blank">下载</a>
+                    <% } %>
+                </span>
+            </td>
+        </tr>
+        <%})%>
+    </tbody>
+    </table>
+    <!-- 页码 -->
+    <div class="widget-list clearfix ">
+        <div class="list-page fr">
+            <span class="pagination-info"></span>
+            <div class="ui-pagination pagination-pop"></div>
+        </div>
+    </div>
+    <!-- /页码 -->
 </script>
 
 <!-- 修改价格弹框 -->

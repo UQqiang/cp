@@ -8,6 +8,12 @@
             this.page.pageSize = 20;
             this.page.vpage = 10;
             this.pageId = 1;
+            // 弹出框页面
+            this.page_pop = {};
+            this.page_pop.pageSize = 10;
+            this.page_pop.vpage = 10;
+            this.page_pop.pageId = 1;
+
             this.search_key = {};
             this.orderStatusData = {
                 '10': '待支付',
@@ -28,6 +34,7 @@
         addEvent: function () {
             var that = this;
 
+        // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
             // 搜索
             $('#j-search').click(function () {
                 that.pageId = 1;
@@ -38,9 +45,22 @@
                 that.search_key.payment_id = $('#payment_id').val() == '0' ? '' : $('#payment_id').val();
                 that.queryOrderList();
             });
+            // 导出订单
+            $('#j-exportOrderList').click(function () {
+                that.exportOrderList();
+            });
+            // 查看已生成列表
+            $('#j-checkOrderList').click(function () {
+                that.checkOrderList();
+            });
+            // 点击全部按钮
+            $('#j-all').click(function () {
 
+            });
+        // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+
+        // 订单列表按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
             $('#goodsTab li').click(function () {
-
                 if ($(this).hasClass('active')) {
                     return false;
                 }
@@ -50,7 +70,6 @@
                 that.pageId = 1;
                 that.queryOrderList();
             });
-
             // 加星
             $(document).on('click', '.j-star', function () {
                 var data = {};
@@ -59,7 +78,6 @@
                 data.asterisk_marks = $(this).attr('data-asterisk_mark') == 1 ? 'n' : 'y';
                 that.addStar(data);
             });
-
             // 备注
             $(document).on('click', '.j-add-comment', function () {
                 var sendData = {};
@@ -79,14 +97,12 @@
                     dialog.close();
                 })
             });
-
             // 发货
             $(document).on('click', '.j-send-goods', function () {
                 var orderInfo = JSON.parse(decodeURIComponent($(this).attr('data-orderinfo')));
                 var refundMark = $(this).attr('data-refund_mark');
                 var order_id = $(this).attr('data-order_id');
                 var user_id = $(this).attr('data-user_id');
-
                 // 发货的时候存在 维权商品
                 if (refundMark && refundMark == 1) {
                     toastr.error('订单中的部分商品，买家已提交了维权申请，您需要先处理（同意或拒绝）买家退款申请后，才能够进行发货操作。', '提示');
@@ -158,7 +174,6 @@
                 var order_id = $(this).attr('data-order_id');
                 var user_id = $(this).attr('data-user_id');
                 var orderInfo = JSON.parse(decodeURIComponent($this.attr('data-orderinfo')));
-
                 var data = {};
                 data.title = '修改价格';
                 data.content = '<div id="changePriceInfo"></div>';
@@ -177,12 +192,10 @@
                         user_id: user_id,
                         floating_price: +Number($('input[name=change]').val() * 100).toFixed(0)
                     }
-
                     that.changePrice(postChangePriceData, function () {
                         dialog.close();
                     });
                 });
-
                 // 增加事件监听
                 $('input[name=change]').on('change', function () {
                     var diff = +$(this).val();
@@ -202,7 +215,6 @@
                         that.changeMoneyStatus = false;
                         return false;
                     }
-
                     // 增加修改的价格判断。如果修改的价格为0 则失败 增加一个改价失败的标记
                     if (money < 0) {
                         toastr.error('修改价格失败，修改后的合计价格不能小于0', '提示');
@@ -211,17 +223,16 @@
                         that.changeMoneyStatus = false;
                         return false;
                     }
-
                     if (diff > 0) { // 涨价
                         $('.js-order-change').html('+ ' + Number(Math.abs(diff)).toFixed(2));
                     } else { // 减价
                         $('.js-order-change').html('- ' + Number(Math.abs(diff)).toFixed(2));
                     }
-
                     $('.js-order-realpay').html(money);
                     that.changeMoneyStatus = true;
                 })
             });
+        // 订单列表按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
         },
 
         // 修改价格
@@ -231,12 +242,88 @@
                 url: '/order/update_price.do',
                 data: postChangePriceData,
                 beforeSend: function () {
-
                 },
                 success: function (data) {
                     toastr.success('修改成功', '提示');
                     that.queryOrderList();
                     cb && cb(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
+        // 导出订单
+        exportOrderList: function () {
+            var that = this;
+            that.search_key = {
+                order_sn: $.trim($('#order_sn').val()),
+                consignee: $.trim($('#consignee').val()),
+                order_status: $('#order_status').val() == '0' ? '' : $('#order_status').val(),
+                consignee_mobile: $.trim($('#consignee_mobile').val()),
+                payment_id: $('#payment_id').val() == '0' ? '' : $('#payment_id').val()
+            }
+            Api.get({
+                url: '/order/downloadOrders.do',
+                data: that.search_key,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('导出成功', '提示');
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
+        // 查看已生成报表
+        checkOrderList: function () {
+            var that = this;
+            var postCheckOrderList = {
+                page: that.page_pop.pageId || 1,
+                page_size: 10,
+                task_type: '2'
+            };
+            Api.get({
+                url: '/item/export/task/query.do',
+                data: postCheckOrderList,
+                beforeSend: function () {
+
+                },
+                success: function (order) {
+                    var order_list_data = order.data.data;
+                    if ($('#checkOrderInfo').length) {
+                        renderCheckOrderList(order_list_data);
+                    }else {
+                        var data = {
+                            title: '导出列表',
+                            content: '<div id="checkOrderInfo"></div>',
+                            width: 800
+                        };
+                        that.popuppage(data, function () {
+                            renderCheckOrderList(order_list_data);
+                        });
+                    }
+                    function renderCheckOrderList(order_list_data) {
+                        if (order_list_data) {
+                            var template = _.template($('#j-template-check-orderlist').html());
+                            $('#checkOrderInfo').html(template({
+                                item: order_list_data
+                            }));
+                            that.paginationPop(order.data.total_count);
+                        }else{
+                            $('#checkOrderInfo').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                        }
+                    }
                 },
                 complete: function () {
 
@@ -342,6 +429,18 @@
                         dialog.close();
                     }
                 }]
+            });
+            cb && cb();
+        },
+        popuppage: function (data, cb, success) {
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: 600,
+                draggable: false,
+                buttonAlign: 'right',
+
             });
             cb && cb();
         },
@@ -595,7 +694,7 @@
          */
         pagination: function (total) {
             var that = this;
-            var pagination = $('.ui-pagination')
+            var pagination = $('.pagination')
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -615,6 +714,35 @@
             });
             $('#check-all').iCheck("uncheck");
             var n = $('#orderList').find('table').length;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
+
+        // 弹出框翻页
+        paginationPop: function (total) {
+            var that = this;
+            var pagination_pop = $('.pagination-pop')
+            pagination_pop.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page_pop.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page_pop.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.page_pop.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.page_pop.pageId = num;
+                    if (type == 'change') {
+                        that.checkOrderList();
+                    }
+                }
+            });
+            var n = $('#checkOrderInfo').find('tr').length - 1;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {
