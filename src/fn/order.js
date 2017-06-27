@@ -14,7 +14,19 @@
             this.page_pop.vpage = 10;
             this.page_pop.pageId = 1;
 
+            // 批量发货－待发货订单列表
+            this.page_pop_select = {};
+            this.page_pop_select.pageSize = 10;
+            this.page_pop_select.vpage = 10;
+            this.page_pop_select.pageId = 1;
+
             this.search_key = {};
+            // 待发货订单导出弹框
+            this.order_ids_list = [];
+            this.search_select_key = {
+                order_sn: ''
+            };
+
             this.orderStatusData = {
                 '10': '待支付',
                 '20': '买家已取消',
@@ -166,6 +178,99 @@
                     });
                 });
             });
+
+            // 批量发货 ===========================
+            $(document).on('click', '#j-batching-deliver', function () {
+                var data = {
+                    title: '批量发货',
+                    content: '<div id="batchDeliver"></div>',
+                    width: 600,
+                    height: 300
+                };
+                that.popuppage(data, function () {
+                    var template = _.template($('#j-template-batching-deliver').html());
+                    $('#batchDeliver').html(template());
+                });
+            });
+            // 批量发货－导入填好的excel
+            $(document).on('click', '#j-upload-excel', function () {
+                var data = {
+                    title: '批量发货',
+                    content: '<div id="batchDeliver"></div>',
+                    width: 600,
+                    height: 300
+                };
+                that.popuppage(data, function () {
+                    var template = _.template($('#j-template-batching-deliver').html());
+                    $('#batchDeliver').html(template());
+                });
+            });
+            // 批量发货－选择订单导出---------------------
+            $(document).on('click', '#j-select-order-export', function () {
+                that.querySelectOrderList();
+            });
+            // 批量发货 全选
+            $('body').on('change', '.o-select-c-all', function () {
+                var checked = $('.o-select-c:checked');
+                var checked_full = $('.o-select-c');
+                var item_order_id;
+                if (this.checked) {
+                    checked_full.prop('checked', true);
+                    for (var i = 0; i < checked_full.length; i++) {
+                        item_order_id = checked_full.eq(i).attr('data-order-id');
+                        if (that.order_ids_list.indexOf(item_order_id) == -1) {
+                            that.order_ids_list.push(item_order_id);
+                        }
+                    }
+                } else {
+                    checked_full.prop('checked', false);
+                    for (var m = 0; m < checked_full.length; m++) {
+                        item_order_id = checked_full.eq(m).attr('data-order-id');
+                        var id_index = that.order_ids_list.indexOf(item_order_id);
+                        that.order_ids_list.splice(id_index, 1);
+                    }
+                }
+            });
+            // 批量发货 单选择
+            $('body').on('change', '.o-select-c', function () {
+                var checked = $('.o-select-c:checked');
+                var checkbox = $('.o-select-c');
+                var checkall = $('.o-select-c-all');
+                var item_order_id = $(this).attr('data-order-id');
+                var id_index = that.order_ids_list.indexOf(item_order_id);
+                if (checkbox.length == checked.length) {
+                    checkall.prop('checked', true)
+                } else {
+                    checkall.prop('checked', false)
+                }
+                var zhi = $(this).is(':checked');
+                if (zhi) {
+                    if (that.order_ids_list.indexOf(item_order_id) == -1) {
+                        that.order_ids_list.push(item_order_id);
+                    }
+                } else {
+                    that.order_ids_list.splice(id_index, 1);
+                }
+            });
+            // 导出待发货订单/选择订单导出
+            $('body').on('click', '.d-down-l', function () {
+                var order_select = that.order_ids_list.length;
+                var order_ids = that.order_ids_list.join(',');
+
+                if (!order_select) {
+                    toastr.error('暂未选择要操作的对象!');
+                    return false;
+                }
+                location.href = '/bossmanager/order/download/deliveryOrders.do?order_ids=' + order_ids;
+            });
+            // 点击搜索
+            $('body').on('click', '#s-search', function () {
+                that.page_pop_select.pageId = 1;
+                that.search_select_key.order_sn =  $('#s-content').val();
+                that.querySelectOrderList();
+            });
+            // 批量发货－选择订单导出---------------------
+            // 批量发货 ===========================
 
             // 修改价格
             $('body').on('click', '.j-change-cost', function () {
@@ -432,15 +537,19 @@
             });
             cb && cb();
         },
+        // 查看已生成报表弹框
         popuppage: function (data, cb, success) {
+            var that = this;
             this.popupDialog = jDialog.dialog({
                 title: data.title,
                 content: data.content,
                 width: data.width || 600,
-                height: 600,
+                height: data.height || 600,
                 draggable: false,
                 buttonAlign: 'right',
-
+            });
+            $(document).on('click', '#j-select-order-export', function () {
+                that.popupDialog.close();
             });
             cb && cb();
         },
@@ -581,6 +690,77 @@
                     console.log(data, msg);
                 }
             });
+        },
+        /**
+         * 待发货订单列表
+         */
+        querySelectOrderList: function () {
+            var that = this;
+            Api.get({
+                url: '/order/query.do',
+                data: {
+                    current_page: that.page_pop_select.pageId,
+                    page_size: that.page_pop_select.pageSize,
+                    order_sn: that.search_select_key.order_sn || '',
+                    consignee_mobile: that.search_key.consignee_mobile || '',
+                    start_time: that.search_key.start_time || '',
+                    end_time: that.search_key.end_time || '',
+                    order_status: 30,
+                    consignee: that.search_key.consignee || '',
+                    user_mobile: '',
+                    payment_id: that.search_key.payment_id || '',
+                    asterisk_mark: that.search_key.asterisk_mark || '',
+                    print_mark: ''
+                },
+                mask: true,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if ($('#selectOrderExport').length) {
+                        renderQuerySelectOrderList();
+                    }else{
+                        var popdata = {
+                            title: '待发货订单列表',
+                            content: '<div id="selectOrderExport"></div>',
+                            width: 800,
+                        };
+                        that.popuppage(popdata, function () {
+                            renderQuerySelectOrderList();
+                        });
+                    }
+                    function renderQuerySelectOrderList() {
+                        if (data.data.total_count > 0) {
+                            var template = _.template($('#j-template-select-export').html());
+                            $('#selectOrderExport').html(template({
+                                items: data.data.data
+                            }));
+                            that.keepSelect();
+                        } else {
+                            $('#selectOrderExport').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                        }
+                        that.paginationPopSelect(data.data.total_count);
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        keepSelect: function () {
+            for (var i = 0; i < $('.o-select-c').length; i++) {
+                if (this.order_ids_list.indexOf($('.o-select-c').eq(i).attr('data-order-id')) !== -1) {
+                    $('.o-select-c').eq(i).prop('checked', true);
+                }
+                if ($('.o-select-c').length == $('.o-select-c:checked').length) {
+                    $('.o-select-c-all').prop('checked', true)
+                } else {
+                    $('.o-select-c-all').prop('checked', false)
+                }
+            }
         },
         /**
          * 获取物流公司.
@@ -743,6 +923,35 @@
                 }
             });
             var n = $('#checkOrderInfo').find('tr').length - 1;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
+
+        // 批量发货－待发货订单 弹出框翻页
+        paginationPopSelect: function (total) {
+            var that = this;
+            var pagination_pop_select = $('.pagination-pop-select')
+            pagination_pop_select.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page_pop_select.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page_pop_select.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.page_pop_select.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.page_pop_select.pageId = num;
+                    if (type == 'change') {
+                        that.querySelectOrderList();
+                    }
+                }
+            });
+            var n = $('#selectOrderExport').find('tr').length - 1;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {
