@@ -41,20 +41,7 @@
                     <div id="orderDetail"></div>
                 </div>
             </div>
-            <div class="x_panel">
-                <div class="x_title">
-                    <h2><small></small></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                        <li class="fr">
-                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                    <div id="orderLogistic"></div>
-                </div>
-            </div>
+
             <div class="x_panel">
                 <div class="x_title">
                     <h2><small></small></h2>
@@ -70,6 +57,20 @@
                 </div>
             </div>
 
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2><small></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li class="fr">
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div id="orderLogistic"></div>
+                </div>
+            </div>
         </div>
         <!-- /page content -->
 
@@ -197,13 +198,11 @@
                 <p>物流公司：<%= item.express %></p>
                 <% } %>
                 <% if(item.express_no != undefined){ %>
-                <span>物流单号：<%= item.express_no%></span>
+                <p>物流单号：<%= item.express_no%></p>
                 <% } %>
-                <!-- <span> -->
-                    <!-- <% if(item.editable == 0){ %> -->
-                    <!--<a href="javascript:;" class="btn btn-sm btn-success j-change-logistic" data-value="{{= item.id}}">修改物流信息</a>-->
-                    <!-- <% } %> -->
-                <!-- <span> -->
+                <% if(item.editable == 0){ %>
+                <button class="btn btn-sm btn-success j-change-logistic" data-value="<%= item.id %>">修改物流信息</button>
+                <% } %>
             </div>
             <% if( item.thirdparty_list == undefined || item.thirdparty_list.length < 1 ){ %>
                 <span class="mt10 inl-bl">暂无物流跟踪信息！</span>
@@ -353,6 +352,64 @@
                 <div class="form-group logistics-info">
                     <label class="ui-label ui-label-md">物流单号：</label>
                     <input class="form-control form-control-lg" id="logisticCode">
+                </div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</script>
+
+<!-- 修改物流信息 -->
+<script type="text/template" id="j-template-change-logistics">
+    <table class="table table-bordered">
+        <thead class="order-header">
+        <tr>
+            <th class="tc cell-50"><span>商品</span></th>
+            <th class="tc cell-10"><span>数量</span></th>
+            <th class="tc cell-10"><span>物流公司</span></th>
+            <th class="tc cell-20"><span>快递单号</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(item.order_item_list,function(o,i){ %>
+        <% if( o.item_type != 11 ){ %>
+        <tr data-id="<%= o.delivery_info_id %>" class="logistics_items">
+            <td>
+                <dl>
+                    <dt><img style="width:60px;height: 60px;" src="<%= o.item_image_url %>"></dt>
+                    <dd>
+                        <p><%= o.item_name %></p>
+                        <p class="sku"><%= o.item_sku_desc %></p>
+                    </dd>
+                </dl>
+            </td>
+            <td class="tc"><span><%= o.number %></span></td>
+            <td class="tc"><span>-</span></td>
+            <td class="tc"><span>-</span></td>
+        </tr>
+        <% } %>
+        <% }) %>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="5">
+                <div class="form-group">
+                    <label class="ui-label ui-label-md">收货地址：</label>
+                    <span><%= item.order_consignee_d_t_o.province %><%= item.order_consignee_d_t_o.city %><%= item.order_consignee_d_t_o.area %><%= item.order_consignee_d_t_o.address %></span>
+                </div>
+                <div class="form-group">
+                    <label class="ui-label ui-label-md">发货方式：</label>
+                    <label><input type="radio" name="logistics" class="flat" checked="checked" data-value="1" style="width:auto">&nbsp;需要物流</label>
+                </div>
+                <div class="form-group logistics-info">
+                    <label class="ui-label ui-label-md">物流公司：</label>
+                    <select class="form-control form-control-lg" id="changelogisticsList">
+                        <option value="">请选择物流公司</option>
+                    </select>
+                </div>
+                <div class="form-group logistics-info">
+                    <label class="ui-label ui-label-md">物流单号：</label>
+                    <input class="form-control form-control-lg" id="changelogisticCode">
                 </div>
             </td>
         </tr>
