@@ -190,6 +190,7 @@
                 that.popuppage(data, function () {
                     var template = _.template($('#j-template-batching-deliver').html());
                     $('#batchDeliver').html(template());
+                    that.imgUpload();
                 });
             });
             // 批量发货－导入填好的excel
@@ -495,6 +496,34 @@
                 $(this).parents('tr').removeClass('selected');
             })
         },
+        /**
+         * 导入excel表格
+         */
+        imgUpload: function () {
+            var self = this;
+            var imgUpload = new lib.imgUpload({
+                trigger: '#j-upload-excel',
+                fileName: 'file',
+                targetUrl: Api.domain() + '/bossmanager/order/batchDeliverGoods.do',
+                'onUploadStart': function () {
+                    self.targetBtn = this.currentTrigger;
+                    self.targetBtn.html('导入中...');
+                },
+                'onUploadError': function (e) {
+                    self.targetBtn.html('导入填好的EXCEL');
+                    toastr.error("上传失败，请重试!");
+                },
+                'onUploadSuccess': function (data) {
+                    self.targetBtn.html('导入填好的EXCEL');
+                    if (data.code == 10000) {
+                        toastr.success("上传成功");
+                    } else {
+                        toastr.error(data.msg);
+                    }
+                }
+            });
+        },
+
         /**
          * tip
          * @param data
