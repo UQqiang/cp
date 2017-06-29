@@ -203,6 +203,28 @@
                     dialog.close();
                 });
             });
+
+            // 批量关联
+            $('#batchSelect').click(function () {
+                var checkedBox = $('.checkbox:checked');
+                var idList = [];
+                for (var i = 0; i < checkedBox.length; i++) {
+                    var id = checkedBox.eq(i).attr('data-id');
+                    var name = checkedBox.eq(i).attr('data-name');
+                    if( id ){
+                        idList.push({
+                            id: id,
+                            name: name
+                        });
+                    }
+                }
+                if( idList.length >= 1 ){
+                    idList = JSON.stringify(idList);
+                    window.open('channel-goods-select.html?id=' + idList);
+                }else{
+                    toastr.error('选择的渠道商有误!无法获取到渠道商的身份标识','提示')
+                }
+            })
         },
         /**
          * 品牌列表

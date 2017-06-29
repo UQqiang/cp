@@ -1,3 +1,5 @@
+@charset "UTF-8";
+/******************************* 添加渠道 ***************************/
 .add-channel-step {
   padding-bottom: 25px;
 }
@@ -34,4 +36,86 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.imgUploadBtn {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  border: 2px solid #73879c;
+  cursor: pointer;
+  position: relative;
+}
+.imgUploadBtn .fa.fa-plus {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}
+.imgUploadBtn .image {
+  width: 116px;
+  height: 116px;
+  position: relative;
+  z-index: 1;
+}
+.imgUploadBtn .img-close {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1px 3px;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 20;
+}
+.imgUploadBtn .img-close:before {
+  position: absolute;
+  left: 48px;
+  top: 48px;
+  padding: 4px 5px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/*************************** 渠道关联商品 ****************************/
+.form-inline .form-group.channel-name-list {
+  display: none;
+}
+.form-inline .channel-name-lists .channel-detail {
+  display: inline-block;
+  padding: 0 10px;
+  text-align: center;
+  position: relative;
+  width: 80px;
+  height: 60px;
+}
+.form-inline .channel-name-lists .channel-detail .channel-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+.form-inline .channel-name-lists .channel-detail span {
+  display: block;
+  font-size: 12px;
+}
+.form-inline .channel-name-lists .channel-detail .img-close {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1px 3px;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 20;
+}
+.form-inline .channel-name-lists .channel-detail .img-close:before {
+  position: absolute;
+  left: 30px;
+  top: 20px;
+  padding: 4px 5px;
+  background: #fff;
+  border-radius: 50%;
 }

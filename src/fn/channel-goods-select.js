@@ -8,6 +8,24 @@
             this.search_key = {};
             this.categoryList = [];
             this.brandList = [];
+            this.idList = JSON.parse(decodeURIComponent(HDL.getQuery('id').split(',')));
+
+            if( !this.idList ){
+                toastr.error('供应商信息出错!','提示');
+                return false;
+            }else{
+                if(this.idList.length > 1){
+                    // 多个供应商
+                    $('.channel-name-list').show();
+                    var template = _.template($('#j-template-channel-list').html());
+                    $('.channel-name-lists').html(template({
+                        items: this.idList
+                    }))
+                } else{
+                    // 单个供应商
+                    // todo 单个供应商需要请求已经关联的商品列表
+                }
+            }
             this.addEvent();
             this.queryBrand();
             this.queryCategory();
@@ -208,6 +226,14 @@
                     $('#check-all').iCheck("uncheck");
                 }
                 $(this).parents('tr').removeClass('selected');
+            });
+
+            $('#channel input[name=radio]').on('ifClicked', function () {
+                var value = $(this).val();
+                $('#channelButton a').hide();
+                $('#channelButton a[data-value=' + value + ']').css({
+                    display: 'inline-block'
+                });
             })
         },
         addEvent: function () {
@@ -345,7 +371,7 @@
                 success: function (data) {
                     var cate = data.data;
                     for (var i = 0; i < cate.length; i++) {
-                        if( cate[i].cate_level == 2 ){
+                        if (cate[i].cate_level == 2) {
                             that.categoryList.push({
                                 text: cate[i].cate_name,
                                 value: cate[i].id

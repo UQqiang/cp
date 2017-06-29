@@ -171,6 +171,34 @@ gulp.task('sass-minify', function() {
 * `uploadify` - 这个我又要说了,是基于百度的webuploader自主研发的图片选择插件
 * `validator` - 表单验证插件(自己更改过了)
 
+## 添加商品 - goods.js 说明
+
+> 核心对象
+
+```
+/**
+ * skuArr {
+ *"216":{
+ *  "sku_name":"体型大小",
+ *  "sku_id":"216",
+ *  "floor":1,
+ *  "value":[{
+ *      "name":"体型大小",
+ *      "sku_property_tmpl_id":"216",
+ *      "value":"20",
+ *      "property_value_id":94685,
+ *      "thumb":""
+ *      },
+ *      {
+ *      "name":"体型大小",
+ *      "sku_property_tmpl_id":"216",
+ *      "value":"30",
+ *      "property_value_id":94686},
+ *      "thumb":""
+ *    ]}
+ * }
+ */
+```
 
 #### 未完待续...
 
