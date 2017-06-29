@@ -9,8 +9,8 @@
         },
         domain: function () {
             // 172.16.0.98
-            //this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
-            this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
+            this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+            //this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
             return this.ajaxDomain;
         },
         post: function (opts) {
@@ -61,11 +61,12 @@
                 complete: function (data) {
                     setTimeout(function () {
                         $('.mask').fadeOut();
-                    }, 1000);
+                    }, 500);
                     opts.complete && opts.complete(data);
                 },
-                error: function (data) {
-                    opts.error && opts.error(data);
+                error: function (xhr,status,error) {
+                    console.log(xhr,status,error);
+                    opts.error && opts.error(xhr,status,error);
                 }
             })
         }

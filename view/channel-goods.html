@@ -56,6 +56,8 @@
             <div class="x_content">
                 <!-- 关联-->
                 <div class="form-group">
+                    <a class="btn btn-sm btn-success mr10" href="javascript:;" id="export">导出</a>
+                    <a class="btn btn-sm btn-success mr10" href="javascript:;" id="exportList">查看导出列表</a>
                     <a class="btn btn-sm btn-success " href="javascript:;" id="channelList">查看关联列表</a>
                 </div>
                 <div class="table-responsive">
@@ -81,7 +83,7 @@
                         <tbody id="warehouseList">
                         <tr class="even pointer list">
                             <td class="a-center tc">
-                                <input type="checkbox" class="flat checkbox" name="table_records">
+                                <input type="checkbox" class="flat checkbox" name="table_records" data-id="10" data-name="管理员三">
                             </td>
                             <td class="tc">张三</td>
                             <td class="tc">管理员1 </td>
@@ -94,7 +96,7 @@
                         </tr>
                         <tr class="odd pointer list">
                             <td class="a-center tc">
-                                <input type="checkbox" class="flat checkbox" name="table_records">
+                                <input type="checkbox" class="flat checkbox" name="table_records" data-id="20" data-name="管理图2">
                             </td>
                             <td class="tc">李四</td>
                             <td class="tc">管理员2</td>
@@ -102,7 +104,7 @@
                             <td class="tc">111111111</td>
                             <td class="tc">激活</td>
                             <td class="last tc">
-                                <a href="javascript:;">商品管理</a>
+                                <a href="channel-goods-select.html?id=1" target="_blank">商品管理</a>
                             </td>
                         </tr>
                         </tbody>
@@ -110,9 +112,9 @@
                 </div>
 
                 <!-- 页码 -->
-                <div class="widget-list clearfix ">
+                <div class="widget-list clearfix">
                     <div class="fl pagination">
-                        <a class="btn btn-sm btn-success" href="channel-goods-select.html">关联</a>
+                        <a class="btn btn-sm btn-success" id="batchSelect" href="javascript:;" target="_blank">批量关联</a>
                     </div>
                     <div class="list-page fr">
                         <span class="pagination-info"></span>

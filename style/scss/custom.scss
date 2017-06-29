@@ -2523,7 +2523,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
   //float: left;
   display: inline-block;
   margin: 0 0 0 20px;
-  padding: 3px 10px;
+  padding: 3px 5px;
   color: #FFF;
   border-radius: 3px 4px 4px 3px;
   background-color: #CE5454;
@@ -2536,6 +2536,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
   top: 1px;
   /* right: inherit; */
   right: -160px;
+  font-size: 12px;
 }
 
 .item .alert::after {

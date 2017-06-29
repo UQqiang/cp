@@ -1,21 +1,25 @@
 @charset "UTF-8";
-#orderList .order-header, #orderInfo .order-header {
+#orderList .order-header, #orderList .price-header, #orderInfo .order-header, #orderInfo .price-header, #changePriceInfo .order-header, #changePriceInfo .price-header {
   background: #f8f8f8;
   box-shadow: 1px 1px 5px #ccc;
 }
-#orderList .fa, #orderInfo .fa {
+#orderList .order-header th, #orderList .price-header th, #orderInfo .order-header th, #orderInfo .price-header th, #changePriceInfo .order-header th, #changePriceInfo .price-header th {
+  border-right: none;
+  border-left: none;
+}
+#orderList .fa, #orderInfo .fa, #changePriceInfo .fa {
   font-size: 16px;
   display: inline-block;
   margin-right: 5px;
   cursor: pointer;
 }
-#orderList .fa.fa-star, #orderInfo .fa.fa-star {
-  color: red;
+#orderList .fa.fa-star, #orderInfo .fa.fa-star, #changePriceInfo .fa.fa-star {
+  color: #1ABB9C;
 }
-#orderList dl, #orderInfo dl {
+#orderList dl, #orderInfo dl, #changePriceInfo dl {
   clear: both;
 }
-#orderList dl dt, #orderInfo dl dt {
+#orderList dl dt, #orderInfo dl dt, #changePriceInfo dl dt {
   float: left;
   padding: 2px;
   margin: 0 10px;
@@ -23,20 +27,20 @@
   border-radius: 4px;
   box-shadow: 1px 1px 1px rgba(38, 185, 154, 0.1) inset, 1px 1px 1px rgba(38, 185, 154, 0.1);
 }
-#orderList dl dt .order-image, #orderInfo dl dt .order-image {
+#orderList dl dt .order-image, #orderInfo dl dt .order-image, #changePriceInfo dl dt .order-image {
   width: 64px;
   height: 64px;
 }
-#orderList dl dd, #orderInfo dl dd {
+#orderList dl dd, #orderInfo dl dd, #changePriceInfo dl dd {
   float: left;
 }
-#orderList dl dd p, #orderInfo dl dd p {
-  max-width: 250px;
+#orderList dl dd p, #orderInfo dl dd p, #changePriceInfo dl dd p {
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#orderList dl dd p.sku, #orderInfo dl dd p.sku {
+#orderList dl dd p.sku, #orderInfo dl dd p.sku, #changePriceInfo dl dd p.sku {
   font-size: 12px;
   color: #ccc;
 }
@@ -62,9 +66,8 @@
   padding: 20px;
 }
 #orderLogistic .tab-pane .parcel-info {
-  padding: 20px 0;
+  padding: 0 0 20px 0;
   border-bottom: 1px solid #73879C;
-  border-top: 1px solid #73879C;
 }
 #orderLogistic .thirdparty-list:nth-child(3) {
   color: #26B99A;

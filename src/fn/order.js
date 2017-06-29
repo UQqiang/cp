@@ -8,7 +8,25 @@
             this.page.pageSize = 20;
             this.page.vpage = 10;
             this.pageId = 1;
+            // 弹出框页面
+            this.page_pop = {};
+            this.page_pop.pageSize = 10;
+            this.page_pop.vpage = 10;
+            this.page_pop.pageId = 1;
+
+            // 批量发货－待发货订单列表
+            this.page_pop_select = {};
+            this.page_pop_select.pageSize = 10;
+            this.page_pop_select.vpage = 10;
+            this.page_pop_select.pageId = 1;
+
             this.search_key = {};
+            // 待发货订单导出弹框
+            this.order_ids_list = [];
+            this.search_select_key = {
+                order_sn: ''
+            };
+
             this.orderStatusData = {
                 '10': '待支付',
                 '20': '买家已取消',
@@ -28,6 +46,7 @@
         addEvent: function () {
             var that = this;
 
+        // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
             // 搜索
             $('#j-search').click(function () {
                 that.pageId = 1;
@@ -38,9 +57,22 @@
                 that.search_key.payment_id = $('#payment_id').val() == '0' ? '' : $('#payment_id').val();
                 that.queryOrderList();
             });
+            // 导出订单
+            $('#j-exportOrderList').click(function () {
+                that.exportOrderList();
+            });
+            // 查看已生成列表
+            $('#j-checkOrderList').click(function () {
+                that.checkOrderList();
+            });
+            // 点击全部按钮
+            $('#j-all').click(function () {
 
+            });
+        // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+
+        // 订单列表按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
             $('#goodsTab li').click(function () {
-
                 if ($(this).hasClass('active')) {
                     return false;
                 }
@@ -50,7 +82,6 @@
                 that.pageId = 1;
                 that.queryOrderList();
             });
-
             // 加星
             $(document).on('click', '.j-star', function () {
                 var data = {};
@@ -59,7 +90,6 @@
                 data.asterisk_marks = $(this).attr('data-asterisk_mark') == 1 ? 'n' : 'y';
                 that.addStar(data);
             });
-
             // 备注
             $(document).on('click', '.j-add-comment', function () {
                 var sendData = {};
@@ -79,14 +109,12 @@
                     dialog.close();
                 })
             });
-
             // 发货
             $(document).on('click', '.j-send-goods', function () {
                 var orderInfo = JSON.parse(decodeURIComponent($(this).attr('data-orderinfo')));
                 var refundMark = $(this).attr('data-refund_mark');
                 var order_id = $(this).attr('data-order_id');
                 var user_id = $(this).attr('data-user_id');
-
                 // 发货的时候存在 维权商品
                 if (refundMark && refundMark == 1) {
                     toastr.error('订单中的部分商品，买家已提交了维权申请，您需要先处理（同意或拒绝）买家退款申请后，才能够进行发货操作。', '提示');
@@ -150,7 +178,267 @@
                     });
                 });
             });
+
+            // 批量发货 ===========================
+            $(document).on('click', '#j-batching-deliver', function () {
+                var data = {
+                    title: '批量发货',
+                    content: '<div id="batchDeliver"></div>',
+                    width: 600,
+                    height: 300
+                };
+                that.popuppage(data, function () {
+                    var template = _.template($('#j-template-batching-deliver').html());
+                    $('#batchDeliver').html(template());
+                });
+            });
+            // 批量发货－导入填好的excel
+            $(document).on('click', '#j-upload-excel', function () {
+                var data = {
+                    title: '批量发货',
+                    content: '<div id="batchDeliver"></div>',
+                    width: 600,
+                    height: 300
+                };
+                that.popuppage(data, function () {
+                    var template = _.template($('#j-template-batching-deliver').html());
+                    $('#batchDeliver').html(template());
+                });
+            });
+            // 批量发货－选择订单导出---------------------
+            $(document).on('click', '#j-select-order-export', function () {
+                that.querySelectOrderList();
+            });
+            // 批量发货 全选
+            $('body').on('change', '.o-select-c-all', function () {
+                var checked = $('.o-select-c:checked');
+                var checked_full = $('.o-select-c');
+                var item_order_id;
+                if (this.checked) {
+                    checked_full.prop('checked', true);
+                    for (var i = 0; i < checked_full.length; i++) {
+                        item_order_id = checked_full.eq(i).attr('data-order-id');
+                        if (that.order_ids_list.indexOf(item_order_id) == -1) {
+                            that.order_ids_list.push(item_order_id);
+                        }
+                    }
+                } else {
+                    checked_full.prop('checked', false);
+                    for (var m = 0; m < checked_full.length; m++) {
+                        item_order_id = checked_full.eq(m).attr('data-order-id');
+                        var id_index = that.order_ids_list.indexOf(item_order_id);
+                        that.order_ids_list.splice(id_index, 1);
+                    }
+                }
+            });
+            // 批量发货 单选择
+            $('body').on('change', '.o-select-c', function () {
+                var checked = $('.o-select-c:checked');
+                var checkbox = $('.o-select-c');
+                var checkall = $('.o-select-c-all');
+                var item_order_id = $(this).attr('data-order-id');
+                var id_index = that.order_ids_list.indexOf(item_order_id);
+                if (checkbox.length == checked.length) {
+                    checkall.prop('checked', true)
+                } else {
+                    checkall.prop('checked', false)
+                }
+                var zhi = $(this).is(':checked');
+                if (zhi) {
+                    if (that.order_ids_list.indexOf(item_order_id) == -1) {
+                        that.order_ids_list.push(item_order_id);
+                    }
+                } else {
+                    that.order_ids_list.splice(id_index, 1);
+                }
+            });
+            // 导出待发货订单/选择订单导出
+            $('body').on('click', '.d-down-l', function () {
+                var order_select = that.order_ids_list.length;
+                var order_ids = that.order_ids_list.join(',');
+
+                if (!order_select) {
+                    toastr.error('暂未选择要操作的对象!');
+                    return false;
+                }
+                location.href = '/bossmanager/order/download/deliveryOrders.do?order_ids=' + order_ids;
+            });
+            // 点击搜索
+            $('body').on('click', '#s-search', function () {
+                that.page_pop_select.pageId = 1;
+                that.search_select_key.order_sn =  $('#s-content').val();
+                that.querySelectOrderList();
+            });
+            // 批量发货－选择订单导出---------------------
+            // 批量发货 ===========================
+
+            // 修改价格
+            $('body').on('click', '.j-change-cost', function () {
+                // 依赖数据
+                var $this = $(this);
+                var order_id = $(this).attr('data-order_id');
+                var user_id = $(this).attr('data-user_id');
+                var orderInfo = JSON.parse(decodeURIComponent($this.attr('data-orderinfo')));
+                var data = {};
+                data.title = '修改价格';
+                data.content = '<div id="changePriceInfo"></div>';
+                data.width = 800;
+                that.popup(data, function () {
+                    var template = _.template($('#j-template-change-price').html());
+                    $('#changePriceInfo').html(template({
+                        item: orderInfo,
+                        orderStatus: that.orderStatusData
+                    }));
+                }, function (btn, dialog) {
+                    // 确定操作
+                    var changePriceData = {};
+                    postChangePriceData = {
+                        order_id: order_id,
+                        user_id: user_id,
+                        floating_price: +Number($('input[name=change]').val() * 100).toFixed(0)
+                    }
+                    that.changePrice(postChangePriceData, function () {
+                        dialog.close();
+                    });
+                });
+                // 增加事件监听
+                $('input[name=change]').on('change', function () {
+                    var diff = +$(this).val();
+                    var origin = +$('.js-order-originpay').html();
+                    var delivery = +$('.js-order-delivery-fee').html();
+                    var money;
+                    // if (that.higo_mark == 1) {
+                        var tax = +$('.js-order-tax-fee').html();
+                        money = Number(origin + delivery + tax + diff).toFixed(2);
+                    // } else {
+                    //     money = Number(origin + delivery + diff).toFixed(2);
+                    // }
+                    if (isNaN(Number(diff)) == true) {
+                        toastr.error('输入的价格有误', '提示');
+                        that.floatMoney = '';
+                        that.newPrice = '';
+                        that.changeMoneyStatus = false;
+                        return false;
+                    }
+                    // 增加修改的价格判断。如果修改的价格为0 则失败 增加一个改价失败的标记
+                    if (money < 0) {
+                        toastr.error('修改价格失败，修改后的合计价格不能小于0', '提示');
+                        that.floatMoney = '';
+                        that.newPrice = '';
+                        that.changeMoneyStatus = false;
+                        return false;
+                    }
+                    if (diff > 0) { // 涨价
+                        $('.js-order-change').html('+ ' + Number(Math.abs(diff)).toFixed(2));
+                    } else { // 减价
+                        $('.js-order-change').html('- ' + Number(Math.abs(diff)).toFixed(2));
+                    }
+                    $('.js-order-realpay').html(money);
+                    that.changeMoneyStatus = true;
+                })
+            });
+        // 订单列表按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
         },
+
+        // 修改价格
+        changePrice: function (postChangePriceData, cb) {
+            var that = this;
+            Api.get({
+                url: '/order/update_price.do',
+                data: postChangePriceData,
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    toastr.success('修改成功', '提示');
+                    that.queryOrderList();
+                    cb && cb(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
+        // 导出订单
+        exportOrderList: function () {
+            var that = this;
+            that.search_key = {
+                order_sn: $.trim($('#order_sn').val()),
+                consignee: $.trim($('#consignee').val()),
+                order_status: $('#order_status').val() == '0' ? '' : $('#order_status').val(),
+                consignee_mobile: $.trim($('#consignee_mobile').val()),
+                payment_id: $('#payment_id').val() == '0' ? '' : $('#payment_id').val()
+            }
+            Api.get({
+                url: '/order/downloadOrders.do',
+                data: that.search_key,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('导出成功', '提示');
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
+        // 查看已生成报表
+        checkOrderList: function () {
+            var that = this;
+            var postCheckOrderList = {
+                page: that.page_pop.pageId || 1,
+                page_size: 10,
+                task_type: '2'
+            };
+            Api.get({
+                url: '/item/export/task/query.do',
+                data: postCheckOrderList,
+                beforeSend: function () {
+
+                },
+                success: function (order) {
+                    var order_list_data = order.data.data;
+                    if ($('#checkOrderInfo').length) {
+                        renderCheckOrderList(order_list_data);
+                    }else {
+                        var data = {
+                            title: '导出列表',
+                            content: '<div id="checkOrderInfo"></div>',
+                            width: 800
+                        };
+                        that.popuppage(data, function () {
+                            renderCheckOrderList(order_list_data);
+                        });
+                    }
+                    function renderCheckOrderList(order_list_data) {
+                        if (order_list_data) {
+                            var template = _.template($('#j-template-check-orderlist').html());
+                            $('#checkOrderInfo').html(template({
+                                item: order_list_data
+                            }));
+                            that.paginationPop(order.data.total_count);
+                        }else{
+                            $('#checkOrderInfo').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                        }
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
         iCheck: function () {
             var that = this;
             if ($("input.flat")[0]) {
@@ -246,6 +534,22 @@
                         dialog.close();
                     }
                 }]
+            });
+            cb && cb();
+        },
+        // 查看已生成报表弹框
+        popuppage: function (data, cb, success) {
+            var that = this;
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: data.height || 600,
+                draggable: false,
+                buttonAlign: 'right',
+            });
+            $(document).on('click', '#j-select-order-export', function () {
+                that.popupDialog.close();
             });
             cb && cb();
         },
@@ -388,6 +692,77 @@
             });
         },
         /**
+         * 待发货订单列表
+         */
+        querySelectOrderList: function () {
+            var that = this;
+            Api.get({
+                url: '/order/query.do',
+                data: {
+                    current_page: that.page_pop_select.pageId,
+                    page_size: that.page_pop_select.pageSize,
+                    order_sn: that.search_select_key.order_sn || '',
+                    consignee_mobile: that.search_key.consignee_mobile || '',
+                    start_time: that.search_key.start_time || '',
+                    end_time: that.search_key.end_time || '',
+                    order_status: 30,
+                    consignee: that.search_key.consignee || '',
+                    user_mobile: '',
+                    payment_id: that.search_key.payment_id || '',
+                    asterisk_mark: that.search_key.asterisk_mark || '',
+                    print_mark: ''
+                },
+                mask: true,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if ($('#selectOrderExport').length) {
+                        renderQuerySelectOrderList();
+                    }else{
+                        var popdata = {
+                            title: '待发货订单列表',
+                            content: '<div id="selectOrderExport"></div>',
+                            width: 800,
+                        };
+                        that.popuppage(popdata, function () {
+                            renderQuerySelectOrderList();
+                        });
+                    }
+                    function renderQuerySelectOrderList() {
+                        if (data.data.total_count > 0) {
+                            var template = _.template($('#j-template-select-export').html());
+                            $('#selectOrderExport').html(template({
+                                items: data.data.data
+                            }));
+                            that.keepSelect();
+                        } else {
+                            $('#selectOrderExport').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                        }
+                        that.paginationPopSelect(data.data.total_count);
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+        keepSelect: function () {
+            for (var i = 0; i < $('.o-select-c').length; i++) {
+                if (this.order_ids_list.indexOf($('.o-select-c').eq(i).attr('data-order-id')) !== -1) {
+                    $('.o-select-c').eq(i).prop('checked', true);
+                }
+                if ($('.o-select-c').length == $('.o-select-c:checked').length) {
+                    $('.o-select-c-all').prop('checked', true)
+                } else {
+                    $('.o-select-c-all').prop('checked', false)
+                }
+            }
+        },
+        /**
          * 获取物流公司.
          */
         queryLogisticsCompany: function () {
@@ -499,7 +874,7 @@
          */
         pagination: function (total) {
             var that = this;
-            var pagination = $('.ui-pagination')
+            var pagination = $('.pagination')
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -519,6 +894,64 @@
             });
             $('#check-all').iCheck("uncheck");
             var n = $('#orderList').find('table').length;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
+
+        // 弹出框翻页
+        paginationPop: function (total) {
+            var that = this;
+            var pagination_pop = $('.pagination-pop')
+            pagination_pop.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page_pop.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page_pop.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.page_pop.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.page_pop.pageId = num;
+                    if (type == 'change') {
+                        that.checkOrderList();
+                    }
+                }
+            });
+            var n = $('#checkOrderInfo').find('tr').length - 1;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
+
+        // 批量发货－待发货订单 弹出框翻页
+        paginationPopSelect: function (total) {
+            var that = this;
+            var pagination_pop_select = $('.pagination-pop-select')
+            pagination_pop_select.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page_pop_select.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page_pop_select.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.page_pop_select.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.page_pop_select.pageId = num;
+                    if (type == 'change') {
+                        that.querySelectOrderList();
+                    }
+                }
+            });
+            var n = $('#selectOrderExport').find('tr').length - 1;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

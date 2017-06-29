@@ -13,10 +13,7 @@
             this.currentCateObj = {};
             this.warehouseList = [];
             $('#categoryChildren').hide();
-            this.queryBrand();
-            this.queryCategory();
             this.queryGoods();
-            this.queryWarehouse();
             this.addEvent();
         },
         popup: function (data, cb, success) {
@@ -81,23 +78,23 @@
                 that.pageId = 1;
 
                 var brand_key = $.trim($('#brandList option:selected').attr('value'))
-                if( brand_key != '' ) {
+                if (brand_key != '') {
                     that.search_key.brand_key = brand_key;
                 }
                 var category_id = that.currentCateObj['2'] ? that.currentCateObj['2'].id : '';
-                if( category_id != '' ){
+                if (category_id != '') {
                     that.search_key.category_id = category_id
                 }
                 var key = $.trim($('#key').val());
-                if( key != '' ){
+                if (key != '') {
                     that.search_key.key = key;
                 }
                 var freeze = $('#freezeStatus').val();
-                if( freeze != '' ){
+                if (freeze != '') {
                     that.search_key.freeze = freeze
                 }
                 var delivery_type = $('#deliveryType').val();
-                if( delivery_type != '' ){
+                if (delivery_type != '') {
                     that.search_key.delivery_type = delivery_type;
                 }
                 that.queryGoods();
@@ -262,6 +259,95 @@
 
                 })
             });
+
+            // 提交
+            $(document).on('click', '.j-submit', function () {
+                var id = $(this).attr('data-item_id');
+                var postData = [];
+                for (var n = 0; n < $('.list-' + id).length; n++) {
+                    var list = $('.list-' + id).eq(n);
+                    var skuDetail = {
+                        item_id: id,
+                        id: list.attr('data-sku_id'),
+                        supplier_cost: ($.trim(list.find('.price-so').val()) * 100).toFixed(0),
+                        operating_cost: ($.trim(list.find('.price-ocr').val()) * 100).toFixed(0),
+                        fxh_cost: ($.trim(list.find('.price-cost').val()) * 100).toFixed(0),
+                        settlement_price: ($.trim(list.find('.price-settlement').val()) * 100).toFixed(0)
+                    };
+                    postData.push(skuDetail);
+                }
+                console.log(postData);
+                that.tip({
+                    target: $(this),
+                    content: '确定要提交选择的商品吗?',
+                    position: 'left'
+                }, function (btn, dialog) {
+                    that.submitPrice(JSON.stringify(postData));
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 批量提交
+            $(document).on('click', '#batchSubmit', function () {
+                var postData = [];
+                var checkedBox = $('.checkbox:checked');
+                for (var i = 0; i < checkedBox.length; i++) {
+                    var tr = checkedBox.eq(i);
+                    var id = tr.attr('data-item_id');
+                    for (var n = 0; n < $('.list-' + id).length; n++) {
+                        var list = $('.list-' + id).eq(n);
+                        var skuDetail = {
+                            item_id: id,
+                            id: list.attr('data-sku_id'),
+                            supplier_cost: ($.trim(list.find('.price-so').val()) * 100).toFixed(0),
+                            operating_cost: ($.trim(list.find('.price-ocr').val()) * 100).toFixed(0),
+                            fxh_cost: ($.trim(list.find('.price-cost').val()) * 100).toFixed(0),
+                            settlement_price: ($.trim(list.find('.price-settlement').val()) * 100).toFixed(0)
+                        };
+                        postData.push(skuDetail);
+                    }
+                }
+                console.log(postData);
+                that.tip({
+                    target: $(this),
+                    content: '确定要提交选择的商品吗?',
+                    position: 'right'
+                }, function (btn, dialog) {
+                    that.submitPrice(JSON.stringify(postData));
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                });
+            });
+
+            // 批量设置 - sku 显示批量的输入框
+            $(document).on('click', '.j-batch', function () {
+                var type = $(this).attr('data-type');
+                $(this).hide();
+                $('input[data-set_type]').hide();
+                $('input[data-set_type=' + type + ']').show().focus();
+            });
+
+            // 批量设置 - sku - input
+            $(document).on('blur', 'input[data-set_type=1],input[data-set_type=2],input[data-set_type=3],input[data-set_type=4]', function () {
+                var type = $(this).attr('data-set_type');
+
+                $(this).hide();
+                $('.j-batch[data-type=' + type + ']').show();
+
+                if ($.trim($(this).val()) == '') {
+                    return;
+                }
+                for (var i = 0; i < $('.checkbox:checked').length; i++) {
+                    var item_id = $('.checkbox:checked').eq(i).attr('data-item_id');
+                    $('.list-' + item_id).find('input[data-input_type=' + type + ']').val($(this).val()).change();
+                }
+
+                //that.finishingSkuTableData();
+            });
+
         },
         iCheck: function () {
             var that = this;
@@ -419,7 +505,7 @@
                     for (var i = 0; i < tax.length; i++) {
                         that.warehouseList.push({
                             text: tax[i].storage_name,
-                            value: tax[i].id
+                            value: tax[i].storage_id
                         });
                     }
                     var selectize = $('#storage-template-selectize').selectize({
@@ -428,10 +514,10 @@
                         create: false,
                         onItemAdd: function (value, $item) {
                             // 选择税率模板
-                            that.storage_id = value
+                            that.tax_key = value
                         },
                         onItemRemove: function (value) {
-                            delete that.storage_id
+                            that.tax_key = ''
                         }
                     });
                 },
@@ -449,6 +535,7 @@
         queryGoods: function () {
             var that = this;
             Api.get({
+                //absoluteUrl: '../src/stub/goods-sku-price.json',
                 url: '/item/query.do',
                 data: {
                     item_qto: JSON.stringify({
@@ -460,23 +547,24 @@
                         item_status: that.search_key.item_status,
                         freeze: that.search_key.freeze,
                         delivery_type: that.search_key.delivery_type,
-                        storage_id: that.storage_id,
+                        need_detail: 1,
                         need_paging: true
                     })
                 },
                 mask: true,
+                dataType: 'jsonp',
                 beforeSend: function () {
 
                 },
                 success: function (data) {
+                    console.log(data);
                     // 滚动条自动回顶部
                     document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
                         var t = _.template($('#j-template').html());
                         $('#goodsList').html(t({
-                            items: data.data.data,
-                            type: that.search_key.item_status
+                            items: data.data.data
                         }));
                         that.iCheck();
                     } else {
@@ -582,7 +670,7 @@
 
                 },
                 success: function (data) {
-                    if( data.code == 10000 ){
+                    if (data.code == 10000) {
                         var msg = freeze == '2' ? '冻结成功' : '解冻成功';
                         toastr.success(msg, '提示');
                         that.queryGoods();
@@ -625,6 +713,36 @@
                 }
             });
         },
+        /**
+         *
+         */
+        submitPrice: function (data) {
+            Api.get({
+            url: '/item/update_price.do',
+                data: {
+                    sku_list: data
+                },
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                console.log(data);
+                if( data.code == 10000 ){
+                    toastr.success('提交成功!', '提示')
+                }
+            },
+            complete: function () {
+
+            },
+            error: function (data) {
+                toastr.error(data.msg, '提示');
+            }
+        });
+        },
+        /**
+         *
+         * @param total
+         */
         pagination: function (total) {
             var that = this;
             var pagination = $('.ui-pagination');
@@ -646,7 +764,7 @@
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#goodsList').find('tr.list').length;
+            var n = $('#goodsList').find('.list').length;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

@@ -114,21 +114,20 @@
                     </span>
                 </a>
             </li>
+            <li>
+                <a href="javascript:;" class="<%if(items.delivery_time){%><%='done'%><%}else{%><%='disabled'%><%}%>">
+                    <span class="step_no">4</span>
+                    <span class="step_descr">结算货款<br/>
+                        <small><%= items.delivery_time || items.pay_time + '以后' %></small>
+                    </span>
+                </a>
+            </li>
         </ul>
     </div>
     <div id="order">
         <div class="form-group">
             <label class="ui-label ui-label-md tr">订单编号：</label>
             <span><%= items.order_sn %></span>
-        </div>
-        <div class="form-group">
-            <label class="ui-label ui-label-md tr">订单状态：</label>
-            <span><%= orderStatus[items.order_status] %></span>
-            <% if( items.order_status == 30 ){ %>
-            <span>
-                <a class="j-send-goods btn btn-sm btn-success" data-order_id="<%= items.id %>" data-user_id="<%= items.user_id %>" data-refund_mark="<%= items.refund_mark %>" data-orderinfo="<%= encodeURIComponent(JSON.stringify(items)) %>">发货</a>
-            </span>
-            <% } %>
         </div>
         <div class="form-group">
             <label class="ui-label ui-label-md tr">付款方式：</label>
@@ -139,12 +138,16 @@
             <span><%= items.order_items[0].user_name %></span>
         </div>
         <div class="form-group">
-            <label class="ui-label ui-label-md tr">买家留言：</label>
-            <span><%= items.user_memo || '暂无留言' %></span>
+            <label class="ui-label ui-label-md tr">实名信息：</label>
+            <span><%= items.order_items[0].user_name %> <%= items.order_consignee_d_t_o.id_card_no %></span>
         </div>
         <div class="form-group">
-            <label class="ui-label ui-label-md tr">身份证：</label>
-            <span><%= items.order_consignee_d_t_o.id_card_no %></span>
+            <label class="ui-label ui-label-md tr">发货仓库：</label>
+            <span><%= orderStatus[items.order_status] %></span>
+        </div>
+        <div class="form-group">
+            <label class="ui-label ui-label-md tr">渠道商：</label>
+            <span><%= orderStatus[items.order_status] %></span>
         </div>
         <div class="form-group">
             <label class="ui-label ui-label-md tr">收货信息：</label>
@@ -157,66 +160,66 @@
                 &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.mobile%>
             </span>
         </div>
+        <div class="form-group">
+            <label class="ui-label ui-label-md tr">买家留言：</label>
+            <span><%= items.user_memo || '暂无留言' %></span>
+        </div>
     </div>
 </script>
 
 <!-- 物流信息 -->
 <script type="text/template" id="j-template-logistic">
     <% if( items && items.length > 0 ){ %>
-    <div class="col-xs-3">
-        <ul class="nav nav-tabs tabs-left" role="tablist">
-            <% _.each(items,function(item,index){ %>
-                <% if( index == 0 ){ %>
-                <li role="presentation" class="active">
-                    <a href="#logistic-<%= index + 1 %>" role="tab" data-toggle="tab" aria-expanded="true">包裹&nbsp;-&nbsp;<%= index + 1 %></a>
-                </li>
-                <% }else{ %>
-                <li role="presentation">
-                    <a href="#logistic-<%= index + 1 %>" role="tab" data-toggle="tab" aria-expanded="false">包裹&nbsp;-&nbsp;<%= index + 1 %></a>
-                </li>
-                <% } %>
-            <% }) %>
-        </ul>
-    </div>
-    <div class="col-xs-9 tab-content">
+    <ul class="nav nav-tabs bar_tabs" role="tablist">
         <% _.each(items,function(item,index){ %>
-            <div class="tab-pane fade <% if( index == 0 ){ %> in active <%} %>" id="logistic-<%= index + 1 %>" role="tabpanel">
-                <p class="lead parcel-title"><i class="fa fa-gift"></i>&nbsp;&nbsp;包裹&nbsp;-&nbsp;<%= index + 1 %></p>
-                <div class="parcel-info">
-                    <% _.each(item.order_item_list,function(o,i){ %>
-                    <p>商品名称：<%= o.item_name %> <%= o.item_sku_desc %> * <%= o.number %></p>
-                    <% }) %>
-                    <% if( item.express_no != undefined ){ %>
-                    <p>发货方式：快递</p>
-                    <% } %>
-                    <% if(item.express != undefined) { %>
-                    <p>物流公司：<%= item.express %></p>
-                    <% } %>
-                    <% if(item.express_no != undefined){ %>
-                    <span>物流单号：<%= item.express_no%></span>
-                    <% } %>
-                    <span>
-                        <% if(item.editable == 0){ %>
-                        <!--<a href="javascript:;" class="btn btn-sm btn-success j-change-logistic" data-value="{{= item.id}}">修改物流信息</a>-->
-                        <% } %>
-                    <span>
-                </div>
-                <% if( item.thirdparty_list == undefined || item.thirdparty_list.length < 1 ){ %>
-                    <span class="mt10 inl-bl">暂无物流跟踪信息！</span>
-                <% }else{ %>
-                    <% _.each(item.thirdparty_list,function(o,i){ %>
-                        <div class="thirdparty-list">
-                            <span class="cycle"></span>
-                            <div class="logistic-content">
-                                <p class="border-line logistic-time"><%= o.time %></p>
-                                <p class="logistic-detail"><%= o.context %></p>
-                            </div>
-                        </div>
-                    <% }) %>
-                <% } %>
-            </div>
+            <% if( index == 0 ){ %>
+            <li role="presentation" class="active">
+                <a href="#logistic-<%= index + 1 %>" role="tab" data-toggle="tab" aria-expanded="false" aria-controls="全部">包裹&nbsp;-&nbsp;<%= index + 1 %></a>
+            </li>
+            <% }else{ %>
+            <li role="presentation">
+                <a href="#logistic-<%= index + 1 %>" role="tab" data-toggle="tab" aria-expanded="false">包裹&nbsp;-&nbsp;<%= index + 1 %></a>
+            </li>
+            <% } %>
         <% }) %>
-    </div>
+    </ul>
+    <% _.each(items,function(item,index){ %>
+        <div class="tab-pane fade <% if( index == 0 ){ %> in active <%} %>" id="logistic-<%= index + 1 %>" role="tabpanel">
+            <div class="parcel-info">
+                <p>订单状态：商家已发货，等待买家确认收货</p>
+                <% _.each(item.order_item_list,function(o,i){ %>
+                <p>商品名称：<%= o.item_name %> <%= o.item_sku_desc %> * <%= o.number %></p>
+                <% }) %>
+                <% if( item.express_no != undefined ){ %>
+                <p>发货方式：快递</p>
+                <% } %>
+                <% if(item.express != undefined) { %>
+                <p>物流公司：<%= item.express %></p>
+                <% } %>
+                <% if(item.express_no != undefined){ %>
+                <span>物流单号：<%= item.express_no%></span>
+                <% } %>
+                <!-- <span> -->
+                    <!-- <% if(item.editable == 0){ %> -->
+                    <!--<a href="javascript:;" class="btn btn-sm btn-success j-change-logistic" data-value="{{= item.id}}">修改物流信息</a>-->
+                    <!-- <% } %> -->
+                <!-- <span> -->
+            </div>
+            <% if( item.thirdparty_list == undefined || item.thirdparty_list.length < 1 ){ %>
+                <span class="mt10 inl-bl">暂无物流跟踪信息！</span>
+            <% }else{ %>
+                <% _.each(item.thirdparty_list,function(o,i){ %>
+                    <div class="thirdparty-list">
+                        <span class="cycle"></span>
+                        <div class="logistic-content">
+                            <p class="border-line logistic-time"><%= o.time %></p>
+                            <p class="logistic-detail"><%= o.context %></p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    <% }) %>
     <% }else{ %>
     <p class="tc">该物流公司暂未返回跟踪信息，你可以前往 <a href="http://www.kuaidi100.com/" class="blue" target="_blank">快递网站查询</a> 或联系其公司电话</p>
     <% } %>
@@ -230,14 +233,10 @@
             <th class="tc"><span>商品</span></th>
             <th class="tc"><span>单价(元)</span></th>
             <th class="tc"><span>数量</span></th>
+            <th class="tc">税费（元）</th>
             <th class="tc"><span>小计(元)</span></th>
-            <th class="tc">状态</th>
-            <th class="tc">优惠</th>
-            <th class="tc">余额抵现</th>
-            <th class="tc">积分抵现</th>
-            <th class="tc">改价</th>
-            <th class="tc">运费</th>
-            <th class="tc">税费</th>
+            <th class="tc">发货状态</th>
+            <th class="tc">维权</th>
         </tr>
         </thead>
         <tbody>
@@ -253,9 +252,12 @@
                     </dd>
                 </dl>
             </td>
-            <td class="cell-5"><span><%= o.unit_price_str %></span></td>
-            <td class="cell-5 tc"><span><%= o.number %></span></td>
-            <td class="cell-5 tc"><span><%= ((o.unit_price * o.number)/100).toFixed(2) %></span></td>
+            <td class="cell-10 tc"><span><%= o.unit_price_str %></span></td>
+            <td class="cell-10 tc"><span><%= o.number %></span></td>
+            <td class="cell-10 tc" >
+                <span><%= (item.tax_fee/100).toFixed(2) || 0 %></span>
+            </td>
+            <td class="cell-10 tc"><span><%= ((o.unit_price * o.number)/100).toFixed(2) %></span></td>
             <td class="cell-10 tc">
                 <% if( o.refund_status == 1 || o.refund_status == 2 ){ %>
                 <a href="./order-refund.html?order_id=<%=o.order_id%>&user_id=<%=o.user_id%>&order_item_id=<%= o.original_order_item_id ==undefined ? o.id : o.original_order_item_id%>" class="ui-button ui-button-sblue">请查看退款维权</a>
@@ -271,27 +273,13 @@
                 <span>已发货</span>
                 <% } %>
             </td>
-            <% if( i == 0 ){ %>
-            <td class="cell-5 tc" rowspan="<%= item.order_items.length %>">
-                <span><%= (item.discount_amount/100).toFixed(2) %></span>
+            <td class="cell-10 tc">
+                <% if( i == 0 ){ %>
+                    <span><%= (item.discount_amount/100).toFixed(2) %></span>
+                <% } else{%>
+                    -
+                <% } %>
             </td>
-            <td class="cell-5 tc" rowspan="<%= item.order_items.length %>">
-                <span><%= ((item.vouchers_discount_amount ? item.vouchers_discount_amount : 0)/100).toFixed(2) %></span>
-            </td>
-            <td class="cell-10 tc" rowspan="<%= item.order_items.length %>">
-                <p><%= (item.point_discount_amount == undefined ? 0 : item.point_discount_amount/100).toFixed(2) %></p>
-                <p>(使用<%= item.point == undefined ? 0 : item.point %>个积分)</p>
-            </td>
-            <td class="cell-5 tc" rowspan="<%= item.order_items.length %>">
-                <span><%= (item.floating_price == undefined ? 0 : (item.floating_price/100).toFixed(2)) %></span>
-            </td>
-            <td class="cell-5 tc" rowspan="<%= item.order_items.length %>">
-                <span><%= (item.delivery_fee/100).toFixed(2) %></span>
-            </td>
-            <td class="cell-5 tc" rowspan="<%= item.order_items.length %>">
-                <span><%= (item.tax_fee/100).toFixed(2) || 0 %></span>
-            </td>
-            <% } %>
         </tr>
         <% } %>
 
@@ -299,7 +287,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="17" class="tr">应收总价：<%= item.total_amount %>&nbsp;元</td>
+                <td colspan="17" class="tr">实付金额：<%= item.total_amount %>&nbsp;元</td>
             </tr>
         </tfoot>
     </table>
