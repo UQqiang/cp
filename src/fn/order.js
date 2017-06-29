@@ -90,6 +90,30 @@
                 data.asterisk_marks = $(this).attr('data-asterisk_mark') == 1 ? 'n' : 'y';
                 that.addStar(data);
             });
+            // 点击订单列表的tab快速搜索
+            $(document).on('click', '.quick-search', function () {
+                var $this = $(this);
+                var key = $this.data('key');
+                if (key == 'all') {
+                    that.pageId = 1;
+                    that.search_key = {
+                        order_sn: '',
+                        consignee_mobile: '',
+                        start_time: '',
+                        end_time: '',
+                        order_status: '',
+                        consignee: '',
+                        user_mobile: '',
+                        payment_id: '',
+                        asterisk_mark: '',
+                        print_mark: ''
+                    }
+                }else {
+                    var value = $this.data('value');
+                    that.search_key[key] = value;
+                }
+                that.queryOrderList();
+            });
             // 备注
             $(document).on('click', '.j-add-comment', function () {
                 var sendData = {};
