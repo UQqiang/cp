@@ -1,25 +1,25 @@
 @charset "UTF-8";
-#orderList .order-header, #orderList .price-header, #orderInfo .order-header, #orderInfo .price-header, #changePriceInfo .order-header, #changePriceInfo .price-header {
+#orderList .order-header, #orderList .price-header, #orderInfo .order-header, #orderInfo .price-header, #changePriceInfo .order-header, #changePriceInfo .price-header, #checkOrderInfo .order-header, #checkOrderInfo .price-header {
   background: #f8f8f8;
   box-shadow: 1px 1px 5px #ccc;
 }
-#orderList .order-header th, #orderList .price-header th, #orderInfo .order-header th, #orderInfo .price-header th, #changePriceInfo .order-header th, #changePriceInfo .price-header th {
+#orderList .order-header th, #orderList .price-header th, #orderInfo .order-header th, #orderInfo .price-header th, #changePriceInfo .order-header th, #changePriceInfo .price-header th, #checkOrderInfo .order-header th, #checkOrderInfo .price-header th {
   border-right: none;
   border-left: none;
 }
-#orderList .fa, #orderInfo .fa, #changePriceInfo .fa {
+#orderList .fa, #orderInfo .fa, #changePriceInfo .fa, #checkOrderInfo .fa {
   font-size: 16px;
   display: inline-block;
   margin-right: 5px;
   cursor: pointer;
 }
-#orderList .fa.fa-star, #orderInfo .fa.fa-star, #changePriceInfo .fa.fa-star {
+#orderList .fa.fa-star, #orderInfo .fa.fa-star, #changePriceInfo .fa.fa-star, #checkOrderInfo .fa.fa-star {
   color: #1ABB9C;
 }
-#orderList dl, #orderInfo dl, #changePriceInfo dl {
+#orderList dl, #orderInfo dl, #changePriceInfo dl, #checkOrderInfo dl {
   clear: both;
 }
-#orderList dl dt, #orderInfo dl dt, #changePriceInfo dl dt {
+#orderList dl dt, #orderInfo dl dt, #changePriceInfo dl dt, #checkOrderInfo dl dt {
   float: left;
   padding: 2px;
   margin: 0 10px;
@@ -27,20 +27,20 @@
   border-radius: 4px;
   box-shadow: 1px 1px 1px rgba(38, 185, 154, 0.1) inset, 1px 1px 1px rgba(38, 185, 154, 0.1);
 }
-#orderList dl dt .order-image, #orderInfo dl dt .order-image, #changePriceInfo dl dt .order-image {
+#orderList dl dt .order-image, #orderInfo dl dt .order-image, #changePriceInfo dl dt .order-image, #checkOrderInfo dl dt .order-image {
   width: 64px;
   height: 64px;
 }
-#orderList dl dd, #orderInfo dl dd, #changePriceInfo dl dd {
+#orderList dl dd, #orderInfo dl dd, #changePriceInfo dl dd, #checkOrderInfo dl dd {
   float: left;
 }
-#orderList dl dd p, #orderInfo dl dd p, #changePriceInfo dl dd p {
+#orderList dl dd p, #orderInfo dl dd p, #changePriceInfo dl dd p, #checkOrderInfo dl dd p {
   max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#orderList dl dd p.sku, #orderInfo dl dd p.sku, #changePriceInfo dl dd p.sku {
+#orderList dl dd p.sku, #orderInfo dl dd p.sku, #changePriceInfo dl dd p.sku, #checkOrderInfo dl dd p.sku {
   font-size: 12px;
   color: #ccc;
 }
@@ -154,5 +154,10 @@
 }
 #orderRefundList .refund-list .refund-content .refund-detail {
   margin-top: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.pagination-pop, .pagination-pop-select {
+  display: inline-block;
+  margin-bottom: 20px;
 }
