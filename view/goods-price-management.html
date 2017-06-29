@@ -80,14 +80,40 @@
                             </tr>
                             </thead>
                             <tbody id="goodsList">
-
+                                <tr class="tc">
+                                    <td colspan="18">没有任何记录!</td>
+                                </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="tr">批量设置：</td>
+                                    <td class="tc">
+                                        <a href="javascript:;" class="j-batch" data-type="1">供应商报价(元)</a>
+                                        <input class="form-control form-control-sm dpnone" data-set_type="1">
+                                    </td>
+                                    <td class="tc">
+                                        <a href="javascript:;" class="j-batch" data-type="2">运营成本费用率(%)</a>
+                                        <input class="form-control form-control-sm dpnone" data-set_type="2">
+                                    </td>
+                                    <td class="tc">
+                                        <a href="javascript:;" class="j-batch" data-type="3">分享汇成本价(元)</a>
+                                        <input class="form-control form-control-sm dpnone" data-set_type="3">
+                                    </td>
+                                    <td class="tc">
+                                        <a href="javascript:;" class="j-batch" data-type="4">结算价(元)</a>
+                                        <input class="form-control form-control-sm dpnone" data-set_type="4">
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
 
                     <!-- 页码 -->
                     <div class="widget-list clearfix ">
-                        <div class="fl pagination"></div>
+                        <div class="fl pagination">
+                            <button class="btn btn-sm btn-success" id="batchSubmit" >提交</button>
+                        </div>
                         <div class="list-page fr">
                             <span class="pagination-info"></span>
                             <div class="ui-pagination pagination"></div>
@@ -114,46 +140,68 @@
 
 <!-- rev-hash -->
 <script src="../src/fn/goods-price-management.js"></script>
+<!--"40"
+fxh_cost
+:
+30
+id
+:
+213
+item_id
+:
+133
+market_price
+:
+3000
+operating_cost
+:
+20
+promotion_price
+:
+1000
+settlement_price
+:
+1000
+sku_code
+:
+"X">
 <!-- end -->
 
 <!-- 商品列表 -->
 <script type="text/template" id="j-template">
     <% _.each(items,function(item,index){ %>
-
-
-            <% _.each(item.item_sku_dto_list, function(obj, i){ %>
-                <% if( i == 0 ){ %>
-                    <tr>
-                        <td class="tc cell-5 list" rowspan="<%= item.item_sku_dto_list.length %>"><input type="checkbox" class="checkbox flat" data-id="<%= item.id %>"></td>
-                        <td class="tc cell-20" rowspan="<%= item.item_sku_dto_list.length %>"><%= item.item_name %></td>
-                        <td class="tc cell-20">
-                        <% _.each(obj.sku_property_dto_list, function(o,n){ %>
+        <% _.each(item.item_sku_dto_list, function(obj, i){ %>
+            <% if( i == 0 ){ %>
+                <tr class="list-<%= item.id %>" data-sku_id="<%= obj.id %>">
+                    <td class="tc cell-5 list" rowspan="<%= item.item_sku_dto_list.length %>"><input type="checkbox" class="checkbox flat" data-item_id="<%= item.id %>"></td>
+                    <td class="tc cell-20" rowspan="<%= item.item_sku_dto_list.length %>"><%= item.item_name %></td>
+                    <td class="tc cell-20">
+                    <% _.each(obj.sku_property_dto_list, function(o,n){ %>
+                    <span><%= o.name %>：</span>
+                    <span><%= o.value %></span>
+                    <% }) %>
+                    </td>
+                    <td class="tc cell-10"><span><input data-input_type="1" type="text" class="form-control form-control-sm price-so" value="<%= obj.supplier_cost ? (obj.supplier_cost/100).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10"><span><input data-input_type="2" type="text" class="form-control form-control-sm price-ocr" value="<%= obj.operating_cost ? (obj.operating_cost/100).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10"><span><input data-input_type="3" type="text" class="form-control form-control-sm price-cost" value="<%= obj.fxh_cost ? (obj.fxh_cost/100).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10"><span><input data-input_type="4" type="text" class="form-control form-control-sm price-settlement" value="<%= obj.settlement_price ? (obj.settlement_price).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10 j-submit" rowspan="<%= item.item_sku_dto_list.length %>" data-item_id="<%= item.id %>"><a>提交</a></td>
+                </tr>
+            <% }else{ %>
+                <tr class="list-<%= item.id %>" data-sku_id="<%= obj.id %>">
+                    <td class="tc cell-20">
+                    <% _.each(obj.sku_property_dto_list, function(o,n){ %>
                         <span><%= o.name %>：</span>
-                        <span><%= o.value %></span>
-                        <% }) %>
-                        </td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                        <td class="tc cell-10" rowspan="<%= item.item_sku_dto_list.length %>"><a>提交</a></td>
-                    </tr>
-                <% }else{ %>
-                    <tr>
-                        <td class="tc cell-20">
-                        <% _.each(obj.sku_property_dto_list, function(o,n){ %>
-                            <span><%= o.name %>：</span>
-                        <span><%= o.value %></span>
-                        <% }) %>
-                        </td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                        <td class="tc cell-10"><span><input type="text" class="form-control form-control-sm"></span></td>
-                    </tr>
-                <% } %>
-            <% }) %>
-
+                    <span><%= o.value %></span>
+                    <% }) %>
+                    </td>
+                    <td class="tc cell-10"><span><input data-input_type="1" type="text" class="form-control form-control-sm price-so" value="<%= obj.supplier_cost ? (obj.supplier_cost/100).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10"><span><input data-input_type="2" type="text" class="form-control form-control-sm price-ocr" value="<%= obj.operating_cost ? (obj.operating_cost/100).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10"><span><input data-input_type="3" type="text" class="form-control form-control-sm price-cost" value="<%= obj.fxh_cost ? (obj.fxh_cost/100).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10"><span><input data-input_type="4" type="text" class="form-control form-control-sm price-settlement" value="<%= obj.settlement_price ? (obj.settlement_price).toFixed(2) : '' %>"></span></td>
+                </tr>
+            <% } %>
+        <% }) %>
     <% }) %>
 </script>
 

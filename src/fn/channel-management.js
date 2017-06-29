@@ -107,7 +107,7 @@
                 }
                 var data = {};
                 data.target = $(this);
-                data.content = '确定要批量删除品牌吗?';
+                data.content = '确定要批量删除渠道吗?';
                 that.tip(data, function (btn, dialog) {
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {
@@ -165,7 +165,7 @@
                 }
                 that.tip({
                     target: $(this),
-                    content: '确定要批量关闭仓库吗?'
+                    content: '确定要批量关闭渠道吗?'
                 }, function (btn, dialog) {
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {
@@ -189,7 +189,7 @@
                 }
                 that.tip({
                     target: $(this),
-                    content: '确定要批量激活仓库吗?'
+                    content: '确定要批量激活渠道吗?'
                 }, function (btn, dialog) {
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {

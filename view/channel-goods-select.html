@@ -40,41 +40,43 @@
             <div class="x_content editorContent">
                 <!-- 关联-->
                 <div class="form-inline">
-                    <div class="form-group mb10">
+                    <div class="form-group mb10 channel-name-list">
                         <label class="ui-label ui-label-md tl">渠道商：</label>
-                        <span></span>
-                    </div>
-                    <br/>
-                    <div class="form-group mb10">
-                        <label class="ui-label ui-label-md tl">关联范围：</label>
-                        <div class="inl-bl">
-                            <label class="ui-label ui-label-md">
-                                全部
-                                <input type="radio" class="flat" name="radio" id="channelAll" value="2" />
-                            </label>
+                        <div class="channel-name-lists">
 
-                            <label class="ui-label ui-label-md">
-                                品牌
-                                <input type="radio" class="flat" name="radio" id="channelBrand" value="2" />
-                            </label>
-
-                            <label class="ui-label ui-label-md">
-                                类目
-                                <input type="radio" class="flat" name="radio" id="channelCategory" value="2" />
-                            </label>
-
-                            <label class="ui-label ui-label-md">
-                                商品
-                                <input type="radio" class="flat" name="radio" id="channelGoods" value="2" checked="checked"/>
-                            </label>
                         </div>
                     </div>
                     <br/>
                     <div class="form-group mb10">
-                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectAll">关联全部</a>
-                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginGoods">关联商品</a>
-                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginBrand">关联品牌</a>
-                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectPluginCategory">关联类目</a>
+                        <label class="ui-label ui-label-md tl">关联范围：</label>
+                        <div class="inl-bl" id="channel">
+                            <label class="ui-label ui-label-md">
+                                全部
+                                <input type="radio" class="flat" name="radio" value="1" checked="checked"/>
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                品牌
+                                <input type="radio" class="flat" name="radio" value="2" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                类目
+                                <input type="radio" class="flat" name="radio" value="3" />
+                            </label>
+
+                            <label class="ui-label ui-label-md">
+                                商品
+                                <input type="radio" class="flat" name="radio" value="4"/>
+                            </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="form-group mb10" id="channelButton">
+                        <a class="btn btn-sm btn-success" href="javascript:;" id="selectAll" data-value="1">关联全部</a>
+                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginGoods" data-value="2">关联商品</a>
+                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginBrand" data-value="3">关联品牌</a>
+                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginCategory" data-value="4">关联类目</a>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -111,10 +113,10 @@
                     </div>
                 </div>
                 <!-- /页码 -->
-                <div class="footer-btn-group">
-                    <a class="btn btn-success btn-sm mr10 j-submit">保存</a>
-                    <a class="btn btn-default btn-sm ml10 j-cancel">取消</a>
-                </div>
+                <!--<div class="footer-btn-group">-->
+                    <!--<a class="btn btn-success btn-sm mr10 j-submit">保存</a>-->
+                    <!--<a class="btn btn-default btn-sm ml10 j-cancel">取消</a>-->
+                <!--</div>-->
             </div>
         </div>
     </div>
@@ -207,5 +209,15 @@
         <% }) %>
         </tbody>
     </table>
+</script>
+
+<script type="text/template" id="j-template-channel-list">
+    <% _.each(items, function(item,index){ %>
+        <div class="channel-detail">
+            <img class="channel-img" src="http://img.mockuai.com/tms/2017/3/20/upload_ed82c572beb295358c92c025eed00e1f.jpeg">
+            <span data-id="<%= item.id %>"><%= item.name %></span>
+            <i class="fa fa-close img-close j-image-close"></i>
+        </div>
+    <% }) %>
 </script>
 </html>

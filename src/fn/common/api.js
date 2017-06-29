@@ -61,7 +61,7 @@
                 complete: function (data) {
                     setTimeout(function () {
                         $('.mask').fadeOut();
-                    }, 1000);
+                    }, 500);
                     opts.complete && opts.complete(data);
                 },
                 error: function (xhr,status,error) {

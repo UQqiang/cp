@@ -419,7 +419,7 @@
                     for (var i = 0; i < tax.length; i++) {
                         that.warehouseList.push({
                             text: tax[i].storage_name,
-                            value: tax[i].storage_id
+                            value: tax[i].id
                         });
                     }
                     var selectize = $('#storage-template-selectize').selectize({
@@ -428,10 +428,10 @@
                         create: false,
                         onItemAdd: function (value, $item) {
                             // 选择税率模板
-                            that.tax_key = value
+                            that.storage_id = value
                         },
                         onItemRemove: function (value) {
-                            that.tax_key = ''
+                            delete that.storage_id
                         }
                     });
                 },
@@ -460,6 +460,7 @@
                         item_status: that.search_key.item_status,
                         freeze: that.search_key.freeze,
                         delivery_type: that.search_key.delivery_type,
+                        storage_id: that.storage_id,
                         need_paging: true
                     })
                 },

@@ -1097,14 +1097,15 @@
                 market_price: $.trim(($('#market_price').val() * 100).toFixed(0)),          // 建议零售价
                 promotion_price: $.trim(($('#promotion_price').val() * 100).toFixed(0)),    // 最低售价(促销价)
                 commodity_code: $.trim($('#ean').val()),                                     // 商品code(ean)
-                item_sku_dto_list: this.skuTableData
+                item_sku_dto_list: this.skuTableData,
+                tax_point: $.trim($('#taxPoint').val())
             };
 
             if (this.goodsId) {
                 this.postData.item_dto.id = this.goodsId;
             }
 
-            if (this.postData.delivery_type == 1 || this.postData.delivery_type == 2) {
+            if (this.postData.item_dto.delivery_type == 1 || this.postData.item_dto.delivery_type == 2) {
                 if ($('[name=radio-rate]:checked').val() == 1) {
                     // 统一税率
                     this.postData.item_dto.tax_threshold = $.trim($('#rateCommonThreshold').val());
@@ -1592,6 +1593,10 @@
                             })
                         }
                         break;
+                    // 增值税税率:
+                    case "tax_point":
+                        $('#taxPoint').val(value);
+                        break;
                     // 货源地: 美国
                     case "country_code":
                         if (value != 'null') {
@@ -1739,7 +1744,7 @@
 
             // 拼装仓库的数据
             that.warehouseData = [];
-            var storage = data.item_storage_d_t_o_list;
+            var storage = data.item_storage_dto_list;
             for (var x = 0; x < storage.length; x++) {
                 storage[x].id = storage[x].storage_id;
                 that.warehouseData.push(storage[x]);
