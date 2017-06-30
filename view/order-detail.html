@@ -142,7 +142,7 @@
             <label class="ui-label ui-label-md tr">买家昵称：</label>
             <span>
                 <%= items.order_items[0].user_name %>
-                <a target="_blank" href="../../html/cross_border/identity_v.html?user_id=<%=items.user_id%>">查看实名认证信息</a>
+                <a target="_blank" href="../../html/cross_border/identity_v.html?user_id=<%=items.user_id%>" class="ml10 green">查看实名认证信息</a>
             </span>
         </div>
         <div class="form-group">
@@ -167,7 +167,7 @@
                 &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.consignee%>
                 &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.mobile%>
             </span>
-            <a data-clipboard-text="<%=items.order_consignee_d_t_o.province%> <%=items.order_consignee_d_t_o.city%> <%=items.order_consignee_d_t_o.area%> <%=items.order_consignee_d_t_o.town%> <%=items.order_consignee_d_t_o.address%> &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.consignee%> &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.mobile%>" href="javascript:;" class="btn btn-success btn-sm copy-btn">复制地址</a>
+            <a data-clipboard-text="<%=items.order_consignee_d_t_o.province%> <%=items.order_consignee_d_t_o.city%> <%=items.order_consignee_d_t_o.area%> <%=items.order_consignee_d_t_o.town%> <%=items.order_consignee_d_t_o.address%> &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.consignee%> &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.mobile%>" href="javascript:;" class="btn btn-success btn-sm copy-btn ml10">复制地址</a>
         </div>
         <div class="form-group">
             <label class="ui-label ui-label-md tr">买家留言：</label>
@@ -267,7 +267,7 @@
             <td class="cell-10 tc"><span><%= ((o.unit_price * o.number)/100).toFixed(2) %></span></td>
             <td class="cell-10 tc">
                 <% if( o.refund_status == 1 || o.refund_status == 2 ){ %>
-                <a href="./order-refund.html?order_id=<%=o.order_id%>&user_id=<%=o.user_id%>&order_item_id=<%= o.original_order_item_id ==undefined ? o.id : o.original_order_item_id%>" class="ui-button ui-button-sblue">请查看退款维权</a>
+                <a href="./order-refund.html?order_id=<%=o.order_id%>&user_id=<%=o.user_id%>&order_item_id=<%= o.original_order_item_id ==undefined ? o.id : o.original_order_item_id%>" class="ui-button ui-button-sblue green">请查看退款维权</a>
                 <% }else if( o.refund_status == 4 ){ %>
                 <span>退款完成</span>
                 <% }else if( o.refund_status == 3 && o.delivery_mark == 0 ){ %>
