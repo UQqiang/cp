@@ -115,6 +115,62 @@
         },
         addEvent: function () {
             var that = this;
+            //修改物流信息
+            $('body').on('click','.j-change-logistic',function(){
+                // 依赖数据
+                var data = {};
+                data.order_item_list = that.cacheOrderDetail;
+                data.order_consignee_d_t_o = that.cacheOrderConsignee;
+                that.delivery_info_id = $(this).attr('data-value');
+                popupchangeLogistic(data);
+                function popupchangeLogistic(data) {
+                    var popdata = {};
+                    popdata.title = '修改物流信息';
+                    popdata.content = '<div id="popupchangeLogistic"></div>';
+                    popdata.width = 800;
+                    that.popup(popdata, function () {
+                        var template = _.template($('#j-template-change-logistics').html());
+                        $('#popupchangeLogistic').html(template({
+                            item: data,
+                            orderStatus: that.orderStatusData
+                        }));
+                        that.queryLogisticsCompany();
+                    }, function (btn, dialog) {
+                        // 确定操作
+                        var changeLogistic = {};
+                        var delivery_company = $('#changelogisticsList').val();
+                        var delivery_code = $.trim($('#changelogisticCode').val());
+                        var orderItem_ids = [];
+
+                        if (delivery_company == '请选择物流公司' || delivery_company == '') {
+                            toastr.error('请选择物流公司', '提示');
+                            return false;
+                        }
+
+                        if (delivery_code == '') {
+                            toastr.error('请填写物流单号', '提示');
+                            return false;
+                        }
+                        changeLogistic.delivery_company = delivery_company;
+                        changeLogistic.delivery_code = delivery_code;
+
+                        var $logisticsitems = $('.logistics_items')
+                        for (var i = 0; i < $logisticsitems.length; i++) {
+                            orderItem_ids.push($logisticsitems.eq(i).attr('data-id'));
+                        }
+
+                        changeLogistic.order_id = data.order_item_list[0].order_id;
+                        changeLogistic.user_id = data.order_item_list[0].user_id;
+                        changeLogistic.delivery_info_id = orderItem_ids.toString();
+
+                        that.changeLogistic(changeLogistic, function () {
+                            setTimeout(function(){
+                                location.reload();
+                            },1000)
+                        });
+                    });
+                }
+            });
 
             // 发货
             $(document).on('click', '.j-send-goods', function () {
@@ -186,7 +242,33 @@
                     });
                 });
             });
+
         },
+
+        // 修改物流信息
+        changeLogistic: function (data,cb) {
+            var that = this;
+            Api.get({
+                url: '/order/delivery/update.do',
+                data: data,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('修改物流信息成功', '提示');
+                    that.getOrderDetail();
+                    that.getOrderLogistic();
+                    cb && cb(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
         popup: function (data, cb, success) {
             this.popupDialog = jDialog.dialog({
                 title: data.title,
@@ -237,7 +319,8 @@
                         orderStatus: that.orderStatusData
                     }));
                     that.order_sn = data.data.order_sn;
-
+                    that.cacheOrderConsignee = data.data.order_consignee_d_t_o;
+                    that.setClipboard();
                     cb && cb();
                 },
                 complete: function () {
@@ -272,12 +355,11 @@
                     $('#orderLogistic').html(template({
                         items: data.data
                     }));
-
                     $('#orderLogistic a').click(function (e) {
                         e.preventDefault();
                         $(this).tab('show')
-                    })
-
+                    });
+                    that.cacheOrderDetail = data.data[0].order_item_list;
                 },
                 complete: function () {
 
@@ -331,6 +413,9 @@
                     $('#logisticsList').html(tpl({
                         items: data.data
                     }));
+                    $('#changelogisticsList').html(tpl({
+                        items: data.data
+                    }));
                     // 物流属性切换
                     $('input[name=logistics]').on('ifChecked', function () {
                         var value = $(this).attr('data-value');
@@ -341,7 +426,7 @@
                             // 不需要物流
                             $('.logistics-info').hide();
                         }
-                    })
+                    });
                 },
                 complete: function () {
 
@@ -374,6 +459,23 @@
                 error: function (data, msg) {
                     console.log(data, msg);
                 }
+            });
+        },
+
+        // 复制地址
+        setClipboard: function () {
+            var that = this;
+            // 添加复制功能
+            var client = new ZeroClipboard($('.copy-btn'));
+            client.on('ready', function() {
+                $('.copy-btn').removeClass('copy-btn');
+
+                client.on('copy', function(event) {
+                    //event.clipboardData.setData('text/plain', 'copy text');
+                });
+                client.on('aftercopy', function() {
+                    toastr.success('复制成功','提示');
+                });
             });
         }
     };

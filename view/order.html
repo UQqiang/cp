@@ -149,31 +149,31 @@
                     <div class="clearfix" role="tabpanel">
                         <ul id="goodsTab" class="nav nav-tabs bar_tabs" role="tablist">
                             <li role="presentation" class="active">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="全部" aria-expanded="false">全部</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="全部" aria-expanded="false" data-key="all" data-value="" class="quick-search">全部</a>
                             </li>
                             <li role="presentation" class="" data-type="1">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="加星" aria-expanded="true">加星</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="加星" aria-expanded="true" data-key="asterisk_mark" data-value="" class="quick-search">加星</a>
                             </li>
                             <li role="presentation" class="">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="待付款" aria-expanded="false">待付款</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="待付款" aria-expanded="false" data-key="order_status" data-value="10" class="quick-search">待付款</a>
                             </li>
                             <li role="presentation" class="" data-type="1">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="待推送" aria-expanded="true">待推送</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="待推送" aria-expanded="true" data-key="order_status" data-value="10" class="quick-search">待推送</a>
                             </li>
                             <li role="presentation" class="">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="待发货" aria-expanded="false">待发货</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="待发货" aria-expanded="false" data-key="order_status" data-value="30" class="quick-search">待发货</a>
                             </li>
                             <li role="presentation" class="" data-type="1">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="已完成" aria-expanded="true">已完成</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="已完成" aria-expanded="true" data-key="order_status" data-value="10" class="quick-search">已完成</a>
                             </li>
                             <li role="presentation" class="">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="已关闭" aria-expanded="false">已关闭</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="已关闭" aria-expanded="false" data-key="order_status" data-value="90" class="quick-search">已关闭</a>
                             </li>
                             <li role="presentation" class="" data-type="1">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="维权中" aria-expanded="true">维权中</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="维权中" aria-expanded="true" data-key="order_status" data-value="10" class="quick-search">维权中</a>
                             </li>
                             <li role="presentation" class="" data-type="1">
-                                <a href="#" role="tab" data-toggle="tab" aria-controls="已取消" aria-expanded="true">已取消</a>
+                                <a href="#" role="tab" data-toggle="tab" aria-controls="已取消" aria-expanded="true" data-key="order_status" data-value="10" class="quick-search">已取消</a>
                             </li>
                             <p>
                                 <a href="#/question-circle" class="pull-right text-muted"><i class="fa fa-question-circle"></i>&nbsp;订单类型简介及管理方法</a>
@@ -229,6 +229,8 @@
 <!-- end -->
 
 <!-- rev-hash -->
+<script src="../src/plugin/jquery.form/jquery.form.js"></script>
+<script src="../src/plugin/uploadify/simpleUploader.js"></script>
 <script src="../src/fn/order.js"></script>
 <!-- end -->
 
@@ -524,7 +526,7 @@
         </tr>
         </thead>
         <tbody>
-        <% _.each(item.order_items,function(o,i){ %>
+        <% _.each(item.order_item_list,function(o,i){ %>
             <% if( o.item_type != 11 ){ %>
             <tr>
                 <td class="tb-name">

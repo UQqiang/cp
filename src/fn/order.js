@@ -90,6 +90,30 @@
                 data.asterisk_marks = $(this).attr('data-asterisk_mark') == 1 ? 'n' : 'y';
                 that.addStar(data);
             });
+            // 点击订单列表的tab快速搜索
+            $(document).on('click', '.quick-search', function () {
+                var $this = $(this);
+                var key = $this.data('key');
+                if (key == 'all') {
+                    that.pageId = 1;
+                    that.search_key = {
+                        order_sn: '',
+                        consignee_mobile: '',
+                        start_time: '',
+                        end_time: '',
+                        order_status: '',
+                        consignee: '',
+                        user_mobile: '',
+                        payment_id: '',
+                        asterisk_mark: '',
+                        print_mark: ''
+                    }
+                }else {
+                    var value = $this.data('value');
+                    that.search_key[key] = value;
+                }
+                that.queryOrderList();
+            });
             // 备注
             $(document).on('click', '.j-add-comment', function () {
                 var sendData = {};
@@ -190,19 +214,32 @@
                 that.popuppage(data, function () {
                     var template = _.template($('#j-template-batching-deliver').html());
                     $('#batchDeliver').html(template());
+                    that.imgUpload();
                 });
             });
             // 批量发货－导入填好的excel
             $(document).on('click', '#j-upload-excel', function () {
-                var data = {
-                    title: '批量发货',
-                    content: '<div id="batchDeliver"></div>',
-                    width: 600,
-                    height: 300
-                };
-                that.popuppage(data, function () {
-                    var template = _.template($('#j-template-batching-deliver').html());
-                    $('#batchDeliver').html(template());
+                var self = this;
+                var imgUpload = new lib.imgUpload({
+                    trigger: '.j-upload-excel',
+                    fileName: 'file',
+                    targetUrl: '/bossmanager/order/batchDeliverGoods.do',
+                    'onUploadStart': function () {
+                        self.targetBtn = this.currentTrigger;
+                        self.targetBtn.html('导入中...');
+                    },
+                    'onUploadError': function (e) {
+                        self.targetBtn.html('导入填好的EXCEL');
+                        toastr.warn("上传失败，请重试!");
+                    },
+                    'onUploadSuccess': function (data) {
+                        self.targetBtn.html('导入填好的EXCEL');
+                        if (data.code == 10000) {
+                            self._msgBox.done("上传成功");
+                        } else {
+                            self._msgBox.warn(data.msg);
+                        }
+                    }
                 });
             });
             // 批量发货－选择订单导出---------------------
@@ -483,6 +520,34 @@
                 $(this).parents('tr').removeClass('selected');
             })
         },
+        /**
+         * 导入excel表格
+         */
+        imgUpload: function () {
+            var self = this;
+            var imgUpload = new lib.imgUpload({
+                trigger: '#j-upload-excel',
+                fileName: 'file',
+                targetUrl: Api.domain() + '/bossmanager/order/batchDeliverGoods.do',
+                'onUploadStart': function () {
+                    self.targetBtn = this.currentTrigger;
+                    self.targetBtn.html('导入中...');
+                },
+                'onUploadError': function (e) {
+                    self.targetBtn.html('导入填好的EXCEL');
+                    toastr.error("上传失败，请重试!");
+                },
+                'onUploadSuccess': function (data) {
+                    self.targetBtn.html('导入填好的EXCEL');
+                    if (data.code == 10000) {
+                        toastr.success("上传成功");
+                    } else {
+                        toastr.error(data.msg);
+                    }
+                }
+            });
+        },
+
         /**
          * tip
          * @param data

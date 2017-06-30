@@ -1,6 +1,6 @@
 @import "_mixin.scss";
 
-#orderList, #orderInfo, #changePriceInfo, #checkOrderInfo {
+#orderList, #orderInfo, #changePriceInfo, #checkOrderInfo, #orderRefund {
   .order-header, .price-header {
     background: #f8f8f8;
     box-shadow: 1px 1px 5px #ccc;
@@ -55,8 +55,8 @@
 
 #order, #orderRefund {
   padding: 20px;
-  /* border: 1px solid #ccc; */
-  background: #f8f8f8;
+  // /* border: 1px solid #ccc; */
+  // background: #f8f8f8;
   border-radius: 4px;
   margin-top: 50px;
 }
@@ -120,7 +120,12 @@
     width: 150px;
   }
 }
-
+.box-block {
+    border: 1px solid #ddd;
+    // border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px
+}
 #orderRefundList {
   .refund-list:nth-child(1) {
     color: #26B99A;
