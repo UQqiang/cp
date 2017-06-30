@@ -84,9 +84,13 @@
 <!-- endinject -->
 <!-- end -->
 
+<!-- 复制插件 -->
+<script src="../src/plugin/zeroClipboard/ZeroClipboard.min.js"></script>
+
  <!--rev-hash -->
 <script src="../src/fn/order-detail.js"></script>
  <!--end -->
+
 
 <script type="text/template" id="j-template">
     <div id="wizard" class="form_wizard wizard_horizontal">
@@ -136,7 +140,10 @@
         </div>
         <div class="form-group">
             <label class="ui-label ui-label-md tr">买家昵称：</label>
-            <span><%= items.order_items[0].user_name %></span>
+            <span>
+                <%= items.order_items[0].user_name %>
+                <a target="_blank" href="../../html/cross_border/identity_v.html?user_id=<%=items.user_id%>">查看实名认证信息</a>
+            </span>
         </div>
         <div class="form-group">
             <label class="ui-label ui-label-md tr">实名信息：</label>
@@ -160,6 +167,7 @@
                 &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.consignee%>
                 &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.mobile%>
             </span>
+            <a data-clipboard-text="<%=items.order_consignee_d_t_o.province%> <%=items.order_consignee_d_t_o.city%> <%=items.order_consignee_d_t_o.area%> <%=items.order_consignee_d_t_o.town%> <%=items.order_consignee_d_t_o.address%> &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.consignee%> &nbsp;&nbsp;&nbsp;<%=items.order_consignee_d_t_o.mobile%>" href="javascript:;" class="btn btn-success btn-sm copy-btn">复制地址</a>
         </div>
         <div class="form-group">
             <label class="ui-label ui-label-md tr">买家留言：</label>

@@ -320,6 +320,7 @@
                     }));
                     that.order_sn = data.data.order_sn;
                     that.cacheOrderConsignee = data.data.order_consignee_d_t_o;
+                    that.setClipboard();
                     cb && cb();
                 },
                 complete: function () {
@@ -458,6 +459,23 @@
                 error: function (data, msg) {
                     console.log(data, msg);
                 }
+            });
+        },
+
+        // 复制地址
+        setClipboard: function () {
+            var that = this;
+            // 添加复制功能
+            var client = new ZeroClipboard($('.copy-btn'));
+            client.on('ready', function() {
+                $('.copy-btn').removeClass('copy-btn');
+
+                client.on('copy', function(event) {
+                    //event.clipboardData.setData('text/plain', 'copy text');
+                });
+                client.on('aftercopy', function() {
+                    toastr.success('复制成功','提示');
+                });
             });
         }
     };
