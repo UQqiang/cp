@@ -591,3 +591,21 @@
     }
   }
 }
+
+/******************************** 查看已生成报表弹框 ******************************/
+#checkOrderInfo, #checkPartnerInfo, #checkShopInfo {
+    height: inherit;
+    table {
+        height: 500px;
+        overflow: scroll;
+        display: inline-block;
+        margin-bottom: 0;
+    }
+    .headings {
+      background: #f8f8f8;
+      box-shadow: 1px 1px 5px #ccc;
+    }
+    .ui-pagination {
+        display: inline-block;
+    }
+}

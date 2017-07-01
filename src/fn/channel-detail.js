@@ -8,6 +8,13 @@
             this.page.pageSize = 20;
             this.page.vpage = 10;
             this.pageId = 1;
+
+            // 弹出框页面
+            this.page_pop = {};
+            this.page_pop.pageSize = 10;
+            this.page_pop.vpage = 10;
+            this.page_pop.pageId = 1;
+
             this.search_key_shop = {};
             this.orderStatusData = {
                 '10': '待支付',
@@ -37,6 +44,16 @@
         },
         addEvent: function () {
             var that = this;
+            // 导出订单
+            $('.export-list').click(function () {
+                that.exportList();
+            });
+
+            // 查看已生成列表
+            $('.check-export').click(function () {
+                var type = $(this).data('type');
+                that.checkExportList(type);
+            });
 
             // 搜索
             $('.search-submit').click(function () {
@@ -148,30 +165,148 @@
         //         }]
         //     });
         // },
-        // popup: function (data, cb, success) {
-        //     this.popupDialog = jDialog.dialog({
-        //         title: data.title,
-        //         content: data.content,
-        //         width: data.width || 600,
-        //         height: 600,
-        //         draggable: false,
-        //         buttonAlign: 'right',
-        //         buttons: [{
-        //             type: 'highlight',
-        //             text: '确定',
-        //             handler: function (button, dialog) {
-        //                 success && success(button, dialog)
-        //             }
-        //         }, {
-        //             type: 'highlight',
-        //             text: '取消',
-        //             handler: function (button, dialog) {
-        //                 dialog.close();
-        //             }
-        //         }]
-        //     });
-        //     cb && cb();
-        // },
+        popupdialog: function (data, cb, success) {
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: 600,
+                draggable: false,
+            });
+            cb && cb();
+        },
+
+        // 导出列表
+        exportList: function () {
+            var that = this;
+            that.search_key = {
+                order_sn: '',
+                consignee: '',
+                order_status: '',
+                consignee_mobile: '',
+                payment_id: ''
+            }
+            Api.get({
+                url: '/order/downloadOrders.do',
+                data: that.search_key,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('导出成功', '提示');
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
+        // 查看生成列表
+        checkExportList: function (type) {
+            var that = this;
+
+            var postCheckList = {
+                page: that.page_pop.pageId || 1,
+                page_size: 10,
+                task_type: '2'
+            };
+            Api.get({
+                url: '/share_partner/shop/query.do',
+                data: postCheckList,
+                beforeSend: function () {
+
+                },
+                success: function (order) {
+                    var order_list_data = order.data.lower_partner_list;
+                    var singleton,targetDom,targetId;
+                    switch (type) {
+                        case 'shop':
+                            targetId = 'checkShopInfo';
+                            $targetDom = $('#'+targetId);
+                            singleton = $targetDom.length;
+                            $tplId = $('#j-template-check-list-shop');
+                            break;
+                        case 'partner':
+                            targetId = 'checkPartnerInfo';
+                            $targetDom = $('#'+targetId);
+                            singleton = $targetDom.length;
+                            $tplId = $('#j-template-check-list-partner');
+                            break;
+                        case 'order':
+                            targetId = 'checkOrderInfo';
+                            $targetDom = $('#'+targetId);
+                            singleton = $targetDom.length;
+                            $tplId = $('#j-template-check-list-order');
+                            break;
+                    }
+                    if (singleton) {
+                        renderCheckList(order_list_data,$tplId);
+                    }else {
+                        var data = {
+                            title: '导出列表',
+                            content: '<div id="'+targetId+'"></div>',
+                            width: 800
+                        };
+                        that.popupdialog(data, function () {
+                            renderCheckList(order_list_data,$tplId);
+                        });
+                    }
+                    function renderCheckList(order_list_data,$tplId) {
+                        $targetDom = $('#'+targetId);
+                        if (order_list_data) {
+                            var template = _.template($tplId.html());
+                            $targetDom.html(template({
+                                items: order_list_data
+                            }));
+                            that.paginationpop(order.data.total_partner_count,type,targetId);
+
+                            // 防止内部表哥滚动时，外部也滚动
+                            that.preventScroll(targetId);
+                        }else{
+                            $targetDom.html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                        }
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
+        preventScroll: function (id) {
+            $.fn.scrollUnique = function() {
+                return $(this).each(function() {
+                    var eventType = 'mousewheel';
+                    if (document.mozHidden !== undefined) {
+                        eventType = 'DOMMouseScroll';
+                    }
+                    $(this).on(eventType, function(event) {
+                        // 一些数据
+                        var scrollTop = this.scrollTop,
+                            scrollHeight = this.scrollHeight,
+                            height = this.clientHeight;
+
+                        var delta = (event.originalEvent.wheelDelta) ? event.originalEvent.wheelDelta : -(event.originalEvent.detail || 0);
+
+                        if ((delta > 0 && scrollTop <= delta) || (delta < 0 && scrollHeight - height - scrollTop <= -1 * delta)) {
+                            // IE浏览器下滚动会跨越边界直接影响父级滚动，因此，临界时候手动边界滚动定位
+                            this.scrollTop = delta > 0? 0: scrollHeight;
+                            // 向上滚 || 向下滚
+                            event.preventDefault();
+                        }
+                    });
+                });
+            };
+
+            $('#'+id+' table').scrollUnique();
+        },
+
         timepicker: function () {
             $('.timepicker').daterangepicker({
                startDate: moment().subtract(29, 'days'),
@@ -323,7 +458,7 @@
                     break;
                 case 'partner':
                     $('.form-inline-partner').fadeIn();
-                    that.queryShopList(type);
+                    that.queryShopList(type);  //需要用到该接口返回的部分数据
                     var url = '/share_partner/query.do';
                     var status = $.trim($('#partnerStatusSearch').val());
                     that.search_key_partner = {
@@ -551,6 +686,38 @@
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {
                 $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
+
+        /**
+         * 弹出框翻页
+         * @param total 总数据量
+         */
+        paginationpop: function (total,tabtype,id) {
+            var that = this;
+            var pagination_pop = $('.pagination-pop-'+tabtype)
+            pagination_pop.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page_pop.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page_pop.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.page_pop.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.page_pop.pageId = num;
+                    if (type == 'change') {
+                        that.checkExportList(tabtype);
+                    }
+                }
+            });
+            var n = $('#'+id).find('tr').length - 1;
+            if (total && total != 0) {
+                $('.pagination-info-pop-'+tabtype).html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info-pop-'+tabtype).html('<span>当前0条</span>/<span>共' + total + '条</span>')
             }
         }
     };
