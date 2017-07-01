@@ -126,90 +126,79 @@
                     </div>
                     <!-- －－－－－－－  订单统计 －－－－－－－－－－－－－－－－ -->
                     <div class="form-inline form-inline-order" style="display:none">
-                        <div class="x_panel">
-                            <div class="x_title">查询</div>
-                            <div class="x_content">
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr">订单号：</label>
-                                    <input class="form-control form-control-lg" id="order_sn" placeholder="">
-                                </div>
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr pt5 pull-left">筛选日期：</label>
-                                    <div class="timepicker pull-left">
-                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                                        <span class="fz12">请选择相应的时间</span> <b class="caret"></b>
-                                    </div>
-                                </div>
-                                <br/>
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr">交易情况：</label>
-                                    <select id="order_status" class="form-control form-control-md">
-                                        <option value="0"></option>
-                                        <option value="10">交易中</option>
-                                        <option value="20">交易成功</option>
-                                        <option value="21">退款</option>
-                                    </select>
-                                </div>
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr">结算状态：</label>
-                                    <select id="order_status" class="form-control form-control-md">
-                                        <option value="0"></option>
-                                        <option value="10">待支付</option>
-                                        <option value="20">买家已取消</option>
-                                        <option value="21">卖家已取消</option>
-                                        <option value="30">已支付</option>
-                                        <option value="40">已发货</option>
-                                        <option value="50">已签收</option>
-                                        <option value="60">已评价</option>
-                                        <option value="70">退款中</option>
-                                        <option value="80">退款完成</option>
-                                        <option value="90">订单关闭</option>
-                                    </select>
-                                </div>
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr">支付方式：</label>
-                                    <select id="order_status" class="form-control form-control-md">
-                                        <option value="0"></option>
-                                        <option value="10">待支付</option>
-                                        <option value="20">买家已取消</option>
-                                        <option value="21">卖家已取消</option>
-                                        <option value="30">已支付</option>
-                                        <option value="40">已发货</option>
-                                        <option value="50">已签收</option>
-                                        <option value="60">已评价</option>
-                                        <option value="70">退款中</option>
-                                        <option value="80">退款完成</option>
-                                        <option value="90">订单关闭</option>
-                                    </select>
-                                </div>
-                                <br/>
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr">分享合伙人</label>
-                                    <input class="form-control form-control-md" id="consignee" placeholder="">
-                                </div>
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr">店铺</label>
-                                    <input class="form-control form-control-md" id="consignee" placeholder="">
-                                </div>
-                                <div class="form-group mb10">
-                                    <label class="ui-label ui-label-md tr">买家</label>
-                                    <input class="form-control form-control-md" id="consignee" placeholder="">
-                                </div>
-                                <div class="form-group right">
-                                    <a class="btn btn-sm btn-success search-submit" id="searchOrder" href="javascript:;">提交</a>
-                                </div>
-                                <br/>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">订单号：</label>
+                            <input class="form-control form-control-lg" id="order_sn" placeholder="">
+                        </div>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr pt5 pull-left">筛选日期：</label>
+                            <div class="timepicker pull-left">
+                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                <span class="fz12">请选择相应的时间</span> <b class="caret"></b>
                             </div>
                         </div>
+                        <br/>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">交易情况：</label>
+                            <select id="order_status" class="form-control form-control-md">
+                                <option value="0"></option>
+                                <option value="10">交易中</option>
+                                <option value="20">交易成功</option>
+                                <option value="21">退款</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">结算状态：</label>
+                            <select id="order_status" class="form-control form-control-md">
+                                <option value="0"></option>
+                                <option value="10">待支付</option>
+                                <option value="20">买家已取消</option>
+                                <option value="21">卖家已取消</option>
+                                <option value="30">已支付</option>
+                                <option value="40">已发货</option>
+                                <option value="50">已签收</option>
+                                <option value="60">已评价</option>
+                                <option value="70">退款中</option>
+                                <option value="80">退款完成</option>
+                                <option value="90">订单关闭</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">支付方式：</label>
+                            <select id="order_status" class="form-control form-control-md">
+                                <option value="0"></option>
+                                <option value="10">待支付</option>
+                                <option value="20">买家已取消</option>
+                                <option value="21">卖家已取消</option>
+                                <option value="30">已支付</option>
+                                <option value="40">已发货</option>
+                                <option value="50">已签收</option>
+                                <option value="60">已评价</option>
+                                <option value="70">退款中</option>
+                                <option value="80">退款完成</option>
+                                <option value="90">订单关闭</option>
+                            </select>
+                        </div>
+                        <br/>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">分享合伙人</label>
+                            <input class="form-control form-control-md" id="consignee" placeholder="">
+                        </div>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">店铺</label>
+                            <input class="form-control form-control-md" id="consignee" placeholder="">
+                        </div>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">买家</label>
+                            <input class="form-control form-control-md" id="consignee" placeholder="">
+                        </div>
+                        <br/>
                         <div class="form-group right ml10">
                             <a class="btn btn-sm btn-success ml10 export-order export-list" href="javascript:;" data-type="order">导出结算列表</a>
                             <a class="btn btn-sm btn-success ml10 check-export-order check-export" href="javascript:;" data-type="order">查看导出列表</a>
                         </div>
-                        <div class="form-group right">
-                            <div id="timepicker" class="timepicker pull-left">
-                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                                <span class="fz12">请选择导出月份</span> <b class="caret"></b>
-                            </div>
+                        <div class="form-group right mr10">
+                            <a class="btn btn-sm btn-success search-submit" id="searchOrder" href="javascript:;">查询</a>
                         </div>
                     </div>
                 </div>
