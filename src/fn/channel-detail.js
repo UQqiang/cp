@@ -440,7 +440,8 @@
                             "columnDefs": [   // 不展示排序标志的列
             		           { "orderable": false, "targets": [ 0,1,2,3,4,9,10 ] }
                            ],
-                           "paging": false  //不显示页脚的页码
+                           "paging": false, //不显示页脚的页码
+                           "info": false  // 不显示页脚当前页信息提示
                         });
                     }
                 },
@@ -491,7 +492,16 @@
                         page_size: that.page.pageSize
                     }
                     var cb =  function () {
-                        $('#datatablepartner').DataTable();
+                        $('#datatablepartner').DataTable({
+                            "order": [[4,'asc']],  // initial sorting
+                            "searching": false,  //不展示搜索框
+                            "lengthChange": false, //不展示每页条目数
+                            "columnDefs": [   // 不展示排序标志的列
+            		           { "orderable": false, "targets": [ 0,1,2,3,7 ] }
+                           ],
+                           "paging": false,  //不显示页脚的页码
+                           "info": false  // 不显示页脚当前页信息提示
+                        });
                     };
 
                     this.requestApi(url,data,cb);
