@@ -433,6 +433,15 @@
                             }
                         }
                         that.pagination(data.data.total_partner_count);
+                        $('#datatableshop').DataTable({
+                            "order": [[8,'asc']],  // initial sorting
+                            "searching": false,  //不展示搜索框
+                            "lengthChange": false, //不展示每页条目数
+                            "columnDefs": [   // 不展示排序标志的列
+            		           { "orderable": false, "targets": [ 0,1,2,3,4,9,10 ] }
+                           ],
+                           "paging": false  //不显示页脚的页码
+                        });
                     }
                 },
                 complete: function () {
@@ -481,7 +490,11 @@
                         current_page: that.pageId,
                         page_size: that.page.pageSize
                     }
-                    this.requestApi(url,data);
+                    var cb =  function () {
+                        $('#datatablepartner').DataTable();
+                    };
+
+                    this.requestApi(url,data,cb);
                     break;
                 case 'order':
                     $('.form-inline-order').fadeIn();
@@ -511,7 +524,7 @@
             }
         },
 
-        requestApi: function (url,data) {
+        requestApi: function (url,data,cb) {
             var that = this;
             Api.get({
                 url: url,
@@ -538,6 +551,7 @@
                     // 订单统计
 
                     that.pagination(6);
+                    cb && cb();
                 },
                 complete: function () {
 
