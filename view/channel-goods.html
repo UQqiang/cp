@@ -140,4 +140,52 @@
 <!-- rev-hash -->
 <script src="../src/fn/channel-goods.js"></script>
 <!-- end -->
+
+<script type="text/template" id="j-export-list">
+    <table class="table table-striped jambo_table bulk_action table-bordered">
+        <thead>
+            <tr>
+                <th class="tc">时间</th>
+                <th class="tc">状态</th>
+                <th class="tc">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if( items.length > 0 ){ %>
+            <% _.each(items, function(item, index){ %>
+
+            <% }) %>
+        <% }else{ %>
+            <tr>
+                <td class="tc" colspan="18">没有任何记录!</td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>
+
+<script type="text/template" id="j-channel-list">
+    <table class="table table-striped jambo_table bulk_action table-bordered">
+        <thead>
+        <tr>
+            <th class="tc">渠道</th>
+            <th class="tc">关联范围</th>
+            <th class="tc">关联时间</th>
+            <th class="tc">完成时间</th>
+            <th class="tc">状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if( items.length > 0 ){ %>
+        <% _.each(items, function(item, index){ %>
+
+        <% }) %>
+        <% }else{ %>
+        <tr>
+            <td class="tc" colspan="18">没有任何记录!</td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>
 </html>

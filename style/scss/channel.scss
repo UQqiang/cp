@@ -110,6 +110,7 @@
         background: rgba(0,0,0,0.5);
         cursor: pointer;
         z-index: 20;
+        border-radius: 4px;
         &:before{
           position: absolute;
           left: 30px;
@@ -119,6 +120,9 @@
           border-radius: 50%;
         }
       }
+    }
+    .channel-detail:hover .img-close{
+      display: inline-block;
     }
   }
 }

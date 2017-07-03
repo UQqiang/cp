@@ -110,6 +110,7 @@
   background: rgba(0, 0, 0, 0.5);
   cursor: pointer;
   z-index: 20;
+  border-radius: 4px;
 }
 .form-inline .channel-name-lists .channel-detail .img-close:before {
   position: absolute;
@@ -118,4 +119,7 @@
   padding: 4px 5px;
   background: #fff;
   border-radius: 50%;
+}
+.form-inline .channel-name-lists .channel-detail:hover .img-close {
+  display: inline-block;
 }

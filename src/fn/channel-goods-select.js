@@ -10,28 +10,34 @@
             this.brandList = [];
             this.idList = JSON.parse(decodeURIComponent(HDL.getQuery('id').split(',')));
 
-            if( !this.idList ){
-                toastr.error('供应商信息出错!','提示');
-                return false;
-            }else{
-                if(this.idList.length > 1){
-                    // 多个供应商
-                    $('.channel-name-list').show();
-                    var template = _.template($('#j-template-channel-list').html());
-                    $('.channel-name-lists').html(template({
-                        items: this.idList
-                    }))
-                } else{
-                    // 单个供应商
-                    // todo 单个供应商需要请求已经关联的商品列表
-                }
-            }
+            this.channelNum();
             this.addEvent();
             this.queryBrand();
             this.queryCategory();
             this.selectPluginBrand();
             this.selectPluginGoods();
             this.selectPluginCategory();
+        },
+        channelNum: function () {
+            if (!this.idList) {
+                toastr.error('供应商信息出错!', '提示');
+                return false;
+            } else {
+                if (this.idList.length > 1) {
+                    // 多个供应商
+                    this.isSingle = false;
+                    $('.channel-name-list').show();
+                    var template = _.template($('#j-template-channel-list').html());
+                    $('.channel-name-lists').html(template({
+                        items: this.idList
+                    }))
+                } else {
+                    // 单个供应商
+                    this.isSingle = true;
+                    // todo 单个供应商需要请求已经关联的商品列表
+                    $('.channel-goods-list').show();
+                }
+            }
         },
         /**
          * tip
@@ -108,10 +114,24 @@
                 brandList: that.brandList || [],
                 showCateAndBrand: true,
                 selectSuccess: function (data) {
-                    that.selectList = data;
-                    // 选择商品进行渲染
-                    that.renderGoods();
-                    console.log(that.selectList);
+                    console.log(data);
+                    var idList = [];
+                    var postData = {};
+                    for (var i = 0; i < data.length; i++) {
+                        idList.push(data[i].id);
+                    }
+                    postData.target_list = idList;
+                    postData.type = 4;
+
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+                            that.renderGoods();
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        })
+                    }
                 },
                 selectError: function (info) {
                 }
@@ -135,10 +155,24 @@
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
                 selectSuccess: function (data) {
-                    that.selectList = data;
-                    // 选择商品进行渲染
-                    //that.renderGoods();
-                    console.log(that.selectList);
+                    console.log(data);
+                    var idList = [];
+                    var postData = {};
+                    for (var i = 0; i < data.length; i++) {
+                        idList.push(data[i].id);
+                    }
+                    postData.target_list = idList;
+                    postData.type = 2;
+
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+                            that.renderGoods();
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        })
+                    }
                 },
                 selectError: function (info) {
                 }
@@ -162,10 +196,26 @@
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
                 selectSuccess: function (data) {
-                    that.selectList = data;
-                    // 选择商品进行渲染
-                    //that.renderGoods();
-                    console.log(that.selectList);
+                    console.log(data);
+                    var idList = [];
+                    var postData = {};
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].cate_level == 2) {
+                            idList.push(data[i].id);
+                        }
+                    }
+                    postData.target_list = idList;
+                    postData.type = 3;
+
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+                            that.renderGoods();
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        })
+                    }
                 },
                 selectError: function (info) {
                 }
@@ -312,6 +362,51 @@
                 }, function () {
 
                 })
+            });
+
+            // 删除渠道商
+            $(document).on('click', '.j-image-close', function () {
+                var id = $(this).attr('data-id');
+                if ($('.channel-detail').length <= 1) {
+                    toastr.error('当前渠道只剩一个了~');
+                    return false;
+                }
+                for (var i = 0; i < that.idList.length; i++) {
+                    if (id == that.idList[i].id) {
+                        that.idList.splice(i, 1);
+                        if (i >= 1) {
+                            i--
+                        }
+                    }
+                }
+                $(this).parents('.channel-detail').remove();
+                that.channelNum();
+            })
+        },
+        associatedGoods: function (postData, cb) {
+            var that = this;
+            var channel_list = [];
+            for (var i = 0; i < this.idList.length; i++) {
+                channel_list.push(this.idList[i].id);
+            }
+            postData.channel_list = channel_list;
+            console.log(postData);
+            cb && cb();
+            return;
+            Api.get({
+                url: '/category/query.do',
+                data: {},
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
             });
         },
         /**

@@ -42,7 +42,7 @@
                 <div class="form-inline">
                     <div class="form-group mb10 channel-name-list">
                         <label class="ui-label ui-label-md tl">渠道商：</label>
-                        <div class="channel-name-lists">
+                        <div class="channel-name-lists mt10">
 
                         </div>
                     </div>
@@ -74,14 +74,15 @@
                     <br/>
                     <div class="form-group mb10" id="channelButton">
                         <a class="btn btn-sm btn-success" href="javascript:;" id="selectAll" data-value="1">关联全部</a>
-                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginGoods" data-value="2">关联商品</a>
-                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginBrand" data-value="3">关联品牌</a>
-                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginCategory" data-value="4">关联类目</a>
+                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginBrand" data-value="2">关联品牌</a>
+                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginCategory" data-value="3">关联类目</a>
+                        <a class="btn btn-sm btn-success dpnone" href="javascript:;" id="selectPluginGoods" data-value="4">关联商品</a>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
-                        <thead>
+                <div class="channel-goods-list dpnone">
+                    <div class="table-responsive">
+                        <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
+                            <thead>
                             <tr class="headings">
                                 <th class="column-title tc">
                                     <input type="checkbox" id="check-all" class="flat">
@@ -93,30 +94,27 @@
                                 <th class="column-title tc">状态</th>
                                 <th class="column-title tc">操作</th>
                             </tr>
-                        </thead>
+                            </thead>
 
-                        <tbody id="goodsList">
+                            <tbody id="goodsList">
                             <tr>
                                 <td colspan="18" class="tc">没有关联任何商品哦~</td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- 页码 -->
-                <div class="widget-list">
-                    <div class="fl pagination">
-                        <button class="btn btn-sm btn-success" id="batchDelete">批量删除</button>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="list-page fr">
-                        <span class="pagination-info"></span>
-                        <div class="ui-pagination pagination"></div>
+                    <!-- 页码 -->
+                    <div class="widget-list">
+                        <div class="fl pagination">
+                            <button class="btn btn-sm btn-success" id="batchDelete">批量删除</button>
+                        </div>
+                        <div class="list-page fr">
+                            <span class="pagination-info"></span>
+                            <div class="ui-pagination pagination"></div>
+                        </div>
                     </div>
+                    <!-- /页码 -->
                 </div>
-                <!-- /页码 -->
-                <!--<div class="footer-btn-group">-->
-                    <!--<a class="btn btn-success btn-sm mr10 j-submit">保存</a>-->
-                    <!--<a class="btn btn-default btn-sm ml10 j-cancel">取消</a>-->
-                <!--</div>-->
             </div>
         </div>
     </div>
@@ -215,8 +213,8 @@
     <% _.each(items, function(item,index){ %>
         <div class="channel-detail">
             <img class="channel-img" src="http://img.mockuai.com/tms/2017/3/20/upload_ed82c572beb295358c92c025eed00e1f.jpeg">
-            <span data-id="<%= item.id %>"><%= item.name %></span>
-            <i class="fa fa-close img-close j-image-close"></i>
+            <span><%= item.name %></span>
+            <i class="fa fa-close img-close j-image-close" data-id="<%= item.id %>"></i>
         </div>
     <% }) %>
 </script>

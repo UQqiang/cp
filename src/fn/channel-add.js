@@ -44,7 +44,7 @@
             if (this.$currentImgUploadBtn.find('.image').length > 0) {
                 this.$currentImgUploadBtn.find('.image').attr('src', url);
             } else {
-                this.$currentImgUploadBtn.prepend('<img class="image" src="' + url + '">')
+                this.$currentImgUploadBtn.prepend('<img id="unionpayCertificate" class="image" src="' + url + '">')
             }
 
             // hover
@@ -67,10 +67,14 @@
                 });
             }
             // 商品类型 切换
-            $('[name=radio]').on('ifClicked', function () {
+            $('[name=radio]').on('ifChecked', function () {
                 var payType = $(this).val();
-                $('.pay-type-wrapper').hide();
-                $('.pay-type-wrapper[data-type='+ payType +']').show();
+                $('.pay-type-wrapper[data-type=' + payType + ']').show();
+            });
+
+            $('[name=radio]').on('ifUnchecked', function () {
+                var payType = $(this).val();
+                $('.pay-type-wrapper[data-type=' + payType + ']').hide();
             });
         },
         /**
@@ -102,7 +106,6 @@
                         if (result.valid === false) {
                             isValid = false;
                             toastr.error(result.error, '提示');
-                            that.stepJump(type);
                             return;
                         }
                     }
@@ -110,7 +113,7 @@
                         that.stepJump(type);
                     }
                 } else if (type == 3) {
-                    required = $('.step[data-now_step=2] .pay-type-wrapper[data-type='+ payType +'],.step[data-now_step=2] .other-info').find('[required]');
+                    required = $('.step[data-now_step=2] .pay-type-wrapper[data-type=' + payType + '],.step[data-now_step=2] .other-info').find('[required]');
                     for (var n = 0; n < required.length; n++) {
                         result = validator.checkField.call(validator, required.eq(n));
                         if (result.valid === false) {
@@ -120,6 +123,7 @@
                         }
                     }
                     if (isValid == true) {
+                        that.setPostData();
                         if (that.id) {
                             that.addAccount();
                         } else {
@@ -294,42 +298,79 @@
             var that = this;
             $.each(data, function (key, value) {
                 switch (key) {
-                    case 'storage_id':
-                        $('#storageId').val(value);
+                    case 'name':
+                        $('#name').val(value);
                         break;
-                    case 'storage_short_name':
-                        $('#storageShortName').val(value);
+                    case 'company':
+                        $('#company').val(value);
                         break;
-                    case 'storage_name':
-                        $('#storageName').val(value);
+                    case 'linkman':
+                        $('#linkman').val(value);
                         break;
-                    case 'supplier_name':
+                    case 'linkphone':
                         $('#supplierName').val(value);
                         break;
-                    case 'link_man':
-                        $('#linkMan').val(value);
+                    case 'country':
+                        $('#areaList-country option[data-code=' + value + ']').prop('selected', true);
                         break;
-                    case 'mobile':
-                        $('#mobile').val(value);
+                    case 'province':
+                        $('#areaList-province option[data-code=' + value + ']').prop('selected', true);
                         break;
-                    case 'address_country':
-                        $('#areaList-country option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
+                    case 'city':
+                        $('#areaList-city option[data-code=' + value + ']').prop('selected', true);
                         break;
-                    case 'address_province':
-                        $('#areaList-province option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
+                    case 'area':
+                        $('#areaList-area option[data-code=' + value + ']').prop('selected', true);
                         break;
-                    case 'address_city':
-                        $('#areaList-city option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
+                    case 'comment':
+                        $('#comment').val(value);
                         break;
-                    case 'address_district':
-                        $('#areaList-area option[data-code=' + value.split('|')[1] + ']').prop('selected', true);
+                    case 'store_ch_name':
+                        $('#storeChName').val(value);
                         break;
-                    case 'address_street':
-                        $('#street').val(value);
+                    case 'store_en_name':
+                        $('#storeEnName').val(value);
                         break;
-                    case 'storage_type':
-                        $('#storageType option[data-value=' + value + ']').prop('selected', true);
+                    case 'store_account':
+                        $('#storeAccount').val(value);
                         break;
+                    case 'origin_pwd':
+                        $('#originPwd').val(value);
+                        break;
+                    case 'pay_type':
+                        var arr = (value).split(',');
+                        for (var i = 0; i < arr.length; i++) {
+                            if (arr[i] == 1) {
+                                // 支付宝
+                                $('#alipayPartner').val(data.config_info.alipay_partner);
+                                $('#alipayAccount').val(data.config_info.alipay_account);
+                                $('#alipayMchPrivateKey').val(data.config_info.alipay_mch_private_key);
+                                $('#alipayPublicKey').val(data.config_info.alipay_public_key);
+                            } else if (arr[i] == 2) {
+                                // 微信
+                                $('#wechatH5AppId').val(data.config_info.wechat_h5_app_id);
+                                $('#wechatH5AppSecret').val(data.config_info.wechat_h5_app_secret);
+                                $('#wechatH5PartnerId').val(data.config_info.wechat_h5_partner_id);
+                                $('#wechatH5PartnerKey').val(data.config_info.wechat_h5_partner_key);
+                                $('#wechatAppAppId').val(data.config_info.wechat_app_app_id);
+                                $('#wechatAppAppSecret').val(data.config_info.wechat_app_app_secret);
+                                $('#wechatAppPartnerId').val(data.config_info.wechat_app_partner_id);
+                                $('#wechatAppPartnerKey').val(data.config_info.wechat_app_partner_key);
+                            } else if (arr[i] == 3) {
+                                // 银联
+                                $('#unionpayMchId').val(data.config_info.unionpay_mch_id);
+                                $('.imgUploadBtn').prepend('<img id="unionpayCertificate" class="image" src="' + data.config_info.unionpay_certificate + '">')
+                            }
+                        }
+                        $('#wechatLoginH5AppId').val(data.config_info.wechat_login_h5_app_id);
+                        $('#wechatLoginH5AppSecret').val(data.config_info.wechat_login_h5_app_secret);
+                        $('#wechatLoginAppAppId').val(data.config_info.wechat_login_app_app_id);
+                        $('#wechatLoginAppAppSectet').val(data.config_info.wechat_login_app_app_sectet);
+                        $('#csTel').val(data.config_info.cs_tel);
+                        $('#csOnlineUrl').val(data.config_info.cs_online_url);
+                        $('#aboutUs').val(data.config_info.about_us);
+                        break;
+
                 }
             });
         },
@@ -339,20 +380,70 @@
          */
         setPostData: function () {
             this.postData = {};
-            this.postData.storage_id = $.trim($('#storageId').val());                                       // 仓库ID
-            this.postData.storage_short_name = $.trim($('#storageShortName').val());                        // 仓库简称
-            this.postData.storage_name = $.trim($('#storageName').val());                                   // 仓库名称
-            this.postData.supplier_name = $.trim($('#supplierName').val());                                 // 供应商名称
-            this.postData.link_man = $.trim($('#linkMan').val());                                            // 联系人
-            this.postData.mobile = $.trim($('#mobile').val());                                              // 联系电话
-            this.postData.address_country = $('#areaList-country option:selected').attr('data-value') + '|' + $('#areaList-country option:selected').attr('data-code');     // 国家
-            this.postData.address_province = $('#areaList-province option:selected').attr('data-value') + '|' + $('#areaList-province option:selected').attr('data-code');    // 省
-            this.postData.address_city = $('#areaList-city option:selected').attr('data-value') + '|' + $('#areaList-city option:selected').attr('data-code');            // 市
-            this.postData.address_district = $('#areaList-area option:selected').attr('data-value') + '|' + $('#areaList-area option:selected').attr('data-code');        // 区
-            this.postData.address_street = $.trim($('#street').val());                                      // 街道 - 详细地址
-            this.postData.storage_type = $('#storageType option:selected').attr('data-value');              // 仓库类型
-            this.postData.cost = 0;                                                                         // 仓库费用 默认0
-            this.postData.status = 1;                                                                       // 仓里状态 默认激活1
+            this.postData.name = $.trim($('#name').val());                                                              // 各渠道间名称不可重复
+            this.postData.company = $.trim($('#company').val());                                                        // 公司名称
+            this.postData.linkman = $.trim($('#linkman').val());                                                        // 联系人
+            this.postData.linphone = $.trim($('#linkphone').val());                                                     // 联系电话
+            this.postData.address = $.trim($('#address').val());                                                        // 渠道详细地址
+            this.postData.country = $('#areaList-country option:selected').attr('data-code');                           // 国家
+            this.postData.province = $('#areaList-province option:selected').attr('data-code');                         // 省
+            this.postData.city = $('#areaList-city option:selected').attr('data-code');                                 // 市
+            this.postData.area = $('#areaList-area option:selected').attr('data-code');                                 // 区
+            this.postData.comment = $.trim($('#comment').val());                                                        // 	备注信息
+            this.postData.store_ch_name = $.trim($('#storeChName').val());                                              // 商城中文名不可重复
+            this.postData.store_en_name = $.trim($('#storeEnName').val());                                              // 商城英文名不可重复
+            this.postData.store_account = $.trim($('#storeAccount').val());                                             // 商城账号不可重复
+            this.postData.origin_pwd = $.trim($('#originPwd').val());                                                   // 初始密码
+            this.postData.parent_biz_code = $.cookie('biz_code');                                                       // 管控的biz_code
+            var checked = [];
+            for (var i = 0; i < $('[name=radio]:checked').length; i++) {
+                var value = $('[name=radio]:checked').eq(i).val();
+                if (value == 'alipay') {
+                    checked.push(1);
+                } else if (value == 'wxpay') {
+                    checked.push(2);
+                } else if (value == 'unionpay') {
+                    checked.push(3);
+                }
+
+                this.postData.pay_type = checked.toString();                                                            // 账户的开通信息表示,1表示支付宝,2表示微信,3表示银联,多个采用字符串拼接,英文逗号隔开,例如1,2,3
+            }
+            this.postData.config_info = {};
+            for (var n = 0; n < checked.length; n++) {
+                if (checked[n] == 1) {
+                    // 支付宝
+                    this.postData.config_info.alipay_partner = $.trim($('#alipayPartner').val());                       // 支付宝商户号
+                    this.postData.config_info.alipay_account = $.trim($('#alipayAccount').val());                       // 支付宝账号
+                    this.postData.config_info.alipay_mch_private_key = $.trim($('#alipayMchPrivateKey').val());         // 支付宝商户私钥
+                    this.postData.config_info.alipay_public_key = $.trim($('#alipayPublicKey').val());                  // 支付宝公钥
+
+                } else if (checked[n] == 2) {
+                    // 微信
+                    this.postData.config_info.wechat_h5_app_id = $.trim($('#wechatH5AppId').val());                     // 微信支付H5端APPID
+                    this.postData.config_info.wechat_h5_app_secret = $.trim($('#wechatH5AppSecret').val());             // 微信支付H5端密钥
+                    this.postData.config_info.wechat_h5_partner_id = $.trim($('#wechatH5PartnerId').val());             // 微信支付H5端商户号
+                    this.postData.config_info.wechat_h5_partner_key = $.trim($('#wechatH5PartnerKey').val());           // 微信支付H5端商户Key
+                    this.postData.config_info.wechat_app_app_id = $.trim($('#wechatAppAppId').val());                   // 微信支付app端APPID
+                    this.postData.config_info.wechat_app_app_secret = $.trim($('#wechatAppAppSecret').val());           // 微信支付app端密钥
+                    this.postData.config_info.wechat_app_partner_id = $.trim($('#wechatAppPartnerId').val());           // 微信支付app商户号
+                    this.postData.config_info.wechat_app_partner_key = $.trim($('#wechatAppPartnerKey').val());         // 微信支付app商户Key
+
+                } else if (checked[n] == 3) {
+                    // 银联
+                    this.postData.config_info.unionpay_mch_id = $.trim($('#unionpayMchId').val());                      // 银联商户号
+                    this.postData.config_info.unionpay_certificate = $.trim($('#unionpayCertificate').attr('src'));     // 银联证书地址
+
+                }
+            }
+
+            this.postData.config_info.wechat_login_h5_app_id = $.trim($('#wechatLoginH5AppId').val());                  // 微信登录H5端APPID
+            this.postData.config_info.wechat_login_h5_app_secret = $.trim($('#wechatLoginH5AppSecret').val());          // 微信登录H5端密钥
+            this.postData.config_info.wechat_login_app_app_id = $.trim($('#wechatLoginAppAppId').val());                // 微信登录APP端APPID
+            this.postData.config_info.wechat_login_app_app_sectet = $.trim($('#wechatLoginAppAppSectet').val());        // 微信登录APP端密钥
+            this.postData.config_info.cs_tel = $.trim($('#csTel').val());                                               // 客服电话
+            this.postData.config_info.cs_online_url = $.trim($('#csOnlineUrl').val());                                  // 在线客服链接
+            this.postData.config_info.about_us = $.trim($('#aboutUs').val());                                           // 关于我们链接
+
         },
         //增加账号
         addAccount: function () {

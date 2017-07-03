@@ -39,6 +39,39 @@
                 }]
             });
         },
+        /**
+         *
+         */
+        popup: function (data, cb, success) {
+            var obj = {
+                title: data.title,
+                content: data.content,
+                width: data.width || 700,
+                height: 600,
+                draggable: false
+            };
+            if (data.button === true) {
+                obj.buttonAlign = 'right';
+                obj.buttons = [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        dialog.close();
+                    }
+                }]
+            }
+            this.popupDialog = jDialog.dialog(obj);
+            cb && cb();
+        },
+        /**
+         * icheck
+         */
         iCheck: function () {
             var that = this;
             if ($("input.flat")[0]) {
@@ -83,6 +116,9 @@
                 $(this).parents('tr').removeClass('selected');
             })
         },
+        /**
+         * addEvent
+         */
         addEvent: function () {
             var that = this;
 
@@ -211,20 +247,57 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     var id = checkedBox.eq(i).attr('data-id');
                     var name = checkedBox.eq(i).attr('data-name');
-                    if( id ){
+                    if (id) {
                         idList.push({
                             id: id,
                             name: name
                         });
                     }
                 }
-                if( idList.length >= 1 ){
+                if (idList.length >= 1) {
                     idList = JSON.stringify(idList);
                     window.open('channel-goods-select.html?id=' + idList);
-                }else{
-                    toastr.error('选择的渠道商有误!无法获取到渠道商的身份标识','提示')
+                } else {
+                    toastr.error('选择的渠道商有误!无法获取到渠道商的身份标识', '提示')
                 }
-            })
+            });
+
+            // 导出
+            $('#export').click(function () {
+                that.exportApi();
+            });
+
+            // 查看导出列表
+            $('#exportList').click(function () {
+                that.popup({
+                    title: '导出列表',
+                    content: '<div class="export-wrapper"></div>'
+                }, function () {
+                    var template = _.template($('#j-export-list').html());
+                    $('.export-wrapper').html(template({
+                        items: []
+                    }))
+                })
+            });
+
+            // 查看关联列表
+            $('#channelList').click(function () {
+                that.popup({
+                    title: '关联列表',
+                    content: '<div class="channel-wrapper"></div>'
+                }, function () {
+                    var template = _.template($('#j-channel-list').html());
+                    $('.channel-wrapper').html(template({
+                        items: []
+                    }))
+                })
+            });
+        },
+        /**
+         * 导出
+         */
+        exportApi: function () {
+
         },
         /**
          * 品牌列表
@@ -291,6 +364,10 @@
                 }
             });
         },
+        /**
+         *
+         * @param total
+         */
         pagination: function (total) {
             var that = this;
             var pagination = $('.ui-pagination')
