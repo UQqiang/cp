@@ -161,7 +161,17 @@
   margin-bottom: 20px;
 }
 
-.pagination-pop, .pagination-pop-select {
+.partdeliver {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  border: 1px solid #1ABB9C;
+}
+
+.pagination-pop, .pagination-pop-select, .pagination-pop-warehouse {
   display: inline-block;
   margin-bottom: 20px;
 }

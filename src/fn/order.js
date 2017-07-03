@@ -8,6 +8,7 @@
             this.page.pageSize = 20;
             this.page.vpage = 10;
             this.pageId = 1;
+
             // 弹出框页面
             this.page_pop = {};
             this.page_pop.pageSize = 10;
@@ -43,45 +44,79 @@
             this.addEvent();
             this.queryOrderList();
         },
+        // 搜索框搜索条件获取数据
+        get_search_key: function () {
+            var that = this;
+            var key = $('.presentation.active').find('a').data('key');
+            var value = $('.presentation.active').find('a').data('value');
+            that.search_key[key] = value;
+            that.search_key = {
+                order_sn : $.trim($('#order_sn').val()) || '',
+                consignee : $.trim($('#consignee').val()) || '',
+                order_status : $('#order_status').val() == '0' ? '' : $('#order_status').val(),
+                consignee_mobile : $.trim($('#consignee_mobile').val()),
+                payment_id : $('#payment_id').val() == '0' ? '' : $('#payment_id').val()
+            }
+            return that.search_key;
+        },
+        // tab健快速搜索获取数据
+        get_guick_search_key: function (key,value) {
+            var that = this;
+            that.search_key = {
+                order_sn : '',
+                consignee : '',
+                order_status : '',
+                consignee_mobile : '',
+                payment_id : ''
+            }
+            that.search_key[key] = value;
+            return that.search_key;
+        },
         addEvent: function () {
             var that = this;
 
-        // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+            // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
             // 搜索
             $('#j-search').click(function () {
                 that.pageId = 1;
-                that.search_key.order_sn = $.trim($('#order_sn').val());
-                that.search_key.consignee = $.trim($('#consignee').val());
-                that.search_key.order_status = $('#order_status').val() == '0' ? '' : $('#order_status').val();
-                that.search_key.consignee_mobile = $.trim($('#consignee_mobile').val());
-                that.search_key.payment_id = $('#payment_id').val() == '0' ? '' : $('#payment_id').val();
+                that.get_search_key();
                 that.queryOrderList();
             });
             // 导出订单
             $('#j-exportOrderList').click(function () {
-                that.exportOrderList();
+                // 导出时，不导出正在维权订单
+                that.get_search_key();
+                if (that.search_key.order_status == ' 维权') {
+                    return false;
+                }
+                var config = {};
+                config.target = $(this);
+                config.position = 'bottom';
+                config.width = '250';
+                config.content = '将导出XXXX个订单，导出后，请点击&quot;已生成报表&quot;按钮进入导出列表下载。';
+                that.tip(config, function (btn, dialog) {
+                    that.exportOrderList();
+                    dialog.close();
+                },function(){},'single');
             });
             // 查看已生成列表
             $('#j-checkOrderList').click(function () {
                 that.checkOrderList();
             });
-            // 点击全部按钮
-            $('#j-all').click(function () {
-
-            });
-        // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
-
-        // 订单列表按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
-            $('#goodsTab li').click(function () {
-                if ($(this).hasClass('active')) {
+            // 点击订单列表的tab快速搜索
+            $(document).on('click', '.quick-search', function () {
+                var $this = $(this);
+                if ($this.hasClass('active')) {
                     return false;
                 }
-                // 重置搜索状态
-                that.search_key.asterisk_mark = $(this).attr('data-type');
-                // 重置页码
-                that.pageId = 1;
+                var key = $this.data('key');
+                var value = $this.data('value');
+                that.get_guick_search_key(key,value);
                 that.queryOrderList();
             });
+            // 搜索框按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+
+            // 订单列表按钮集合  ＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
             // 加星
             $(document).on('click', '.j-star', function () {
                 var data = {};
@@ -90,30 +125,7 @@
                 data.asterisk_marks = $(this).attr('data-asterisk_mark') == 1 ? 'n' : 'y';
                 that.addStar(data);
             });
-            // 点击订单列表的tab快速搜索
-            $(document).on('click', '.quick-search', function () {
-                var $this = $(this);
-                var key = $this.data('key');
-                if (key == 'all') {
-                    that.pageId = 1;
-                    that.search_key = {
-                        order_sn: '',
-                        consignee_mobile: '',
-                        start_time: '',
-                        end_time: '',
-                        order_status: '',
-                        consignee: '',
-                        user_mobile: '',
-                        payment_id: '',
-                        asterisk_mark: '',
-                        print_mark: ''
-                    }
-                }else {
-                    var value = $this.data('value');
-                    that.search_key[key] = value;
-                }
-                that.queryOrderList();
-            });
+
             // 备注
             $(document).on('click', '.j-add-comment', function () {
                 var sendData = {};
@@ -402,13 +414,7 @@
         // 导出订单
         exportOrderList: function () {
             var that = this;
-            that.search_key = {
-                order_sn: $.trim($('#order_sn').val()),
-                consignee: $.trim($('#consignee').val()),
-                order_status: $('#order_status').val() == '0' ? '' : $('#order_status').val(),
-                consignee_mobile: $.trim($('#consignee_mobile').val()),
-                payment_id: $('#payment_id').val() == '0' ? '' : $('#payment_id').val()
-            }
+
             Api.get({
                 url: '/order/downloadOrders.do',
                 data: that.search_key,
@@ -554,16 +560,17 @@
          * @param success
          * @param fail
          */
-        tip: function (data, success, fail) {
-            this.dialogTip = jDialog.tip(data.content, {
-                target: data.target,
-                position: data.position || 'left'
-            }, {
-                width: data.width || 200,
-                closeable: false,
-                closeOnBodyClick: true,
-                buttonAlign: 'center',
-                buttons: [{
+        tip: function (data, success, fail, btn) {
+            if (btn == 'single') {
+                var button =  [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }];
+            }else {
+                var button =  [{
                     type: 'highlight',
                     text: '确定',
                     handler: function (button, dialog) {
@@ -575,7 +582,17 @@
                     handler: function (button, dialog) {
                         fail && fail(button, dialog)
                     }
-                }]
+                }];
+            }
+            this.dialogTip = jDialog.tip(data.content, {
+                target: data.target,
+                position: data.position || 'left'
+            }, {
+                width: data.width || 200,
+                closeable: false,
+                closeOnBodyClick: true,
+                buttonAlign: 'center',
+                buttons: button
             });
         },
         popup: function (data, cb, success) {
@@ -723,13 +740,13 @@
                     page_size: that.page.pageSize,
                     order_sn: that.search_key.order_sn || '',
                     consignee_mobile: that.search_key.consignee_mobile || '',
-                    start_time: that.search_key.start_time || '',
-                    end_time: that.search_key.end_time || '',
+                    start_time: that.search_key.start_time ? that.search_key.start_time : '',
+                    end_time: that.search_key.end_time ?  that.search_key.end_time : '',
                     order_status: that.search_key.order_status || '',
                     consignee: that.search_key.consignee || '',
                     user_mobile: '',
                     payment_id: that.search_key.payment_id || '',
-                    asterisk_mark: that.search_key.asterisk_mark || '',
+                    asterisk_mark: that.search_key.asterisk_mark ?  that.search_key.asterisk_mark : '',
                     print_mark: ''
                 },
                 mask: true,

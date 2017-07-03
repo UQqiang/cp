@@ -1,10 +1,10 @@
 ;(function () {
     var main = {
         init: function () {
-            this.page = {};
-            this.page.pageSize = 20;
-            this.page.vpage = 10;
-            this.pageId = 1;
+            this.page_pop = {};
+            this.page_pop.pageSize = 10;
+            this.page_pop.vpage = 10;
+            this.page_pop.pageId = 1;
             this.search_key = {};
             this.order_id = HDL.getQuery('order_id');
             this.user_id = HDL.getQuery('user_id');
@@ -174,7 +174,7 @@
 
             // 发货
             $(document).on('click', '.j-send-goods', function () {
-                var orderInfo = JSON.parse(decodeURIComponent($(this).attr('data-orderinfo')));
+                // var orderInfo = JSON.parse(decodeURIComponent(that.orderInfo));
                 var refundMark = $(this).attr('data-refund_mark');
                 var order_id = $(this).attr('data-order_id');
                 var user_id = $(this).attr('data-user_id');
@@ -192,7 +192,7 @@
                 that.popup(data, function () {
                     var template = _.template($('#j-template-send-goods').html());
                     $('#orderInfo').html(template({
-                        item: orderInfo,
+                        item: that.orderInfo,
                         orderStatus: that.orderStatusData
                     }));
                     that.iCheck();
@@ -243,6 +243,11 @@
                 });
             });
 
+            // 修改仓库
+            $(document).on('click', '.warehouse-change', function () {
+                that.getWarehouseInfo();
+            });
+
         },
 
         // 修改物流信息
@@ -269,15 +274,19 @@
             });
         },
 
-        popup: function (data, cb, success) {
-            this.popupDialog = jDialog.dialog({
-                title: data.title,
-                content: data.content,
-                width: data.width || 600,
-                height: 600,
-                draggable: false,
-                buttonAlign: 'right',
-                buttons: [{
+        popup: function (data, cb, success, num) {
+            if (num == 1) {
+                var button = [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }]
+            }else if (num == 0) {
+                var button = '';
+            }else{
+                var button = [{
                     type: 'highlight',
                     text: '确定',
                     handler: function (button, dialog) {
@@ -290,6 +299,15 @@
                         dialog.close();
                     }
                 }]
+            }
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: 600,
+                draggable: false,
+                buttonAlign: 'right',
+                buttons: button
             });
             cb && cb();
         },
@@ -359,13 +377,104 @@
                         e.preventDefault();
                         $(this).tab('show')
                     });
-                    that.cacheOrderDetail = data.data[0].order_item_list;
+                    if (data.data.length) {
+                        that.cacheOrderDetail = data.data[0].order_item_list;
+                    }
                 },
                 complete: function () {
 
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 获取仓库信息
+         */
+        getWarehouseInfo: function () {
+            var that = this;
+            // Api.get({
+            //     url: '/order/delivery/query.do',
+            //     data: {
+            //
+            //     },
+            //     beforeSend: function () {
+            //
+            //     },
+            //     success: function (data) {
+                    var data = that.orderStatusData;
+                    function renderWarehouseList() {
+                        var template = _.template($('#j-template-warehouse-change').html());
+                        $('#warehouseChangeList').html(template({
+                            item: data
+                        }));
+                        that.paginationPop(20);
+                    }
+                    if (!$('#warehouseChangeList').length) {
+                        var popdata = {};
+                        popdata.title = '选择仓库 | <a href="#" class="green">新建仓库</a>';
+                        popdata.content = '<div id="warehouseChangeList"></div>';
+                        popdata.width = 800;
+                        that.popup(popdata, function () {
+                            that.iCheck();
+                            renderWarehouseList();
+                        }, function (btn, dialog) {
+                            // 确定操作
+                            var warehouseData = {};
+                            var checkedBox = $('.checkbox:checked');
+                            var needLogistics = $('input[name=logistics]:checked').attr('data-value');
+
+                            if (checkedBox.length < 1) {
+                                toastr.error('请选择仓库', '提示');
+                                return false;
+                            }
+
+                            for (var i = 0; i < checkedBox.length; i++) {
+                                orderItem_ids.push(checkedBox.eq(i).attr('data-id'));
+                            }
+                            warehouseData = {
+
+                            }
+                            that.changeWarehouse(warehouseData, function () {
+                                dialog.close();
+                            });
+                        },0);
+                    }else {
+                        renderWarehouseList();
+                    }
+                // },
+                // complete: function () {
+                //
+                // },
+                // error: function (data) {
+                //     toastr.error(data.msg, '提示');
+                // }
+            // });
+        },
+        /**
+         * 修改仓库信息
+         */
+        changeWarehouse: function () {
+            var that = this;
+            Api.get({
+                url: '/order/query.do',
+                data: {
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('修改仓库成功','提示');
+                    setTimeout(function () {
+                        location.reload();
+                    },2000);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
                 }
             });
         },
@@ -388,6 +497,7 @@
                         item: data.data.data[0],
                         orderStatus: that.orderStatusData
                     }));
+                    that.orderInfo = data.data.data[0];
                 },
                 complete: function () {
 
@@ -477,7 +587,36 @@
                     toastr.success('复制成功','提示');
                 });
             });
-        }
+        },
+
+        // 弹出框翻页
+        paginationPop: function (total) {
+            var that = this;
+            var pagination_pop = $('.pagination-pop-warehouse')
+            pagination_pop.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page_pop.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page_pop.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.page_pop.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.page_pop.pageId = num;
+                    if (type == 'change') {
+                        that.getWarehouseInfo();
+                    }
+                }
+            });
+            var n = $('#warehouseChangeList').find('tr').length - 1;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
     };
     // run
     $(function () {
