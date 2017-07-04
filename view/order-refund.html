@@ -104,6 +104,89 @@
         </ul>
     </div>
     <div id="orderRefund">
+        <!-- 处理状态 -->
+        <div class="box-block">
+            <h4 class="j-order-status"><%= ['','等待商家处理退款申请','退款处理中...','商家不同意退款申请','退款完成'][items[0].refund_status] %></h4>
+            <p>
+                <span class="j-order-info">
+                    <% var status = items[0].refund_status;
+                    var type = items[0].refund_type;
+                    if(status == 1){
+                        if(type == 0) { %>
+                            收到买家退款申请，请尽快处理
+                        <% }else { %>
+                            收到买家退款、退货申请，请尽快处理
+                        <% }
+                    } else if(status == 3) { %>
+                        您已经拒绝了本次退款申请，你可以与买家协商后，重新处理
+                    <% }else if(status == 4) { %>
+                        退款金额<%= (items[0].refund_amount/100).toFixed(2) %>元
+                    <% } %>
+                </span>
+            </p>
+            <% if(items[0].refund_status == 1){ %>
+                <button class="btn btn-success mr10 J-btn-success">同意买家退款</button>
+                <button class="btn btn-danger J-btn-danger">拒绝退款申请</button>
+            <% } %>
+        </div>
+        <!-- 处理状态 -->
+
+        <div class="box-block">
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr green">当前处理结果：</label>
+                <span class="green"><%= ['','等待商家处理退款申请','退款处理中...','商家不同意退款申请','退款完成'][items[0].refund_status] %></span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr">期望结果：</label>
+                <span>
+                    <%= items[0].refund_type == 0 ? '退款' : '退款.退货' %>
+                </span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr">维权原因：</label>
+                <span><%= items[0].refund_reason %></span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr">退款金额：</label>
+                <span><%= (items[0].refund_amount/100).toFixed(2) %>元</span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr">维权说明：</label>
+                <span><%= items[0].refund_reason %></span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr">渠道佣金：</label>
+                <span><%= items[0].refund_reason %></span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr">店主佣金：</label>
+                <span><%= items[0].refund_reason %></span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-lg tr">分享合伙人佣金：</label>
+                <span><%= items[0].refund_reason %></span>
+            </div>
+            <!-- <div class="form-group">
+                <label class="ui-label ui-label-md tr">退款明细：</label>
+                <span>实付<%= (items[0].payment_amount/100).toFixed(2) %>元&nbsp;&nbsp;&nbsp;</span>
+                <span>折扣<%= (items[0].discount_amount/100).toFixed(2) %>元&nbsp;&nbsp;&nbsp;</span>
+                <span>积分抵现<%= (items[0].point/100).toFixed(2) %>&nbsp;&nbsp;&nbsp;</span>
+            </div> -->
+            <!-- <div class="form-group">
+                <label class="ui-label ui-label-md tr">运费：</label>
+                <span><%= (data.delivery_fee/100).toFixed(2) %>元</span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-md tr">合计优惠：</label>
+                <span><%= (data.discount_amount/100).toFixed(2) %>元</span>
+            </div>
+            <div class="form-group">
+                <label class="ui-label ui-label-md tr">实收总计：</label>
+                <span><%= (data.total_amount/100).toFixed(2) %>元</span>
+            </div> -->
+        </div>
+
+        <!-- 订单信息 -->
         <div class="box-block clearfix">
             <div class="form-inline">
                 <div class="form-group col-md-6 col-sm-6 col-xs-6">
@@ -130,44 +213,8 @@
                 </div>
             </div>
         </div>
-        <div class="box-block">
-            <div class="form-group">
-                <label class="ui-label ui-label-md tr green">当前处理结果：</label>
-                <span class="green"><%= ['','等待商家处理退款申请','退款处理中...','商家不同意退款申请','退款完成'][items[0].refund_status] %></span>
-            </div>
-            <div class="form-group">
-                <label class="ui-label ui-label-md tr">期望结果：</label>
-                <span>
-                    <%= items[0].refund_type == 0 ? '退款' : '退款.退货' %>
-                </span>
-            </div>
-            <div class="form-group">
-                <label class="ui-label ui-label-md tr">退款金额：</label>
-                <span><%= (items[0].refund_amount/100).toFixed(2) %>元</span>
-            </div>
-            <div class="form-group">
-                <label class="ui-label ui-label-md tr">退款明细：</label>
-                <span>实付<%= (items[0].payment_amount/100).toFixed(2) %>元&nbsp;&nbsp;&nbsp;</span>
-                <span>折扣<%= (items[0].discount_amount/100).toFixed(2) %>元&nbsp;&nbsp;&nbsp;</span>
-                <span>积分抵现<%= (items[0].point/100).toFixed(2) %>&nbsp;&nbsp;&nbsp;</span>
-            </div>
-            <!-- <div class="form-group">
-                <label class="ui-label ui-label-md tr">运费：</label>
-                <span><%= (data.delivery_fee/100).toFixed(2) %>元</span>
-            </div>
-            <div class="form-group">
-                <label class="ui-label ui-label-md tr">合计优惠：</label>
-                <span><%= (data.discount_amount/100).toFixed(2) %>元</span>
-            </div>
-            <div class="form-group">
-                <label class="ui-label ui-label-md tr">实收总计：</label>
-                <span><%= (data.total_amount/100).toFixed(2) %>元</span>
-            </div> -->
-            <div class="form-group">
-                <label class="ui-label ui-label-md tr">维权原因：</label>
-                <span><%= items[0].refund_reason %></span>
-            </div>
-        </div>
+
+        <!-- 商品信息 -->
         <table class="table table-striped jambo_table bulk_action table-bordered table-condensed">
             <thead>
                 <tr>
@@ -177,6 +224,8 @@
                     <th class="tc cell-10">税费（元）</th>
                     <th class="tc cell-10">优惠金额（元）</th>
                     <th class="tc cell-10">实付金额（元）</th>
+                    <th class="tc cell-10">身份</th>
+                    <th class="tc cell-10">佣金金额（元）</th>
                 </tr>
             </thead>
             <tbody>
@@ -196,6 +245,16 @@
                     <td class="cell-10 tc"><span>税费</span></td>
                     <td class="cell-10 tc"><span><%= (item.discount_amount/100).toFixed(2) %></span></td>
                     <td class="cell-10 tc"><span><%= (item.payment_amount/100).toFixed(2) %></span></td>
+                    <td class="cell-10 tc">
+                        <p>渠道</p>
+                        <p>店主</p>
+                        <p>分享合伙人</p>
+                    </td>
+                    <td class="cell-10 tc">
+                        <p>10.11</p>
+                        <p>10.11</p>
+                        <p>10.11</p>
+                    </td>
                 </tr>
             <% }) %>
             </tbody>
