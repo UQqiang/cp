@@ -1754,12 +1754,13 @@ span.right {
   position: fixed;
   width: 230px;
   background: #2A3F54;
+  z-index: 1;
 }
 
 .sidebar-footer a {
-  padding: 7px 0 3px;
-  text-align: center;
-  width: 25%;
+  padding: 7px 10px 3px;
+  text-align: right;
+  width: 100%;
   font-size: 17px;
   display: block;
   float: left;

@@ -82,7 +82,8 @@
 .form-inline .form-group.channel-name-list {
   display: none;
 }
-.form-inline .channel-name-lists .channel-detail {
+
+.channel-name-lists .channel-detail {
   display: inline-block;
   padding: 0 10px;
   text-align: center;
@@ -90,16 +91,16 @@
   width: 80px;
   height: 60px;
 }
-.form-inline .channel-name-lists .channel-detail .channel-img {
+.channel-name-lists .channel-detail .channel-img {
   width: 40px;
   height: 40px;
   border-radius: 100%;
 }
-.form-inline .channel-name-lists .channel-detail span {
+.channel-name-lists .channel-detail span {
   display: block;
   font-size: 12px;
 }
-.form-inline .channel-name-lists .channel-detail .img-close {
+.channel-name-lists .channel-detail .img-close {
   display: none;
   position: absolute;
   top: 0;
@@ -112,7 +113,7 @@
   z-index: 20;
   border-radius: 4px;
 }
-.form-inline .channel-name-lists .channel-detail .img-close:before {
+.channel-name-lists .channel-detail .img-close:before {
   position: absolute;
   left: 30px;
   top: 20px;
@@ -120,6 +121,6 @@
   background: #fff;
   border-radius: 50%;
 }
-.form-inline .channel-name-lists .channel-detail:hover .img-close {
+.channel-name-lists .channel-detail:hover .img-close {
   display: inline-block;
 }

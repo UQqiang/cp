@@ -6,6 +6,10 @@
             this.page.vpage = 10;
             this.pageId = 1;
             this.search_key = {};
+            this.selectedList = [{
+                id: 10,
+                name: '管理员三'
+            }];
             this.addEvent();
             this.queryBrand();
         },
@@ -92,28 +96,50 @@
                 }
             });
 
+            // 选择
             $('.checkbox').on('ifChecked', function () {
                 var checkedBox = $('.checkbox:checked');
                 var checkbox = $('.checkbox');
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
 
+                // 全选按钮
                 if (checkbox.length == checkedBox.length) {
                     $('#check-all').iCheck("check");
                 } else {
                     $('#check-all').iCheck("uncheck");
                 }
+                if (that._isInArry(that.selectedList, id) === false) {
+                    that.selectedList.push({
+                        id: id,
+                        name: name
+                    });
+                }
                 $(this).parents('tr').addClass('selected');
+                that.renderChannelList();
             });
 
+            // 取消选择
             $('.checkbox').on('ifUnchecked', function () {
                 var checkedBox = $('.checkbox:checked');
                 var checkbox = $('.checkbox');
 
+                // 全选按钮
                 if (checkbox.length == checkedBox.length) {
                     $('#check-all').iCheck("check");
                 } else {
                     $('#check-all').iCheck("uncheck");
                 }
+                for (var i = 0; i < that.selectedList.length; i++) {
+                    if (that.selectedList[i].id == $(this).attr('data-id')) {
+                        that.selectedList.splice(i, 1);
+                        if (i > 0) {
+                            i--
+                        }
+                    }
+                }
                 $(this).parents('tr').removeClass('selected');
+                that.renderChannelList();
             })
         },
         /**
@@ -242,24 +268,39 @@
 
             // 批量关联
             $('#batchSelect').click(function () {
-                var checkedBox = $('.checkbox:checked');
-                var idList = [];
-                for (var i = 0; i < checkedBox.length; i++) {
-                    var id = checkedBox.eq(i).attr('data-id');
-                    var name = checkedBox.eq(i).attr('data-name');
-                    if (id) {
-                        idList.push({
-                            id: id,
-                            name: name
-                        });
-                    }
-                }
-                if (idList.length >= 1) {
-                    idList = JSON.stringify(idList);
-                    window.open('channel-goods-select.html?id=' + idList);
+                //var checkedBox = $('.checkbox:checked');
+                //var idList = [];
+                //for (var i = 0; i < checkedBox.length; i++) {
+                //    var id = checkedBox.eq(i).attr('data-id');
+                //    var name = checkedBox.eq(i).attr('data-name');
+                //    if (id) {
+                //        idList.push({
+                //            id: id,
+                //            name: name
+                //        });
+                //    }
+                //}
+                if (that.selectedList.length >= 1) {
+
+                    window.open('channel-goods-select.html?id=' + JSON.stringify(that.selectedList));
                 } else {
                     toastr.error('选择的渠道商有误!无法获取到渠道商的身份标识', '提示')
                 }
+            });
+
+            // 删除渠道商
+            $(document).on('click', '.j-image-close', function () {
+                var id = $(this).attr('data-id');
+                for (var i = 0; i < that.selectedList.length; i++) {
+                    if (id == that.selectedList[i].id) {
+                        that.selectedList.splice(i, 1);
+                        if (i >= 1) {
+                            i--
+                        }
+                    }
+                }
+                $(this).parents('.channel-detail').remove();
+                $('.checkbox[data-id=' + id + ']').iCheck('uncheck');
             });
 
             // 导出
@@ -291,6 +332,16 @@
                         items: []
                     }))
                 })
+            });
+
+            $(document).on('click', '.j-goods-channel', function () {
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
+                var objArr = [{
+                    id: id,
+                    name: name
+                }];
+                window.open('channel-goods-select.html?id=' + JSON.stringify(objArr))
             });
         },
         /**
@@ -325,6 +376,7 @@
                         //    items: data.data.data
                         //}));
                         that.iCheck();
+                        that._checked();
                     } else {
                         $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
                     }
@@ -394,6 +446,31 @@
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {
                 $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
+        renderChannelList: function () {
+            var that = this;
+            var template = _.template($('#j-template-channel-list').html());
+            $('#renderChannel').html(template({
+                items: that.selectedList
+            }))
+        },
+        _isInArry: function (arr, id) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].id == id) {
+                    return true
+                }
+            }
+            return false
+        },
+        _checked: function () {
+            var checkbox = $('.checkbox');
+            for (var i = 0; i < this.selectedList.length; i++) {
+                for (var n = 0; n < checkbox.length; n++) {
+                    if (this.selectedList[i].id == checkbox.eq(n).attr('data-id')) {
+                        checkbox.eq(n).iCheck('check');
+                    }
+                }
             }
         }
     };

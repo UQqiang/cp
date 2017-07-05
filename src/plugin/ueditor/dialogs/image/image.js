@@ -353,11 +353,12 @@
                 acceptExtensions = (editor.getOpt('imageAllowFiles') || []).join('').replace(/\./g, ',').replace(/^[,]/, ''),
                 imageMaxSize = editor.getOpt('imageMaxSize'),
                 imageCompressBorder = editor.getOpt('imageCompressBorder');
-
+                console.log(actionUrl);
             if (!WebUploader.Uploader.support()) {
                 $('#filePickerReady').after($('<div>').html(lang.errorNotSupport)).hide();
                 return;
             } else if (!editor.getOpt('imageActionName')) {
+                console.log(editor.getOpt('imageActionName'))
                 $('#filePickerReady').after($('<div>').html(lang.errorLoadConfig)).hide();
                 return;
             }
@@ -367,12 +368,21 @@
                     id: '#filePickerReady',
                     label: lang.uploadSelectFile
                 },
+                formData:{
+                    user_id: editor.getOpt('user_id'),
+                    biz_code: editor.getOpt('biz_code'),
+                    parent_id: 0
+                },
                 accept: {
                     title: 'Images',
                     extensions: acceptExtensions,
-                    mimeTypes: 'image/*'
+                    //mimeTypes: 'image/*'
+                    mimeTypes: 'image/jpg,image/jpeg,image/png,image/gif'
                 },
-                swf: '../../third-party/webuploader/Uploader.swf',
+                thumb: {
+                    type: '',
+                },
+                //swf: '../../third-party/webuploader/Uploader.swf',
                 server: actionUrl,
                 fileVal: editor.getOpt('imageFieldName'),
                 duplicate: true,
@@ -702,7 +712,7 @@
 
             uploader.on('uploadBeforeSend', function (file, data, header) {
                 //这里可以通过data对象添加POST参数
-                header['X_Requested_With'] = 'XMLHttpRequest';
+                //header['X_Requested_With'] = 'XMLHttpRequest';
             });
 
             uploader.on('uploadProgress', function (file, percentage) {
@@ -719,11 +729,13 @@
                 try {
                     var responseText = (ret._raw || ret),
                         json = utils.str2json(responseText);
-                    if (json.state == 'SUCCESS') {
+                    console.log(json)
+                    if (json.state == 'SUCCESS' || json.code == 10000) {
                         var index = file.id.split("_");
                         index = index[index.length-1] - 0;
                         if(index !== NaN){
-                            _this.imageList[index] = json;
+                            _this.imageList[index] = json.data;
+                            console.log(_this.imageList);
                         }
                         $file.append('<span class="success"></span>');
                     } else {

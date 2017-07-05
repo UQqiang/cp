@@ -82,47 +82,47 @@
   .form-group.channel-name-list{
     display: none;
   }
-  .channel-name-lists{
-    .channel-detail{
-      display: inline-block;
-      padding: 0 10px;
-      text-align: center;
-      position: relative;
-      width: 80px;
-      height: 60px;
-      .channel-img{
-        width: 40px;
-        height: 40px;
-        border-radius: 100%;
-      }
-      span{
-        display: block;
-        font-size: 12px;
-      }
-      .img-close{
-        display: none;
+}
+.channel-name-lists{
+  .channel-detail{
+    display: inline-block;
+    padding: 0 10px;
+    text-align: center;
+    position: relative;
+    width: 80px;
+    height: 60px;
+    .channel-img{
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+    }
+    span{
+      display: block;
+      font-size: 12px;
+    }
+    .img-close{
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 1px 3px;
+      background: rgba(0,0,0,0.5);
+      cursor: pointer;
+      z-index: 20;
+      border-radius: 4px;
+      &:before{
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        padding: 1px 3px;
-        background: rgba(0,0,0,0.5);
-        cursor: pointer;
-        z-index: 20;
-        border-radius: 4px;
-        &:before{
-          position: absolute;
-          left: 30px;
-          top: 20px;
-          padding: 4px 5px;
-          background: #fff;
-          border-radius: 50%;
-        }
+        left: 30px;
+        top: 20px;
+        padding: 4px 5px;
+        background: #fff;
+        border-radius: 50%;
       }
     }
-    .channel-detail:hover .img-close{
-      display: inline-block;
-    }
+  }
+  .channel-detail:hover .img-close{
+    display: inline-block;
   }
 }
