@@ -94,19 +94,11 @@
                     <div class="form-inline form-inline-partner" style="display:none">
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">所属店铺：</label>
-                            <select id="partnerShopSearch" class="form-control form-control-lg">
-                                <option value="0">请选择店铺</option>
-                                <option value="10">待支付</option>
-                                <option value="20">买家已取消</option>
-                                <option value="21">卖家已取消</option>
-                                <option value="30">已支付</option>
-                                <option value="40">已发货</option>
-                                <option value="50">已签收</option>
-                                <option value="60">已评价</option>
-                                <option value="70">退款中</option>
-                                <option value="80">退款完成</option>
-                                <option value="90">订单关闭</option>
-                            </select>
+                            <input class="form-control form-control-lg" id="shopNameSearch" placeholder="输入店铺名称">
+                        </div>
+                        <div class="form-group mb10">
+                            <label class="ui-label ui-label-md tr">联系方式：</label>
+                            <input class="form-control form-control-lg" id="shopNameSearch" placeholder="输入联系方式">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">状态：</label>
@@ -119,7 +111,7 @@
                         <br/>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr"></label>
-                            <input class="form-control form-control-lg" id="partnerSearch" placeholder="请输入用户ID、联系方式或账号">
+                            <input class="form-control form-control-lg" id="partnerSearch" placeholder="请输入用户ID、昵称或账号">
                         </div>
                         <div class="form-group right">
                             <a class="btn btn-sm btn-success search-submit" id="searchPartner" href="javascript:;">查询</a>

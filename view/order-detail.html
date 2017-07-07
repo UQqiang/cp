@@ -301,7 +301,7 @@
             <td class="cell-10 tc"><span><%= ((o.unit_price * o.number)/100).toFixed(2) %></span></td>
             <td class="cell-10 tc">
                 <% if( o.refund_status == 1 || o.refund_status == 2 ){ %>
-                <a href="./order-refund.html?order_id=<%=o.order_id%>&user_id=<%=o.user_id%>&order_item_id=<%= o.original_order_item_id ==undefined ? o.id : o.original_order_item_id%>" class="ui-button ui-button-sblue green">请查看退款维权</a>
+                    维权中
                 <% }else if( o.refund_status == 4 ){ %>
                 <span>退款完成</span>
                 <% }else if( o.refund_status == 3 && o.delivery_mark == 0 ){ %>
@@ -312,6 +312,13 @@
                 <span>未发货</span>
                 <% }else if( o.refund_status == undefined && o.delivery_mark == 1 ){ %>
                 <span>已发货</span>
+                <% } %>
+            </td>
+            <td class="cell-10 tc">
+                <% if( o.refund_status == 1 || o.refund_status == 2 ){ %>
+                <a href="./order-refund.html?order_id=<%=o.order_id%>&user_id=<%=o.user_id%>&order_item_id=<%= o.original_order_item_id ==undefined ? o.id : o.original_order_item_id%>" class="ui-button ui-button-sblue green">处理维权</a>
+                <% }else{ %>
+                    －
                 <% } %>
             </td>
             <td class="cell-10 tc">

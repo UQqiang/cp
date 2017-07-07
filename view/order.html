@@ -314,9 +314,15 @@
                             <td class="cell-8 tc" rowspan="<%= item.order_items.length %>" >
                                 <p><%= orderStatus[item.order_status] %></p>
                                 <% if( item.order_status == 30 ){ %>
-                                <p>
-                                    <a class="j-send-goods btn btn-sm btn-success" data-order_id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-refund_mark="<%= item.refund_mark %>" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>">发货</a>
-                                </p>
+                                    <% if(item.refund_mark == 1){ %>
+                                        <p>维权中
+                                            <a class=" btn btn-sm btn-success" href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>" target="_blank">处理维权</a>
+                                        </p>
+                                    <% }else if(item.refund_mark == 0 ){ %>
+                                        <p>
+                                            <a class="j-send-goods btn btn-sm btn-success" data-order_id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-refund_mark="<%= item.refund_mark %>" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>">发货</a>
+                                        </p>
+                                    <% } %>
                                 <% }else if(item.order_status == 10){ %>
                                     <p>
                                         <a class="j-order-cancel btn btn-sm btn-success" data-order_id="<%= item.id %>" data-user_id="<%= item.user_id %>" data-refund_mark="<%= item.refund_mark %>" data-orderinfo="<%= encodeURIComponent(JSON.stringify(item)) %>">取消</a>
