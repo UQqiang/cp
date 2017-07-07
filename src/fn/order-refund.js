@@ -162,7 +162,138 @@
                 }, function (btn, dialog) {
                     dialog.close();
                 });
-            })
+            });
+
+            // 同意买家退款
+            $(document).on('click',".J-btn-success",function () {
+                var refundDetail = that.refundDetail,
+                    payment_id = refundDetail.payment_id,
+                    item = refundDetail.return_items[0],
+                    refund_type = item.refund_type,
+                    refund_status = item.refund_status;
+                var payTypeData = that.payTypeData;
+                var postData = {
+                    order_id : item.order_id,
+                    user_id: item.user_id,
+                    order_item_id: item.id
+                }
+                if (refund_type == 0) {
+                    refund_type = '退款';
+                }else {
+                    refund_type = '退款、退货';
+                }
+                var config = {};
+                config.target = $(this);
+                config.position = 'right';
+                config.width = '300';
+                config.content = '<div style="text-align:left"><p><strong>该笔订单通过“'+payTypeData[payment_id]+'”付款，需您同意退款申请，退款将自动原路退回至买家付款账户</strong></p><p><strong>处理方式</strong>：'+refund_type+'</p><p><strong>退款金额</strong>：'+(item.refund_amount/100).toFixed(2)+'元</p></div>';
+                that.tip(config, function (btn, dialog) {
+                    that.agreeRefund(postData);
+                    dialog.close();
+                }, function (btn, dialog) {
+
+                    dialog.close();
+                })
+            });
+            // 拒绝退款
+            $(document).on('click',".J-btn-danger",function () {
+                var refundDetail = that.refundDetail,
+                    payment_id = refundDetail.payment_id,
+                    item = refundDetail.return_items[0],
+                    refund_type = item.refund_type,
+                    refund_status = item.refund_status;
+                var payTypeData = that.payTypeData;
+                var postData = {
+                    order_id : item.order_id,
+                    user_id: item.user_id,
+                    order_item_id: item.id
+                }
+                if (refund_type == 0) {
+                    refund_type = '退款';
+                }else {
+                    refund_type = '退款、退货';
+                }
+
+                var config = {};
+                config.target = $(this);
+                config.position = 'right';
+                config.width = '350';
+                config.content = '<div style="text-align:left"><p><strong>处理方式</strong>：退款</p><p><strong>退款金额</strong>：45.00元</p><p><strong>拒绝理由</strong>：</p><textarea class="form-control j-memo" maxlength="300" style="min-height: 100px;" id="danger-text"></textarea></div>';
+                that.tip(config, function (btn, dialog) {
+                    var refundContent = $('#danger-text').val();
+                    if (refundContent == '') {
+                        toastr.warn('请输入拒绝理由，理由为必填项','提示');
+                        return false;
+                    }
+                    postData.refuse_reason = refundContent;
+                    postData.audit_result = 0;
+                    that.refuseRefund(postData);
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                })
+            });
+
+        },
+        /**
+         * 同意退款
+         */
+        agreeRefund: function (postData) {
+            var that = this;
+            Api.get({
+                url: '/refund/confirm.do',
+                data: postData,
+                mask: true,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if(data.code == 10000){
+                        toastr.success('您已同意退款', '提示');
+                        setTimeout(function(){
+                            location.reload()
+                        },1000)
+                    }else{
+                        that._msgBox.error(data.msg);
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 拒绝退款
+         */
+        refuseRefund: function (postData) {
+            var that = this;
+            Api.get({
+                url: '/refund/audit.do',
+                data: postData,
+                mask: true,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if(data.code == 10000){
+                        toastr.success('您已拒绝退款', '提示');
+                        setTimeout(function(){
+                            location.reload()
+                        },1000)
+                    }else{
+                        that._msgBox.error(data.msg);
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
         },
         /**
          * 订单详情
@@ -197,6 +328,7 @@
                         items: data.data.return_items
                     }));
                     that.order_sn = data.data.order_sn;
+                    that.refundDetail = data.data;
 
                     cb && cb();
                 },

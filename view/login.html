@@ -28,31 +28,41 @@
 </head>
 
 <body class="login">
-<div>
+<div class="login-content">
     <a class="hiddenanchor" id="signup"></a>
     <a class="hiddenanchor" id="signin"></a>
-    <div  contenteditable="true"></div>
+    <div  contenteditable="true" class="login-top">
+        <p class="login-title">纷享汇管理后台</p>
+    </div>
     <div class="login_wrapper">
         <div class="animate form login_form">
             <section class="login_content">
                 <form>
                     <h1>登录</h1>
                     <div class="item field">
-                        <input type="text" class="form-control" placeholder="请输入用户名" required="required" data-name="用户名" id="username"/>
+                        <div class="form-group form-inline">
+                            <label class="tr mr10"><i class="fa fa-user"></i></label>
+                            <input type="text" class="form-control" placeholder="请输入用户名" required="required" data-name="用户名" id="username"/>
+                        </div>
                     </div>
                     <div class="item field">
-                        <input type="password" class="form-control" placeholder="请输入密码" required="required" data-name="密码" id="password"/>
+                        <div class="form-group form-inline">
+                            <label class="tr mr10"><i class="fa fa-lock"></i></label>
+                            <input type="password" class="form-control" placeholder="请输入密码" required="required" data-name="密码" id="password"/>
+                        </div>
                     </div>
                     <div class="item field">
-                        <input type="text" class="form-control form-control-lg verify-input" id="verify" placeholder="请输入验证码" required="required" data-name="验证码">
-                        <span class="verify">
-                             <script>
-                                 document.write('<img id="verifyCode" title="看不清？换一张" src="'+ Api.domain() + '/verify_code.do" />')
-                             </script>
-                        </span>
+                        <div class="form-group form-inline">
+                            <input type="text" class="form-control verify-input mr10" id="verify" placeholder="请输入验证码" required="required" data-name="验证码">
+                            <span class="verify">
+                                 <script>
+                                     document.write('<img id="verifyCode" title="看不清？换一张" src="'+ Api.domain() + '/verify_code.do" />')
+                                 </script>
+                            </span>
+                        </div>
                     </div>
                     <div>
-                        <a class="btn btn-default submit" href="javascript:;" id="j-submit">登录</a>
+                        <a class="btn btn-success btn-success-lg submit" href="javascript:;" id="j-submit" style="width:100%">登 录</a>
                         <!--<a class="btn btn-default to_register" href="#signup">注册</a>-->
                         <!--<a class="reset_pass" href="#">Lost your password?</a>-->
                     </div>
@@ -115,6 +125,9 @@
                 <!--</form>-->
             <!--</section>-->
         <!--</div>-->
+    </div>
+    <div class="login-bottom">
+        <p>Copyright © 2015-2016 杭州魔筷科技有限公司 浙ICP备15018042号-1</p>
     </div>
 </div>
 

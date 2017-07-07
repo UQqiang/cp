@@ -1,10 +1,10 @@
 ;(function () {
     var main = {
         init: function () {
-            this.page = {};
-            this.page.pageSize = 20;
-            this.page.vpage = 10;
-            this.pageId = 1;
+            this.page_pop = {};
+            this.page_pop.pageSize = 10;
+            this.page_pop.vpage = 10;
+            this.page_pop.pageId = 1;
             this.search_key = {};
             this.order_id = HDL.getQuery('order_id');
             this.user_id = HDL.getQuery('user_id');
@@ -115,10 +115,66 @@
         },
         addEvent: function () {
             var that = this;
+            //修改物流信息
+            $('body').on('click','.j-change-logistic',function(){
+                // 依赖数据
+                var data = {};
+                data.order_item_list = that.cacheOrderDetail;
+                data.order_consignee_d_t_o = that.cacheOrderConsignee;
+                that.delivery_info_id = $(this).attr('data-value');
+                popupchangeLogistic(data);
+                function popupchangeLogistic(data) {
+                    var popdata = {};
+                    popdata.title = '修改物流信息';
+                    popdata.content = '<div id="popupchangeLogistic"></div>';
+                    popdata.width = 800;
+                    that.popup(popdata, function () {
+                        var template = _.template($('#j-template-change-logistics').html());
+                        $('#popupchangeLogistic').html(template({
+                            item: data,
+                            orderStatus: that.orderStatusData
+                        }));
+                        that.queryLogisticsCompany();
+                    }, function (btn, dialog) {
+                        // 确定操作
+                        var changeLogistic = {};
+                        var delivery_company = $('#changelogisticsList').val();
+                        var delivery_code = $.trim($('#changelogisticCode').val());
+                        var orderItem_ids = [];
+
+                        if (delivery_company == '请选择物流公司' || delivery_company == '') {
+                            toastr.error('请选择物流公司', '提示');
+                            return false;
+                        }
+
+                        if (delivery_code == '') {
+                            toastr.error('请填写物流单号', '提示');
+                            return false;
+                        }
+                        changeLogistic.delivery_company = delivery_company;
+                        changeLogistic.delivery_code = delivery_code;
+
+                        var $logisticsitems = $('.logistics_items')
+                        for (var i = 0; i < $logisticsitems.length; i++) {
+                            orderItem_ids.push($logisticsitems.eq(i).attr('data-id'));
+                        }
+
+                        changeLogistic.order_id = data.order_item_list[0].order_id;
+                        changeLogistic.user_id = data.order_item_list[0].user_id;
+                        changeLogistic.delivery_info_id = orderItem_ids.toString();
+
+                        that.changeLogistic(changeLogistic, function () {
+                            setTimeout(function(){
+                                location.reload();
+                            },1000)
+                        });
+                    });
+                }
+            });
 
             // 发货
             $(document).on('click', '.j-send-goods', function () {
-                var orderInfo = JSON.parse(decodeURIComponent($(this).attr('data-orderinfo')));
+                // var orderInfo = JSON.parse(decodeURIComponent(that.orderInfo));
                 var refundMark = $(this).attr('data-refund_mark');
                 var order_id = $(this).attr('data-order_id');
                 var user_id = $(this).attr('data-user_id');
@@ -136,7 +192,7 @@
                 that.popup(data, function () {
                     var template = _.template($('#j-template-send-goods').html());
                     $('#orderInfo').html(template({
-                        item: orderInfo,
+                        item: that.orderInfo,
                         orderStatus: that.orderStatusData
                     }));
                     that.iCheck();
@@ -186,16 +242,51 @@
                     });
                 });
             });
+
+            // 修改仓库
+            $(document).on('click', '.warehouse-change', function () {
+                that.getWarehouseInfo();
+            });
+
         },
-        popup: function (data, cb, success) {
-            this.popupDialog = jDialog.dialog({
-                title: data.title,
-                content: data.content,
-                width: data.width || 600,
-                height: 600,
-                draggable: false,
-                buttonAlign: 'right',
-                buttons: [{
+
+        // 修改物流信息
+        changeLogistic: function (data,cb) {
+            var that = this;
+            Api.get({
+                url: '/order/delivery/update.do',
+                data: data,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('修改物流信息成功', '提示');
+                    that.getOrderDetail();
+                    that.getOrderLogistic();
+                    cb && cb(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
+        },
+
+        popup: function (data, cb, success, num) {
+            if (num == 1) {
+                var button = [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }]
+            }else if (num == 0) {
+                var button = '';
+            }else{
+                var button = [{
                     type: 'highlight',
                     text: '确定',
                     handler: function (button, dialog) {
@@ -208,6 +299,15 @@
                         dialog.close();
                     }
                 }]
+            }
+            this.popupDialog = jDialog.dialog({
+                title: data.title,
+                content: data.content,
+                width: data.width || 600,
+                height: 600,
+                draggable: false,
+                buttonAlign: 'right',
+                buttons: button
             });
             cb && cb();
         },
@@ -237,7 +337,8 @@
                         orderStatus: that.orderStatusData
                     }));
                     that.order_sn = data.data.order_sn;
-
+                    that.cacheOrderConsignee = data.data.order_consignee_d_t_o;
+                    that.setClipboard();
                     cb && cb();
                 },
                 complete: function () {
@@ -272,18 +373,108 @@
                     $('#orderLogistic').html(template({
                         items: data.data
                     }));
-
                     $('#orderLogistic a').click(function (e) {
                         e.preventDefault();
                         $(this).tab('show')
-                    })
-
+                    });
+                    if (data.data.length) {
+                        that.cacheOrderDetail = data.data[0].order_item_list;
+                    }
                 },
                 complete: function () {
 
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        /**
+         * 获取仓库信息
+         */
+        getWarehouseInfo: function () {
+            var that = this;
+            // Api.get({
+            //     url: '/order/delivery/query.do',
+            //     data: {
+            //
+            //     },
+            //     beforeSend: function () {
+            //
+            //     },
+            //     success: function (data) {
+                    var data = that.orderStatusData;
+                    function renderWarehouseList() {
+                        var template = _.template($('#j-template-warehouse-change').html());
+                        $('#warehouseChangeList').html(template({
+                            item: data
+                        }));
+                        that.paginationPop(20);
+                    }
+                    if (!$('#warehouseChangeList').length) {
+                        var popdata = {};
+                        popdata.title = '选择仓库 | <a href="#" class="green">新建仓库</a>';
+                        popdata.content = '<div id="warehouseChangeList"></div>';
+                        popdata.width = 800;
+                        that.popup(popdata, function () {
+                            that.iCheck();
+                            renderWarehouseList();
+                        }, function (btn, dialog) {
+                            // 确定操作
+                            var warehouseData = {};
+                            var checkedBox = $('.checkbox:checked');
+                            var needLogistics = $('input[name=logistics]:checked').attr('data-value');
+
+                            if (checkedBox.length < 1) {
+                                toastr.error('请选择仓库', '提示');
+                                return false;
+                            }
+
+                            for (var i = 0; i < checkedBox.length; i++) {
+                                orderItem_ids.push(checkedBox.eq(i).attr('data-id'));
+                            }
+                            warehouseData = {
+
+                            }
+                            that.changeWarehouse(warehouseData, function () {
+                                dialog.close();
+                            });
+                        },0);
+                    }else {
+                        renderWarehouseList();
+                    }
+                // },
+                // complete: function () {
+                //
+                // },
+                // error: function (data) {
+                //     toastr.error(data.msg, '提示');
+                // }
+            // });
+        },
+        /**
+         * 修改仓库信息
+         */
+        changeWarehouse: function () {
+            var that = this;
+            Api.get({
+                url: '/order/query.do',
+                data: {
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('修改仓库成功','提示');
+                    setTimeout(function () {
+                        location.reload();
+                    },2000);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
                 }
             });
         },
@@ -306,6 +497,7 @@
                         item: data.data.data[0],
                         orderStatus: that.orderStatusData
                     }));
+                    that.orderInfo = data.data.data[0];
                 },
                 complete: function () {
 
@@ -331,6 +523,9 @@
                     $('#logisticsList').html(tpl({
                         items: data.data
                     }));
+                    $('#changelogisticsList').html(tpl({
+                        items: data.data
+                    }));
                     // 物流属性切换
                     $('input[name=logistics]').on('ifChecked', function () {
                         var value = $(this).attr('data-value');
@@ -341,7 +536,7 @@
                             // 不需要物流
                             $('.logistics-info').hide();
                         }
-                    })
+                    });
                 },
                 complete: function () {
 
@@ -375,7 +570,53 @@
                     console.log(data, msg);
                 }
             });
-        }
+        },
+
+        // 复制地址
+        setClipboard: function () {
+            var that = this;
+            // 添加复制功能
+            var client = new ZeroClipboard($('.copy-btn'));
+            client.on('ready', function() {
+                $('.copy-btn').removeClass('copy-btn');
+
+                client.on('copy', function(event) {
+                    //event.clipboardData.setData('text/plain', 'copy text');
+                });
+                client.on('aftercopy', function() {
+                    toastr.success('复制成功','提示');
+                });
+            });
+        },
+
+        // 弹出框翻页
+        paginationPop: function (total) {
+            var that = this;
+            var pagination_pop = $('.pagination-pop-warehouse')
+            pagination_pop.jqPaginator({
+                totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
+                pageSize: that.page_pop.pageSize,                                    // 设置每一页的条目数
+                visiblePages: that.page_pop.vpage,                                   // 设置最多显示的页码数
+                currentPage: that.page_pop.pageId,                                        // 设置当前的页码
+                first: '<a class="first" href="javascript:;">&lt;&lt;<\/a>',
+                prev: '<a class="prev" href="javascript:;">&lt;<\/a>',
+                next: '<a class="next" href="javascript:;">&gt;<\/a>',
+                last: '<a class="last" href="javascript:;">&gt;&gt;<\/a>',
+                page: '<a href="javascript:;">{{page}}<\/a>',
+                onPageChange: function (num, type) {
+                    that.page_pop.pageId = num;
+                    if (type == 'change') {
+                        that.getWarehouseInfo();
+                    }
+                }
+            });
+            var n = $('#warehouseChangeList').find('tr').length - 1;
+            if (total && total != 0) {
+                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+            } else {
+                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
     };
     // run
     $(function () {

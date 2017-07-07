@@ -1,9 +1,13 @@
 @import "_mixin.scss";
 
-#orderList, #orderInfo {
-  .order-header {
+#orderList, #orderInfo, #changePriceInfo, #checkOrderInfo, #orderRefund {
+  .order-header, .price-header {
     background: #f8f8f8;
     box-shadow: 1px 1px 5px #ccc;
+    th {
+        border-right: none;
+        border-left: none;
+    }
   }
   .fa {
     font-size: 16px;
@@ -11,7 +15,7 @@
     margin-right: 5px;
     cursor: pointer;
     &.fa-star {
-      color: red;
+      color: #1ABB9C;
     }
   }
   dl {
@@ -29,7 +33,7 @@
     dd {
       float: left;
       p {
-        max-width: 250px;
+        max-width: 150px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -51,8 +55,8 @@
 
 #order, #orderRefund {
   padding: 20px;
-  /* border: 1px solid #ccc; */
-  background: #f8f8f8;
+  // /* border: 1px solid #ccc; */
+  // background: #f8f8f8;
   border-radius: 4px;
   margin-top: 50px;
 }
@@ -62,9 +66,9 @@
   .tab-pane {
     padding: 20px;
     .parcel-info {
-      padding: 20px 0;
+      padding: 0 0 20px 0;
       border-bottom: 1px solid #73879C;
-      border-top: 1px solid #73879C;
+    //   border-top: 1px solid #73879C;
     }
   }
   .thirdparty-list:nth-child(3) {
@@ -116,7 +120,12 @@
     width: 150px;
   }
 }
-
+.box-block {
+    border: 1px solid #ddd;
+    // border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px
+}
 #orderRefundList {
   .refund-list:nth-child(1) {
     color: #26B99A;
@@ -155,8 +164,24 @@
       }
       .refund-detail {
         margin-top: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       }
     }
   }
 }
+.partdeliver {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    border: 1px solid #1ABB9C;
+}
+
+// 弹出框页面＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+.pagination-pop, .pagination-pop-select, .pagination-pop-warehouse {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+// 弹出框页面＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
