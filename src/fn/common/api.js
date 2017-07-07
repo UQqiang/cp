@@ -1,5 +1,6 @@
 /**
  * Created by lijiahao on 17/3/1.
+ * ajax Api
  */
 ;var Api = (function () {
     var api = {
@@ -8,9 +9,14 @@
             return this;
         },
         domain: function () {
-            // 172.16.0.98
-            this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
-            //this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
+            var host = location.host;
+            if (!host || host.indexOf('localhost') != -1 || host.indexOf('file') != -1) {
+                // 测试环境 or 本地环境
+                this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+                //this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
+            } else {
+                this.ajaxDomain = 'http://' + host + '/bossmanager';
+            }
             return this.ajaxDomain;
         },
         post: function (opts) {
@@ -64,9 +70,9 @@
                     }, 500);
                     opts.complete && opts.complete(data);
                 },
-                error: function (xhr,status,error) {
-                    console.log(xhr,status,error);
-                    opts.error && opts.error(xhr,status,error);
+                error: function (xhr, status, error) {
+                    console.log(xhr, status, error);
+                    opts.error && opts.error(xhr, status, error);
                 }
             })
         }

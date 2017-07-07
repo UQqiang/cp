@@ -8,6 +8,7 @@
             this.search_key = {};
             this.categoryList = [];
             this.brandList = [];
+            this.selectedList = [];
             this.idList = JSON.parse(decodeURIComponent(HDL.getQuery('id').split(',')));
 
             this.channelNum();
@@ -106,7 +107,7 @@
                 type: 0,
                 title: '商品选择',
                 selectLength: 0,
-                selectedList: that.selectList,
+                selectedList: that.selectedList,
                 ajaxUrl: Api.domain() + '/item/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
@@ -120,7 +121,8 @@
                     for (var i = 0; i < data.length; i++) {
                         idList.push(data[i].id);
                     }
-                    postData.target_list = idList;
+                    that.selectedList = idList;
+                    postData.target_list = JSON.stringify(idList);
                     postData.type = 4;
 
                     if (that.isSingle === true) {
@@ -150,7 +152,7 @@
                 type: 4,
                 title: '品牌选择',
                 selectLength: 0,
-                selectedList: that.selectList,
+                selectedList: that.selectedList,
                 ajaxUrl: Api.domain() + '/brand/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
@@ -161,7 +163,9 @@
                     for (var i = 0; i < data.length; i++) {
                         idList.push(data[i].id);
                     }
-                    postData.target_list = idList;
+
+                    that.selectedList = idList;
+                    postData.target_list = JSON.stringify(idList);
                     postData.type = 2;
 
                     if (that.isSingle === true) {
@@ -191,7 +195,7 @@
                 type: 5,
                 title: '类目选择',
                 selectLength: 0,
-                selectedList: that.selectList,
+                selectedList: that.selectedList,
                 ajaxUrl: Api.domain() + '/category/leaf/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
@@ -204,7 +208,8 @@
                             idList.push(data[i].id);
                         }
                     }
-                    postData.target_list = idList;
+                    that.selectedList = idList;
+                    postData.target_list = JSON.stringify(idList);
                     postData.type = 3;
 
                     if (that.isSingle === true) {
@@ -381,28 +386,63 @@
                 }
                 $(this).parents('.channel-detail').remove();
                 that.channelNum();
+            });
+
+            // 关联全部
+            $('#selectAll').click(function () {
+                that.tip({
+                    target: $(this),
+                    content: '确定要关联全部商品吗?',
+                    position: 'right'
+                }, function (btn, dialog) {
+                    var postData = {};
+                    postData.type = 1;
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        });
+                    }
+
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                })
             })
         },
+
+        /**
+         * 关联商品
+         * @param postData
+         * @param cb
+         */
         associatedGoods: function (postData, cb) {
             var that = this;
             var channel_list = [];
             for (var i = 0; i < this.idList.length; i++) {
                 channel_list.push(this.idList[i].id);
             }
-            postData.channel_list = channel_list;
+            postData.channel_list = JSON.stringify(channel_list);
             console.log(postData);
-            cb && cb();
-            return;
             Api.get({
-                url: '/category/query.do',
-                data: {},
+                url: '/item/bind_channel.do',
+                data: postData,
                 beforeSend: function () {
 
                 },
                 success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('关联中,关联进度请查看关联列表<a style="color:blue;" href="channel-goods.html">点击</a>', '提示');
+                        cb && cb();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
                 },
                 complete: function () {
-
+                    that.selectedList.splice(0, that.selectedList.length);
                 },
                 error: function (data) {
                     toastr.error(data.msg, '提示');

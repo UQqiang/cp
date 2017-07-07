@@ -327,10 +327,12 @@
                     title: '关联列表',
                     content: '<div class="channel-wrapper"></div>'
                 }, function () {
-                    var template = _.template($('#j-channel-list').html());
-                    $('.channel-wrapper').html(template({
-                        items: []
-                    }))
+                    that.bindTask(function (data) {
+                        var template = _.template($('#j-channel-list').html());
+                        $('.channel-wrapper').html(template({
+                            items: data.data
+                        }))
+                    })
                 })
             });
 
@@ -400,6 +402,35 @@
                 url: '/brand/delete.do',
                 data: {
                     brand_id: id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+        /**
+         * 关联列表
+         */
+        bindTask: function () {
+            var that = this;
+            Api.get({
+                url: '/biz_item/query_bind_task.do',
+                data: {
+                    bind_task_qto: {
+                        needPaging: true,
+                        pageSize: that.page.pageSize,
+                        currentPage: that.pageId
+                    }
                 },
                 beforeSend: function () {
 

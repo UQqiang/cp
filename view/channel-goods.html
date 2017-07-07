@@ -45,7 +45,7 @@
                     </div>
                 </div>
             </div>
-        </div>        <!-- 姓名角色-->
+        </div>
         <div class="x_panel">
             <div class="x_title">
                 <h2><small>渠道列表</small></h2>
@@ -182,7 +182,13 @@
         <tbody>
         <% if( items.length > 0 ){ %>
         <% _.each(items, function(item, index){ %>
-
+            <tr>
+                <td class="tc"><%= item.channel_name %></td>
+                <td class="tc"><%= ['-','全部','指定品牌','指定类目','指定商品'][item.type] %><%= item.target_name %></td>
+                <td class="tc"><%= item.start_time %></td>
+                <td class="tc"><%= item.end_time %></td>
+                <td class="tc"><%= item.status %></td>
+            </tr>
         <% }) %>
         <% }else{ %>
         <tr>

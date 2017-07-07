@@ -7,7 +7,7 @@
             this.pageId = 1;
             this.search_key = {};
             this.addEvent();
-            this.queryBrand();
+            this.queryChannel();
         },
         /**
          * tip
@@ -95,7 +95,7 @@
             $('#search').click(function () {
                 that.search_key = $.trim($('#keywords').val());
                 that.pageId = 1;
-                that.queryBrand();
+                that.queryChannel();
             });
 
             // batch delete
@@ -112,7 +112,7 @@
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {
                     //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
+                    //    that.queryChannel();
                     //}, function (data) {
                     //    toastr.error(data.msg)
                     //});
@@ -132,7 +132,7 @@
                 that.tip(data, function (btn, dialog) {
                     that.deleteBrand(id, function (data) {
                         toastr.success('已成功删除' + name, '提示');
-                        that.queryBrand();
+                        that.queryChannel();
                     }, function (data) {
                         toastr.error(data.msg)
                     });
@@ -170,7 +170,7 @@
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {
                     //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
+                    //    that.queryChannel();
                     //}, function (data) {
                     //    toastr.error(data.msg)
                     //});
@@ -194,7 +194,7 @@
                     console.log(idList);
                     //that.deleteBrand(idList, function (data) {
                     //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryBrand();
+                    //    that.queryChannel();
                     //}, function (data) {
                     //    toastr.error(data.msg)
                     //});
@@ -205,16 +205,17 @@
             });
         },
         /**
-         * 品牌列表
+         * 渠道列表
          */
-        queryBrand: function () {
+        queryChannel: function () {
             var that = this;
             Api.get({
-                url: '/brand/query.do',
+                url: '/channel/control/query.do',
                 data: {
                     current_page: that.pageId || 1,
                     page_size: that.page.pageSize || 20,
-                    keywords: that.search_key || ''
+                    name: that.search_key || '',
+                    parent_biz_code: $.cookie('biz_code')
                 },
                 mask: true,
                 beforeSend: function () {
@@ -225,10 +226,10 @@
                     document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
-                        //var t = _.template($('#j-template').html());
-                        //$('#brandList').html(t({
-                        //    items: data.data.data
-                        //}));
+                        var t = _.template($('#j-template').html());
+                        $('#brandList').html(t({
+                            items: data.data.channel_info_list
+                        }));
                         that.iCheck();
                     } else {
                         $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
@@ -285,7 +286,7 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        that.queryBrand()
+                        that.queryChannel()
                     }
                 }
             });
