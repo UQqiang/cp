@@ -1,4 +1,16 @@
 @charset "UTF-8";
+html {
+  height: 100%;
+}
+
+body {
+  height: inherit;
+}
+
+.login-content {
+  height: inherit;
+}
+
 .verify-input {
   display: inline-block;
   border-radius: 3px 0 0 3px;
@@ -7,12 +19,12 @@
 .verify {
   display: inline-block;
   background: #dedede;
-  height: 33px;
+  height: 34px;
   width: 100px;
   border-radius: 0 3px 3px 0;
+  vertical-align: top;
   /* padding: 1px; */
   border: 1px solid #fff;
-  margin-left: 45px;
 }
 .verify img {
   width: 100%;
@@ -23,4 +35,40 @@
 input:-webkit-autofill,
 input:focus:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+}
+
+i {
+  font-size: 22px !important;
+  vertical-align: middle;
+}
+
+.verify-input {
+  width: 170px !important;
+}
+
+label {
+  height: 32px;
+  line-height: 32px;
+  vertical-align: top;
+}
+
+#j-submit {
+  text-shadow: none;
+  font-size: 18px;
+}
+
+.login-top {
+  border-bottom: 1px solid #c8c8c8;
+  height: 100px;
+  background: #fff;
+  font-size: 30px;
+  line-height: 100px;
+  padding-left: 20%;
+}
+
+.login-bottom {
+  text-align: center;
+  background: #fff;
+  height: inherit;
+  padding-top: 60px;
 }

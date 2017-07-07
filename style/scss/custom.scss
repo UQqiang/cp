@@ -3942,6 +3942,7 @@ a.hiddenanchor {
   margin-top: 5%;
   max-width: 350px;
   position: relative;
+  height: 500px;
 }
 
 .registration_form, .login_form {
@@ -3958,6 +3959,8 @@ a.hiddenanchor {
 
 .login_form {
   z-index: 22;
+  z-index: 22;
+    padding: 15px 26px;
 }
 
 #signup:target ~ .login_wrapper .registration_form, #signin:target ~ .login_wrapper .login_form {
@@ -4134,7 +4137,7 @@ a.hiddenanchor {
   border: 1px solid #c8c8c8;
   color: #777;
   margin: 0 0 20px;
-  width: 100%;
+  width: 85%;
 }
 
 .login_content form input[type="text"]:focus, .login_content form input[type="email"]:focus, .login_content form input[type="password"]:focus {
