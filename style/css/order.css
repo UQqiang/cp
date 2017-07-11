@@ -1,21 +1,25 @@
 @charset "UTF-8";
-#orderList .order-header, #orderInfo .order-header {
+#orderList .order-header, #orderList .price-header, #orderInfo .order-header, #orderInfo .price-header, #changePriceInfo .order-header, #changePriceInfo .price-header, #checkOrderInfo .order-header, #checkOrderInfo .price-header, #orderRefund .order-header, #orderRefund .price-header {
   background: #f8f8f8;
   box-shadow: 1px 1px 5px #ccc;
 }
-#orderList .fa, #orderInfo .fa {
+#orderList .order-header th, #orderList .price-header th, #orderInfo .order-header th, #orderInfo .price-header th, #changePriceInfo .order-header th, #changePriceInfo .price-header th, #checkOrderInfo .order-header th, #checkOrderInfo .price-header th, #orderRefund .order-header th, #orderRefund .price-header th {
+  border-right: none;
+  border-left: none;
+}
+#orderList .fa, #orderInfo .fa, #changePriceInfo .fa, #checkOrderInfo .fa, #orderRefund .fa {
   font-size: 16px;
   display: inline-block;
   margin-right: 5px;
   cursor: pointer;
 }
-#orderList .fa.fa-star, #orderInfo .fa.fa-star {
-  color: red;
+#orderList .fa.fa-star, #orderInfo .fa.fa-star, #changePriceInfo .fa.fa-star, #checkOrderInfo .fa.fa-star, #orderRefund .fa.fa-star {
+  color: #1ABB9C;
 }
-#orderList dl, #orderInfo dl {
+#orderList dl, #orderInfo dl, #changePriceInfo dl, #checkOrderInfo dl, #orderRefund dl {
   clear: both;
 }
-#orderList dl dt, #orderInfo dl dt {
+#orderList dl dt, #orderInfo dl dt, #changePriceInfo dl dt, #checkOrderInfo dl dt, #orderRefund dl dt {
   float: left;
   padding: 2px;
   margin: 0 10px;
@@ -23,20 +27,20 @@
   border-radius: 4px;
   box-shadow: 1px 1px 1px rgba(38, 185, 154, 0.1) inset, 1px 1px 1px rgba(38, 185, 154, 0.1);
 }
-#orderList dl dt .order-image, #orderInfo dl dt .order-image {
+#orderList dl dt .order-image, #orderInfo dl dt .order-image, #changePriceInfo dl dt .order-image, #checkOrderInfo dl dt .order-image, #orderRefund dl dt .order-image {
   width: 64px;
   height: 64px;
 }
-#orderList dl dd, #orderInfo dl dd {
+#orderList dl dd, #orderInfo dl dd, #changePriceInfo dl dd, #checkOrderInfo dl dd, #orderRefund dl dd {
   float: left;
 }
-#orderList dl dd p, #orderInfo dl dd p {
-  max-width: 250px;
+#orderList dl dd p, #orderInfo dl dd p, #changePriceInfo dl dd p, #checkOrderInfo dl dd p, #orderRefund dl dd p {
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#orderList dl dd p.sku, #orderInfo dl dd p.sku {
+#orderList dl dd p.sku, #orderInfo dl dd p.sku, #changePriceInfo dl dd p.sku, #checkOrderInfo dl dd p.sku, #orderRefund dl dd p.sku {
   font-size: 12px;
   color: #ccc;
 }
@@ -49,8 +53,6 @@
 /**** 订单详情 ***/
 #order, #orderRefund {
   padding: 20px;
-  /* border: 1px solid #ccc; */
-  background: #f8f8f8;
   border-radius: 4px;
   margin-top: 50px;
 }
@@ -62,9 +64,8 @@
   padding: 20px;
 }
 #orderLogistic .tab-pane .parcel-info {
-  padding: 20px 0;
+  padding: 0 0 20px 0;
   border-bottom: 1px solid #73879C;
-  border-top: 1px solid #73879C;
 }
 #orderLogistic .thirdparty-list:nth-child(3) {
   color: #26B99A;
@@ -112,6 +113,12 @@
   width: 150px;
 }
 
+.box-block {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
 #orderRefundList .refund-list:nth-child(1) {
   color: #26B99A;
 }
@@ -151,5 +158,20 @@
 }
 #orderRefundList .refund-list .refund-content .refund-detail {
   margin-top: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.partdeliver {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  border: 1px solid #1ABB9C;
+}
+
+.pagination-pop, .pagination-pop-select, .pagination-pop-warehouse {
+  display: inline-block;
+  margin-bottom: 20px;
 }
