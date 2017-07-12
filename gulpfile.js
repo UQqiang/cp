@@ -351,6 +351,6 @@ gulp.task('dev', ['build', 'clean'], function () {
 // Rc Task
 // 生产环境
 gulp.task('rc', ['html', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'copy-img', 'hash']);
+    gulp.start(['copy-plugin', 'copy-stub', 'copy-js', 'copy-img', 'hash']);
     console.log('============rc OK version!============')
 });

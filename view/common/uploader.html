@@ -34,14 +34,20 @@
 
 <!-- 图片选择模板 -->
 <script type="text/template" id="j-select-img-tpl">
+    <% if( items.length > 0 ){ %>
     <% _.each(items,function(item,index){ %>
     <tr>
         <td class="tc"><a class="j-blank-link" target="_blank" href="<%= item.file_url %>"><img style="width: 60px;height: 60px;" src="<%= item.file_url %>"></a></td>
         <td><%= item.file_name %></td>
         <td class="j-time tc"><%= item.create_time %></td>
-        <td>
+        <td class="tc">
             <a href="javascript:;" class="j-select-img tc" data-furl="<%= item.file_url %>">选择</a>
         </td>
     </tr>
     <% }) %>
+    <% }else{ %>
+    <tr>
+        <td class="tc" colspan="18">没有任何记录~</td>
+    </tr>
+    <% } %>
 </script>

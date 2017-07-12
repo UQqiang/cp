@@ -239,7 +239,7 @@
                         }));
                         that.iCheck();
                     } else {
-                        $('#channelList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
+                        $('#channelList').html('<tr><td class="tc" colspan="18">没有任何记录!</td></tr>')
                     }
 
                     that.pagination(data.data.total_count);

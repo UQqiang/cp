@@ -30,7 +30,7 @@
 }
 
 .nav-sm .container.body .right_col {
-  padding: 10px 20px;
+  padding: 10px 15px;
   margin-left: 70px;
   z-index: 2;
 }
@@ -253,7 +253,7 @@ body .container.body .right_col {
 }
 
 .nav-md .container.body .right_col {
-  padding: 10px 20px 0;
+  padding: 10px 15px 0;
   margin-left: 230px;
 }
 
@@ -1037,7 +1037,7 @@ h2 {
   position: relative;
   width: 100%;
   margin-bottom: 10px;
-  padding: 10px 17px;
+  padding: 10px 15px;
   display: inline-block;
   background: #fff;
   border: 1px solid #E6E9ED;
@@ -2463,6 +2463,7 @@ legend {
 
 .form-group-sm {
   width: 100px;
+  height: 30px;
 }
 
 .validate {
@@ -5573,4 +5574,23 @@ a.antoo {
     border-radius: 100%;
     width: 80px;
   }
+}
+
+.information-warning{
+  padding: 0 6px;
+  border-radius: 100%;
+  border: 1px solid #ec971f;
+  color: #ec971f;
+  margin: 0 5px 0 0;
+}
+.required-icon{
+  font-size: 12px;
+  display: inline-block;
+  margin-right: 2px;
+  color:red;
+}
+
+/**************************** 修正selectize使其兼容后台 ********************/
+.selectize-input{
+  padding: 4px 10px!important;
 }

@@ -37,6 +37,7 @@
                     this.isSingle = true;
                     // todo 单个供应商需要请求已经关联的商品列表
                     $('.channel-goods-list').show();
+                    this.queryAssociatedGoodsList()
                 }
             }
         },
@@ -551,6 +552,40 @@
                 }
             });
         },
+
+        /**
+         * 已经关联的商品列表
+         */
+        queryAssociatedGoodsList: function (id) {
+            var that = this;
+            Api.get({
+                url: '/biz_item/query.do',
+                data: {
+                    biz_item_qto: JSON.stringify({
+                        biz_code: 'direct-biz',
+                        need_paging: true,
+                        page_size: that.page.pageSize,
+                        current_page: that.pageId
+                    })
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    var template = _.template($('#j-template-goods').html());
+                    $('#goodsList').html(template({
+                        items: data.data.data
+                    }));
+                    that.pagination(data.data.total_count)
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    toastr.error(data.msg)
+                }
+            });
+        },
         /**
          * 删除品牌
          */
@@ -578,7 +613,7 @@
         },
         pagination: function (total) {
             var that = this;
-            var pagination = $('.ui-pagination')
+            var pagination = $('.ui-pagination');
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -592,12 +627,12 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        that.queryBrand()
+                        that.queryAssociatedGoodsList()
                     }
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#warehouseList').find('tr.list').length;
+            var n = $('#goodsList').find('tr.list').length;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

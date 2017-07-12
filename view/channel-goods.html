@@ -186,8 +186,8 @@
                 <td class="tc"><%= item.channel_name %></td>
                 <td class="tc"><%= ['-','全部','指定品牌','指定类目','指定商品'][item.type] %><%= item.target_name %></td>
                 <td class="tc"><%= item.start_time %></td>
-                <td class="tc"><%= item.end_time %></td>
-                <td class="tc"><%= item.status %></td>
+                <td class="tc"><%= item.end_time || '-' %></td>
+                <td class="tc"><%= ['-','进行中','成功','失败'][item.status] %></td>
             </tr>
         <% }) %>
         <% }else{ %>

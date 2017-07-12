@@ -330,7 +330,7 @@
                     that.bindTask(function (data) {
                         var template = _.template($('#j-channel-list').html());
                         $('.channel-wrapper').html(template({
-                            items: data.data
+                            items: data.data.data
                         }))
                     })
                 })
@@ -421,16 +421,16 @@
         /**
          * 关联列表
          */
-        bindTask: function () {
+        bindTask: function (success) {
             var that = this;
             Api.get({
                 url: '/biz_item/query_bind_task.do',
                 data: {
-                    bind_task_qto: {
+                    bind_task_qto: JSON.stringify({
                         needPaging: true,
                         pageSize: that.page.pageSize,
                         currentPage: that.pageId
-                    }
+                    })
                 },
                 beforeSend: function () {
 

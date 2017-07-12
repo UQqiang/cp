@@ -136,12 +136,12 @@
 <script type="text/template" id="j-template-goods">
     <% if( items.length > 0 ){ %>
     <% _.each(items,function(item, index){ %>
-    <tr>
+    <tr class="list">
         <th class="column-title tc">
             <input type="checkbox" class="flat checkbox" data-id="<%= item.id %>">
         </th>
         <td><span class="goods-name"><%= item.item_name %></span></td>
-        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
+        <td class="tc"><%= (item.cost_price/100).toFixed(2) %></td>
         <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
         <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
         <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>

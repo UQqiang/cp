@@ -34,12 +34,12 @@
                         <!-- 运费模板内容开始 -->
                             <div class="form-inline">
                                 <div class="form-group field item">
-                                    <label class="ui-label ui-label-md tr">模板名称：</label>
+                                    <label class="ui-label ui-label-md tr"><span class="required-icon">*</span>模板名称：</label>
                                     <input type="text" class="form-control form-control-hg" id="name" required="required" name="模板名称" placeholder="请输入模板名称">
                                 </div>
                                 <br/>
                                 <div class="form-group mb10 mt10">
-                                    <label class="ui-label ui-label-md tr">计价方式：</label>
+                                    <label class="ui-label ui-label-md tr"><span class="required-icon">*</span>计价方式：</label>
                                 </div>
                                 <div class="form-group">
                                     <label>
@@ -61,13 +61,13 @@
                                 </div>
                                 <br/>
                                 <div class="form-group">
-                                    <label class="ui-label ui-label-md tr">配送区域：</label> <span>除指定地区外，其余地区的运费采用”默认运费“</span>
+                                    <label class="ui-label ui-label-md tr"><span class="required-icon">*</span>配送区域：</label> <span>除指定地区外，其余地区的运费采用”默认运费“</span>
                                 </div>
                             </div>
                             <div class="template-set mb-15 ">
                                 <div class="form-inline">
                                     <div class="form-group default-shipping">
-                                        <label>默认运费：</label>
+                                        <label><span class="required-icon">*</span>默认运费：</label>
                                         <div class="field item inline">
                                             <input class="form-control form-control-sm basic_count" type="text" required="required" name="数据" pattern="decimalOne">
                                         </div>
@@ -178,7 +178,7 @@
                 <% if( status == 0 ){ %>
                 <input type="text" class="form-control form-control-sm basic_count" value="<%= item.basic_count %>" required="required" name="数据" pattern="numeric">
                 <% }else{ %>
-                <input type="text" class="form-control form-control-sm basic_count" value="<%= (item.basic_count / 10) %>" required="required" name="数据" pattern="decimalOne">
+                <input type="text" class="form-control form-control-sm basic_count" value="<%= (item.basic_count) %>" required="required" name="数据" pattern="decimalOne">
                 <% } %>
             </div>
         </td>
@@ -192,7 +192,7 @@
                 <% if( status == 0 ){ %>
                 <input type="text" class="form-control form-control-sm extra_count" value="<%= (item.extra_count) %>" required="required" name="数据" pattern="numeric">
                 <% }else{ %>
-                <input type="text" class="form-control form-control-sm extra_count" value="<%= (item.extra_count / 10) %>" required="required" name="数据" pattern="decimalOne">
+                <input type="text" class="form-control form-control-sm extra_count" value="<%= (item.extra_count) %>" required="required" name="数据" pattern="decimalOne">
                 <% } %>
             </div>
         </td>
