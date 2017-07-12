@@ -422,12 +422,16 @@
                             value: tax[i].id
                         });
                     }
+                    var list = that.warehouseList.length <= 0 ? [{text: '请选择仓库', value: 'null'}] : that.warehouseList
                     var selectize = $('#storage-template-selectize').selectize({
-                        options: that.warehouseList,
-                        placeholder: '请选择税仓库',
+                        options: list,
+                        placeholder: '请选择仓库',
                         create: false,
                         onItemAdd: function (value, $item) {
                             // 选择税率模板
+                            if(value == 'null'){
+                                return;
+                            }
                             that.storage_id = value
                         },
                         onItemRemove: function (value) {

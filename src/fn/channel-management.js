@@ -110,12 +110,12 @@
                 data.content = '确定要批量删除渠道吗?';
                 that.tip(data, function (btn, dialog) {
                     console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryChannel();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.deleteChannel((idList).toString(), function (data) {
+                        toastr.success('已成功批量删除', '提示');
+                        that.queryChannel();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -130,7 +130,7 @@
                 data.target = $(this);
                 data.content = '确定要删除仓库' + name + '吗?';
                 that.tip(data, function (btn, dialog) {
-                    that.deleteBrand(id, function (data) {
+                    that.deleteChannel(id, function (data) {
                         toastr.success('已成功删除' + name, '提示');
                         that.queryChannel();
                     }, function (data) {
@@ -146,10 +146,17 @@
             $(document).on('click', '.j-channel-freeze', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
+                var status = $(this).attr('data-status');
                 that.tip({
                     target: $(this),
-                    content: '确定要关闭' + name + '吗?'
+                    content: status == 1 ? '确定要关闭' + name + '吗?' : '确定要激活' + name + '吗?'
                 }, function (btn, dialog) {
+                    that.freeze(id, status, function () {
+                        toastr.success(status == 1 ? '成功关闭' + name : '成功激活' + name, '提示');
+                        that.queryChannel();
+                    }, function () {
+                        toastr.error(data.msg)
+                    });
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -168,12 +175,12 @@
                     content: '确定要批量关闭渠道吗?'
                 }, function (btn, dialog) {
                     console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryChannel();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.freeze(idList.toString(), 1,function (data) {
+                        toastr.success('已成功批量关闭', '提示');
+                        that.queryChannel();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -192,12 +199,12 @@
                     content: '确定要批量激活渠道吗?'
                 }, function (btn, dialog) {
                     console.log(idList);
-                    //that.deleteBrand(idList, function (data) {
-                    //    toastr.success('已成功批量删除', '提示');
-                    //    that.queryChannel();
-                    //}, function (data) {
-                    //    toastr.error(data.msg)
-                    //});
+                    that.freeze(idList.toString(), 0,function (data) {
+                        toastr.success('已成功批量激活', '提示');
+                        that.queryChannel();
+                    }, function (data) {
+                        toastr.error(data.msg)
+                    });
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -227,12 +234,12 @@
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
                         var t = _.template($('#j-template').html());
-                        $('#brandList').html(t({
-                            items: data.data.channel_info_list
+                        $('#channelList').html(t({
+                            items: data.data.data
                         }));
                         that.iCheck();
                     } else {
-                        $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
+                        $('#channelList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
                     }
 
                     that.pagination(data.data.total_count);
@@ -246,14 +253,40 @@
             });
         },
         /**
-         * 删除品牌
+         * 删除渠道
          */
-        deleteBrand: function (id, success, error) {
+        deleteChannel: function (id, success, error) {
             var that = this;
             Api.get({
-                url: '/brand/delete.do',
+                url: '/channel/control/delete.do',
                 data: {
-                    brand_id: id
+                    id_list: id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+        /**
+         * 关闭 & 激活 渠道
+         */
+        freeze: function (id, status, success, error) {
+            var that = this;
+            Api.get({
+                url: '/channel/control/activity.do',
+                data: {
+                    id_list: id,
+                    channel_status: status
                 },
                 beforeSend: function () {
 
@@ -291,7 +324,7 @@
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#warehouseList').find('tr.list').length;
+            var n = $('#channelList').find('tr.list').length;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

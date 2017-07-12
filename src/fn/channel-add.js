@@ -124,7 +124,7 @@
                     }
                     if (isValid == true) {
                         that.setPostData();
-                        if (that.id) {
+                        if (!that.id) {
                             that.addAccount();
                         } else {
                             that.changeAccount();
@@ -181,7 +181,7 @@
                     closeOnBodyClick: true
                 }, function (btn, dialog) {
                     dialog.close();
-                    location.href = 'goods-brand.html';
+                    location.href = 'channel-management.html';
                 }, function (btn, dialog) {
                     dialog.close();
                 })
@@ -264,24 +264,25 @@
         getData: function () {
             var that = this;
             Api.get({
-                url: "/storage/get.do",
+                url: "/channel/control/get.do",
                 data: {
                     id: that.id
                 },
+                mask: true,
                 success: function (data) {
                     // todo 先渲染省市区
                     if (data) {
                         that.getArea($('#areaList-province'), {
                             parent_name: 'province',
-                            parent_code: data.data.address_country.split('|')[1]
+                            parent_code: data.data.country
                         }, function () {
                             that.getArea($('#areaList-city'), {
                                 parent_name: 'city',
-                                parent_code: data.data.address_province.split('|')[1]
+                                parent_code: data.data.province
                             }, function () {
                                 that.getArea($('#areaList-area'), {
                                     parent_name: 'area',
-                                    parent_code: data.data.address_city.split('|')[1]
+                                    parent_code: data.data.city
                                 }, function () {
                                     that.renderDataFunc(data.data)
                                 });
@@ -308,7 +309,7 @@
                         $('#linkman').val(value);
                         break;
                     case 'linkphone':
-                        $('#supplierName').val(value);
+                        $('#linkphone').val(value);
                         break;
                     case 'country':
                         $('#areaList-country option[data-code=' + value + ']').prop('selected', true);
@@ -321,6 +322,9 @@
                         break;
                     case 'area':
                         $('#areaList-area option[data-code=' + value + ']').prop('selected', true);
+                        break;
+                    case 'address':
+                        $('#address').val(value);
                         break;
                     case 'comment':
                         $('#comment').val(value);
@@ -338,44 +342,41 @@
                         $('#originPwd').val(value);
                         break;
                     // 支付宝
-                    case 'is_paytype_alipay_available':
-                        if (value == 1) {
+                    case 'biz_info_d_t_o':
+                        if (value.biz_property_map.is_paytype_alipay_available && value.biz_property_map.is_paytype_alipay_available.value == 1) {
                             // 支付宝
-                            $('#alipayPartner').val(data.config_info.alipay_partner);
-                            $('#alipayAccount').val(data.config_info.alipay_account);
-                            $('#alipayMchPrivateKey').val(data.config_info.alipay_mch_private_key);
-                            $('#alipayPublicKey').val(data.config_info.alipay_public_key);
+                            $('[name=radio][value=alipay]').iCheck('check');
+                            $('#alipayPartner').val(value.biz_property_map.alipay_partner.value);
+                            $('#alipayAccount').val(value.biz_property_map.alipay_account.value);
+                            $('#alipayMchPrivateKey').val(value.biz_property_map.alipay_mch_private_key.value);
+                            $('#alipayPublicKey').val(value.biz_property_map.alipay_public_key.value);
                         }
-                        break;
-                    // 微信
-                    case 'is_paytype_wechat_available':
-                        if (value == 1) {
-                            $('#wechatH5AppId').val(data.config_info.wechat_h5_app_id);
-                            $('#wechatH5AppSecret').val(data.config_info.wechat_h5_app_secret);
-                            $('#wechatH5PartnerId').val(data.config_info.wechat_h5_partner_id);
-                            $('#wechatH5PartnerKey').val(data.config_info.wechat_h5_partner_key);
-                            $('#wechatAppAppId').val(data.config_info.wechat_app_app_id);
-                            $('#wechatAppAppSecret').val(data.config_info.wechat_app_app_secret);
-                            $('#wechatAppPartnerId').val(data.config_info.wechat_app_partner_id);
-                            $('#wechatAppPartnerKey').val(data.config_info.wechat_app_partner_key);
+                        if (value.biz_property_map.is_paytype_wechat_available && value.biz_property_map.is_paytype_wechat_available.value == 1) {
+                            $('[name=radio][value=wxpay]').iCheck('check');
+                            $('#wechatH5AppId').val(value.biz_property_map.wechat_h5_app_id.value);
+                            $('#wechatH5AppSecret').val(value.biz_property_map.wechat_h5_app_secret.value);
+                            $('#wechatH5PartnerId').val(value.biz_property_map.wechat_h5_partner_id.value);
+                            $('#wechatH5PartnerKey').val(value.biz_property_map.wechat_h5_partner_key.value);
+                            $('#wechatAppAppId').val(value.biz_property_map.wechat_app_app_id.value);
+                            $('#wechatAppAppSecret').val(value.biz_property_map.wechat_app_app_secret.value);
+                            $('#wechatAppPartnerId').val(value.biz_property_map.wechat_app_partner_id.value);
+                            $('#wechatAppPartnerKey').val(value.biz_property_map.wechat_app_partner_key.value);
                         }
-                        break;
-                    // 银联
-                    case 'is_paytype_unionpay_available':
-                        if (value == 1) {
-                            $('#unionpayMchId').val(data.config_info.unionpay_mch_id);
-                            $('.imgUploadBtn').prepend('<img id="unionpayCertificate" class="image" src="' + data.config_info.unionpay_certificate + '">')
+                        if (value.biz_property_map.is_paytype_unionpay_available && value.biz_property_map.is_paytype_unionpay_available.value == 1) {
+                            $('[name=radio][value=unionpay]').iCheck('check');
+                            $('#unionpayMchId').val(value.biz_property_map.unionpay_mch_id.value);
+                            $('.imgUploadBtn').prepend('<img id="unionpayCertificate" class="image" src="' + value.biz_property_map.unionpay_certificate.value + '">')
                         }
+                        $('#wechatLoginH5AppId').val(value.biz_property_map.wechat_login_h5_app_id.value);
+                        $('#wechatLoginH5AppSecret').val(value.biz_property_map.wechat_login_h5_app_secret.value);
+                        $('#wechatLoginAppAppId').val(value.biz_property_map.wechat_login_app_app_id.value);
+                        $('#wechatLoginAppAppSectet').val(value.biz_property_map.wechat_login_app_app_secret.value);
+                        $('#csTel').val(value.biz_property_map.cs_tel.value);
+                        $('#csOnlineUrl').val(value.biz_property_map.cs_online_url.value);
+                        $('#aboutUs').val(value.biz_property_map.about_us.value);
                         break;
                 }
             });
-            $('#wechatLoginH5AppId').val(data.config_info.wechat_login_h5_app_id);
-            $('#wechatLoginH5AppSecret').val(data.config_info.wechat_login_h5_app_secret);
-            $('#wechatLoginAppAppId').val(data.config_info.wechat_login_app_app_id);
-            $('#wechatLoginAppAppSectet').val(data.config_info.wechat_login_app_app_sectet);
-            $('#csTel').val(data.config_info.cs_tel);
-            $('#csOnlineUrl').val(data.config_info.cs_online_url);
-            $('#aboutUs').val(data.config_info.about_us);
         },
         /**
          * 设置要提交的数据
@@ -386,7 +387,7 @@
             this.postData.name = $.trim($('#name').val());                                                              // 各渠道间名称不可重复
             this.postData.company = $.trim($('#company').val());                                                        // 公司名称
             this.postData.linkman = $.trim($('#linkman').val());                                                        // 联系人
-            this.postData.linphone = $.trim($('#linkphone').val());                                                     // 联系电话
+            this.postData.linkphone = $.trim($('#linkphone').val());                                                     // 联系电话
             this.postData.address = $.trim($('#address').val());                                                        // 渠道详细地址
             this.postData.country = $('#areaList-country option:selected').attr('data-code');                           // 国家
             this.postData.province = $('#areaList-province option:selected').attr('data-code');                         // 省
@@ -407,42 +408,45 @@
                 } else if (value == 'unionpay') {
                     this.postData.is_paytype_unionpay_available = 1;
                 }
-
-                this.postData.pay_type = checked.toString();                                                            // 账户的开通信息表示,1表示支付宝,2表示微信,3表示银联,多个采用字符串拼接,英文逗号隔开,例如1,2,3
             }
-            this.postData.config_info = {};
+            //this.postData.config_info = {};
             if (this.postData.is_paytype_alipay_available && this.postData.is_paytype_alipay_available == 1) {
                 // 支付宝
-                this.postData.config_info.alipay_partner = $.trim($('#alipayPartner').val());                       // 支付宝商户号
-                this.postData.config_info.alipay_account = $.trim($('#alipayAccount').val());                       // 支付宝账号
-                this.postData.config_info.alipay_mch_private_key = $.trim($('#alipayMchPrivateKey').val());         // 支付宝商户私钥
-                this.postData.config_info.alipay_public_key = $.trim($('#alipayPublicKey').val());                  // 支付宝公钥
+                this.postData.alipay_partner = $.trim($('#alipayPartner').val());                       // 支付宝商户号
+                this.postData.alipay_account = $.trim($('#alipayAccount').val());                       // 支付宝账号
+                this.postData.alipay_mch_private_key = $.trim($('#alipayMchPrivateKey').val());         // 支付宝商户私钥
+                this.postData.alipay_public_key = $.trim($('#alipayPublicKey').val());                  // 支付宝公钥
 
-            } else if (this.postData.is_paytype_wechat_available && this.postData.is_paytype_wechat_available == 1) {
+            }
+            if (this.postData.is_paytype_wechat_available && this.postData.is_paytype_wechat_available == 1) {
                 // 微信
-                this.postData.config_info.wechat_h5_app_id = $.trim($('#wechatH5AppId').val());                     // 微信支付H5端APPID
-                this.postData.config_info.wechat_h5_app_secret = $.trim($('#wechatH5AppSecret').val());             // 微信支付H5端密钥
-                this.postData.config_info.wechat_h5_partner_id = $.trim($('#wechatH5PartnerId').val());             // 微信支付H5端商户号
-                this.postData.config_info.wechat_h5_partner_key = $.trim($('#wechatH5PartnerKey').val());           // 微信支付H5端商户Key
-                this.postData.config_info.wechat_app_app_id = $.trim($('#wechatAppAppId').val());                   // 微信支付app端APPID
-                this.postData.config_info.wechat_app_app_secret = $.trim($('#wechatAppAppSecret').val());           // 微信支付app端密钥
-                this.postData.config_info.wechat_app_partner_id = $.trim($('#wechatAppPartnerId').val());           // 微信支付app商户号
-                this.postData.config_info.wechat_app_partner_key = $.trim($('#wechatAppPartnerKey').val());         // 微信支付app商户Key
+                this.postData.wechat_h5_app_id = $.trim($('#wechatH5AppId').val());                     // 微信支付H5端APPID
+                this.postData.wechat_h5_app_secret = $.trim($('#wechatH5AppSecret').val());             // 微信支付H5端密钥
+                this.postData.wechat_h5_partner_id = $.trim($('#wechatH5PartnerId').val());             // 微信支付H5端商户号
+                this.postData.wechat_h5_partner_key = $.trim($('#wechatH5PartnerKey').val());           // 微信支付H5端商户Key
+                this.postData.wechat_app_app_id = $.trim($('#wechatAppAppId').val());                   // 微信支付app端APPID
+                this.postData.wechat_app_app_secret = $.trim($('#wechatAppAppSecret').val());           // 微信支付app端密钥
+                this.postData.wechat_app_partner_id = $.trim($('#wechatAppPartnerId').val());           // 微信支付app商户号
+                this.postData.wechat_app_partner_key = $.trim($('#wechatAppPartnerKey').val());         // 微信支付app商户Key
 
-            } else if (this.postData.is_paytype_unionpay_available && this.postData.is_paytype_unionpay_available == 1) {
+            }
+            if (this.postData.is_paytype_unionpay_available && this.postData.is_paytype_unionpay_available == 1) {
                 // 银联
-                this.postData.config_info.unionpay_mch_id = $.trim($('#unionpayMchId').val());                      // 银联商户号
-                this.postData.config_info.unionpay_certificate = $.trim($('#unionpayCertificate').attr('src'));     // 银联证书地址
+                this.postData.unionpay_mch_id = $.trim($('#unionpayMchId').val());                      // 银联商户号
+                this.postData.unionpay_certificate = $.trim($('#unionpayCertificate').attr('src'));     // 银联证书地址
 
             }
 
-            this.postData.config_info.wechat_login_h5_app_id = $.trim($('#wechatLoginH5AppId').val());                  // 微信登录H5端APPID
-            this.postData.config_info.wechat_login_h5_app_secret = $.trim($('#wechatLoginH5AppSecret').val());          // 微信登录H5端密钥
-            this.postData.config_info.wechat_login_app_app_id = $.trim($('#wechatLoginAppAppId').val());                // 微信登录APP端APPID
-            this.postData.config_info.wechat_login_app_app_sectet = $.trim($('#wechatLoginAppAppSectet').val());        // 微信登录APP端密钥
-            this.postData.config_info.cs_tel = $.trim($('#csTel').val());                                               // 客服电话
-            this.postData.config_info.cs_online_url = $.trim($('#csOnlineUrl').val());                                  // 在线客服链接
-            this.postData.config_info.about_us = $.trim($('#aboutUs').val());                                           // 关于我们链接
+            this.postData.wechat_login_h5_app_id = $.trim($('#wechatLoginH5AppId').val());                  // 微信登录H5端APPID
+            this.postData.wechat_login_h5_app_secret = $.trim($('#wechatLoginH5AppSecret').val());          // 微信登录H5端密钥
+            this.postData.wechat_login_app_app_id = $.trim($('#wechatLoginAppAppId').val());                // 微信登录APP端APPID
+            this.postData.wechat_login_app_app_secret = $.trim($('#wechatLoginAppAppSectet').val());        // 微信登录APP端密钥
+            this.postData.cs_tel = $.trim($('#csTel').val());                                               // 客服电话
+            this.postData.cs_online_url = $.trim($('#csOnlineUrl').val());                                  // 在线客服链接
+            this.postData.about_us = $.trim($('#aboutUs').val());                                           // 关于我们链接
+            if (this.id) {
+                this.postData.id = this.id
+            }
 
         },
         //增加账号
@@ -453,14 +457,12 @@
             }
             this.isAjax = true;
             Api.get({
-                url: "/storage/add.do",
-                data: {
-                    storage_dto: JSON.stringify(that.postData)
-                },
+                url: "/channel/control/add.do",
+                data: that.postData,
                 success: function () {
                     toastr.success('添加成功!', '提示');
                     setTimeout(function () {
-                        location.href = 'warehouse.html';
+                        location.href = 'channel-management.html';
                     }, 1000)
                 },
                 complete: function () {
@@ -469,7 +471,11 @@
                     }, 1000)
                 },
                 error: function (data) {
-                    toastr.error(data.msg, '提示');
+                    if (data.code == 30003) {
+                        toastr.error('商城英文名不能重复', '提示');
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
                 }
             })
         },
@@ -481,15 +487,13 @@
             }
             this.isAjax = true;
             Api.get({
-                url: '/storage/update.do',
-                data: {
-                    storage_dto: JSON.stringify(that.postData)
-                },
-                success: function () {
+                url: '/channel/control/update.do',
+                data: that.postData,
+                success: function (data) {
                     toastr.success('修改成功!', '提示');
                     setTimeout(function () {
-                        location.href = 'warehouse.html';
-                    }, 1000)
+                        location.href = 'channel-management.html';
+                    }, 1000);
                 },
                 complete: function () {
                     setTimeout(function () {
@@ -497,7 +501,11 @@
                     }, 1000)
                 },
                 error: function (data) {
-                    toastr.error(data.msg, '提示');
+                    if (data.code == 30003) {
+                        toastr.error('商城英文名不能重复', '提示');
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
                 }
             })
         }

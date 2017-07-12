@@ -668,7 +668,7 @@
                             value: that.skuArr[m].value[i].value,
                             property_value_id: that.skuArr[m].value[i].property_value_id
                         }
-                        if( that.skuArr[m].value[i].has_image == 1 ){
+                        if (that.skuArr[m].value[i].has_image == 1) {
                             obj.has_image = 1;
                         }
                         dataArr[k].push(obj);
@@ -811,10 +811,10 @@
         renderSkuSelect: function (data, sku_id) {
             if (data.length > 0) {
 
-                function isHasImage (){
+                function isHasImage() {
                     for (var i = 0; i < data.length; i++) {
                         for (var n = 0; n < data[i].sku_property_dto_list.length; n++) {
-                            if( data[i].sku_property_dto_list[n].has_image == 1 ){
+                            if (data[i].sku_property_dto_list[n].has_image == 1) {
                                 return true;
                             }
                         }
@@ -839,7 +839,7 @@
          * @param data
          * @param sku_id
          */
-        renderSkuImage: function (data, sku_id ,type) {
+        renderSkuImage: function (data, sku_id, type) {
             var template = _.template($('#j-template-sku-img').html());
             $('.sku-gallery').html(template({
                 items: data,
@@ -1230,10 +1230,17 @@
                     that.categoryData = data.data;
 
                     var template = _.template($('#template-category').html());
+                    var item = data.data;
+                    var category1 = [];
+                    for (var i = 0; i < item.length; i++) {
+                        if (item[i].cate_level == 1) {
+                            category1.push(item[i]);
+                        }
+                    }
 
                     // 渲染一级类目
                     $('#add-goods-category-1').html(template({
-                        items: data.data,
+                        items: category1,
                         level: 1
                     }));
 
@@ -1243,13 +1250,22 @@
                         var parent_id = $(this).attr('data-parent_id');
                         var name = $.trim($(this).text());
                         var level = $(this).attr('data-cate_level');
+                        if(!id){
+                            return;
+                        }
+                        var category2 = [];
 
                         if (parent_id == 0) {
                             // 点击的是一级类目
                             // 一级类目移除active
+                            for (var n = 0; n < item.length; n++) {
+                                if (item[n].parent_id == id && item[n].cate_level == 2) {
+                                    category2.push(item[n])
+                                }
+                            }
                             $('.category-list li[data-parent_id=' + parent_id + ']').removeClass('active');
                             $('#add-goods-category-2').html(template({
-                                items: data.data,
+                                items: category2,
                                 parent_id: id,
                                 level: 2
                             }));

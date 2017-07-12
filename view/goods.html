@@ -402,6 +402,7 @@
 
     </div>
 </div>
+</body>
 
 <!-- rev-hash -->
 <!-- inject:js -->
@@ -418,17 +419,21 @@
 <!-- 类目模板 -->
 <script type="text/template" id="template-category">
     <ul>
-    <% _.each(items,function(item,index){ %>
-        <% if( level === item.cate_level ){ %>
-            <% if( level == 1 ){ %>
-                <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
-            <% }else{ %>
-                <% if( item.parent_id == parent_id ){ %>
-                     <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+        <% if(items.length > 0){ %>
+        <% _.each(items,function(item,index){ %>
+            <% if( level === item.cate_level ){ %>
+                <% if( level == 1 ){ %>
+                    <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+                <% }else{ %>
+                    <% if( item.parent_id == parent_id ){ %>
+                        <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+                    <% } %>
                 <% } %>
             <% } %>
+        <% }) %>
+        <% }else{ %>
+            <li class="tc">当前无类目~</li>
         <% } %>
-    <% }) %>
     </ul>
 </script>
 
@@ -764,5 +769,4 @@
     </table>
     <% }) %>
 </script>
-</body>
 </html>

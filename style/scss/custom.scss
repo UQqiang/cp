@@ -2395,13 +2395,13 @@ span.section {
   border-bottom: 1px solid #e5e5e5;
 }
 
-select.form-control{
+select.form-control {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   position: relative;
-  background:#fff url(../images/arrowdown.png) no-repeat 92% 50%;
-  background-size:  11px 5px;
+  background: #fff url(../images/arrowdown.png) no-repeat 92% 50%;
+  background-size: 11px 5px;
 }
 
 .form-control {
@@ -2461,6 +2461,10 @@ legend {
   margin-bottom: 10px;
 }
 
+.form-group-sm {
+  width: 100px;
+}
+
 .validate {
   margin-top: 10px;
 }
@@ -2509,7 +2513,8 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
   -moz-animation: .7s 1 shake linear;
   -webkit-animation: 0.7s 1 shake linear;
 }
-.field{
+
+.field {
   position: relative;
 }
 
@@ -3962,7 +3967,7 @@ a.hiddenanchor {
 .login_form {
   z-index: 22;
   z-index: 22;
-    padding: 15px 26px;
+  padding: 15px 26px;
 }
 
 #signup:target ~ .login_wrapper .registration_form, #signin:target ~ .login_wrapper .login_form {
@@ -4932,45 +4937,46 @@ ul.notifications {
     display: none;
   }
 }
+
 .form-control.form-control-xs {
   height: 30px;
   font-size: 12px;
-  width: 70px!important;
+  width: 70px !important;
 }
 
 .form-control.form-control-sm {
   height: 30px;
   font-size: 12px;
-  width: 100px!important;
+  width: 100px !important;
 }
 
 .form-control.form-control-md {
   font-size: 12px;
-  width: 140px!important;
+  width: 140px !important;
   height: 30px;
 }
 
 .form-control.form-control-lg {
   font-size: 12px;
-  width: 200px!important;
+  width: 200px !important;
   height: 30px;
 }
 
 .form-control.form-control-hg {
   font-size: 12px;
-  width: 340px!important;
+  width: 340px !important;
   height: 30px;
 }
 
 .form-control.form-control-370 {
   font-size: 12px;
-  width: 370px!important;
+  width: 370px !important;
   height: 30px;
 }
 
 .form-control.form-control-410 {
   font-size: 12px;
-  width: 410px!important;
+  width: 410px !important;
   height: 30px;
 }
 
@@ -5401,7 +5407,8 @@ ul.notifications {
 .vat {
   vertical-align: top !important;
 }
-.dpnone{
+
+.dpnone {
   display: none;
 }
 
@@ -5432,13 +5439,16 @@ ul.notifications {
 .mr15 {
   margin-right: 15px !important;
 }
-.pt5{
+
+.pt5 {
   padding-top: 5px;
 }
-.pb70{
+
+.pb70 {
   padding-bottom: 70px;
 }
-.fz12{
+
+.fz12 {
   font-size: 12px;
 }
 
@@ -5458,7 +5468,7 @@ ul.notifications {
   width: 200px;
 }
 
-.inline{
+.inline {
   display: inline-block;
 }
 
@@ -5495,13 +5505,15 @@ ul.notifications {
   vertical-align: middle;
 }
 
-.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
   vertical-align: middle;
 }
-a.antoo{
-  color:#fff
+
+a.antoo {
+  color: #fff
 }
-.footer-btn-group{
+
+.footer-btn-group {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -5509,21 +5521,22 @@ a.antoo{
   padding: 20px;
   text-align: center;
   background: #f8f8f8;
-  a{
+  a {
     min-width: 150px;
   }
 }
-.ellipsis{
+
+.ellipsis {
   -webkit-box-orient: vertical;
   display: -webkit-box;
   text-overflow: ellipsis;
-  overflow : hidden;
+  overflow: hidden;
   -webkit-line-clamp: 2;
-  -webkit-box-orient:vertical
+  -webkit-box-orient: vertical
 }
 
 /****** timepicker ******/
-.timepicker{
+.timepicker {
   position: relative;
   width: 200px;
   margin-left: 4px;
@@ -5531,7 +5544,7 @@ a.antoo{
   cursor: pointer;
   padding: 5px 10px;
   border: 1px solid #ccc;
-  .caret{
+  .caret {
     position: absolute;
     right: 5px;
     top: 13px;
@@ -5540,22 +5553,23 @@ a.antoo{
 
 /*************************** icheck ***************************/
 .icheckbox_flat-green,
-.iradio_flat-green{
- vertical-align: top;
+.iradio_flat-green {
+  vertical-align: top;
 }
-.mask{
+
+.mask {
   display: none;
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 1024;
-  .mask-wrapper{
+  .mask-wrapper {
     text-align: center;
   }
-  .mask-img{
+  .mask-img {
     border-radius: 100%;
     width: 80px;
   }

@@ -2387,6 +2387,10 @@ legend {
   margin-bottom: 10px;
 }
 
+.form-group-sm {
+  width: 100px;
+}
+
 .validate {
   margin-top: 10px;
 }
