@@ -6,12 +6,9 @@
             this.page.vpage = 10;
             this.pageId = 1;
             this.search_key = {};
-            this.selectedList = [{
-                id: 10,
-                name: '管理员三'
-            }];
+            this.selectedList = [];
             this.addEvent();
-            this.queryBrand();
+            this.queryChannel();
         },
         /**
          * tip
@@ -353,16 +350,17 @@
 
         },
         /**
-         * 品牌列表
+         * 渠道列表
          */
-        queryBrand: function () {
+        queryChannel: function () {
             var that = this;
             Api.get({
-                url: '/brand/query.do',
+                url: '/channel/control/query.do',
                 data: {
                     current_page: that.pageId || 1,
                     page_size: that.page.pageSize || 20,
-                    keywords: that.search_key || ''
+                    name: that.search_key || '',
+                    parent_biz_code: $.cookie('biz_code')
                 },
                 mask: true,
                 beforeSend: function () {
@@ -373,14 +371,13 @@
                     document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
-                        //var t = _.template($('#j-template').html());
-                        //$('#brandList').html(t({
-                        //    items: data.data.data
-                        //}));
+                        var t = _.template($('#j-template').html());
+                        $('#channel').html(t({
+                            items: data.data.data
+                        }));
                         that.iCheck();
-                        that._checked();
                     } else {
-                        $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
+                        $('#channel').html('<tr><td class="tc" colspan="18">没有任何记录!</td></tr>')
                     }
 
                     that.pagination(data.data.total_count);

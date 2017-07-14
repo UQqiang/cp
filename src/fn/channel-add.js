@@ -387,13 +387,15 @@
             this.postData.name = $.trim($('#name').val());                                                              // 各渠道间名称不可重复
             this.postData.company = $.trim($('#company').val());                                                        // 公司名称
             this.postData.linkman = $.trim($('#linkman').val());                                                        // 联系人
-            this.postData.linkphone = $.trim($('#linkphone').val());                                                     // 联系电话
+            this.postData.linkphone = $.trim($('#linkphone').val());                                                    // 联系电话
             this.postData.address = $.trim($('#address').val());                                                        // 渠道详细地址
             this.postData.country = $('#areaList-country option:selected').attr('data-code');                           // 国家
             this.postData.province = $('#areaList-province option:selected').attr('data-code');                         // 省
             this.postData.city = $('#areaList-city option:selected').attr('data-code');                                 // 市
             this.postData.area = $('#areaList-area option:selected').attr('data-code');                                 // 区
-            this.postData.comment = $.trim($('#comment').val());                                                        // 	备注信息
+            if($.trim($('#comment').val()) != ''){
+                this.postData.comment = $.trim($('#comment').val());                                                    // 备注信息
+            }
             this.postData.store_ch_name = $.trim($('#storeChName').val());                                              // 商城中文名不可重复
             this.postData.store_en_name = $.trim($('#storeEnName').val());                                              // 商城英文名不可重复
             this.postData.store_account = $.trim($('#storeAccount').val());                                             // 商城账号不可重复

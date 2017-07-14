@@ -181,10 +181,26 @@ sku_code
                     <span><%= o.value %></span>
                     <% }) %>
                     </td>
-                    <td class="tc cell-10"><span><input data-input_type="1" type="text" class="form-control form-control-sm price-so" value="<%= obj.supplier_cost ? (obj.supplier_cost/100).toFixed(2) : '' %>"></span></td>
-                    <td class="tc cell-10"><span><input data-input_type="2" type="text" class="form-control form-control-sm price-ocr" value="<%= obj.operating_cost ? (obj.operating_cost/100).toFixed(2) : '' %>"></span></td>
-                    <td class="tc cell-10"><span><input data-input_type="3" type="text" class="form-control form-control-sm price-cost" value="<%= obj.fxh_cost ? (obj.fxh_cost/100).toFixed(2) : '' %>"></span></td>
-                    <td class="tc cell-10"><span><input data-input_type="4" type="text" class="form-control form-control-sm price-settlement" value="<%= obj.settlement_price ? (obj.settlement_price).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                        <input data-input_type="1" type="text" class="form-control form-control-sm price-so" value="<%= obj.supplier_cost ? (obj.supplier_cost/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                            <input data-input_type="2" type="text" class="form-control form-control-sm price-ocr" value="<%= obj.operating_cost ? (obj.operating_cost/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                            <input data-input_type="3" type="text" class="form-control form-control-sm price-cost" value="<%= obj.fxh_cost ? (obj.fxh_cost/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                            <input data-input_type="4" type="text" class="form-control form-control-sm price-settlement" value="<%= obj.settlement_price ? (obj.settlement_price).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
                     <td class="tc cell-10 j-submit" rowspan="<%= item.item_sku_dto_list.length %>" data-item_id="<%= item.id %>"><a>提交</a></td>
                 </tr>
             <% }else{ %>
@@ -195,10 +211,26 @@ sku_code
                     <span><%= o.value %></span>
                     <% }) %>
                     </td>
-                    <td class="tc cell-10"><span><input data-input_type="1" type="text" class="form-control form-control-sm price-so" value="<%= obj.supplier_cost ? (obj.supplier_cost/100).toFixed(2) : '' %>"></span></td>
-                    <td class="tc cell-10"><span><input data-input_type="2" type="text" class="form-control form-control-sm price-ocr" value="<%= obj.operating_cost ? (obj.operating_cost/100).toFixed(2) : '' %>"></span></td>
-                    <td class="tc cell-10"><span><input data-input_type="3" type="text" class="form-control form-control-sm price-cost" value="<%= obj.fxh_cost ? (obj.fxh_cost/100).toFixed(2) : '' %>"></span></td>
-                    <td class="tc cell-10"><span><input data-input_type="4" type="text" class="form-control form-control-sm price-settlement" value="<%= obj.settlement_price ? (obj.settlement_price).toFixed(2) : '' %>"></span></td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                            <input data-input_type="1" type="text" class="form-control form-control-sm price-so" value="<%= obj.supplier_cost ? (obj.supplier_cost/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                            <input data-input_type="2" type="text" class="form-control form-control-sm price-ocr" value="<%= obj.operating_cost ? (obj.operating_cost/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                            <input data-input_type="3" type="text" class="form-control form-control-sm price-cost" value="<%= obj.fxh_cost ? (obj.fxh_cost/100).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
+                    <td class="tc cell-10 field item">
+                        <span>
+                            <input data-input_type="4" type="text" class="form-control form-control-sm price-settlement" value="<%= obj.settlement_price ? (obj.settlement_price).toFixed(2) : '' %>" required="required" pattern="decimal">
+                        </span>
+                    </td>
                 </tr>
             <% } %>
         <% }) %>

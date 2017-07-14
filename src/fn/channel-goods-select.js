@@ -321,9 +321,9 @@
                 }, function (btn, dialog) {
 
                     console.log(idList);
-                    that.removeGoods(idList, function () {
+                    that.deleteAssociatedGoods(idList, function () {
                         toastr.success('已成功批量删除', '提示');
-                        that.renderGoods();
+                        that.queryAssociatedGoodsList();
                     });
 
                     dialog.close();
@@ -336,18 +336,16 @@
             $(document).on('click', '.j-channel-delete', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
-                var idList = [];
-                idList.push(id);
                 that.tip({
                     target: $(this),
                     content: '确定要删除商品：' + name + '吗?'
                 }, function (btn, dialog) {
-
-                    that.removeGoods(idList, function () {
+                    that.deleteAssociatedGoods(id, function () {
                         toastr.success('已成功删除：' + name, '提示');
-                        that.renderGoods();
-                    });
+                        that.queryAssociatedGoodsList();
+                    }, function () {
 
+                    });
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -365,8 +363,24 @@
                     width: 800
                 }, function () {
                     that.goodsSkuList(id, name)
-                }, function () {
-
+                }, function (btn, dialog) {
+                    // 点击确定
+                    var input = $('.settlement-sku-input');
+                    var item_id = input.eq(0).attr('data-item_id');
+                    var obj = {};
+                    var postData = {};
+                    for (var i = 0; i < input.length; i++) {
+                        obj[input.eq(i).attr('data-sku_id')] = $.trim((input.eq(i).val() * 100).toFixed(0));
+                    }
+                    postData.biz_item_id = item_id;
+                    postData.price_map = JSON.stringify(obj);
+                    that.editSettlementPrice(postData, function (data) {
+                        toastr.success('更改结算价成功!', '提示');
+                        dialog.close();
+                    }, function (data) {
+                        toastr.error(data.msg, '提示');
+                        dialog.close();
+                    })
                 })
             });
 
@@ -450,21 +464,7 @@
                 }
             });
         },
-        /**
-         * 删除 & 批量删除已经选择的关联商品
-         * @param idList    要删除的关联商品的id数组
-         * @param cb        删除完后的回调
-         */
-        removeGoods: function (idList, cb) {
-            for (var i = 0; i < this.selectList.length; i++) {
-                for (var n = 0; n < idList.length; n++) {
-                    if (this.selectList[i].id == idList[n]) {
-                        this.selectList.splice(i, 1);
-                    }
-                }
-            }
-            cb && cb();
-        },
+
         /**
          * 品牌列表
          */
@@ -493,6 +493,7 @@
                 }
             });
         },
+
         /**
          * 类目列表
          */
@@ -523,15 +524,16 @@
                 }
             });
         },
+
         /**
          * sku
          */
         goodsSkuList: function (id, name) {
             var that = this;
             Api.get({
-                url: '/item/sku/query.do',
+                url: '/biz_item/get_sku.do',
                 data: {
-                    item_id: id
+                    biz_item_id: id
                 },
                 beforeSend: function () {
 
@@ -540,7 +542,7 @@
                     console.log(data);
                     var template = _.template($('#j-template-sku-table').html());
                     $('#skuList').html(template({
-                        items: data.data.skus,
+                        items: data.data,
                         name: name
                     }))
                 },
@@ -562,7 +564,7 @@
                 url: '/biz_item/query.do',
                 data: {
                     biz_item_qto: JSON.stringify({
-                        biz_code: 'direct-biz',
+                        biz_code: 'category-biz', // TODO
                         need_paging: true,
                         page_size: that.page.pageSize,
                         current_page: that.pageId
@@ -576,7 +578,8 @@
                     $('#goodsList').html(template({
                         items: data.data.data
                     }));
-                    that.pagination(data.data.total_count)
+                    that.pagination(data.data.total_count);
+                    that.iCheck();
                 },
                 complete: function () {
 
@@ -586,15 +589,16 @@
                 }
             });
         },
+
         /**
-         * 删除品牌
+         * 删除已关联的商品
          */
-        deleteBrand: function (id, success, error) {
+        deleteAssociatedGoods: function (idList, success, error) {
             var that = this;
             Api.get({
-                url: '/brand/delete.do',
+                url: '/biz_item/delete.do',
                 data: {
-                    brand_id: id
+                    id_list: JSON.stringify(idList)
                 },
                 beforeSend: function () {
 
@@ -611,6 +615,31 @@
                 }
             });
         },
+
+        /**
+         * 编辑结算价
+         */
+        editSettlementPrice: function (data, success, error) {
+            var that = this;
+            Api.get({
+                url: '/biz_item/update_settlement_price.do',
+                data: data,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+
         pagination: function (total) {
             var that = this;
             var pagination = $('.ui-pagination');

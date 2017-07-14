@@ -21,27 +21,31 @@
             this.addEvent();
         },
         popup: function (data, cb, success) {
-            this.popupDialog = jDialog.dialog({
+            var obj = {
                 title: data.title,
                 content: data.content,
                 width: data.width || 600,
                 height: 600,
-                draggable: false,
-                buttonAlign: 'right',
-                buttons: [{
-                    type: 'highlight',
-                    text: '确定',
-                    handler: function (button, dialog) {
-                        success && success(button, dialog)
-                    }
-                }, {
-                    type: 'highlight',
-                    text: '取消',
-                    handler: function (button, dialog) {
-                        dialog.close();
-                    }
-                }]
-            });
+                draggable: false
+            };
+            if (data.btn == true) {
+                obj.buttonAlign = 'right';
+                obj.buttons =
+                    [{
+                        type: 'highlight',
+                        text: '确定',
+                        handler: function (button, dialog) {
+                            success && success(button, dialog)
+                        }
+                    }, {
+                        type: 'highlight',
+                        text: '取消',
+                        handler: function (button, dialog) {
+                            dialog.close();
+                        }
+                    }]
+            }
+            this.popupDialog = jDialog.dialog(obj);
             cb && cb();
         },
         /**
@@ -86,22 +90,41 @@
                 //    that.search_key.brand_key = brand_key;
                 //}
                 var category_id = that.currentCateObj['2'] ? that.currentCateObj['2'].id : '';
-                if( category_id != '' ){
+                if (category_id != '') {
                     that.search_key.category_id = category_id
                 }
                 var key = $.trim($('#key').val());
-                if( key != '' ){
+                if (key != '') {
                     that.search_key.key = key;
                 }
                 var freeze = $('#freezeStatus').val();
-                if( freeze != '' ){
+                if (freeze != '') {
                     that.search_key.freeze = freeze
                 }
                 var delivery_type = $('#deliveryType').val();
-                if( delivery_type != '' ){
+                if (delivery_type != '') {
                     that.search_key.delivery_type = delivery_type;
                 }
                 that.queryGoods();
+            });
+
+            $(document).on('click', '.j-current-channel-list', function () {
+                var id = $(this).attr('data-id');
+                that.popup({
+                    title: '已关联的渠道',
+                    content: '<div id="currentChannelList"></div>'
+                }, function () {
+                    that.queryCurrentChannelList(id, function () {
+                        var template = _.template($('#j-template-channel-list'));
+                        $('#currentChannelList').html(template({
+
+                        }))
+                    }, function () {
+
+                    });
+                }, function () {
+                    // 确定
+                })
             });
 
             // tab
@@ -405,7 +428,7 @@
                         create: false,
                         onItemAdd: function (value, $item) {
                             // 选择税率模板
-                            if(value == 'null'){
+                            if (value == 'null') {
                                 return;
                             }
                             that.search_key.brand_key = value
@@ -454,7 +477,7 @@
                         create: false,
                         onItemAdd: function (value, $item) {
                             // 选择税率模板
-                            if(value == 'null'){
+                            if (value == 'null') {
                                 return;
                             }
                             that.storage_id = value
@@ -611,7 +634,7 @@
 
                 },
                 success: function (data) {
-                    if( data.code == 10000 ){
+                    if (data.code == 10000) {
                         var msg = freeze == '2' ? '冻结成功' : '解冻成功';
                         toastr.success(msg, '提示');
                         that.queryGoods();
@@ -650,6 +673,28 @@
 
                 },
                 error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
+        },
+        queryCurrentChannelList: function (id, success, fail) {
+            var that = this;
+            Api.get({
+                url: '/item/qeury_bind_channel.do',
+                data: {
+                    item_id: id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data)
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    fail && fail(data);
                     toastr.error(data.msg, '提示');
                 }
             });

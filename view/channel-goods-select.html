@@ -88,9 +88,10 @@
                                     <input type="checkbox" id="check-all" class="flat">
                                 </th>
                                 <th class="column-title tc">商品名称</th>
-                                <th class="column-title tc">成本价(元)</th>
+                                <th class="column-title tc">分享汇成本价(元)</th>
                                 <th class="column-title tc">最低售价(元)</th>
                                 <th class="column-title tc">建议零售价(元)</th>
+                                <th class="column-title tc">结算价(元)</th>
                                 <th class="column-title tc">状态</th>
                                 <th class="column-title tc">操作</th>
                             </tr>
@@ -141,10 +142,11 @@
             <input type="checkbox" class="flat checkbox" data-id="<%= item.id %>">
         </th>
         <td><span class="goods-name"><%= item.item_name %></span></td>
-        <td class="tc"><%= (item.cost_price/100).toFixed(2) %></td>
+        <td class="tc"><%= (item.fxh_cost/100).toFixed(2) %></td>
         <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
-        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
-        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
+        <td class="tc"><%= (item.market_price/100).toFixed(2) %></td>
+        <td class="tc"><%= (item.settlement_price/100).toFixed(2) %></td>
+        <td class="tc"><%= ['-','正常','冻结'][item.freeze] %></td>
         <td class="tc">
             <a href="javascript:;" class="j-edit-price" data-id="<%= item.id %>" data-name="<%= item.item_name %>">编辑结算价</a>
             <span>-</span>
@@ -170,8 +172,8 @@
     <table class="table table-bordered">
         <thead>
         <tr class="headings">
-            <th class="column-title tc cell-20">商品名称</th>
-            <th class="column-title tc cell-60" colspan="<%= 2*(items[0].prop.length) %>">规格</th>
+            <th class="column-title tc cell-30">商品名称</th>
+            <th class="column-title tc cell-50" colspan="<%= 2*(items[0].sku_property_d_t_o_list.length) %>">规格</th>
             <th class="column-title tc cell-20">结算价</th>
         </tr>
         </thead>
@@ -179,29 +181,29 @@
         <% _.each(items,function(item,index){ %>
         <% if( index == 0 ){ %>
         <tr>
-            <td class="tc" rowspan="<%= items.length %>"><%= name %></td>
-            <% _.each(item.prop,function(n,i){ %>
-            <td rowspan="<%= items.length %>">
-                <span><%= n.prop_name || '-' %></span>
+            <td class="tc" rowspan="<%= items.length %>"><%= item.item_name %></td>
+            <% _.each(item.sku_property_d_t_o_list,function(n,i){ %>
+            <td rowspan="<%= items.length %>" class="tc">
+                <span><%= n.name || '-' %></span>
             </td>
-            <td>
-                <span><%= n.value_name || '-' %></span>
+            <td class="tc">
+                <span><%= n.value || '-' %></span>
+            </td>
+            <td class="tc">
+                <input class="form-control form-control-md settlement-sku-input" data-item_id="<%= item.biz_item_id %>" data-sku_id="<%= item.id || '0' %>" value="<%= item.settlement_price ? (item.settlement_price/100).toFixed(2) : '' %>">
             </td>
             <% }) %>
-            <td>
-                <input class="form-control form-control-md">
-            </td>
         </tr>
         <% }else{ %>
         <tr>
-            <% _.each(item.prop,function(n,i){ %>
-            <td>
-                <span><%= n.value_name || '-' %></span>
+            <% _.each(item.sku_property_d_t_o_list,function(n,i){ %>
+            <td class="tc">
+                <span><%= n.value || '-' %></span>
+            </td>
+            <td class="tc">
+                <input class="form-control form-control-md settlement-sku-input"  data-item_id="<%= item.biz_item_id %>" data-sku_id="<%= item.id || '0' %>" value="<%= item.settlement_price ? (item.settlement_price/100).toFixed(2) : '' %>">
             </td>
             <% }) %>
-            <td>
-                <input class="form-control form-control-md">
-            </td>
         </tr>
         <% } %>
         <% }) %>

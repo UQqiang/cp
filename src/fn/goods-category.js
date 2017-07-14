@@ -294,21 +294,17 @@
          */
         deleteCategory: function (id, success, error) {
             var that = this;
-            Api.get({
+            Api.post({
                 url: '/category/delete.do',
                 data: {
                     category_id: id
                 },
-                dataType: 'jsonp',
+                dataType: 'json',
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    if (data.code == 10000) {
-                        success && success(data);
-                    } else {
-                        error && error(data);
-                    }
+                    success && success(data);
                 },
                 complete: function () {
 

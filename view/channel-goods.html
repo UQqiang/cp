@@ -84,33 +84,8 @@
                         </tr>
                         </thead>
 
-                        <tbody id="warehouseList">
-                        <tr class="even pointer list">
-                            <td class="a-center tc">
-                                <input type="checkbox" class="flat checkbox" name="table_records" data-id="10" data-name="管理员三">
-                            </td>
-                            <td class="tc">张三</td>
-                            <td class="tc">管理员1 </td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">激活</td>
-                            <td class="last tc">
-                                <a href="javascript:;" class="j-goods-channel" data-id="10" data-name="管理员三">商品管理</a>
-                            </td>
-                        </tr>
-                        <tr class="odd pointer list">
-                            <td class="a-center tc">
-                                <input type="checkbox" class="flat checkbox" name="table_records" data-id="20" data-name="管理图2">
-                            </td>
-                            <td class="tc">李四</td>
-                            <td class="tc">管理员2</td>
-                            <td class="tc">111111</td>
-                            <td class="tc">111111111</td>
-                            <td class="tc">激活</td>
-                            <td class="last tc">
-                                <a href="javascript:;" class="j-goods-channel" data-id="20" data-name="管理图2">商品管理</a>
-                            </td>
-                        </tr>
+                        <tbody id="channel">
+
                         </tbody>
                     </table>
                 </div>
@@ -206,6 +181,24 @@
         <span><%= item.name %></span>
         <i class="fa fa-close img-close j-image-close" data-id="<%= item.id %>"></i>
     </div>
+    <% }) %>
+</script>
+
+<script type="text/template" id="j-template">
+    <% _.each(items, function(item,index){ %>
+    <tr class="even pointer list">
+        <td class="a-center tc">
+            <input type="checkbox" class="flat checkbox" name="table_records" data-id="<%= item.id %>" data-name="<%= item.name %>">
+        </td>
+        <td class="tc"><%= item.id %></td>
+        <td class="tc"><%= item.name %> </td>
+        <td class="tc">-</td>
+        <td class="tc">-</td>
+        <td class="tc"><%= ['激活','关闭'][item.channel_status] %></td>
+        <td class="last tc">
+            <a href="javascript:;" class="j-goods-channel" data-id="<%= item.id %>" data-name="<%= item.name %>">商品管理</a>
+        </td>
+    </tr>
     <% }) %>
 </script>
 </html>

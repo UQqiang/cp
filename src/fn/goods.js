@@ -5,8 +5,8 @@
             $('.step').css({
                 'min-height': height + 'px'
             });
-
             this.goodsId = HDL.getQuery('id');          // 商品的id - 编辑商品的时候
+            this.canEdit = HDL.getQuery('edit') == '' ? '1' : HDL.getQuery('edit');        // 是否可编辑的字符串
             this.nowStep = this.goodsId ? 2 : 1;        // 添加商品的步骤 (1: 第二步,2: 第二步,3: 第三步)
             this.currentCateObj = {};                   // 当前选择的一二级类目对象
             this.cateId = '';                           // 当前的类目id ( 二级类目 )
@@ -40,6 +40,12 @@
                     this.getGoods()
                 );
             }
+        },
+        isEdit: function () {
+            $('input').prop('disabled', true);
+            $('.btn').prop('disabled', true);
+            $('select').prop('disabled', true);
+            $('#nextStep2').prop('disabled', false);
         },
 
         /**
@@ -143,6 +149,9 @@
                     }
                 } else if (type === 'back') {
                     // todo back
+                    if (that.canEdit == 0) {
+                        return;
+                    }
                     that.nowStep = num - 1 == 0 ? 1 : num - 1;
                 } else if (type === 'submit') {
                     // 最后保存数据的验证
@@ -179,7 +188,7 @@
                     // 保存
                     if (isValid == true) {
                         that.setPostData();
-                        if(that.isAjax === true){
+                        if (that.isAjax === true) {
                             return;
                         }
                         that.isAjax = true;
@@ -203,6 +212,9 @@
          */
         imgModal: function () {
             var that = this;
+            if (that.canEdit == 0) {
+                return;
+            }
             $('.imgUploadBtn').imgModal({
                 selectImgPopupBtn: '.imgUploadBtn',
                 selectImgBtn: '.j-select-img',
@@ -275,6 +287,9 @@
          */
         selectPluginWarehouse: function () {
             var that = this;
+            if (that.canEdit == 0) {
+                return;
+            }
             $('#selectPluginButtonWarehouse').selectPlugin({
                 single: false,
                 isSku: false,
@@ -366,6 +381,9 @@
 
             // 添加 sku 规格
             $('.j-add-sku-specifications').click(function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 // 沿用老的 最多添加三个规格
                 if (that.selectizeNumber === 4) {
                     return false;
@@ -382,6 +400,9 @@
 
             // 添加 sku-prop
             $('.goods-content').on('click', '.j-add-prop', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var data = {};
                 var sku_name = $(this).attr('data-sku_name');
                 var sku_id = $(this).attr('data-sku_id');
@@ -428,7 +449,7 @@
                         }
                         that.combineData();
                         that.render(sku_id, 'click');
-                        that.initWarehouse()
+                        that.initWarehouse();
                         dialog.close();
                     });
                 }, function (button, dialog) {
@@ -438,6 +459,9 @@
 
             // 批量设置 - sku 显示批量的输入框
             $('.goods-content').on('click', '.j-batch', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var type = $(this).attr('data-type');
                 $(this).hide();
                 $('input[data-type]').hide();
@@ -447,7 +471,9 @@
             // 批量设置 - sku - input
             $('.goods-content').on('blur', 'input[data-type=promotion_price],input[data-type=market_price],input[data-type=ean]', function () {
                 var type = $(this).attr('data-type');
-
+                if (that.canEdit == 0) {
+                    return;
+                }
                 $(this).hide();
                 $('.j-batch[data-type=' + type + ']').show();
 
@@ -460,6 +486,9 @@
 
             // 单个输入 - sku - input
             $('.goods-content').on('change', 'input[data-input_type=promotion_price],input[data-input_type=market_price],input[data-input_type=ean]', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var type = $(this).attr('data-input_type');
                 var arr = [], hasEmpty = false;
                 if ($.trim($(this).val()) == '') {
@@ -483,6 +512,9 @@
 
             // sku 属性切换
             $('.goods-content').on('ifChecked', 'input[name=radio-sku-prop]', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var sku_id = $(this).attr('data-sku_id');
 
                 // 切换的时候判断选择的sku主图属性
@@ -502,6 +534,9 @@
 
             // props 删除
             $('.goods-content').on('click', '.j-g-close.props-close', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var sid = $(this).parent().attr('data-sid');
                 var pid = $(this).parent().attr('data-pid');
                 for (var key in that.skuArr) {
@@ -514,31 +549,33 @@
                         }
                     }
                 }
-                for (var m = 0; m < that.skuTableData.length; m++) {
-                    if (that.skuTableData[m].sku_property_dto_list.length > 0) {
-                        for (var n = 0; n < that.skuTableData[m].sku_property_dto_list.length; n++) {
-                            if (that.skuTableData[m].sku_property_dto_list[n]) {
-                                if (pid == that.skuTableData[m].sku_property_dto_list[n].property_value_id) {
-                                    that.skuTableData.splice(m, 1);
-                                    if (m > 0) {
-                                        m--;
-                                    } else {
-                                        break;
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                }
+                //for (var m = 0; m < that.skuTableData.length; m++) {
+                //    if (that.skuTableData[m].sku_property_dto_list.length > 0) {
+                //        for (var n = 0; n < that.skuTableData[m].sku_property_dto_list.length; n++) {
+                //            if (that.skuTableData[m].sku_property_dto_list[n]) {
+                //                if (pid == that.skuTableData[m].sku_property_dto_list[n].property_value_id) {
+                //                    that.skuTableData.splice(m, 1);
+                //                    m--;
+                //                    break;
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
                 $(this).parent().remove();
+                // 因为删除的比较多 所以滞空
+                that.skuTableData = [];
+                that.combineData();
                 that.render(sid);
-                that.initWarehouse()
+                that.initWarehouse();
                 toastr.success('删除成功', '提示')
             });
 
             // selectize 删除
             $('.goods-content').on('click', '.j-g-close.selectize-close', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var floor = $(this).attr('data-floor');
                 for (var key in that.skuArr) {
                     if (that.skuArr[key]['floor'] == floor) {
@@ -550,7 +587,7 @@
                 that.skuTableData = [];
                 that.combineData();
                 that.render();
-                that.initWarehouse()
+                that.initWarehouse();
                 // 减少楼层
                 that.selectizeNumber -= 1;
                 if (that.selectizeNumber < 4) {
@@ -562,6 +599,9 @@
             // 图片删除
             $('.goods-content').on('click', '.j-g-close.img-close', function (e) {
                 e.stopPropagation();
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var type = $(this).parent().attr('data-type');
                 var index = $(this).parent().index();
                 var pid = $(this).parent().attr('data-pid');
@@ -594,6 +634,9 @@
 
             // 仓库删除
             $('#warehouse').on('click', '.j-delete-warehouse', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var warehouseId = $(this).attr('data-warehouse_id');
                 var name = $(this).attr('data-name');
                 var data = {};
@@ -625,6 +668,10 @@
             $('#skuCont').append(selectizeTpl({
                 index: that.index
             }));
+            if (that.canEdit == 0) {
+                that.isEdit();
+            }
+            that.hoverFunc();
             var selectize = $('#selectize-' + that.index).selectize({
                 options: that.skuHistoryArr,
                 placeholder: '请添加规格',
@@ -718,6 +765,9 @@
             // 渲染完成后 初始化下icheck
             that.iCheck();
             that.hoverFunc();
+            if (that.canEdit == 0) {
+                that.isEdit();
+            }
         },
 
         /**
@@ -1549,7 +1599,7 @@
                 success: function (data) {
                     toastr.success('添加成功!', '提示');
                     setTimeout(function () {
-                        location.href = 'goods-list.html';
+                        location.href = 'goods-price-management.html';
                     }, 1000)
                 },
                 complete: function () {
@@ -1596,9 +1646,9 @@
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
-                    toastr.success('编辑成功!', '提示')
+                    toastr.success('编辑成功!', '提示');
                     setTimeout(function () {
-                        location.href = 'goods-list.html';
+                        location.href = 'goods-price-management.html';
                     }, 1000)
                 },
                 complete: function () {
@@ -1741,18 +1791,20 @@
                                                 selectize.setValue(o.sku_property_tmpl_id);
                                             }, function () {
                                                 console.log(that.skuArr);
-                                                if (that.skuArr[o.sku_property_tmpl_id].sku_id == o.sku_property_tmpl_id) {
-                                                    var props = {};
-                                                    props.name = (o.name);
-                                                    props.sku_property_tmpl_id = (o.sku_property_tmpl_id);
-                                                    props.value = (o.value);
-                                                    props.property_value_id = (o.property_value_id);
-                                                    props.thumb = (obj.image_url);
-                                                    if (o.has_image == 1) {
-                                                        props.has_image = o.has_image;
+                                                if (that.skuArr[o.sku_property_tmpl_id].sku_id) {
+                                                    if (that.skuArr[o.sku_property_tmpl_id].sku_id == o.sku_property_tmpl_id) {
+                                                        var props = {};
+                                                        props.name = (o.name);
+                                                        props.sku_property_tmpl_id = (o.sku_property_tmpl_id);
+                                                        props.value = (o.value);
+                                                        props.property_value_id = (o.property_value_id);
+                                                        props.thumb = (obj.image_url);
+                                                        if (o.has_image == 1) {
+                                                            props.has_image = o.has_image;
+                                                        }
+                                                        (that.skuArr[o.sku_property_tmpl_id].value).push(props);
+                                                        that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + o.sku_property_tmpl_id + ']'), props);
                                                     }
-                                                    (that.skuArr[o.sku_property_tmpl_id].value).push(props);
-                                                    that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + o.sku_property_tmpl_id + ']'), props);
                                                 }
                                             });
                                         } else {
@@ -1822,7 +1874,14 @@
 
                     }
                 }
+                if (that.canEdit == 0) {
+                    that.isEdit();
+                }
             });
+
+            if (that.canEdit == 0) {
+                that.isEdit();
+            }
         },
 
         /**

@@ -71,6 +71,8 @@
                             <th class="column-title tc">电话</th>
                             <th class="column-title tc">账号</th>
                             <th class="column-title tc">商城名称</th>
+                            <th class="column-title tc">后台域名</th>
+                            <th class="column-title tc">前台域名</th>
                             <th class="column-title tc">状态</th>
                             <th class="column-title tc no-link last"><span class="nobr">操作</span>
                             </th>
@@ -132,6 +134,8 @@
         <td class="tc"><%= item.linkphone %></td>
         <td class="tc"><%= item.store_account %></td>
         <td class="tc"><%= item.store_ch_name %></td>
+        <td class="tc">-</td>
+        <td class="tc">-</td>
         <td class="tc"><%= ['激活','关闭'][item.channel_status] %></td>
         <td class="last tc">
             <a href="channel-add.html?id=<%= item.id %>">编辑</a>

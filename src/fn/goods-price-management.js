@@ -72,6 +72,8 @@
         },
         addEvent: function () {
             var that = this;
+            var validator = new FormValidator();
+            validator.settings.alerts = true;
 
             // 搜索
             $('#search').click(function () {
@@ -264,6 +266,9 @@
             $(document).on('click', '.j-submit', function () {
                 var id = $(this).attr('data-item_id');
                 var postData = [];
+                if(that.verify(id) == false){
+                    return;
+                }
                 for (var n = 0; n < $('.list-' + id).length; n++) {
                     var list = $('.list-' + id).eq(n);
                     var skuDetail = {
@@ -282,7 +287,9 @@
                     content: '确定要提交选择的商品吗?',
                     position: 'left'
                 }, function (btn, dialog) {
-                    that.submitPrice(JSON.stringify(postData));
+                    if(that.verify(id)){
+                        that.submitPrice(postData);
+                    };
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -296,6 +303,9 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     var tr = checkedBox.eq(i);
                     var id = tr.attr('data-item_id');
+                    if(that.verify(id) == false){
+                        return;
+                    }
                     for (var n = 0; n < $('.list-' + id).length; n++) {
                         var list = $('.list-' + id).eq(n);
                         var skuDetail = {
@@ -315,11 +325,24 @@
                     content: '确定要提交选择的商品吗?',
                     position: 'right'
                 }, function (btn, dialog) {
-                    that.submitPrice(JSON.stringify(postData));
+                    that.submitPrice(postData);
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
                 });
+            });
+
+            $(document).on('blur', 'input[required]', function () {
+                // required input validator 验证表单
+                var required = $(this);
+                for (var i = 0; i < required.length; i++) {
+                    var result = validator.checkField.call(validator, required.eq(i));
+                    if (result.valid === false) {
+                        //isValid = false;
+                        //toastr.error('价格填写不合法', '提示');
+                        return;
+                    }
+                }
             });
 
             // 批量设置 - sku 显示批量的输入框
@@ -717,27 +740,44 @@
          *
          */
         submitPrice: function (data) {
-            Api.get({
-            url: '/item/update_price.do',
+            var that = this;
+            Api.post({
+                url: '/item/update_price.do',
                 data: {
-                    sku_list: data
+                    sku_list: JSON.stringify(data)
                 },
-            beforeSend: function () {
+                beforeSend: function () {
 
-            },
-            success: function (data) {
-                console.log(data);
-                if( data.code == 10000 ){
-                    toastr.success('提交成功!', '提示')
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data.code == 10000) {
+                        toastr.success('提交成功!', '提示')
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
                 }
-            },
-            complete: function () {
+            });
+        },
 
-            },
-            error: function (data) {
-                toastr.error(data.msg, '提示');
+        verify: function (id) {
+            var decimal = /^\d+(\.\d{1,2})?$/;
+            for (var n = 0; n < $('.list-' + id).length; n++) {
+                var list = $('.list-' + id).eq(n);
+                var supplier_cost = $.trim(list.find('.price-so').val());
+                var operating_cost = $.trim(list.find('.price-ocr').val());
+                var fxh_cost = $.trim(list.find('.price-cost').val());
+                var settlement_price = $.trim(list.find('.price-settlement').val());
+                if(!(decimal).test(supplier_cost) || !(decimal).test(operating_cost) || !(decimal).test(fxh_cost) || !(decimal).test(settlement_price)){
+                    toastr.error('内容为空或输入的内容不合法!', '提示');
+                    return false;
+                }
             }
-        });
+            return true;
         },
         /**
          *
