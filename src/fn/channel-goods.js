@@ -6,6 +6,10 @@
             this.page.vpage = 10;
             this.pageId = 1;
             this.search_key = {};
+            this.selectedList = [{
+                id: 10,
+                name: '管理员三'
+            }];
             this.addEvent();
             this.queryBrand();
         },
@@ -39,6 +43,39 @@
                 }]
             });
         },
+        /**
+         *
+         */
+        popup: function (data, cb, success) {
+            var obj = {
+                title: data.title,
+                content: data.content,
+                width: data.width || 700,
+                height: 600,
+                draggable: false
+            };
+            if (data.button === true) {
+                obj.buttonAlign = 'right';
+                obj.buttons = [{
+                    type: 'highlight',
+                    text: '确定',
+                    handler: function (button, dialog) {
+                        success && success(button, dialog)
+                    }
+                }, {
+                    type: 'highlight',
+                    text: '取消',
+                    handler: function (button, dialog) {
+                        dialog.close();
+                    }
+                }]
+            }
+            this.popupDialog = jDialog.dialog(obj);
+            cb && cb();
+        },
+        /**
+         * icheck
+         */
         iCheck: function () {
             var that = this;
             if ($("input.flat")[0]) {
@@ -59,30 +96,55 @@
                 }
             });
 
+            // 选择
             $('.checkbox').on('ifChecked', function () {
                 var checkedBox = $('.checkbox:checked');
                 var checkbox = $('.checkbox');
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
 
+                // 全选按钮
                 if (checkbox.length == checkedBox.length) {
                     $('#check-all').iCheck("check");
                 } else {
                     $('#check-all').iCheck("uncheck");
                 }
+                if (that._isInArry(that.selectedList, id) === false) {
+                    that.selectedList.push({
+                        id: id,
+                        name: name
+                    });
+                }
                 $(this).parents('tr').addClass('selected');
+                that.renderChannelList();
             });
 
+            // 取消选择
             $('.checkbox').on('ifUnchecked', function () {
                 var checkedBox = $('.checkbox:checked');
                 var checkbox = $('.checkbox');
 
+                // 全选按钮
                 if (checkbox.length == checkedBox.length) {
                     $('#check-all').iCheck("check");
                 } else {
                     $('#check-all').iCheck("uncheck");
                 }
+                for (var i = 0; i < that.selectedList.length; i++) {
+                    if (that.selectedList[i].id == $(this).attr('data-id')) {
+                        that.selectedList.splice(i, 1);
+                        if (i > 0) {
+                            i--
+                        }
+                    }
+                }
                 $(this).parents('tr').removeClass('selected');
+                that.renderChannelList();
             })
         },
+        /**
+         * addEvent
+         */
         addEvent: function () {
             var that = this;
 
@@ -206,25 +268,89 @@
 
             // 批量关联
             $('#batchSelect').click(function () {
-                var checkedBox = $('.checkbox:checked');
-                var idList = [];
-                for (var i = 0; i < checkedBox.length; i++) {
-                    var id = checkedBox.eq(i).attr('data-id');
-                    var name = checkedBox.eq(i).attr('data-name');
-                    if( id ){
-                        idList.push({
-                            id: id,
-                            name: name
-                        });
+                //var checkedBox = $('.checkbox:checked');
+                //var idList = [];
+                //for (var i = 0; i < checkedBox.length; i++) {
+                //    var id = checkedBox.eq(i).attr('data-id');
+                //    var name = checkedBox.eq(i).attr('data-name');
+                //    if (id) {
+                //        idList.push({
+                //            id: id,
+                //            name: name
+                //        });
+                //    }
+                //}
+                if (that.selectedList.length >= 1) {
+
+                    window.open('channel-goods-select.html?id=' + JSON.stringify(that.selectedList));
+                } else {
+                    toastr.error('选择的渠道商有误!无法获取到渠道商的身份标识', '提示')
+                }
+            });
+
+            // 删除渠道商
+            $(document).on('click', '.j-image-close', function () {
+                var id = $(this).attr('data-id');
+                for (var i = 0; i < that.selectedList.length; i++) {
+                    if (id == that.selectedList[i].id) {
+                        that.selectedList.splice(i, 1);
+                        if (i >= 1) {
+                            i--
+                        }
                     }
                 }
-                if( idList.length >= 1 ){
-                    idList = JSON.stringify(idList);
-                    window.open('channel-goods-select.html?id=' + idList);
-                }else{
-                    toastr.error('选择的渠道商有误!无法获取到渠道商的身份标识','提示')
-                }
-            })
+                $(this).parents('.channel-detail').remove();
+                $('.checkbox[data-id=' + id + ']').iCheck('uncheck');
+            });
+
+            // 导出
+            $('#export').click(function () {
+                that.exportApi();
+            });
+
+            // 查看导出列表
+            $('#exportList').click(function () {
+                that.popup({
+                    title: '导出列表',
+                    content: '<div class="export-wrapper"></div>'
+                }, function () {
+                    var template = _.template($('#j-export-list').html());
+                    $('.export-wrapper').html(template({
+                        items: []
+                    }))
+                })
+            });
+
+            // 查看关联列表
+            $('#channelList').click(function () {
+                that.popup({
+                    title: '关联列表',
+                    content: '<div class="channel-wrapper"></div>'
+                }, function () {
+                    that.bindTask(function (data) {
+                        var template = _.template($('#j-channel-list').html());
+                        $('.channel-wrapper').html(template({
+                            items: data.data.data
+                        }))
+                    })
+                })
+            });
+
+            $(document).on('click', '.j-goods-channel', function () {
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
+                var objArr = [{
+                    id: id,
+                    name: name
+                }];
+                window.open('channel-goods-select.html?id=' + JSON.stringify(objArr))
+            });
+        },
+        /**
+         * 导出
+         */
+        exportApi: function () {
+
         },
         /**
          * 品牌列表
@@ -252,6 +378,7 @@
                         //    items: data.data.data
                         //}));
                         that.iCheck();
+                        that._checked();
                     } else {
                         $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
                     }
@@ -291,6 +418,39 @@
                 }
             });
         },
+        /**
+         * 关联列表
+         */
+        bindTask: function (success) {
+            var that = this;
+            Api.get({
+                url: '/biz_item/query_bind_task.do',
+                data: {
+                    bind_task_qto: JSON.stringify({
+                        needPaging: true,
+                        pageSize: that.page.pageSize,
+                        currentPage: that.pageId
+                    })
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+        /**
+         *
+         * @param total
+         */
         pagination: function (total) {
             var that = this;
             var pagination = $('.ui-pagination')
@@ -317,6 +477,31 @@
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {
                 $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            }
+        },
+        renderChannelList: function () {
+            var that = this;
+            var template = _.template($('#j-template-channel-list').html());
+            $('#renderChannel').html(template({
+                items: that.selectedList
+            }))
+        },
+        _isInArry: function (arr, id) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].id == id) {
+                    return true
+                }
+            }
+            return false
+        },
+        _checked: function () {
+            var checkbox = $('.checkbox');
+            for (var i = 0; i < this.selectedList.length; i++) {
+                for (var n = 0; n < checkbox.length; n++) {
+                    if (this.selectedList[i].id == checkbox.eq(n).attr('data-id')) {
+                        checkbox.eq(n).iCheck('check');
+                    }
+                }
             }
         }
     };

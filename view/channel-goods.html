@@ -12,6 +12,9 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- end -->
+    <!-- rev-hash -->
+    <link href="../style/css/channel.css" rel="stylesheet" type="text/css">
+    <!-- end -->
 </head>
 <body class="nav-md">
 <div class="container body">
@@ -42,7 +45,7 @@
                     </div>
                 </div>
             </div>
-        </div>        <!-- 姓名角色-->
+        </div>
         <div class="x_panel">
             <div class="x_title">
                 <h2><small>渠道列表</small></h2>
@@ -60,6 +63,7 @@
                     <a class="btn btn-sm btn-success mr10" href="javascript:;" id="exportList">查看导出列表</a>
                     <a class="btn btn-sm btn-success " href="javascript:;" id="channelList">查看关联列表</a>
                 </div>
+                <div id="renderChannel" class="mt10 mb10 channel-name-lists"></div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                         <thead>
@@ -91,7 +95,7 @@
                             <td class="tc">111111111</td>
                             <td class="tc">激活</td>
                             <td class="last tc">
-                                <a href="javascript:;">商品管理</a>
+                                <a href="javascript:;" class="j-goods-channel" data-id="10" data-name="管理员三">商品管理</a>
                             </td>
                         </tr>
                         <tr class="odd pointer list">
@@ -104,7 +108,7 @@
                             <td class="tc">111111111</td>
                             <td class="tc">激活</td>
                             <td class="last tc">
-                                <a href="channel-goods-select.html?id=1" target="_blank">商品管理</a>
+                                <a href="javascript:;" class="j-goods-channel" data-id="20" data-name="管理图2">商品管理</a>
                             </td>
                         </tr>
                         </tbody>
@@ -140,4 +144,68 @@
 <!-- rev-hash -->
 <script src="../src/fn/channel-goods.js"></script>
 <!-- end -->
+
+<script type="text/template" id="j-export-list">
+    <table class="table table-striped jambo_table bulk_action table-bordered">
+        <thead>
+            <tr>
+                <th class="tc">时间</th>
+                <th class="tc">状态</th>
+                <th class="tc">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if( items.length > 0 ){ %>
+            <% _.each(items, function(item, index){ %>
+
+            <% }) %>
+        <% }else{ %>
+            <tr>
+                <td class="tc" colspan="18">没有任何记录!</td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>
+
+<script type="text/template" id="j-channel-list">
+    <table class="table table-striped jambo_table bulk_action table-bordered">
+        <thead>
+        <tr>
+            <th class="tc">渠道</th>
+            <th class="tc">关联范围</th>
+            <th class="tc">关联时间</th>
+            <th class="tc">完成时间</th>
+            <th class="tc">状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if( items.length > 0 ){ %>
+        <% _.each(items, function(item, index){ %>
+            <tr>
+                <td class="tc"><%= item.channel_name %></td>
+                <td class="tc"><%= ['-','全部','指定品牌','指定类目','指定商品'][item.type] %><%= item.target_name %></td>
+                <td class="tc"><%= item.start_time %></td>
+                <td class="tc"><%= item.end_time || '-' %></td>
+                <td class="tc"><%= ['-','进行中','成功','失败'][item.status] %></td>
+            </tr>
+        <% }) %>
+        <% }else{ %>
+        <tr>
+            <td class="tc" colspan="18">没有任何记录!</td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+</script>
+
+<script type="text/template" id="j-template-channel-list">
+    <% _.each(items, function(item,index){ %>
+    <div class="channel-detail">
+        <img class="channel-img" src="http://img.mockuai.com/tms/2017/3/20/upload_ed82c572beb295358c92c025eed00e1f.jpeg">
+        <span><%= item.name %></span>
+        <i class="fa fa-close img-close j-image-close" data-id="<%= item.id %>"></i>
+    </div>
+    <% }) %>
+</script>
 </html>

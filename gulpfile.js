@@ -58,9 +58,14 @@ gulp.task('hash', ['packHtml'], function () {
 gulp.task('htmlmin', ['hash'], function () {
     gulp.start(['cssmin']);
     var options = {
-        collapseWhitespace: true,       //压缩HTML
-        minifyJS: true,                 //压缩页面JS
-        minifyCSS: true                 //压缩页面CSS
+        removeComments: true,//清除HTML注释
+        collapseWhitespace: true,//压缩HTML
+        //collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
+        //removeEmptyAttributes: true,//删除所有空格作属性值 <input id="" /> ==> <input />
+        //removeScriptTypeAttributes: true,//删除<script>的type="text/javascript"
+        //removeStyleLinkTypeAttributes: true,//删除<style>和<link>的type="text/css"
+        minifyJS: true,//压缩页面JS
+        minifyCSS: true//压缩页面CSS
     };
     return gulp.src(DEST + 'view/*.html')
         .pipe(htmlmin(options))
@@ -198,9 +203,12 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/jquery.dialog/jquery.dialog.css',
             './src/plugin/select-plugin/select-plugin.css',
             './style/css/daterangepicker.css',
+            './src/plugin/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css',
             './style/css/custom.css',
             './src/plugin/jquery/js/jquery.js',
             './src/plugin/jquery/js/jquery.cookie.js',
+            './src/plugin/jquery.form/jquery.form.js',
+            './src/plugin/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js',
             './src/plugin/bootstrap/js/bootstrap.js',
             './src/plugin/moment/js/moment.min.js',
             './src/plugin/daterangepicker/js/daterangepicker.js',
@@ -232,9 +240,12 @@ gulp.task('packHtml', ['sass', 'scripts'], function () {
             './src/plugin/jquery.dialog/jquery.dialog.css',
             './src/plugin/select-plugin/select-plugin.css',
             './style/css/daterangepicker.css',
+            './src/plugin/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css',
             './style/css/custom.css',
             './src/plugin/jquery/js/jquery.min.js',
             './src/plugin/jquery/js/jquery.cookie.js',
+            './src/plugin/jquery.form/jquery.form.js',
+            './src/plugin/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js',
             './src/plugin/bootstrap/js/bootstrap.min.js',
             './src/plugin/moment/js/moment.min.js',
             './src/plugin/daterangepicker/js/daterangepicker.min.js',
@@ -306,7 +317,7 @@ gulp.task('copy-img', function () {
         return gulp.src('./style/images/*')
             .pipe(gulp.dest(DEST + '/style/images'))
     } else {
-        return gulp.src('./style/images')
+        return gulp.src('./style/images/*')
             .pipe(gulp.dest(DEST + '/style/images'))
     }
 });
@@ -340,6 +351,6 @@ gulp.task('dev', ['build', 'clean'], function () {
 // Rc Task
 // 生产环境
 gulp.task('rc', ['html', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-js', 'hash', 'htmlmin']);
+    gulp.start(['copy-plugin', 'copy-stub', 'copy-js', 'copy-img', 'hash']);
     console.log('============rc OK version!============')
 });

@@ -1,5 +1,6 @@
 /**
  * Created by lijiahao on 17/3/1.
+ * ajax Api
  */
 ;var Api = (function () {
     var api = {
@@ -8,9 +9,16 @@
             return this;
         },
         domain: function () {
-            // 172.16.0.98
-            this.ajaxDomain = 'http://boss.mockuai.net:8085/bossmanager';
-            // this.ajaxDomain = 'http://test.seller.mockuai.com:8085/bossmanager';
+            var host = location.host;
+            if (!host || host.indexOf('localhost') != -1 || host.indexOf('file') != -1) {
+                // 本地环境
+                // this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+                //this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
+                this.ajaxDomain = 'http://' + 'fenxianghui.seller.mockuai.com' + '/bossmanager';
+            } else {
+                // 测试环境
+                this.ajaxDomain = 'http://' + host + '/bossmanager';
+            }
             return this.ajaxDomain;
         },
         post: function (opts) {
@@ -50,7 +58,6 @@
                 },
                 success: function (data) {
                     if (data.code == 40000) {
-                        console.log('登录已过期');
                         location.href = 'login.html'
                     } else if (data.code == 10000) {
                         opts.success && opts.success(data);
@@ -64,9 +71,14 @@
                     }, 500);
                     opts.complete && opts.complete(data);
                 },
-                error: function (xhr,status,error) {
-                    console.log(xhr,status,error);
-                    opts.error && opts.error(xhr,status,error);
+                error: function (xhr, status, error) {
+                    if (xhr.status === 500) {
+                        toastr.error('服务端开小差~', '提示')
+                    } else if (xhr.status == 404) {
+                        toastr.error('接口可能走丢了~', '提示')
+                    } else {
+                        opts.error && opts.error(xhr, status, error);
+                    }
                 }
             })
         }

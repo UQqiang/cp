@@ -24429,11 +24429,11 @@ UE.plugin.register('simpleupload', function (){
 
             wrapper.innerHTML = '<form id="edui_form_' + timestrap + '" target="edui_iframe_' + timestrap + '" method="POST" enctype="multipart/form-data" action="' + me.getOpt('serverUrl') + '" ' +
             'style="' + btnStyle + '">' +
-            '<input id="edui_input_' + timestrap + '" type="file" accept="image/*" name="' + 'file' + '" ' +
+            '<input id="edui_input_' + timestrap + '" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" name="' + 'file' + '" ' +
             'style="' + btnStyle + '">' +
             '<input name="' + 'media_auth_key' + '" type="hidden" value="' + '6r4XkF6EcE' + '"/>' +
-            '<input name="' + 'biz_code' + '" type="hidden" value="' + '' + '"/>' +
-            '<input name="' + 'user_id' + '" type="hidden" value="' + '' + '"/>' +
+            '<input name="' + 'biz_code' + '" type="hidden" value="' + $.cookie('biz_code') + '"/>' +
+            '<input name="' + 'user_id' + '" type="hidden" value="' + $.cookie('user_id') + '"/>' +
             '<input name="' + 'parent_id' + '" type="hidden" value="' + 0 + '"/>' +
             '</form>' +
             '<iframe id="edui_iframe_' + timestrap + '" name="edui_iframe_' + timestrap + '" style="display:none;width:0;height:0;border:0;margin:0;padding:0;position:absolute;"></iframe>';

@@ -12,6 +12,7 @@
             this.categoryId = '';
             this.currentCateObj = {};
             this.warehouseList = [];
+            this.brandList = [];
             $('#categoryChildren').hide();
             this.queryBrand();
             this.queryCategory();
@@ -80,10 +81,10 @@
             $('#search').click(function () {
                 that.pageId = 1;
 
-                var brand_key = $.trim($('#brandList option:selected').attr('value'))
-                if( brand_key != '' ) {
-                    that.search_key.brand_key = brand_key;
-                }
+                //var brand_key = $.trim($('#brandList option:selected').attr('value'))
+                //if( brand_key != '' ) {
+                //    that.search_key.brand_key = brand_key;
+                //}
                 var category_id = that.currentCateObj['2'] ? that.currentCateObj['2'].id : '';
                 if( category_id != '' ){
                     that.search_key.category_id = category_id
@@ -385,10 +386,34 @@
 
                 },
                 success: function (data) {
-                    var t = _.template($('#j-template-brand').html());
-                    $('#brandList').html(t({
-                        items: data.data.data
-                    }));
+                    //var t = _.template($('#j-template-brand').html());
+                    //$('#brandList').html(t({
+                    //    items: data.data.data
+                    //}));
+                    console.log(data);
+                    var brand = data.data.data;
+                    for (var i = 0; i < brand.length; i++) {
+                        that.brandList.push({
+                            text: brand[i].brand_name,
+                            value: brand[i].id
+                        });
+                    }
+                    var list = that.brandList.length <= 0 ? [{text: '请选择品牌', value: 'null'}] : that.brandList;
+                    var selectize = $('#brandList').selectize({
+                        options: list,
+                        placeholder: '请选择品牌',
+                        create: false,
+                        onItemAdd: function (value, $item) {
+                            // 选择税率模板
+                            if(value == 'null'){
+                                return;
+                            }
+                            that.search_key.brand_key = value
+                        },
+                        onItemRemove: function (value) {
+                            delete that.search_key.brand_key
+                        }
+                    });
                 },
                 complete: function () {
 
@@ -422,12 +447,16 @@
                             value: tax[i].id
                         });
                     }
+                    var list = that.warehouseList.length <= 0 ? [{text: '请选择仓库', value: 'null'}] : that.warehouseList
                     var selectize = $('#storage-template-selectize').selectize({
-                        options: that.warehouseList,
-                        placeholder: '请选择税仓库',
+                        options: list,
+                        placeholder: '请选择仓库',
                         create: false,
                         onItemAdd: function (value, $item) {
                             // 选择税率模板
+                            if(value == 'null'){
+                                return;
+                            }
                             that.storage_id = value
                         },
                         onItemRemove: function (value) {

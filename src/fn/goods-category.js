@@ -240,6 +240,9 @@
                         var parent_id = $(this).attr('data-parent_id');
                         var name = $.trim($(this).text());
                         var level = $(this).attr('data-cate_level');
+                        if(!id){
+                            return;
+                        }
                         if ($(this).attr('data-sub_cate') != 'undefined') {
                             var subCate = JSON.parse(decodeURIComponent($(this).attr('data-sub_cate')));
                         }

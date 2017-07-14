@@ -23,7 +23,7 @@
             });
 
             var username = $.cookie('username');
-            if(username){
+            if (username) {
                 $('.sidebar-username').text(username);
             }
         },
@@ -32,7 +32,7 @@
                 url: '/user/logout.do',
                 success: function (data) {
                     // remove cookie
-                    $.removeCookie('username',{path: '/'});
+                    $.removeCookie('username', {path: '/'});
                     $.removeCookie('seller_id', {path: '/'});
                     $.removeCookie('user_id', {path: '/'});
 
@@ -110,7 +110,7 @@
                 that.setContentHeight();
             }).parent().addClass('active');
 
-            if( $('.current-page').parent('ul').attr('data-target_menu') == 3 ){
+            if ($('.current-page').parent('ul').attr('data-target_menu') == 3) {
                 $('.current-page').parents('ul[data-target_menu=2] li').addClass('current-page');
             }
 

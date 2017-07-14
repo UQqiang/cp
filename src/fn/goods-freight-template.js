@@ -147,7 +147,9 @@
                 },
                 mask: true,
                 success: function (data) {
-                    that.templateShow(data)
+                    if( data.data.freight_template_dto_list.length > 0 ){
+                        that.templateShow(data)
+                    }
                 },
                 complete: function () {
 
@@ -158,9 +160,9 @@
             })
         },
         templateShow: function (data) {
-            var $tpl1 = $("#tpl").html();
+            var $tpl1 = _.template($("#j-template").html());
             console.log(data);
-            $(".template-main").html(_.template($tpl1)({
+            $(".template-main").html($tpl1({
                 data: data.data.freight_template_dto_list
             }));
 

@@ -164,13 +164,13 @@
             var that = this;
             // 显示弹窗
             $(that.body).on('click', that.$element, function () {
-                if (that.options.selectedList.length > 0) {
-                    that.selected_list = that.options.selectedList
-                }
+                //if (that.options.selectedList.length > 0) {
+                    that.selected_list = that.options.selectedList;
+                //}
                 that.target = $(this);
 
                 // 清空上次的查询条件
-                for(var key in that.search_key){
+                for (var key in that.search_key) {
                     delete that.search_key[key];
                 }
                 that.pageConfig.pageId = 1;
@@ -198,7 +198,7 @@
             // 搜索
             $(document).off('click', ('#' + that.selectPluginSearchBtn));
             // 确定使用
-            $(document).off('click', ('.' + that.selectPluginSaveBtn));
+            $(that.body).off('click', ('.' + that.selectPluginSaveBtn));
             // 弹窗 全选本页
             $(document).off('click', ('.' + that.selectPluginSelectAllBtn));
             // 弹窗选择&取消选择
@@ -338,7 +338,7 @@
                         // 判断是单选还是多选
                         if (that.options.single === true) {
                             that.options.selectSuccess(selectedList, that.target);
-                            if( that.dialog ){
+                            if (that.dialog) {
                                 that.dialog.close();
                             }
 
@@ -361,14 +361,16 @@
                     var selectBtn0, selectBtn1;
                     if (status == '0') {
                         // 选择
-                        selectedList.push(data);
+                        if(that.isInArry(selectedList, data) === false){
+                            selectedList.push(data);
+                        }
                         $(this).attr('data-status', '1');
                         $(this).text('取消');
                         $(this).css({'background': '#26B99A', 'border-color': '#169F85', 'color': '#fff'});
                         // 判断是单选还是多选
                         if (that.options.single === true) {
                             that.options.selectSuccess(selectedList, that.target);
-                            if( that.dialog ){
+                            if (that.dialog) {
                                 that.dialog.close();
                             }
 
@@ -384,7 +386,9 @@
                                 } else {
                                     // 如果是没有展开的情况
                                     for (var n = 0; n < data.sub_categorys.length; n++) {
-                                        selectedList.push(data.sub_categorys[n]);
+                                        if(that.isInArry(selectedList, data.sub_categorys[n]) === false){
+                                            selectedList.push(data.sub_categorys[n]);
+                                        }
                                     }
                                 }
                             } else if (level == 2) {
@@ -573,18 +577,20 @@
                     var itemStatus;
                     if (that.options.needFailureInfo == true) {
                         // 需要下架商品
-                        itemStatus = that.statusKey || ''
+                        itemStatus = that.statusKey
                     } else {
                         // 不需要下架商品
                         itemStatus = that.statusKey || 4
                     }
                     obj = {
-                        current_page: that.pageConfig.pageId || 1,
-                        page_size: that.pageConfig.pageSize,
-                        item_status: itemStatus,
-                        key: that.search_key.key,
-                        brand_key: that.search_key.brand_key || '',
-                        category_id: that.search_key.cate_key || ''
+                        item_qto: JSON.stringify({
+                            current_page: that.pageConfig.pageId || 1,
+                            page_size: that.pageConfig.pageSize,
+                            item_status: itemStatus,
+                            key: that.search_key.key,
+                            brand_key: that.search_key.brand_key,
+                            category_id: that.search_key.cate_key
+                        })
                     };
 
                     that.ajax(that.ajaxApi, obj, function (data) {
@@ -906,6 +912,8 @@
                     items: data,
                     type: that.options.type
                 }))
+            }else{
+                $('#j-select-plugin-cate-level-2').html('<p class="tc">当前一级类目下无二级类目~</p>')
             }
         },
         /**
@@ -1027,6 +1035,17 @@
                     $('#' + this.templateRenderArea).html(content)
                 }
             }
+        },
+        /**
+         *
+         */
+        isInArry: function (selectedList, data) {
+            for (var k = 0; k < selectedList.length; k++) {
+                if(selectedList[k].id == data.id){
+                    return true;
+                }
+            }
+            return false;
         }
     };
 

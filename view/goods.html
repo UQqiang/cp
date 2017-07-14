@@ -106,17 +106,17 @@
                             <div class="add-goods-content">
                                 <div class="add-goods-inner form-inline">
                                     <div class="form-group mb10">
-                                        <label class="ui-label ui-label-md tr">* 商品类目：</label>
+                                        <label class="ui-label ui-label-md tr"><span class="required-icon">*</span>商品类目：</label>
                                         <span class="currentCategory"></span><span class="ml10"><a href="javascript:;" class="reselect" data-type="back">重新选择</a></span>
                                     </div>
                                     <br/>
                                     <div class="form-group mb10 field item">
-                                        <label class="ui-label ui-label-md tr"><span>* 商品名称：</span></label>
+                                        <label class="ui-label ui-label-md tr"><span><span class="required-icon">*</span>商品名称：</span></label>
                                         <input class="form-control form-control-hg" id="name" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length-range=1,40">
                                     </div>
                                     <br/>
                                     <div class="form-group mb10 item">
-                                        <label class="ui-label ui-label-md tr">* 商品类型：</label>
+                                        <label class="ui-label ui-label-md tr"><span class="required-icon">*</span>商品类型：</label>
 
                                         <input type="radio" class="flat" name="radio-goods" id="goodsType-1" value="1" checked="checked"/>
                                         <label for="goodsType-1" class="ml5 mr5">
@@ -140,7 +140,7 @@
                                     </div>
                                     <br/>
                                     <div class="form-group mb10 field item">
-                                        <label class="ui-label ui-label-md tr">* 商品品牌：</label>
+                                        <label class="ui-label ui-label-md tr"><span class="required-icon">*</span>商品品牌：</label>
                                         <div class="the-selectize-wrapper">
                                         <select required="required" name="商品品牌" id="brand-selectize">
                                             <!--<option>请选择商品品牌</option>-->
@@ -151,7 +151,7 @@
                                     </div>
                                     <br/>
                                     <div class="form-group mb10 field item">
-                                        <label class="ui-label ui-label-md tr">* 货源地：</label>
+                                        <label class="ui-label ui-label-md tr"><span class="required-icon">*</span>货源地：</label>
                                         <!--<select class="form-control form-control-md" required name="货源地" id="countryList">-->
                                             <!--<option>请选择商品货源地</option>-->
                                         <!--</select>-->
@@ -174,7 +174,7 @@
                             <div class="add-goods-content">
                                 <div class="add-goods-inner">
                                     <div class="form-group">
-                                        <label class="ui-label ui-label-md tr vat">* 税率：</label>
+                                        <label class="ui-label ui-label-md tr vat"><span class="required-icon">*</span>税率：</label>
                                         <div class="dib">
                                             <div class="dib">
                                                 <div class="mb10">
@@ -246,7 +246,7 @@
                                 <div class="add-goods-inner">
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
-                                            <label class="ui-label ui-label-md tr mb10"><span>增值税税率：</span></label>
+                                            <label class="ui-label ui-label-md tr mb10"><span class="required-icon">*</span><span>增值税税率：</span></label>
                                             <div class="input-group">
                                                 <input class="form-control form-control-md" required="required" placeholder="请输入增值税税率" name="增值税税率" type="text" pattern="decimal" id="taxPoint">
                                                 <span class="input-group-addon">%</span>
@@ -268,7 +268,7 @@
                             <div class="add-goods-content">
                                 <div class="add-goods-inner">
                                     <div class="form-group">
-                                        <label class="ui-label ui-label-md tr vat"><span>商品规格：</span></label>
+                                        <label class="ui-label ui-label-md tr vat"><span><span class="required-icon">*</span>商品规格：</span></label>
                                         <div class="sku-wrapper">
                                             <div id="skuCont"></div>
                                             <div class="sku-group add-group">
@@ -279,30 +279,30 @@
                                         </div>
                                     </div>
                                     <div class="form-group stock-container">
-                                        <label class="ui-label ui-label-md tr vat"><span>商品库存：</span></label>
+                                        <label class="ui-label ui-label-md tr vat"><span class="required-icon">*</span><span>商品库存：</span></label>
                                         <div class="sku-wrapper" id="sku">
 
                                         </div>
                                     </div>
                                     <div class="form-group sku-container">
-                                        <label class="ui-label ui-label-md tr vat"><span>SKU图片：</span></label>
+                                        <label class="ui-label ui-label-md tr vat"><span class="required-icon">*</span><span>SKU图片：</span></label>
                                         <div class="sku-wrapper" id="sku-img">
 
                                         </div>
                                     </div>
                                     <div class="form-inline">
                                         <div class="form-group mb10 field item">
-                                            <label class="ui-label ui-label-md tr"><span>* 最低售价：</span></label>
+                                            <label class="ui-label ui-label-md tr"><span><span class="required-icon">*</span>最低售价：</span></label>
                                             <input class="form-control form-control-md" id="promotion_price" required="required" placeholder="请输入最低售价" name="最低售价" type="text" pattern="decimal">
                                         </div>
                                         <br/>
                                         <div class="form-group mb10 field item">
-                                            <label class="ui-label ui-label-md tr"><span>* 建议零售价：</span></label>
+                                            <label class="ui-label ui-label-md tr"><span><span class="required-icon">*</span>建议零售价：</span></label>
                                             <input class="form-control form-control-md" id="market_price" required="required" placeholder="请输入建议零售价" name="建议零售价" type="text" pattern="decimal">
                                         </div>
                                         <br/>
                                         <div class="form-group mb10 field item">
-                                            <label class="ui-label ui-label-md tr"><span>* EAN：</span></label>
+                                            <label class="ui-label ui-label-md tr"><span class="required-icon">*</span><span>EAN：</span></label>
                                             <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="alphanumeric">
                                         </div>
                                     </div>
@@ -320,16 +320,16 @@
                             </div>
                             <div class="add-goods-content add-goods-inner">
                                 <div class="form-group">
-                                    <label class="ui-label ui-label-md tr vat"><span>商品主图：</span></label>
+                                    <label class="ui-label ui-label-md tr vat"><span class="required-icon">*</span><span>商品主图：</span></label>
                                     <div id="main-gallery">
-                                        <p>最多5张，支持格式JPEG,PNG，建议尺寸：640 x 640 像素</p>
+                                        <p><span class="information-warning">!</span>最多5张，支持格式JPEG,PNG，建议尺寸：640 x 640 像素</p>
                                         <ul class="clearfix">
                                             <li class="imgUploadBtn" data-type="common"><i class="fa fa-plus"></i></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="ui-label ui-label-md tr vat"><span>商品详情：</span></label>
+                                    <label class="ui-label ui-label-md tr vat"><span class="required-icon">*</span><span>商品详情：</span></label>
                                     <script type="text/plain" id="editor" class="dib"></script>
                                 </div>
                             </div>
@@ -347,7 +347,7 @@
                                 <div class="add-goods-inner">
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
-                                            <label class="ui-label ui-label-md tr mb10"><span>物品体积：</span></label>
+                                            <label class="ui-label ui-label-md tr mb10"><span class="required-icon">*</span><span>物品体积：</span></label>
                                             <div class="input-group">
                                                 <input class="form-control form-control-md" required="required" placeholder="请输入物品体积" name="物品体积" type="text" pattern="decimal" id="weight">
                                                 <span class="input-group-addon">m3</span>
@@ -356,7 +356,7 @@
                                     </div>
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
-                                            <label class="ui-label ui-label-md tr mb10"><span>物品重量：</span></label>
+                                            <label class="ui-label ui-label-md tr mb10"><span class="required-icon">*</span><span>物品重量：</span></label>
                                             <div class="input-group">
                                                 <input class="form-control form-control-md" required="required" placeholder="请输入物品重量" name="物品重量" type="text" pattern="decimal" id="volume">
                                                 <span class="input-group-addon">kg</span>
@@ -402,6 +402,7 @@
 
     </div>
 </div>
+</body>
 
 <!-- rev-hash -->
 <!-- inject:js -->
@@ -411,23 +412,28 @@
 <!-- rev-hash -->
 <script src="../src/plugin/ueditor/ueditor.config.js"></script>
 <script src="../src/plugin/ueditor/ueditor.all.js"></script>
+<script src="../src/plugin/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script src="../src/fn/goods.js"></script>
 <!-- end -->
 
 <!-- 类目模板 -->
 <script type="text/template" id="template-category">
     <ul>
-    <% _.each(items,function(item,index){ %>
-        <% if( level === item.cate_level ){ %>
-            <% if( level == 1 ){ %>
-                <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
-            <% }else{ %>
-                <% if( item.parent_id == parent_id ){ %>
-                     <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+        <% if(items.length > 0){ %>
+        <% _.each(items,function(item,index){ %>
+            <% if( level === item.cate_level ){ %>
+                <% if( level == 1 ){ %>
+                    <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+                <% }else{ %>
+                    <% if( item.parent_id == parent_id ){ %>
+                        <li data-id="<%= item.id %>" data-parent_id="<%= item.parent_id %>" data-cate_level="<%= item.cate_level %>"><%= item.cate_name %></li>
+                    <% } %>
                 <% } %>
             <% } %>
+        <% }) %>
+        <% }else{ %>
+            <li class="tc">当前无类目~</li>
         <% } %>
-    <% }) %>
     </ul>
 </script>
 
@@ -763,5 +769,4 @@
     </table>
     <% }) %>
 </script>
-</body>
 </html>

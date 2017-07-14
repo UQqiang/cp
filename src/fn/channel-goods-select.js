@@ -8,30 +8,38 @@
             this.search_key = {};
             this.categoryList = [];
             this.brandList = [];
+            this.selectedList = [];
             this.idList = JSON.parse(decodeURIComponent(HDL.getQuery('id').split(',')));
 
-            if( !this.idList ){
-                toastr.error('供应商信息出错!','提示');
-                return false;
-            }else{
-                if(this.idList.length > 1){
-                    // 多个供应商
-                    $('.channel-name-list').show();
-                    var template = _.template($('#j-template-channel-list').html());
-                    $('.channel-name-lists').html(template({
-                        items: this.idList
-                    }))
-                } else{
-                    // 单个供应商
-                    // todo 单个供应商需要请求已经关联的商品列表
-                }
-            }
+            this.channelNum();
             this.addEvent();
             this.queryBrand();
             this.queryCategory();
             this.selectPluginBrand();
             this.selectPluginGoods();
             this.selectPluginCategory();
+        },
+        channelNum: function () {
+            if (!this.idList) {
+                toastr.error('供应商信息出错!', '提示');
+                return false;
+            } else {
+                if (this.idList.length > 1) {
+                    // 多个供应商
+                    this.isSingle = false;
+                    $('.channel-name-list').show();
+                    var template = _.template($('#j-template-channel-list').html());
+                    $('.channel-name-lists').html(template({
+                        items: this.idList
+                    }))
+                } else {
+                    // 单个供应商
+                    this.isSingle = true;
+                    // todo 单个供应商需要请求已经关联的商品列表
+                    $('.channel-goods-list').show();
+                    this.queryAssociatedGoodsList()
+                }
+            }
         },
         /**
          * tip
@@ -100,7 +108,7 @@
                 type: 0,
                 title: '商品选择',
                 selectLength: 0,
-                selectedList: that.selectList,
+                selectedList: that.selectedList,
                 ajaxUrl: Api.domain() + '/item/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
@@ -108,10 +116,25 @@
                 brandList: that.brandList || [],
                 showCateAndBrand: true,
                 selectSuccess: function (data) {
-                    that.selectList = data;
-                    // 选择商品进行渲染
-                    that.renderGoods();
-                    console.log(that.selectList);
+                    console.log(data);
+                    var idList = [];
+                    var postData = {};
+                    for (var i = 0; i < data.length; i++) {
+                        idList.push(data[i].id);
+                    }
+                    that.selectedList = idList;
+                    postData.target_list = JSON.stringify(idList);
+                    postData.type = 4;
+
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+                            that.renderGoods();
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        })
+                    }
                 },
                 selectError: function (info) {
                 }
@@ -130,15 +153,31 @@
                 type: 4,
                 title: '品牌选择',
                 selectLength: 0,
-                selectedList: that.selectList,
+                selectedList: that.selectedList,
                 ajaxUrl: Api.domain() + '/brand/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
                 selectSuccess: function (data) {
-                    that.selectList = data;
-                    // 选择商品进行渲染
-                    //that.renderGoods();
-                    console.log(that.selectList);
+                    console.log(data);
+                    var idList = [];
+                    var postData = {};
+                    for (var i = 0; i < data.length; i++) {
+                        idList.push(data[i].id);
+                    }
+
+                    that.selectedList = idList;
+                    postData.target_list = JSON.stringify(idList);
+                    postData.type = 2;
+
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+                            that.renderGoods();
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        })
+                    }
                 },
                 selectError: function (info) {
                 }
@@ -157,15 +196,32 @@
                 type: 5,
                 title: '类目选择',
                 selectLength: 0,
-                selectedList: that.selectList,
+                selectedList: that.selectedList,
                 ajaxUrl: Api.domain() + '/category/leaf/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
                 selectSuccess: function (data) {
-                    that.selectList = data;
-                    // 选择商品进行渲染
-                    //that.renderGoods();
-                    console.log(that.selectList);
+                    console.log(data);
+                    var idList = [];
+                    var postData = {};
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].cate_level == 2) {
+                            idList.push(data[i].id);
+                        }
+                    }
+                    that.selectedList = idList;
+                    postData.target_list = JSON.stringify(idList);
+                    postData.type = 3;
+
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+                            that.renderGoods();
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        })
+                    }
                 },
                 selectError: function (info) {
                 }
@@ -313,6 +369,86 @@
 
                 })
             });
+
+            // 删除渠道商
+            $(document).on('click', '.j-image-close', function () {
+                var id = $(this).attr('data-id');
+                if ($('.channel-detail').length <= 1) {
+                    toastr.error('当前渠道只剩一个了~');
+                    return false;
+                }
+                for (var i = 0; i < that.idList.length; i++) {
+                    if (id == that.idList[i].id) {
+                        that.idList.splice(i, 1);
+                        if (i >= 1) {
+                            i--
+                        }
+                    }
+                }
+                $(this).parents('.channel-detail').remove();
+                that.channelNum();
+            });
+
+            // 关联全部
+            $('#selectAll').click(function () {
+                that.tip({
+                    target: $(this),
+                    content: '确定要关联全部商品吗?',
+                    position: 'right'
+                }, function (btn, dialog) {
+                    var postData = {};
+                    postData.type = 1;
+                    if (that.isSingle === true) {
+                        that.associatedGoods(postData, function () {
+
+                        });
+                    } else {
+                        that.associatedGoods(postData, function () {
+
+                        });
+                    }
+
+                    dialog.close();
+                }, function (btn, dialog) {
+                    dialog.close();
+                })
+            })
+        },
+
+        /**
+         * 关联商品
+         * @param postData
+         * @param cb
+         */
+        associatedGoods: function (postData, cb) {
+            var that = this;
+            var channel_list = [];
+            for (var i = 0; i < this.idList.length; i++) {
+                channel_list.push(this.idList[i].id);
+            }
+            postData.channel_list = JSON.stringify(channel_list);
+            console.log(postData);
+            Api.get({
+                url: '/item/bind_channel.do',
+                data: postData,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    if (data.code == 10000) {
+                        toastr.success('关联中,关联进度请查看关联列表<a style="color:blue;" href="channel-goods.html">点击</a>', '提示');
+                        cb && cb();
+                    } else {
+                        toastr.error(data.msg, '提示');
+                    }
+                },
+                complete: function () {
+                    that.selectedList.splice(0, that.selectedList.length);
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            });
         },
         /**
          * 删除 & 批量删除已经选择的关联商品
@@ -416,6 +552,40 @@
                 }
             });
         },
+
+        /**
+         * 已经关联的商品列表
+         */
+        queryAssociatedGoodsList: function (id) {
+            var that = this;
+            Api.get({
+                url: '/biz_item/query.do',
+                data: {
+                    biz_item_qto: JSON.stringify({
+                        biz_code: 'direct-biz',
+                        need_paging: true,
+                        page_size: that.page.pageSize,
+                        current_page: that.pageId
+                    })
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    var template = _.template($('#j-template-goods').html());
+                    $('#goodsList').html(template({
+                        items: data.data.data
+                    }));
+                    that.pagination(data.data.total_count)
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    toastr.error(data.msg)
+                }
+            });
+        },
         /**
          * 删除品牌
          */
@@ -443,7 +613,7 @@
         },
         pagination: function (total) {
             var that = this;
-            var pagination = $('.ui-pagination')
+            var pagination = $('.ui-pagination');
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -457,12 +627,12 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        that.queryBrand()
+                        that.queryAssociatedGoodsList()
                     }
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#warehouseList').find('tr.list').length;
+            var n = $('#goodsList').find('tr.list').length;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

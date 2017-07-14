@@ -3,7 +3,14 @@
     // 定义构造函数
     var SelectImg = function(ele,opt){
 
-        var content = '<div class="ui-box" style="overflow: scroll;height: 450px;"><table class="table table-striped jambo_table bulk_action">' +
+        var content = '<div class="form-inline mb10 tr"><div class="form-group">' +
+                    '<div class="input-group">' +
+                        '<input class="form-control form-control-lg" id="imgUploadModalKeywords">' +
+                        '<span class="input-group-addon btn-success" style="color:#fff;" id="imgUploadModalSearch">搜索</span>' +
+                    '</div>' +
+                '</div></div>' +
+                '<div class="ui-box" style="overflow: scroll;height: 450px;">' +
+                '<table class="table table-striped jambo_table bulk_action">' +
                 '<thead>'+
                 '<tr>'+
                 '<th class="tc">图片</th>'+
@@ -16,7 +23,7 @@
                 '</tbody>'+
                 '</table></div>' +
                 '<div class="ui-box">' +
-                '<div class="ui-box" style="position: absolute;bottom: 25px;right: 0;">'+
+                '<div class="ui-box" style="position: absolute;bottom: 25px;right: 10px;">'+
                 '<div class="widget-list">'+
                 '<div>'+
                 '</div>'+
@@ -66,6 +73,7 @@
                 pageSize:20,
                 visiblePages:10
             };
+            this.search_key = {};
 
             this.addEvent();
             this.showUploadDialog();
@@ -79,9 +87,10 @@
              * 弹出框的按钮
              * 点击弹出弹框
              */
-
             $('body').on('click',that.options.selectImgPopupBtn,function(){
 
+                that.pageId = 1;
+                that.search_key = {};
                 if ( !that.options.selectImgPopupTemplate || that.options.selectImgPopupTemplate == '' ){
                     console.log('error,template is not found！')
                 }else{
@@ -89,13 +98,19 @@
                 }
                 that.currentTrigger = $(this);
             });
+            
+            $('body').on('click', '#imgUploadModalSearch', function () {
+                that.search_key.keywords = $.trim($('#imgUploadModalKeywords').val());
+                that.pageId = 1;
+                that.imgList();
+            })
         },
 
         /**
          * imgList：获取图片选择的图片列表
          */
 
-        imgList: function (callback, order, key) {
+        imgList: function (callback, order) {
             var that = this;
 
             $.ajax({
@@ -106,7 +121,7 @@
                     biz_code: that.options.biz_code,
                     user_id: that.options.user_id,
                     path_id: 0,                                  // 所属文件夹ID，（默认0,代表获取根目录下文件列表） 暂未启用文件夹
-                    keyword: key == undefined ? '':key,          // 搜索的关键字
+                    keyword: that.search_key.keywords,           // 搜索的关键字
                     order: order == undefined ? 'desc':order,    // 图片列表的排序
                     page: that.pageId,
                     num: that.paginationCfg.pageSize

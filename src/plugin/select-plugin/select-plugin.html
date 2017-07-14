@@ -63,8 +63,8 @@
             <% } %>
             <% if( type == 3 ){ %>
             <div class="form-group">
-                <input type="checkbox" id="warehouse">
-                <label class="ui-label ui-label-lg" for="warehouse">只显示开放仓库</label>
+                <input type="checkbox" id="warehouse-input">
+                <label class="ui-label ui-label-lg" for="warehouse-input">只显示开放仓库</label>
             </div>
             <% } %>
             <div class="form-group">
@@ -280,7 +280,7 @@
     <% }) %>
 </script>
 
-<!-- 弹窗 展开商品对应的sku -->
+<!-- 弹窗 展开一级类目下对应的二级类目 -->
 <script type="text/template" id="j-select-plugin-category2">
     <% _.each(items,function(item,index){ %>
     <ul class="select-plugin-category-list j-select-plugin-box" data-cate_level="<%= item.cate_level %>" data-parent_id="<%= item.parent_id %>" data-id="<%= item.id %>">

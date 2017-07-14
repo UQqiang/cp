@@ -58,6 +58,7 @@
                     $.cookie('username', $.trim($('#username').val()), {path: '/'});
                     $.cookie('seller_id', data.data.seller_id, {path: '/'});
                     $.cookie('user_id', data.data.user_id, {path: '/'});
+                    $.cookie('biz_code', data.data.biz_code, {path: '/'});
 
                     if (!window.localStorage) {
                         toastr.error('游览器不支持localStorage')
