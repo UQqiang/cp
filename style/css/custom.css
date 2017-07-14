@@ -3801,12 +3801,11 @@ a.hiddenanchor {
 }
 
 .login_wrapper {
-  right: 0px;
-  margin: 0px auto;
-  margin-top: 5%;
+  margin: auto;
   max-width: 350px;
   position: relative;
   height: 500px;
+  width: 100%;
 }
 
 .registration_form, .login_form {

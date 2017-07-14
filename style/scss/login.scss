@@ -6,6 +6,10 @@ body {
 }
 .login-content {
     height: inherit;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 .verify-input {
   display: inline-block;
@@ -54,15 +58,16 @@ label {
 }
 .login-top {
     border-bottom: 1px solid #c8c8c8;
-    height: 100px;
+    height: 120px;
     background: #fff;
     font-size: 30px;
-    line-height: 100px;
+    line-height: 120px;
     padding-left: 20%;
 }
 .login-bottom {
     text-align: center;
     background: #fff;
-    height: inherit;
+    height: 200px;
     padding-top: 60px;
+    margin-top: auto;
 }

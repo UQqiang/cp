@@ -3945,12 +3945,12 @@ a.hiddenanchor {
 }
 
 .login_wrapper {
-  right: 0px;
-  margin: 0px auto;
-  margin-top: 5%;
+  // right: 0px;
+  margin: auto;
   max-width: 350px;
   position: relative;
   height: 500px;
+  width: 100%;
 }
 
 .registration_form, .login_form {
@@ -3968,7 +3968,7 @@ a.hiddenanchor {
 .login_form {
   z-index: 22;
   z-index: 22;
-  padding: 15px 26px;
+    padding: 15px 26px;
 }
 
 #signup:target ~ .login_wrapper .registration_form, #signin:target ~ .login_wrapper .login_form {
