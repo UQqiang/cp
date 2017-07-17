@@ -3804,7 +3804,7 @@ a.hiddenanchor {
   margin: auto;
   max-width: 350px;
   position: relative;
-  height: 500px;
+  min-height: 500px;
   width: 100%;
 }
 
