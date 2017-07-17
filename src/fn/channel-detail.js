@@ -299,7 +299,7 @@
             }
             var task_type = task_type_obj[type];
             var postCheckList = {
-                current_page: that.page_pop.pageId || 1,
+                page: that.page_pop.pageId || 1,
                 page_size: 10,
                 task_type: task_type
             };
