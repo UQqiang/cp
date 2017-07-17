@@ -82,3 +82,19 @@ label {
 .form-group {
     margin-bottom: 0 !important;
 }
+
+
+// ---------------------------------------------修改密码--------------------------------------
+.pwd-change {
+    .button-wrapper {
+        margin: 40px 0 50px;
+    }
+    .j-save {
+        width: 100px;
+    }
+    .form-required {
+        color: #26B99A;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+}

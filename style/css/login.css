@@ -91,3 +91,15 @@ label {
 .form-group {
   margin-bottom: 0 !important;
 }
+
+.pwd-change .button-wrapper {
+  margin: 40px 0 50px;
+}
+.pwd-change .j-save {
+  width: 100px;
+}
+.pwd-change .form-required {
+  color: #26B99A;
+  margin-right: 5px;
+  vertical-align: middle;
+}
