@@ -80,3 +80,14 @@ label {
   padding-top: 60px;
   margin-top: auto;
 }
+
+.forget-secret-wrap {
+  margin-bottom: 20px;
+}
+.forget-secret-wrap .forget-secret {
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 0 !important;
+}
