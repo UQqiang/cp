@@ -99,6 +99,7 @@
                 var checkbox = $('.checkbox');
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
+                var biz_code = $(this).attr('data-biz_code')
 
                 // 全选按钮
                 if (checkbox.length == checkedBox.length) {
@@ -109,7 +110,8 @@
                 if (that._isInArry(that.selectedList, id) === false) {
                     that.selectedList.push({
                         id: id,
-                        name: name
+                        name: name,
+                        biz_code: biz_code
                     });
                 }
                 $(this).parents('tr').addClass('selected');
@@ -307,19 +309,25 @@
 
             // 查看导出列表
             $('#exportList').click(function () {
+                that.pageId = 1;
                 that.popup({
                     title: '导出列表',
                     content: '<div class="export-wrapper"></div>'
                 }, function () {
-                    var template = _.template($('#j-export-list').html());
-                    $('.export-wrapper').html(template({
-                        items: []
-                    }))
+                    that.exportTask(function (data) {
+                        var template = _.template($('#j-export-list').html());
+                        $('.export-wrapper').html(template({
+                            items: data.data.data,
+                            url: Api.domain()
+                        }));
+                        that.pagination(data.data.total_count, 3)
+                    });
                 })
             });
 
             // 查看关联列表
             $('#channelList').click(function () {
+                that.pageId = 1;
                 that.popup({
                     title: '关联列表',
                     content: '<div class="channel-wrapper"></div>'
@@ -328,7 +336,8 @@
                         var template = _.template($('#j-channel-list').html());
                         $('.channel-wrapper').html(template({
                             items: data.data.data
-                        }))
+                        }));
+                        that.pagination(data.data.total_count, 2)
                     })
                 })
             });
@@ -336,9 +345,11 @@
             $(document).on('click', '.j-goods-channel', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
+                var biz_code = $(this).attr('data-biz_code');
                 var objArr = [{
                     id: id,
-                    name: name
+                    name: name,
+                    biz_code: biz_code
                 }];
                 window.open('channel-goods-select.html?id=' + JSON.stringify(objArr))
             });
@@ -347,7 +358,25 @@
          * 导出
          */
         exportApi: function () {
+            var that = this;
+            Api.get({
+                url: '/channel/item/control/export.do',
+                data: {
+                    name: that.search_key || ''
+                },
+                beforeSend: function () {
 
+                },
+                success: function (data) {
+                    toastr.success('导出成功', '提示')
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            })
         },
         /**
          * 渠道列表
@@ -380,7 +409,7 @@
                         $('#channel').html('<tr><td class="tc" colspan="18">没有任何记录!</td></tr>')
                     }
 
-                    that.pagination(data.data.total_count);
+                    that.pagination(data.data.total_count, 1);
                 },
                 complete: function () {
 
@@ -445,12 +474,40 @@
             });
         },
         /**
-         *
-         * @param total
+         * 关联列表
          */
-        pagination: function (total) {
+        exportTask: function (success) {
             var that = this;
-            var pagination = $('.ui-pagination')
+            Api.get({
+                url: '/item/export/task/query.do',
+                data: {
+                    task_type: 29,
+                    page_size: that.page.pageSize,
+                    page: that.pageId
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+        /**
+         * 翻页
+         * @param total
+         * @param type
+         */
+        pagination: function (total, type) {
+            var that = this;
+            var pagination = $('.ui-pagination.p-' + type);
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -464,16 +521,24 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        that.queryBrand()
+                        if (type == 1) {
+                            that.queryBrand()
+                        } else if (type == 2) {
+                            that.bindTask()
+                        } else if (type == 3) {
+                            that.exportTask()
+                        }
                     }
                 }
             });
-            $('#check-all').iCheck("uncheck");
-            var n = $('#warehouseList').find('tr.list').length;
-            if (total && total != 0) {
-                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
-            } else {
-                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            if (type == 1) {
+                $('#check-all').iCheck("uncheck");
+                var n = $('#warehouseList').find('tr.list').length;
+                if (total && total != 0) {
+                    $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+                } else {
+                    $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+                }
             }
         },
         renderChannelList: function () {

@@ -140,9 +140,15 @@
                 if (that.search_key.item_status == -1) {
                     $('#j-batch-trash').hide();
                     $('#j-batch-restore,#j-batch-delete').show();
+                    $('#add-goods').css({
+                        visibility: 'hidden'
+                    })
                 } else {
                     $('#j-batch-trash').show();
                     $('#j-batch-restore,#j-batch-delete').hide();
+                    $('#add-goods').css({
+                        visibility: 'visible'
+                    })
                 }
                 that.queryGoods();
             });
@@ -501,7 +507,7 @@
         queryGoods: function () {
             var that = this;
             Api.get({
-                url: '/item/query.do',
+                url: '/control/item/query.do',
                 data: {
                     item_qto: JSON.stringify({
                         current_page: that.pageId || 1,

@@ -11,6 +11,8 @@
             $('.category-list').css({
                 'min-height': height + 'px'
             });
+            this.validator = new FormValidator();
+            this.validator.settings.alerts = true;
             this.addEvent();
             this.imgModal();
             this.queryCategory();
@@ -44,6 +46,19 @@
                 this.$currentImgUploadBtn.append('<img class="icon-image" src="' + url + '">')
             }
         },
+        validate: function () {
+            // required input validator
+            var that = this;
+            var required, result;
+            required = $('input[required]');
+            for (var i = 0; i < required.length; i++) {
+                result = that.validator.checkField.call(that.validator, required.eq(i));
+                if (result.valid === false) {
+                    return false;
+                }
+            }
+            return true;
+        },
         addEvent: function () {
             var that = this;
 
@@ -56,7 +71,7 @@
                 var data = {};
                 var d = {};
                 if (type == 1) {
-                    data.content = '<div class="add-category-dialog"><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称"></div>';
+                    data.content = '<div class="add-category-dialog field item inl-bl"><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" required="required" pattern="normal"></div>';
                     data.closeOnBodyClick = true;
                     d.parent_id = 0;
                 } else if (type == 2) {
@@ -64,7 +79,7 @@
                         toastr.error('请选择一级类目', '提示');
                         return false;
                     }
-                    data.content = '<div class="add-category-dialog"><a class="imgUploadBtn"><i class="fa fa-plus"></i></a><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称"></div>';
+                    data.content = '<div class="add-category-dialog field item inl-bl"><a class="imgUploadBtn"><i class="fa fa-plus"></i></a><input class="form-control form-control-lg j-category-name" required="required" pattern="normal" placeholder="请输入类目名称"></div>';
                     data.closeOnBodyClick = false;
                     d.parent_id = that.categoryId;
                 }
@@ -75,6 +90,9 @@
                     d.category_name = $.trim($('.j-category-name').val());
                     if (that.imageUrl) {
                         d.image_url = that.imageUrl;
+                    }
+                    if (that.validate() == false) {
+                        return;
                     }
                     that.addCategory(d, function (cbData) {
                         if (cbData.code == 10000) {
@@ -112,16 +130,16 @@
                 if (type == 1) {
                     data.closeOnBodyClick = true;
                     data.width = 250;
-                    data.content = '<div class="add-category-dialog"><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" value="' + name + '"></div>';
+                    data.content = '<div class="add-category-dialog field item inl-bl"><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" value="' + name + '" required="required" pattern="normal"></div>';
                     d.parent_id = 0;
                 } else if (type == 2) {
                     data.closeOnBodyClick = false;
                     data.width = 400;
                     if (img) {
                         that.imageUrl = img;
-                        data.content = '<div class="add-category-dialog"><a class="imgUploadBtn"><i class="fa fa-plus"></i><img class="icon-image" src="' + img + '"></a><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" value="' + name + '"></div>';
+                        data.content = '<div class="add-category-dialog field item inl-bl"><a class="imgUploadBtn"><i class="fa fa-plus"></i><img class="icon-image" src="' + img + '"></a><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" value="' + name + '" required="required" pattern="normal"></div>';
                     } else {
-                        data.content = '<div class="add-category-dialog"><a class="imgUploadBtn"><i class="fa fa-plus"></i></a><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" value="' + name + '"></div>';
+                        data.content = '<div class="add-category-dialog field item inl-bl"><a class="imgUploadBtn"><i class="fa fa-plus"></i></a><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" value="' + name + '" required="required" pattern="normal"></div>';
                     }
                     d.parent_id = that.categoryId;
                 }
@@ -129,6 +147,9 @@
                     d.category_name = $.trim($('.j-category-name').val());
                     if (that.imageUrl) {
                         d.image_url = that.imageUrl;
+                    }
+                    if (that.validate() == false) {
+                        return;
                     }
                     that.updateCategory(d, function (cbData) {
                         if (cbData.code == 10000) {
@@ -240,7 +261,7 @@
                         var parent_id = $(this).attr('data-parent_id');
                         var name = $.trim($(this).text());
                         var level = $(this).attr('data-cate_level');
-                        if(!id){
+                        if (!id) {
                             return;
                         }
                         if ($(this).attr('data-sub_cate') != 'undefined') {
@@ -257,7 +278,7 @@
                                 items: subCate
                             }));
                             that.currentCateObj = {};
-                            if( subCate.length > 0 ){
+                            if (subCate.length > 0) {
                                 that.initSortable(subCate[0].parent_id);
                             }
 
@@ -315,7 +336,7 @@
             });
         },
         /**
-         * 添加
+         * 添加/[^u4e00-u9fa5w]/g
          */
         addCategory: function (data, success, error) {
             var that = this;
@@ -419,7 +440,7 @@
 
                 },
                 error: function (data) {
-                    toastr.error('排序出错','提示')
+                    toastr.error('排序出错', '提示')
                 }
             });
         },

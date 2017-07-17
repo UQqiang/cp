@@ -134,8 +134,8 @@
         <td class="tc"><%= item.linkphone %></td>
         <td class="tc"><%= item.store_account %></td>
         <td class="tc"><%= item.store_ch_name %></td>
-        <td class="tc">-</td>
-        <td class="tc">-</td>
+        <td class="tc"><%= item.back_domain_name %></td>
+        <td class="tc"><%= item.fore_domain_name %></td>
         <td class="tc"><%= ['激活','关闭'][item.channel_status] %></td>
         <td class="last tc">
             <a href="channel-add.html?id=<%= item.id %>">编辑</a>

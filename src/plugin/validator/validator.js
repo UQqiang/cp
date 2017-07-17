@@ -61,6 +61,7 @@ FormValidator.prototype = {
             decimal      : /^\d+(\.\d{1,2})?$/,
             decimalOne   : /^\d*\.{0,1}\d{0,1}$/,
             alphanumeric : /^[a-zA-Z0-9]+$/i,
+            normal       : /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
             email        : {
                 illegalChars : /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
                 filter       : /^.+@.+\..{2,6}$/ // exmaple email "steve@s-i.photo"
@@ -165,6 +166,9 @@ FormValidator.prototype = {
                         break;
                     case 'decimalOne':
                         regex = this.settings.regex.decimalOne;
+                        break;
+                    case 'normal':
+                        regex = this.settings.regex.normal;
                         break;
                     default :
                         regex = data.pattern;

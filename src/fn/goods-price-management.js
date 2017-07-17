@@ -559,7 +559,7 @@
             var that = this;
             Api.get({
                 //absoluteUrl: '../src/stub/goods-sku-price.json',
-                url: '/item/query.do',
+                url: '/control/item/query.do',
                 data: {
                     item_qto: JSON.stringify({
                         current_page: that.pageId || 1,
@@ -571,7 +571,8 @@
                         freeze: that.search_key.freeze,
                         delivery_type: that.search_key.delivery_type,
                         need_detail: 1,
-                        need_paging: true
+                        need_paging: true,
+                        from: 3             // 价格管理多传的参数
                     })
                 },
                 mask: true,

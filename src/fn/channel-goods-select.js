@@ -109,7 +109,7 @@
                 title: '商品选择',
                 selectLength: 0,
                 selectedList: that.selectedList,
-                ajaxUrl: Api.domain() + '/item/query.do',
+                ajaxUrl: Api.domain() + '/control/item/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
                 categoryList: that.categoryList || [],
@@ -564,7 +564,7 @@
                 url: '/biz_item/query.do',
                 data: {
                     biz_item_qto: JSON.stringify({
-                        biz_code: 'category-biz', // TODO
+                        biz_code: that.idList[0].biz_code,
                         need_paging: true,
                         page_size: that.page.pageSize,
                         current_page: that.pageId

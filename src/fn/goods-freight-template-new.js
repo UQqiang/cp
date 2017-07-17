@@ -569,14 +569,16 @@
                     }
 
                     // 提交的数据和获取到的不太一样.需要处理下
-                    for (var i = 0; i < $tpl.freight_area_template_list.length; i++) {
-                        for (var n = 0; n < $tpl.freight_area_template_list[i].areas.length; n++) {
-                            var areas = {
-                                code: $tpl.freight_area_template_list[i].areas[n].code,
-                                name: $tpl.freight_area_template_list[i].areas[n].name,
-                                level: $tpl.freight_area_template_list[i].areas[n].level
-                            };
-                            $tpl.freight_area_template_list[i].areas[n] = areas;
+                    if($tpl.freight_area_template_list){
+                        for (var i = 0; i < $tpl.freight_area_template_list.length; i++) {
+                            for (var n = 0; n < $tpl.freight_area_template_list[i].areas.length; n++) {
+                                var areas = {
+                                    code: $tpl.freight_area_template_list[i].areas[n].code,
+                                    name: $tpl.freight_area_template_list[i].areas[n].name,
+                                    level: $tpl.freight_area_template_list[i].areas[n].level
+                                };
+                                $tpl.freight_area_template_list[i].areas[n] = areas;
+                            }
                         }
                     }
 

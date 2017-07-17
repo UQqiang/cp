@@ -146,8 +146,8 @@
                                             <!--<option>请选择商品品牌</option>-->
                                         </select>
                                         </div>
-                                        <span class="ml10"><a href="javascript:;">刷新</a></span>
-                                        <span class="ml10 mr10"><a href="javascript:;">新建品牌</a></span>
+                                        <span class="ml10"><a href="javascript:;" class="j-refresh" data-type="brand">刷新</a></span>
+                                        <span class="ml10 mr10"><a href="goods-brand-add.html" target="_blank">新建品牌</a></span>
                                     </div>
                                     <br/>
                                     <div class="form-group mb10 field item">
@@ -224,8 +224,8 @@
 
                                                         </select>
                                                     </div>
-                                                    <span class="ml10"><a href="javascript:;">刷新</a></span>
-                                                    <span class="ml10 mr10"><a href="javascript:;">新建模板</a></span>
+                                                    <span class="ml10"><a href="javascript:;" class="j-refresh" data-type="tax">刷新</a></span>
+                                                    <span class="ml10 mr10"><a href="goods-tax-template-add.html" target="_blank">新建模板</a></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -268,7 +268,7 @@
                             <div class="add-goods-content">
                                 <div class="add-goods-inner">
                                     <div class="form-group">
-                                        <label class="ui-label ui-label-md tr vat"><span><span class="required-icon">*</span>商品规格：</span></label>
+                                        <label class="ui-label ui-label-md tr vat"><span>商品规格：</span></label>
                                         <div class="sku-wrapper">
                                             <div id="skuCont"></div>
                                             <div class="sku-group add-group">
@@ -303,7 +303,7 @@
                                         <br/>
                                         <div class="form-group mb10 field item">
                                             <label class="ui-label ui-label-md tr"><span class="required-icon">*</span><span>EAN：</span></label>
-                                            <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="商品名称" type="text" pattern="alphanumeric">
+                                            <input class="form-control form-control-md" id="ean" required="required" placeholder="请输入EAN" name="ean" type="text" pattern="alphanumeric">
                                         </div>
                                     </div>
                                 </div>
@@ -347,18 +347,18 @@
                                 <div class="add-goods-inner">
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
-                                            <label class="ui-label ui-label-md tr mb10"><span class="required-icon">*</span><span>物品体积：</span></label>
+                                            <label class="ui-label ui-label-md tr mb10"><span>物品体积：</span></label>
                                             <div class="input-group">
-                                                <input class="form-control form-control-md" required="required" placeholder="请输入物品体积" name="物品体积" type="text" pattern="decimal" id="weight">
+                                                <input class="form-control form-control-md" placeholder="请输入物品体积" name="物品体积" type="text" pattern="decimal" id="weight">
                                                 <span class="input-group-addon">m3</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
-                                            <label class="ui-label ui-label-md tr mb10"><span class="required-icon">*</span><span>物品重量：</span></label>
+                                            <label class="ui-label ui-label-md tr mb10"><span>物品重量：</span></label>
                                             <div class="input-group">
-                                                <input class="form-control form-control-md" required="required" placeholder="请输入物品重量" name="物品重量" type="text" pattern="decimal" id="volume">
+                                                <input class="form-control form-control-md" placeholder="请输入物品重量" name="物品重量" type="text" pattern="decimal" id="volume">
                                                 <span class="input-group-addon">kg</span>
                                             </div>
                                         </div>
@@ -509,18 +509,18 @@
                             <% }) %>
                         <% } %>
                         <td class="tc">
-                            <div class="field item">
+                            <div class="field item inl-bl">
                                 <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="promotion_price" data-index="<%= index %>" value="<%= item.promotion_price ? (item.promotion_price/100).toFixed(2) : '' %>" required="required" pattern="decimal">
                             </div>
                         </td>
                         <td class="tc">
-                            <div class="field item">
+                            <div class="field item inl-bl">
                                 <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="market_price" data-index="<%= index %>" value="<%= item.market_price ? (item.market_price/100).toFixed(2) : '' %>" required="required" pattern="decimal">
                             </div>
                         </td>
                         <td class="tc">
-                            <div class="field item">
-                                <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="ean" data-index="<%= index %>" value="<%= item.bar_code ? (item.bar_code) : '' %>"  pattern="alphanumeric">
+                            <div class="field item inl-bl">
+                                <input class="form-control form-control-xs" name="sku信息" data-key="skuProp" data-input_type="ean" data-index="<%= index %>" value="<%= item.bar_code ? (item.bar_code) : '' %>" pattern="numeric" required="required">
                             </div>
                         </td>
                     </tr>
@@ -532,7 +532,7 @@
                         <label class="ui-label tl">批量设置：</label>
                         <span class="j-batch btn btn-sm" data-type="promotion_price">最低售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="promotion_price"></span>
                         <span class="j-batch btn btn-sm" data-type="market_price">建议零售价</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="market_price"></span>
-                        <span class="j-batch btn btn-sm" data-type="ean">EAN</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="ean"></span>
+                        <!--<span class="j-batch btn btn-sm" data-type="ean">EAN</span><span><input class="ml10 mr10 form-control form-control-sm none" data-type="ean"></span>-->
                     </td>
                 </tr>
             </tfoot>
@@ -724,9 +724,9 @@
                 <td class="tc">
                     <div class="field item inl-bl">
                         <% if( o.sku_property_storage_dto_list){ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>" value="<%= o.sku_property_storage_dto_list[index].stock_num %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(sku[0])) %>" value="<%= o.sku_property_storage_dto_list[i].stock_num %>">
                         <% }else{ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(sku[0])) %>">
                         <% } %>
                     </div>
                 </td>

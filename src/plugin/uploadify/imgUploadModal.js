@@ -163,7 +163,7 @@
         chooseImg: function(){
             var that = this;
 
-            $(that.options.selectImgBtn).on('click' ,function(e){
+            $(document).on('click', that.options.selectImgBtn,function(e){
                 e.preventDefault();
                 var $this = $(this);
 

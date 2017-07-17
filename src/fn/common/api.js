@@ -12,9 +12,9 @@
             var host = location.host;
             if (!host || host.indexOf('localhost') != -1 || host.indexOf('file') != -1) {
                 // 本地环境
-                // this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+                 this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
                 //this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
-                this.ajaxDomain = 'http://' + 'fenxianghui.seller.mockuai.com' + '/bossmanager';
+                this.ajaxDomain = 'http://' + 'fenxianghui.control.mockuai.com' + '/bossmanager';
             } else {
                 // 测试环境
                 this.ajaxDomain = 'http://' + host + '/bossmanager';
