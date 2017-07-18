@@ -82,6 +82,7 @@
         },
 
         updatePwd: function (url,postData) {
+            var that = this;
             Api.get({
                 url: url,
                 data: postData,
