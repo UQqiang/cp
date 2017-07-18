@@ -84,7 +84,7 @@
                     d.parent_id = that.categoryId;
                 }
                 data.target = $(this);
-                data.width = 400;
+                data.width = 300;
                 data.position = 'top';
                 that.tip(data, function (btn, dialog) {
                     d.category_name = $.trim($('.j-category-name').val());
@@ -134,7 +134,7 @@
                     d.parent_id = 0;
                 } else if (type == 2) {
                     data.closeOnBodyClick = false;
-                    data.width = 400;
+                    data.width = 320;
                     if (img) {
                         that.imageUrl = img;
                         data.content = '<div class="add-category-dialog field item inl-bl"><a class="imgUploadBtn"><i class="fa fa-plus"></i><img class="icon-image" src="' + img + '"></a><input class="form-control form-control-lg j-category-name" placeholder="请输入类目名称" value="' + name + '" required="required" pattern="normal"></div>';

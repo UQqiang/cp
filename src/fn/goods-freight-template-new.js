@@ -155,9 +155,9 @@
                         return;
                     }
                 }
-                for( var n = 0 ; n < $('.template-tr').length; n ++ ){
-                    if( !$('.template-tr').eq(n).attr('data-arr') ){
-                        toastr.error('暂未选择地区','提示');
+                for (var n = 0; n < $('.template-tr').length; n++) {
+                    if (!$('.template-tr').eq(n).attr('data-arr')) {
+                        toastr.error('暂未选择地区', '提示');
                         return;
                     }
                 }
@@ -426,10 +426,15 @@
                 $('.city-item').hide();
                 if (this.checked) {
                     area.find('.check-city-all,.check-city').prop('checked', true);
+                    for (var i = 0; i < area.find('.check-city-all').length; i++) {
+                        area.find('.city-length').eq(i).text('(' + area.find('.check-city-all').eq(i).attr('data-city_length') + ')');
+                    }
                 } else {
                     area.find('.check-city-all,.check-city').prop('checked', false);
+                    for (var n = 0; n < area.find('.check-city-all').length; n++) {
+                        area.find('.city-length').eq(n).text('');
+                    }
                 }
-                $('.city-length').text('');
             });
 
             // 省选择
@@ -569,7 +574,7 @@
                     }
 
                     // 提交的数据和获取到的不太一样.需要处理下
-                    if($tpl.freight_area_template_list){
+                    if ($tpl.freight_area_template_list) {
                         for (var i = 0; i < $tpl.freight_area_template_list.length; i++) {
                             for (var n = 0; n < $tpl.freight_area_template_list[i].areas.length; n++) {
                                 var areas = {
@@ -629,13 +634,13 @@
             }
             that.isAjax = true;
             that.setPostData();
-            Api.get({
+            Api.post({
                 url: "/freight/add.do",
                 data: {
                     freight_template_dto: that.postData
                 },
                 success: function (data) {
-                    toastr.success('添加成功!', '提示')
+                    toastr.success('添加成功!', '提示');
                     setTimeout(function () {
                         location.href = 'goods-freight-template.html'
                     }, 1000)
@@ -657,7 +662,7 @@
             }
             that.isAjax = true;
             that.setPostData();
-            Api.get({
+            Api.post({
                 url: "/freight/update.do",
                 data: {
                     freight_template_dto: that.postData

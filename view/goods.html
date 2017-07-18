@@ -112,7 +112,7 @@
                                     <br/>
                                     <div class="form-group mb10 field item">
                                         <label class="ui-label ui-label-md tr"><span><span class="required-icon">*</span>商品名称：</span></label>
-                                        <input class="form-control form-control-hg" id="name" required="required" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length-range=1,40">
+                                        <input class="form-control form-control-hg" id="name" required="required" pattern="normal" placeholder="请输入商品名称" name="商品名称" type="text" data-validate-length-range=1,40">
                                     </div>
                                     <br/>
                                     <div class="form-group mb10 item">
@@ -674,7 +674,7 @@
                         <div class="form-group mb10">
                             <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked" data-value="1">&nbsp;统一运费</label>
                             <div class="input-group">
-                                <input class="form-control form-control-sm common-freight-<%= o.id %>" value="<%= o.freight ? (o.freight/100).toFixed(2) : ''  %>">
+                                <input class="form-control form-control-sm common-freight-<%= o.id %>" value="<%= o.freight ? (o.freight/100).toFixed(2) : ''  %>" pattern="decimal" data-name="统一运费">
                                 <span class="input-group-addon">元</span>
                             </div>
                         </div>
@@ -696,7 +696,7 @@
                 </td>
                 <td rowspan="<%= sku.length %>" class="tc">
                     <div class="field item inl-bl">
-                        <input class="form-control form-control-xs" data-name="优先级" required="required" pattern="decimal" id="priority-<%= o.id %>" value="<%= o.priority %>">
+                        <input class="form-control form-control-xs" data-name="优先级" required="required" pattern="numeric" id="priority-<%= o.id %>" value="<%= o.priority %>">
                     </div>
                 </td>
                 <td rowspan="<%= sku.length %>" class="tc"><a class="j-delete-warehouse" href="javascript:;" data-warehouse_id="<%= o.id %>" data-name="<%= o.storage_name %>">删除</a></td>
@@ -735,7 +735,7 @@
                         <div class="form-group mb10">
                             <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked" data-value="1">&nbsp;统一运费</label>
                             <div class="input-group">
-                                <input class="form-control form-control-sm common-freight-<%= o.id %>" value="<%= o.freight ? (o.freight/100).toFixed(2) : '' %>">
+                                <input class="form-control form-control-sm common-freight-<%= o.id %>" value="<%= o.freight ? (o.freight/100).toFixed(2) : '' %>" data-name="统一运费">
                                 <span class="input-group-addon">元</span>
                             </div>
                         </div>
@@ -757,7 +757,7 @@
                 </td>
                 <td class="tc">
                     <div class="field item inl-bl">
-                        <input class="form-control form-control-xs" data-name="优先级" required="required" pattern="decimal" id="priority-<%= o.id %>" value="<%= o.priority %>">
+                        <input class="form-control form-control-xs" data-name="优先级" required="required" pattern="numeric" id="priority-<%= o.id %>" value="<%= o.priority %>">
                     </div>
                 </td>
                 <td class="tc">

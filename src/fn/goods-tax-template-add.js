@@ -86,6 +86,15 @@
                     dialog.close();
                 })
             });
+
+            // HS编码 & 行邮税号
+            $('#postal_number,#has_code').blur(function () {
+                if ($(this).val() != '') {
+                    $(this).attr('required', 'required');
+                } else {
+                    $(this).removeAttr('required', 'required');
+                }
+            });
         },
         getData: function () {
             var that = this;

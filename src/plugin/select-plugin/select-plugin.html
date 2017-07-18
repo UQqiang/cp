@@ -237,7 +237,12 @@
         <td class="tc"><%= item.storage_id %></td>
         <td class="tl"><%= item.storage_short_name %></td>
         <td class="tl"><%= item.storage_name %></td>
-        <td class="tl"><%= (item.address_country).split('|')[0] %><%= (item.address_province).split('|')[0] %><%= (item.address_city).split('|')[0] %><%= (item.address_district).split('|')[0] %><%= item.address_street %></td>
+        <td class="tl">
+            <%= item.address_country ? (item.address_country).split('|')[0] : '' %>
+            <%= item.address_province ? (item.address_province).split('|')[0] : '' %>
+            <%= item.address_city ? (item.address_city).split('|')[0] : '' %>
+            <%= item.address_district ? (item.address_district).split('|')[0] : '' %>
+            <%= item.address_street %></td>
         <td class="tc"><%= ['-','激活','关闭'][item.status] %></td>
         <td class="tc"><a class="selectDialogPlugin select-group-goods j-select-plugin-g" data-status="0" data-id="<%= item.id %>" data-info="<%= encodeURIComponent(JSON.stringify(item)) %>">选择</a></td>
     </tr>

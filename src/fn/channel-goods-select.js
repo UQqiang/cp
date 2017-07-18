@@ -24,14 +24,14 @@
                 toastr.error('供应商信息出错!', '提示');
                 return false;
             } else {
+                $('.channel-name-list').show();
+                var template = _.template($('#j-template-channel-list').html());
+                $('.channel-name-lists').html(template({
+                    items: this.idList
+                }))
                 if (this.idList.length > 1) {
                     // 多个供应商
                     this.isSingle = false;
-                    $('.channel-name-list').show();
-                    var template = _.template($('#j-template-channel-list').html());
-                    $('.channel-name-lists').html(template({
-                        items: this.idList
-                    }))
                 } else {
                     // 单个供应商
                     this.isSingle = true;
@@ -316,13 +316,13 @@
                 }
                 that.tip({
                     target: $(this),
-                    content: '确定要批量删除已经选择的商品吗?',
+                    content: '确定要批量取消关联已经选择的商品吗?',
                     position: 'right'
                 }, function (btn, dialog) {
 
                     console.log(idList);
                     that.deleteAssociatedGoods(idList, function () {
-                        toastr.success('已成功批量删除', '提示');
+                        toastr.success('已成功批量取消关联', '提示');
                         that.queryAssociatedGoodsList();
                     });
 
@@ -336,12 +336,14 @@
             $(document).on('click', '.j-channel-delete', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
+                var idList = [];
+                idList.push(id);
                 that.tip({
                     target: $(this),
-                    content: '确定要删除商品：' + name + '吗?'
+                    content: '确定要取消关联商品：' + name + '吗?'
                 }, function (btn, dialog) {
-                    that.deleteAssociatedGoods(id, function () {
-                        toastr.success('已成功删除：' + name, '提示');
+                    that.deleteAssociatedGoods(idList, function () {
+                        toastr.success('已成功取消关联：' + name, '提示');
                         that.queryAssociatedGoodsList();
                     }, function () {
 
@@ -567,7 +569,8 @@
                         biz_code: that.idList[0].biz_code,
                         need_paging: true,
                         page_size: that.page.pageSize,
-                        current_page: that.pageId
+                        current_page: that.pageId,
+                        from: 1                         // 展示管控的渠道已经关联的商品
                     })
                 },
                 beforeSend: function () {
@@ -591,7 +594,7 @@
         },
 
         /**
-         * 删除已关联的商品
+         * 取消已关联的商品
          */
         deleteAssociatedGoods: function (idList, success, error) {
             var that = this;

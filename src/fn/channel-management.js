@@ -105,6 +105,10 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                if(checkedBox.length <=0){
+                    toastr.error('请至少选择一个要删除的渠道~', '提示');
+                    return;
+                }
                 var data = {};
                 data.target = $(this);
                 data.content = '确定要批量删除渠道吗?';
@@ -170,6 +174,10 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                if(checkedBox.length <=0){
+                    toastr.error('请至少选择一个要关闭的渠道~', '提示');
+                    return;
+                }
                 that.tip({
                     target: $(this),
                     content: '确定要批量关闭渠道吗?'
@@ -193,6 +201,10 @@
                 var idList = [];
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                if(checkedBox.length <=0){
+                    toastr.error('请至少选择一个要激活的渠道~', '提示');
+                    return;
                 }
                 that.tip({
                     target: $(this),

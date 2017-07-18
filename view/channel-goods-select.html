@@ -107,7 +107,7 @@
                     <!-- 页码 -->
                     <div class="widget-list">
                         <div class="fl pagination">
-                            <button class="btn btn-sm btn-success" id="batchDelete">批量删除</button>
+                            <button class="btn btn-sm btn-success" id="batchDelete">批量取消关联</button>
                         </div>
                         <div class="list-page fr">
                             <span class="pagination-info"></span>
@@ -142,15 +142,15 @@
             <input type="checkbox" class="flat checkbox" data-id="<%= item.id %>">
         </th>
         <td><span class="goods-name"><%= item.item_name %></span></td>
-        <td class="tc"><%= (item.fxh_cost/100).toFixed(2) %></td>
-        <td class="tc"><%= (item.promotion_price/100).toFixed(2) %></td>
-        <td class="tc"><%= (item.market_price/100).toFixed(2) %></td>
-        <td class="tc"><%= (item.settlement_price/100).toFixed(2) %></td>
+        <td class="tc"><%= item.fxh_code ? (item.fxh_cost/100).toFixed(2) : '-' %></td>
+        <td class="tc"><%= item.promotion_price ? (item.promotion_price/100).toFixed(2) : '-' %></td>
+        <td class="tc"><%= item.market_price ? (item.market_price/100).toFixed(2) : '-' %></td>
+        <td class="tc"><%= item.settlement_price ? (item.settlement_price/100).toFixed(2) : '-' %></td>
         <td class="tc"><%= ['-','正常','冻结'][item.freeze] %></td>
         <td class="tc">
             <a href="javascript:;" class="j-edit-price" data-id="<%= item.id %>" data-name="<%= item.item_name %>">编辑结算价</a>
             <span>-</span>
-            <a href="javascript:;" class="j-channel-delete" data-id="<%= item.id %>" data-name="<%= item.item_name %>">删除</a>
+            <a href="javascript:;" class="j-channel-delete" data-id="<%= item.id %>" data-name="<%= item.item_name %>">取消关联</a>
         </td>
     </tr>
     <% }) %>

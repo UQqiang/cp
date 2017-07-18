@@ -109,6 +109,10 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                if(checkedBox.length <=0){
+                    toastr.error('请至少选择一个要删除的仓库~', '提示');
+                    return;
+                }
                 that.tip({
                     target: $(this),
                     content: '确定要批量删除仓库吗?'
@@ -189,6 +193,10 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                if(checkedBox.length <=0){
+                    toastr.error('请至少选择一个要关闭的仓库~', '提示');
+                    return;
+                }
                 var status = 2;
                 that.tip({
                     target: $(this),
@@ -215,6 +223,10 @@
                 var idList = [];
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                if(checkedBox.length <=0){
+                    toastr.error('请至少选择一个要激活的仓库~', '提示');
+                    return;
                 }
                 var status = 1;
                 that.tip({
@@ -301,6 +313,7 @@
                 },
                 error: function (data, msg) {
                     console.log(data, msg);
+                    toastr.error(data.msg);
                     error && error(data);
                 }
             });

@@ -1,6 +1,7 @@
 .left_col {
   background: #2A3F54;
   z-index: 1024;
+  border-right: 1px solid #ccc;
 }
 
 .right_col {
@@ -5588,6 +5589,10 @@ a.antoo {
   display: inline-block;
   margin-right: 2px;
   color:red;
+}
+
+.right_col,footer{
+  display: none;
 }
 
 /**************************** 修正selectize使其兼容后台 ********************/

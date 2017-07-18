@@ -99,6 +99,10 @@
 .channel-name-lists .channel-detail span {
   display: block;
   font-size: 12px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .channel-name-lists .channel-detail .img-close {
   display: none;

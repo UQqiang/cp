@@ -147,6 +147,7 @@
                         }
                     }
                     if (isValid == true) {
+                        that.finishingSkuTableData();
                         that.nowStep = num + 1 == 4 ? 1 : num + 1;
                     }
                 } else if (type === 'back') {
@@ -708,6 +709,14 @@
                 options: that.skuHistoryArr,
                 placeholder: '请添加规格',
                 create: true,
+                createFilter: function (value) {
+                    for (var optValue in this.options) {
+                        if (this.options[optValue].text.toLowerCase() === value.toLowerCase() || this.options[optValue].text === value) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
                 onItemAdd: function (value, $item) {
                     // 选择sku事件
                     var name = $item.html();
@@ -1205,7 +1214,7 @@
                 this.postData.item_dto.weight = $.trim($('#weight').val());                 // 重量
             }
 
-            if ($.trim($('#volume').val()) != ''){
+            if ($.trim($('#volume').val()) != '') {
                 this.postData.item_dto.volume = $.trim($('#volume').val());                 // 体积
             }
 
@@ -1634,7 +1643,7 @@
         addGoods: function () {
             var that = this;
             console.log(that.postData);
-            Api.get({
+            Api.post({
                 url: '/item/add.do',
                 data: that.postData,
                 beforeSend: function (XMLHttpRequest) {
@@ -1675,6 +1684,7 @@
                 complete: function () {
                 },
                 error: function (data) {
+                    toastr.error(data.msg, '提示');
                 }
             })
         },
@@ -1684,7 +1694,7 @@
          */
         updateGoods: function () {
             var that = this;
-            Api.get({
+            Api.post({
                 url: '/item/update.do',
                 data: that.postData,
                 beforeSend: function (XMLHttpRequest) {
@@ -1701,6 +1711,7 @@
                     }, 1000)
                 },
                 error: function (data) {
+                    toastr.error(data.msg, '提示');
                 }
             });
         },
@@ -1788,6 +1799,8 @@
                         $('.rate-table').show();
                         $('.rate-template').hide();
                         $('#rateCommonThreshold').val(value);
+                        that.queryTaxTemplate(function (selectize) {
+                        });
                         break;
                     // 税率
                     case "tax_rate":
@@ -1896,6 +1909,12 @@
                         break;
                 }
             });
+
+            // 在没有选择相关税率的情况下
+            if (!data.tax_threshold || !data.tax_template_id) {
+                that.queryTaxTemplate(function (selectize) {
+                });
+            }
 
             // 拼装仓库的数据
             that.warehouseData = [];

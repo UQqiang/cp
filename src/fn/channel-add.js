@@ -187,6 +187,15 @@
                 })
             });
 
+            // 客服电话,在线客服链接,关于我们链接
+            $('#csTel,#csOnlineUrl,#aboutUs').blur(function () {
+                if ($(this).val() != '') {
+                    $(this).attr('required', 'required');
+                } else {
+                    $(this).removeAttr('required', 'required');
+                }
+            });
+
             // 省 市 区 选择
             $(document).on('change', 'select', function () {
                 var name = $(this).attr('data-nextName');
@@ -333,10 +342,10 @@
                         $('#storeChName').val(value);
                         break;
                     case 'store_en_name':
-                        $('#storeEnName').val(value);
+                        $('#storeEnName').val(value).prop('disabled', true);
                         break;
                     case 'store_account':
-                        $('#storeAccount').val(value);
+                        $('#storeAccount').val(value).prop('disabled', true);
                         break;
                     case 'origin_pwd':
                         $('#originPwd').val(value);

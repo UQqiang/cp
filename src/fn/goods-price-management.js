@@ -571,8 +571,7 @@
                         freeze: that.search_key.freeze,
                         delivery_type: that.search_key.delivery_type,
                         need_detail: 1,
-                        need_paging: true,
-                        from: 3             // 价格管理多传的参数
+                        need_paging: true
                     })
                 },
                 mask: true,

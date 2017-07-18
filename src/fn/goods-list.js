@@ -114,10 +114,10 @@
                     title: '已关联的渠道',
                     content: '<div id="currentChannelList"></div>'
                 }, function () {
-                    that.queryCurrentChannelList(id, function () {
-                        var template = _.template($('#j-template-channel-list'));
+                    that.queryCurrentChannelList(id, function (data) {
+                        var template = _.template($('#j-template-channel-list').html());
                         $('#currentChannelList').html(template({
-
+                            items: data.data
                         }))
                     }, function () {
 
@@ -175,6 +175,10 @@
                 var data = {};
                 var idList = [];
                 var checkedBox = $('.checkbox:checked');
+                if(checkedBox.length <= 0){
+                    toastr.error('请至少选择一个要加入回收站的商品~', '提示');
+                    return;
+                }
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
@@ -214,6 +218,10 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                if(checkedBox.length <= 0){
+                    toastr.error('请至少选择一个要删除的商品~', '提示');
+                    return;
+                }
                 data.target = $(this);
                 data.content = '确定要将选中的商品彻底删除吗?';
                 data.position = 'right';
@@ -249,6 +257,10 @@
                 var checkedBox = $('.checkbox:checked');
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
+                }
+                if(checkedBox.length <= 0){
+                    toastr.error('请至少选择一个要恢复的商品~', '提示');
+                    return;
                 }
                 data.target = $(this);
                 data.content = '确定要将选中的商品全部恢复吗?';
@@ -392,7 +404,7 @@
                                 parent_id: parent_id,
                                 level: level
                             };
-                            console.log('cateOBJ:' + JSON.stringify(that.currentCateObj))
+                            //console.log('cateOBJ:' + JSON.stringify(that.currentCateObj))
                         });
                     }
                 },
@@ -419,7 +431,7 @@
                     //$('#brandList').html(t({
                     //    items: data.data.data
                     //}));
-                    console.log(data);
+                    //console.log(data);
                     var brand = data.data.data;
                     for (var i = 0; i < brand.length; i++) {
                         that.brandList.push({
@@ -468,7 +480,7 @@
 
                 },
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     var tax = data.data.data;
                     for (var i = 0; i < tax.length; i++) {
                         that.warehouseList.push({
@@ -519,7 +531,8 @@
                         freeze: that.search_key.freeze,
                         delivery_type: that.search_key.delivery_type,
                         storage_id: that.storage_id,
-                        need_paging: true
+                        need_paging: true,
+                        from: 3                                         // 商品列表多传的参数
                     })
                 },
                 mask: true,
@@ -668,7 +681,7 @@
 
                 },
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     var template = _.template($('#j-template-sku-table').html());
                     $('#skuList').html(template({
                         items: data.data.skus,

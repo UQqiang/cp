@@ -285,14 +285,34 @@
 
 <script type="text/template" id="j-template-channel-list">
     <table class="table table-striped jambo_table bulk_action table-bordered">
-        <tr>
-            <th class="tc">渠道商ID</th>
-            <th class="tc">渠道商名称</th>
-            <th class="tc">联系人</th>
-            <th class="tc">电话</th>
-            <th class="tc">商城名称</th>
-            <th class="tc">状态</th>
-        </tr>
+        <thead>
+            <tr>
+                <th class="tc">渠道商ID</th>
+                <th class="tc">渠道商名称</th>
+                <th class="tc">联系人</th>
+                <th class="tc">电话</th>
+                <th class="tc">商城名称</th>
+                <th class="tc">状态</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if( items.length > 0 ){ %>
+            <% _.each(items, function(item, index){ %>
+            <tr>
+                <td class="tc"><%= item.id %></td>
+                <td class="tc"><%= item.name %></td>
+                <td class="tc"><%= item.linkman %></td>
+                <td class="tc"><%= item.linkphone %></td>
+                <td class="tc"><%= item.store_ch_name %></td>
+                <td class="tc"><%= ['激活','关闭'][item.channel_status] %></td>
+            </tr>
+            <% }) %>
+        <% }else{ %>
+            <tr>
+                <td colspan="18" class="tc">没有任何记录~</td>
+            </tr>
+        <% } %>
+        </tbody>
     </table>
 
 </script>
