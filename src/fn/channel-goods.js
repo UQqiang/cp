@@ -314,14 +314,7 @@
                     title: '导出列表',
                     content: '<div class="export-wrapper"></div>'
                 }, function () {
-                    that.exportTask(function (data) {
-                        var template = _.template($('#j-export-list').html());
-                        $('.export-wrapper').html(template({
-                            items: data.data.data,
-                            url: Api.domain()
-                        }));
-                        that.pagination(data.data.total_count, 3)
-                    });
+                    that.exportTask();
                 })
             });
 
@@ -332,13 +325,7 @@
                     title: '关联列表',
                     content: '<div class="channel-wrapper"></div>'
                 }, function () {
-                    that.bindTask(function (data) {
-                        var template = _.template($('#j-channel-list').html());
-                        $('.channel-wrapper').html(template({
-                            items: data.data.data
-                        }));
-                        that.pagination(data.data.total_count, 2)
-                    })
+                    that.bindTask()
                 })
             });
 
@@ -447,7 +434,7 @@
         /**
          * 关联列表
          */
-        bindTask: function (success) {
+        bindTask: function () {
             var that = this;
             Api.get({
                 url: '/biz_item/query_bind_task.do',
@@ -462,7 +449,11 @@
 
                 },
                 success: function (data) {
-                    success && success(data);
+                    var template = _.template($('#j-channel-list').html());
+                    $('.channel-wrapper').html(template({
+                        items: data.data.data
+                    }));
+                    that.pagination(data.data.total_count, 2)
                 },
                 complete: function () {
 
@@ -474,9 +465,9 @@
             });
         },
         /**
-         * 关联列表
+         * 导出列表
          */
-        exportTask: function (success) {
+        exportTask: function () {
             var that = this;
             Api.get({
                 url: '/item/export/task/query.do',
@@ -489,7 +480,12 @@
 
                 },
                 success: function (data) {
-                    success && success(data);
+                    var template = _.template($('#j-export-list').html());
+                    $('.export-wrapper').html(template({
+                        items: data.data.data,
+                        url: Api.domain()
+                    }));
+                    that.pagination(data.data.total_count, 3)
                 },
                 complete: function () {
 

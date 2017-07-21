@@ -53,7 +53,11 @@
             // 初始化提示框
             toastr.options = ({
                 progressBar: true,
-                positionClass: "toast-top-center"
+                positionClass: "toast-top-center",
+                showDuration: 300,
+                hideDuration: 300,
+                timeOut: 1000,
+                extendedTimeOut: 1000
             });
         },
         addEvent: function () {

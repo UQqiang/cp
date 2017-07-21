@@ -122,7 +122,7 @@
                             return;
                         }
                     }
-                    if($('input[value=unionpay]:checked').length == 1 && $('#unionpayCertificate').length == 0){
+                    if ($('input[value=unionpay]:checked').length == 1 && $('#unionpayCertificate').length == 0) {
                         toastr.error('未上传银联证书!', '提示');
                         isValid = false;
                         return;
@@ -385,9 +385,15 @@
                         $('#wechatLoginH5AppSecret').val(value.biz_property_map.wechat_login_h5_app_secret.value);
                         $('#wechatLoginAppAppId').val(value.biz_property_map.wechat_login_app_app_id.value);
                         $('#wechatLoginAppAppSectet').val(value.biz_property_map.wechat_login_app_app_secret.value);
-                        $('#csTel').val(value.biz_property_map.cs_tel.value);
-                        $('#csOnlineUrl').val(value.biz_property_map.cs_online_url.value);
-                        $('#aboutUs').val(value.biz_property_map.about_us.value);
+                        if (value.biz_property_map.cs_tel) {
+                            $('#csTel').val(value.biz_property_map.cs_tel.value);
+                        }
+                        if (value.biz_property_map.cs_online_url) {
+                            $('#csOnlineUrl').val(value.biz_property_map.cs_online_url.value);
+                        }
+                        if (value.biz_property_map.about_us) {
+                            $('#aboutUs').val(value.biz_property_map.about_us.value);
+                        }
                         break;
                 }
             });
@@ -407,7 +413,7 @@
             this.postData.province = $('#areaList-province option:selected').attr('data-code');                         // 省
             this.postData.city = $('#areaList-city option:selected').attr('data-code');                                 // 市
             this.postData.area = $('#areaList-area option:selected').attr('data-code');                                 // 区
-            if($.trim($('#comment').val()) != ''){
+            if ($.trim($('#comment').val()) != '') {
                 this.postData.comment = $.trim($('#comment').val());                                                    // 备注信息
             }
             this.postData.store_ch_name = $.trim($('#storeChName').val());                                              // 商城中文名不可重复

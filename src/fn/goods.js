@@ -1528,7 +1528,10 @@
             var that = this;
             Api.get({
                 url: '/brand/query.do',
-                data: {},
+                data: {
+                    current_page: 1,
+                    page_size: 10
+                },
                 beforeSend: function () {
                 },
                 success: function (data) {
@@ -1544,12 +1547,51 @@
                         options: that.brandList,
                         placeholder: '请选择商品品牌',
                         create: false,
+                        valueField: 'value',
+                        labelField: 'text',
+                        searchField: 'text',
+                        render: {
+                            option: function (item, escape) {
+                                console.log(item, escape);
+                                return '<div><span>' + item.text + '</span></div>'
+                            }
+                        },
                         onItemAdd: function (value, $item) {
                             // 选择品牌
                             that.brand_key = value
                         },
                         onItemRemove: function (value) {
                             that.brand_key = ''
+                        },
+                        score: function(search) {
+                            var score = this.getScoreFunction(search);
+                            return function(item) {
+                                return score(item) * (1 + Math.min(item.watchers / 100, 1));
+                            };
+                        },
+                        load: function (query, callback) {
+                            if (!query.length) return callback();
+                            Api.get({
+                                url: '/brand/query.do',
+                                data: {
+                                    keywords: query,
+                                    current_page: 1,
+                                    page_size: 5
+                                },
+                                beforeSend: function () {
+
+                                },
+                                success: function (data) {
+                                    callback(data.data.data);
+                                },
+                                complete: function () {
+
+                                },
+                                error: function () {
+                                    callback();
+                                    toastr.error(data.msg, '提示');
+                                }
+                            })
                         }
                     });
                     selectize[0].selectize.addOption(that.brandList);
@@ -1755,7 +1797,7 @@
                         if (value != 'null') {
                             that.queryCountry(function (selectize) {
                                 selectize.setValue(value);
-                                if($('[name=radio-goods]:checked').val() == 3 || $('[name=radio-goods]:checked').val() == 4 ){
+                                if ($('[name=radio-goods]:checked').val() == 3 || $('[name=radio-goods]:checked').val() == 4) {
                                     selectize.disable();
                                 }
                             })

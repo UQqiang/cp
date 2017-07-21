@@ -376,8 +376,15 @@
                     var item_id = input.eq(0).attr('data-item_id');
                     var obj = {};
                     var postData = {};
+                    var price;
+                    var decimal = /^\d+(\.\d{1,2})?$/;
                     for (var i = 0; i < input.length; i++) {
-                        obj[input.eq(i).attr('data-sku_id')] = $.trim((input.eq(i).val() * 100).toFixed(0));
+                        price = $.trim((input.eq(i).val() * 100).toFixed(0));
+                        if (!decimal.test(price)) {
+                            toastr.error('结算价价格的输入有误,无法提交~', '提示');
+                            return;
+                        }
+                        obj[input.eq(i).attr('data-sku_id')] = price;
                     }
                     postData.biz_item_id = item_id;
                     postData.price_map = JSON.stringify(obj);
