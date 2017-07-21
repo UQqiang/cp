@@ -11,10 +11,12 @@
         domain: function () {
             var host = location.host;
             if (!host || host.indexOf('localhost') != -1 || host.indexOf('file') != -1) {
-                // 测试环境 or 本地环境
-                this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
+                // 本地环境
+                 this.ajaxDomain = 'http://boss.mockuai.net:8080/bossmanager';
                 //this.ajaxDomain = 'http://test.seller.mockuai.com/bossmanager';
+                this.ajaxDomain = 'http://' + 'fenxianghui.control.mockuai.com' + '/bossmanager';
             } else {
+                // 测试环境
                 this.ajaxDomain = 'http://' + host + '/bossmanager';
             }
             return this.ajaxDomain;
@@ -56,7 +58,6 @@
                 },
                 success: function (data) {
                     if (data.code == 40000) {
-                        console.log('登录已过期');
                         location.href = 'login.html'
                     } else if (data.code == 10000) {
                         opts.success && opts.success(data);
@@ -71,8 +72,13 @@
                     opts.complete && opts.complete(data);
                 },
                 error: function (xhr, status, error) {
-                    console.log(xhr, status, error);
-                    opts.error && opts.error(xhr, status, error);
+                    if (xhr.status === 500) {
+                        toastr.error('服务端开小差~', '提示')
+                    } else if (xhr.status == 404) {
+                        toastr.error('接口可能走丢了~', '提示')
+                    } else {
+                        opts.error && opts.error(xhr, status, error);
+                    }
                 }
             })
         }

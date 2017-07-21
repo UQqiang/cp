@@ -40,23 +40,23 @@
   box-shadow: 1px 1px 1px rgba(38, 185, 154, 0.1) inset, 1px 1px 1px rgba(38, 185, 154, 0.1);
 }
 
-#orderList .order-header, #orderInfo .order-header {
+#orderList .order-header, #orderInfo .order-header, #partnerList .order-header {
   background: #f8f8f8;
   box-shadow: 1px 1px 5px #ccc;
 }
-#orderList .fa, #orderInfo .fa {
+#orderList .fa, #orderInfo .fa, #partnerList .fa {
   font-size: 16px;
   display: inline-block;
   margin-right: 5px;
   cursor: pointer;
 }
-#orderList .fa.fa-star, #orderInfo .fa.fa-star {
+#orderList .fa.fa-star, #orderInfo .fa.fa-star, #partnerList .fa.fa-star {
   color: red;
 }
-#orderList dl, #orderInfo dl {
+#orderList dl, #orderInfo dl, #partnerList dl {
   clear: both;
 }
-#orderList dl dt, #orderInfo dl dt {
+#orderList dl dt, #orderInfo dl dt, #partnerList dl dt {
   float: left;
   padding: 2px;
   margin: 0 10px;
@@ -64,24 +64,28 @@
   border-radius: 4px;
   box-shadow: 1px 1px 1px rgba(38, 185, 154, 0.1) inset, 1px 1px 1px rgba(38, 185, 154, 0.1);
 }
-#orderList dl dt .order-image, #orderInfo dl dt .order-image {
+#orderList dl dt .order-image, #orderInfo dl dt .order-image, #partnerList dl dt .order-image {
   width: 64px;
   height: 64px;
 }
-#orderList dl dd, #orderInfo dl dd {
+#orderList dl dt .partner-image, #orderInfo dl dt .partner-image, #partnerList dl dt .partner-image {
+  width: 64px;
+  height: 64px;
+}
+#orderList dl dd, #orderInfo dl dd, #partnerList dl dd {
   float: left;
 }
-#orderList dl dd p, #orderInfo dl dd p {
-  max-width: 120px;
+#orderList dl dd p, #orderInfo dl dd p, #partnerList dl dd p {
+  max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#orderList dl dd p.sku, #orderInfo dl dd p.sku {
+#orderList dl dd p.sku, #orderInfo dl dd p.sku, #partnerList dl dd p.sku {
   font-size: 12px;
   color: #ccc;
 }
-#orderList .inset-td, #orderInfo .inset-td {
+#orderList .inset-td, #orderInfo .inset-td, #partnerList .inset-td {
   padding: 6px;
 }
 

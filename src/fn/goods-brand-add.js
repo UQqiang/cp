@@ -127,7 +127,7 @@
             this.postData.brand_name = $.trim($('#brandName').val());
             this.postData.brand_desc = $.trim($('#brandDesc').val());
             if( this.brand_id ){
-                this.postData.brand_id = this.brand_id;
+                this.postData.id = this.brand_id;
             }
         },
         /**

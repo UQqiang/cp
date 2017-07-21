@@ -26,6 +26,9 @@
             if (username) {
                 $('.sidebar-username').text(username);
             }
+            $(document).on('ready', function () {
+                $('.right_col,footer').fadeIn(500);
+            })
         },
         logout: function () {
             Api.get({
@@ -50,7 +53,11 @@
             // 初始化提示框
             toastr.options = ({
                 progressBar: true,
-                positionClass: "toast-top-center"
+                positionClass: "toast-top-center",
+                showDuration: 300,
+                hideDuration: 300,
+                timeOut: 1000,
+                extendedTimeOut: 1000
             });
         },
         addEvent: function () {
@@ -184,9 +191,9 @@
                 contentHeight = bodyHeight < leftColHeight ? leftColHeight : bodyHeight;
 
             // 内容部分 right_col
-            $right_col.css('min-height', $(window).height());
-            contentHeight -= $nav_menu.height() + footerHeight;
-            $right_col.css('min-height', contentHeight);
+            $right_col.css('min-height', $(window).height() - 50);
+            //contentHeight -= $nav_menu.height() + footerHeight;
+            //$right_col.css('min-height', contentHeight);
         },
         // 页面进度条
         nprogress: function () {

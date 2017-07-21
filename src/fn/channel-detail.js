@@ -28,50 +28,141 @@
                 '80': '退款完成',
                 '90': '订单关闭'
             };
-            var url_search = window.location.search || '';
-            this.type = url_search ? url_search.split('=')[1] : 'shop';
+
+            this.type = HDL.getQuery('type');
+            this.id = HDL.getQuery('id');
             this.search_key = {};
             this.dateTimerPick();
             this.addEvent();
-            if (this.type == 'shop') {
-                $('.form-inline-shop').fadeIn();
-                this.queryShopList(this.type);
-            }else {
-                $('#switchTab li').removeClass('active');
-                $('#switchTab').find('.switch-tab-'+this.type).addClass('active');
-                this.queryList(this.type);
+            this.getDataStatistics();  // 获取顶部banner数据统计
+
+            // 激活的tab
+            var index = {
+                'shop': 2,
+                'partner': 1,
+                'order': 0
             }
+            $('#switchTab li').eq(index[this.type]).addClass('active');
+            this.queryList(this.type); //根据类型（店铺，分享合伙人，订单统计）不同申请不同接口
+        },
+        getDataStatistics: function () {
+            var that = this;
+            Api.get({
+                url: '/channel/share_partner/shop_sum/get.do',
+                data: {
+                    id: that.id
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    var data = data.data;
+                    // 数据展示banner
+                    if (data) {
+                        var tpl = _.template($('#j-template-shopSumList').html());
+                        $('#shopSumList').html(tpl({
+                            item: data
+                        }));
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                }
+            });
         },
         addEvent: function () {
             var that = this;
             // 导出订单
             $('.export-list').click(function () {
-                that.exportList();
+                var type = $(this).data('type');
+                switch (type) {
+                    case 'shop':
+                        var status = $.trim($('#shopStatusSearch').val());
+                        that.search_key_shop = {
+                            dist_username: $.trim($('#shopNoSearch').val()) || '',
+                            shop_name: $.trim($('#shopNameSearch').val()) || '',
+                            status: status > 0 ? status-1 : '',
+                            start_time: that.search_key.start_time || '',
+                            end_time: that.search_key.end_time || '',
+                        }
+                        var data = {
+                            id: that.id,
+                            dist_username: that.search_key_shop.dist_username,
+                            shop_name: that.search_key_shop.shop_name,
+                            status: that.search_key_shop.status,
+                            start_time: that.search_key.start_time,
+                            end_time: that.search_key.end_time
+                        }
+                        var url = '/channel/shop_info/export.do';
+                        break;
+                    case 'partner':
+                        var status = $.trim($('#partnerShopStatusSearch').val());
+                        that.search_key_partner = {
+                            shop_name: $.trim($('#partnerShopNameSearch').val()) || '',
+                            keywords: $.trim($('#partnerKeywordsSearch').val()) || '',
+                            link_phone: $.trim($('#partnerPhoneSearch').val()) || '',
+                            status: status > 0 ? status-1 : '',
+                        }
+                        var data = {
+                            id: that.id,
+                            shop_name: that.search_key_partner.shop_name,
+                            keywords: that.search_key_partner.keywords,
+                            link_phone: that.search_key_partner.link_phone,
+                            status: that.search_key_partner.status
+                        }
+                        var url = '/channel/sharepartner/export.do';
+                        break;
+                    case 'order':
+                        that.search_key_order = {
+                            order_sn: $.trim($('#orderSnSearch').val()) || '',
+                            dist_name: $.trim($('#orderPartnerSearch').val()) || '',
+                            shop_name: $.trim($('#orderShopNameSearch').val()) || '',
+                            status: $.trim($('#orderClearStatusSearch').val()) || '',
+                            order_status: $.trim($('#orderDealSearch').val()) || '',
+                            buyer_name: $.trim($('#orderBuyerSearch').val()) || '',
+                        }
+                        var data = {
+                            id: that.id,
+                            order_sn: that.search_key_order.order_sn,
+                            dist_name: that.search_key_order.dist_name,
+                            shop_name: that.search_key_order.shop_name,
+                            status: that.search_key_order.status,
+                            order_status: that.search_key_order.order_status,
+                            buyer_name: that.search_key_order.buyer_name,
+                            start_time: that.search_key.start_time,
+                            end_time: that.search_key.end_time
+                        }
+                        var url = '/channel/share_partner/statistic/export.do';
+                        break;
+                }
+                that.exportList(data,url);
             });
 
             // 查看已生成列表
             $('.check-export').click(function () {
                 var type = $(this).data('type');
-                that.checkExportList(type);
+                switch (type) {
+                    case 'shop':
+                        var url = '/item/export/task/query.do';
+                        break;
+                    case 'partner':
+                        var url = '/item/export/task/query.do';
+                        break;
+                    case 'order':
+                        var url = '/item/export/task/query.do';
+                        break;
+                }
+                that.checkExportList(type,url);
             });
 
             // 搜索
             $('.search-submit').click(function () {
                 that.pageId = 1;
-                var id = $(this).attr('id');
-                switch (id) {
-                    case 'searchShop':
-                        that.queryShopList('shop');
-                        break;
-                    case 'searchPartner':
-                    that.queryList();
-
-                        break;
-                    case 'searchOrder':
-                    that.queryList();
-
-                        break;
-                }
+                var type = $(this).data('type');
+                that.queryList(type);
             });
 
             $('#switchTab li').click(function (e) {
@@ -89,6 +180,35 @@
                 // 重置页码
                 that.pageId = 1;
                 that.queryList(that.type);
+            });
+
+            // 店铺tab点击排序
+            $('body').on('click', '#datatableshop .sorting',function () {
+                var $this = $(this);
+                var $sorting = $('#datatableshop .sorting');
+                var index = $this.index() - 5;
+                that.order_key = [4,1,2,3][index];
+                if ($this.hasClass('sorting_desc')) { // 当前为降序，要转为升序
+                    that.call = function () {
+                        $('.sorting').eq(index).addClass('sorting_asc');
+                    }
+                    that.order_type = 1;
+                    that.queryList('shop');
+                    return false;
+                }
+                if ($this.hasClass('sorting_asc')) { // 当前为升序，要转为降序
+                    that.call = function () {
+                        $('.sorting').eq(index).addClass('sorting_desc');
+                    }
+                    that.order_type = 2;
+                    that.queryList('shop');
+                    return false;
+                }
+                that.call = function () {
+                    $('.sorting').eq(index).addClass('sorting_desc').bind(this); //由无序变为升序
+                }
+                that.order_type = 2;
+                that.queryList('shop');
             });
         },
         iCheck: function () {
@@ -135,36 +255,7 @@
                 $(this).parents('tr').removeClass('selected');
             })
         },
-        /**
-         * tip
-         * @param data
-         * @param success
-         * @param fail
-         */
-        // tip: function (data, success, fail) {
-        //     this.dialogTip = jDialog.tip(data.content, {
-        //         target: data.target,
-        //         position: data.position || 'left'
-        //     }, {
-        //         width: data.width || 200,
-        //         closeable: false,
-        //         closeOnBodyClick: true,
-        //         buttonAlign: 'center',
-        //         buttons: [{
-        //             type: 'highlight',
-        //             text: '确定',
-        //             handler: function (button, dialog) {
-        //                 success && success(button, dialog)
-        //             }
-        //         }, {
-        //             type: 'highlight',
-        //             text: '取消',
-        //             handler: function (button, dialog) {
-        //                 fail && fail(button, dialog)
-        //             }
-        //         }]
-        //     });
-        // },
+
         popupdialog: function (data, cb, success) {
             this.popupDialog = jDialog.dialog({
                 title: data.title,
@@ -177,18 +268,12 @@
         },
 
         // 导出列表
-        exportList: function () {
+        exportList: function (data,url) {
             var that = this;
-            that.search_key = {
-                order_sn: '',
-                consignee: '',
-                order_status: '',
-                consignee_mobile: '',
-                payment_id: ''
-            }
+
             Api.get({
-                url: '/order/downloadOrders.do',
-                data: that.search_key,
+                url: url,
+                data: data,
                 beforeSend: function () {
 
                 },
@@ -205,22 +290,27 @@
         },
 
         // 查看生成列表
-        checkExportList: function (type) {
+        checkExportList: function (type,url) {
             var that = this;
-
+            var task_type_obj = {
+                shop: 28,
+                order: 26,
+                partner: 27
+            }
+            var task_type = task_type_obj[type];
             var postCheckList = {
                 page: that.page_pop.pageId || 1,
                 page_size: 10,
-                task_type: '2'
+                task_type: task_type
             };
             Api.get({
-                url: '/share_partner/shop/query.do',
+                url: url,
                 data: postCheckList,
                 beforeSend: function () {
 
                 },
                 success: function (order) {
-                    var order_list_data = order.data.lower_partner_list;
+                    var order_list_data = order.data.data;
                     var singleton,targetDom,targetId;
                     switch (type) {
                         case 'shop':
@@ -261,7 +351,7 @@
                             $targetDom.html(template({
                                 items: order_list_data
                             }));
-                            that.paginationpop(order.data.total_partner_count,type,targetId);
+                            that.paginationpop(order.data.total_count,type,targetId);
 
                             // 防止内部表哥滚动时，外部也滚动
                             that.preventScroll(targetId);
@@ -381,46 +471,41 @@
             });
         },
 
-        queryShopList: function (type) {
+        /**
+         * 要生成的列表因类型不同请求不同的接口
+         */
+        queryList: function (type) {
             var that = this;
-            var status = $.trim($('#shopStatusSearch').val());
-            that.search_key_shop = {
-                dist_username: $.trim($('#shopNoSearch').val()) || '',
-                shop_name: $.trim($('#shopNameSearch').val()) || '',
-                status: status > 0 ? status-1 : '',
-                start_time: that.search_key.start_time || '',
-                end_time: that.search_key.end_time || '',
-                order_key: 0,
-                order_type: 2
-            }
-            var data = {
-                dist_username: that.search_key_shop.dist_username,
-                shop_name: that.search_key_shop.shop_name,
-                start_time: that.search_key_shop.start_time,
-                end_time: that.search_key_shop.end_time,
-                status: that.search_key_shop.status,
-                order_key: that.search_key_shop.order_key,
-                order_type: that.search_key_shop.order_type,
-                current_page: that.pageId,
-                page_size: that.page.pageSize
-            }
-            Api.get({
-                url: '/share_partner/shop/query.do',
-                data: data,
-                mask: true,
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    // 数据展示banner
-                    if (data.data.shop_sum) {
-                        var tpl = _.template($('#j-template-shopSumList').html());
-                        $('#shopSumList').html(tpl({
-                            item: data.data.shop_sum
-                        }));
+            var order_key = that.order_key || '';
+            var order_type = that.order_type || '';
+            $('.form-inline').fadeOut();
+            switch (type) {
+                case 'shop':
+                case '':
+                    $('.form-inline-shop').fadeIn();
+                    var url = '/channel/shop_info/query.do';
+                    var status = $.trim($('#shopStatusSearch').val());
+                    that.search_key_shop = {
+                        dist_username: $.trim($('#shopNoSearch').val()) || '',
+                        shop_name: $.trim($('#shopNameSearch').val()) || '',
+                        status: status > 0 ? status-1 : '',
+                        start_time: that.search_key.start_time || '',
+                        end_time: that.search_key.end_time || '',
                     }
-                    // 店铺列表
-                    if (type == 'shop') {
+                    var data = {
+                        dist_username: that.search_key_shop.dist_username,
+                        shop_name: that.search_key_shop.shop_name,
+                        start_time: that.search_key.start_time,
+                        end_time: that.search_key.end_time,
+                        status: that.search_key_shop.status,
+                        order_key: order_key,
+                        order_type: order_type,
+                        current_page: that.pageId,
+                        page_size: that.page.pageSize,
+                        id: that.id
+                    }
+                    var cb = function (data) {
+                        // 店铺列表
                         var shopResData = data.data.lower_partner_list || '';
                         if (shopResData) {
                             if (shopResData.length > 0) {
@@ -431,107 +516,114 @@
                             }else {
                                 $('#dataLists').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
                             }
+                            that.call && that.call();
                         }
                         that.pagination(data.data.total_partner_count);
-                        $('#datatableshop').DataTable({
-                            "order": [[8,'asc']],  // initial sorting
-                            "searching": false,  //不展示搜索框
-                            "lengthChange": false, //不展示每页条目数
-                            "columnDefs": [   // 不展示排序标志的列
-            		           { "orderable": false, "targets": [ 0,1,2,3,4,9,10 ] }
-                           ],
-                           "paging": false, //不显示页脚的页码
-                           "info": false  // 不显示页脚当前页信息提示
-                        });
+                        // $('#datatableshop').DataTable({
+                        //     // "order": [[8,'asc']],  // initial sorting
+                        //     "searching": false,  //不展示搜索框
+                        //     "lengthChange": false, //不展示每页条目数
+                        //     "columnDefs": [   // 不展示排序标志的列
+                        //        { "orderable": false, "targets": [ 0,1,2,3,4,9,10 ] }
+                        //    ],
+                        //    "paging": false, //不显示页脚的页码
+                        //    "info": false  // 不显示页脚当前页信息提示
+                        // });
                     }
-                },
-                complete: function () {
-
-                },
-                error: function (data, msg) {
-                    console.log(data, msg);
-                }
-            });
-
-        },
-
-        /**
-         * 要生成的列表因类型不同请求不同的接口
-         */
-        queryList: function (type) {
-            var that = this;
-            $('.form-inline').fadeOut();
-            switch (type) {
-                case 'shop':
-                    $('.form-inline-shop').fadeIn();
-                    that.queryShopList(type);
                     break;
                 case 'partner':
                     $('.form-inline-partner').fadeIn();
-                    that.queryShopList(type);  //需要用到该接口返回的部分数据
-                    var url = '/share_partner/query.do';
+                    var url = '/channel/share_partner/query.do';
                     var status = $.trim($('#partnerStatusSearch').val());
                     that.search_key_partner = {
-                        dist_username: $.trim($('#partnerShopSearch').val()) || '',
-                        shop_name: '',
+                        shop_name: $.trim($('#partnerShopNameSearch').val()) || '',
+                        keywords: $.trim($('#partnerKeywordsSearch').val()) || '',
+                        link_phone: $.trim($('#partnerPhoneSearch').val()) || '',
                         status: status > 0 ? status-1 : '',
-                        start_time: that.search_key.start_time || '',
-                        end_time: that.search_key.end_time || '',
-                        order_key: 0,
-                        order_type: 2
                     }
                     var data = {
-                        dist_username: that.search_key_partner.dist_username,
                         shop_name: that.search_key_partner.shop_name,
                         start_time: that.search_key_shop.start_time,
                         end_time: that.search_key_shop.end_time,
                         status: that.search_key_partner.status,
-                        order_key: that.search_key_partner.order_key,
-                        order_type: that.search_key_partner.order_type,
+                        order_key: order_key,
+                        order_type: order_type,
                         current_page: that.pageId,
-                        page_size: that.page.pageSize
+                        page_size: that.page.pageSize,
+                        id: that.id
                     }
-                    var cb =  function () {
-                        $('#datatablepartner').DataTable({
-                            "order": [[4,'asc']],  // initial sorting
-                            "searching": false,  //不展示搜索框
-                            "lengthChange": false, //不展示每页条目数
-                            "columnDefs": [   // 不展示排序标志的列
-            		           { "orderable": false, "targets": [ 0,1,2,3,7 ] }
-                           ],
-                           "paging": false,  //不显示页脚的页码
-                           "info": false  // 不显示页脚当前页信息提示
-                        });
-                    };
-
-                    this.requestApi(url,data,cb);
+                    var cb = function (data) {
+                        // 分享合伙人列表
+                        var partnerResData = data.data.data || '';
+                        if (partnerResData) {
+                            if (partnerResData.length > 0) {
+                                var tpl = _.template($('#j-template-partner').html());
+                                    $('#dataLists').html(tpl({
+                                        items: partnerResData
+                                    }))
+                            }else {
+                                $('#dataLists').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                            }
+                        }
+                        that.pagination(data.data.total_count);
+                        // $('#datatablepartner').DataTable({
+                        //     // "order": [[4,'asc']],  // initial sorting
+                        //     "searching": false,  //不展示搜索框
+                        //     "lengthChange": false, //不展示每页条目数
+                        //     "columnDefs": [   // 不展示排序标志的列
+                        //        { "orderable": false, "targets": [ 0,1,2,3,7 ] }
+                        //    ],
+                        //    "paging": false, //不显示页脚的页码
+                        //    "info": false  // 不显示页脚当前页信息提示
+                        // });
+                    }
                     break;
                 case 'order':
                     $('.form-inline-order').fadeIn();
-                    that.queryShopList(type);
-                    var url = '/share_partner/shop/query.do';
+                    var url = '/channel/order/statistic/query.do';
                     that.search_key_order = {
-                        dist_username: $.trim($('#shopNoSearch').val()) || '',
-                        shop_name: $.trim($('#shopNameSearch').val()) || '',
-                        start_time: '',
-                        end_time: '',
-                        order_key: 0,
-                        order_type: 2
+                        order_sn: $.trim($('#orderSnSearch').val()) || '',
+                        dist_name: $.trim($('#orderPartnerSearch').val()) || '',
+                        shop_name: $.trim($('#orderShopNameSearch').val()) || '',
+                        status: $.trim($('#orderClearStatusSearch').val()) || '',
+                        order_status: $.trim($('#orderDealSearch').val()) || '',
+                        buyer_name: $.trim($('#orderBuyerSearch').val()) || '',
                     }
                     var data = {
-                        dist_username: that.search_key_shop.dist_username,
-                        shop_name: that.search_key_shop.shop_name,
-                        start_time: that.search_key_shop.start_time,
-                        end_time: that.search_key_shop.end_time,
-                        status: that.search_key_shop.status,
-                        order_key: that.search_key_shop.order_key,
-                        order_type: that.search_key_shop.order_type,
-                        current_page: that.pageId.current_page,
-                        page_size: that.page.pageSize
+                        order_sn: that.search_key_order.order_sn,
+                        dist_name: that.search_key_order.dist_name,
+                        shop_name: that.search_key_order.shop_name,
+                        status: that.search_key_order.status,
+                        order_status: that.search_key_order.order_status,
+                        buyer_name: that.search_key_order.buyer_name,
+                        start_time: that.search_key.start_time,
+                        end_time: that.search_key.end_time,
+                        current_page: that.pageId,
+                        page_size: that.page.pageSize,
+                        order_key: order_key,
+                        order_type: order_type,
+                        id: that.id
                     }
-                    this.requestApi(url,data);
+                    var cb = function (data) {
+                        // 订单列表
+                        var orderResData = data.data.data || '';
+                        if (orderResData) {
+                            if (orderResData.length > 0) {
+                                var tpl = _.template($('#j-template-order').html());
+                                $('#dataLists').html(tpl({
+                                    items: orderResData
+                                }));
+                            }else {
+                                $('#dataLists').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
+                            }
+                            call && call();
+                        }
+                        that.pagination(data.data.totalCount);
+                    }
                     break;
             }
+
+            this.requestApi(url,data,cb);
         },
 
         requestApi: function (url,data,cb) {
@@ -544,142 +636,16 @@
 
                 },
                 success: function (data) {
-                    // 分享合伙人
-                    // var partnerResData = data.data.lower_partner_list || '';
-                    // if (partnerResData) {
-                        // if (partnerResData.length > 0) {
-                            var tpl = _.template($('#j-template-partner').html());
-                            $('#dataLists').html(tpl({
-                                items: JSON.stringify([2,3])
-                            }))
+                    cb && cb(data);
 
-                        // }else {
-                        //     $('#partnerList').html('<table class="table"><tbody><tr><td class="tc" colspan="7">没有任何记录!</td></tr></tbody></table>');
-                        // }
-                    // }
-
-                    // 订单统计
-
-                    that.pagination(6);
-                    cb && cb();
                 },
-                complete: function () {
-
+                complete: function (data) {
                 },
                 error: function (data, msg) {
                     console.log(data, msg);
                 }
             });
         },
-
-
-
-        /**
-         * 获取物流公司.
-         */
-        // queryLogisticsCompany: function () {
-        //     var that = this;
-        //     Api.get({
-        //         url: '/order/queryLogisticsCompany.do',
-        //         data: {},
-        //         beforeSend: function () {
-        //
-        //         },
-        //         success: function (data) {
-        //             var tpl = _.template($('#j-template-logistics').html());
-        //             $('#logisticsList').html(tpl({
-        //                 items: data.data
-        //             }));
-        //             // 物流属性切换
-        //             $('input[name=logistics]').on('ifChecked', function () {
-        //                 var value = $(this).attr('data-value');
-        //                 if (value == 1) {
-        //                     // 需要物流
-        //                     $('.logistics-info').show();
-        //                 } else {
-        //                     // 不需要物流
-        //                     $('.logistics-info').hide();
-        //                 }
-        //             })
-        //         },
-        //         complete: function () {
-        //
-        //         },
-        //         error: function (data, msg) {
-        //             console.log(data, msg);
-        //         }
-        //     });
-        // },
-        /**
-         * 加星
-         * @param data
-         */
-        // addStar: function (data) {
-        //     var that = this;
-        //     Api.get({
-        //         url: '/order/updateAsteriskMark.do',
-        //         data: data,
-        //         beforeSend: function () {
-        //
-        //         },
-        //         success: function (d) {
-        //             toastr.success('加星成功', '提示');
-        //             that.queryOrderList();
-        //         },
-        //         complete: function () {
-        //
-        //         },
-        //         error: function (data, msg) {
-        //             console.log(data, msg);
-        //         }
-        //     });
-        // },
-        /**
-         * 备注
-         */
-        // addMemo: function (data) {
-        //     var that = this;
-        //     Api.get({
-        //         url: '/order/updateMemo.do',
-        //         data: data,
-        //         beforeSend: function () {
-        //
-        //         },
-        //         success: function (d) {
-        //             that.queryOrderList();
-        //         },
-        //         complete: function () {
-        //
-        //         },
-        //         error: function (data, msg) {
-        //             console.log(data, msg);
-        //         }
-        //     });
-        // },
-        /**
-         * 发货api
-         */
-        // sendGoods: function (sendData, cb) {
-        //     var that = this;
-        //     Api.get({
-        //         url: '/order/delivery.do',
-        //         data: sendData,
-        //         beforeSend: function () {
-        //
-        //         },
-        //         success: function (data) {
-        //             toastr.success('发货成功', '提示');
-        //             that.queryOrderList();
-        //             cb && cb(data);
-        //         },
-        //         complete: function () {
-        //
-        //         },
-        //         error: function (data, msg) {
-        //             console.log(data, msg);
-        //         }
-        //     });
-        // },
         /**
          * 翻页
          * @param total 总数据量

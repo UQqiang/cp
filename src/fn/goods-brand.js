@@ -99,6 +99,10 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                if (checkedBox.length <= 0) {
+                    toastr.error('请至少选择一个要删除的商品~', '提示');
+                    return;
+                }
                 var data = {};
                 data.target = $(this);
                 data.content = '确定要批量删除品牌吗?';

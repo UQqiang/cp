@@ -5,8 +5,8 @@
             $('.step').css({
                 'min-height': height + 'px'
             });
-
             this.goodsId = HDL.getQuery('id');          // 商品的id - 编辑商品的时候
+            this.canEdit = HDL.getQuery('edit') == '' ? '1' : HDL.getQuery('edit');        // 是否可编辑的字符串
             this.nowStep = this.goodsId ? 2 : 1;        // 添加商品的步骤 (1: 第二步,2: 第二步,3: 第三步)
             this.currentCateObj = {};                   // 当前选择的一二级类目对象
             this.cateId = '';                           // 当前的类目id ( 二级类目 )
@@ -23,6 +23,12 @@
             this.brandList = [];                        // 品牌的列表
             this.taxList = [];                          // 税率模板的列表
             this.freightList = [];                      // 运费模板的列表
+            this.countryList = [];                      // 货源地
+            this.isAjax = false;
+
+            this.validator = new FormValidator();
+            this.validator.settings.alerts = true;
+
             this.stepJump();
             this.step();
             this.addEvent();
@@ -38,6 +44,12 @@
                     this.getGoods()
                 );
             }
+        },
+        isEdit: function () {
+            $('input').prop('disabled', true);
+            $('.btn').prop('disabled', true);
+            $('select').prop('disabled', true);
+            $('#nextStep2').prop('disabled', false);
         },
 
         /**
@@ -61,8 +73,7 @@
          */
         step: function () {
             var that = this;
-            var validator = new FormValidator();
-            validator.settings.alerts = true;
+            var decimal = /^\d+(\.\d{1,2})?$/;
 
             // 下一步 & 重新选择
             $('#nextStep,#nextStep2,.reselect,#submit').click(function () {
@@ -90,7 +101,7 @@
                         // required input validator 验证第二步里面的表单
                         required = $('.step[data-now_step=2]').find('[required]');
                         for (var i = 0; i < required.length; i++) {
-                            result = validator.checkField.call(validator, required.eq(i));
+                            result = that.validator.checkField.call(that.validator, required.eq(i));
                             if (result.valid === false) {
                                 isValid = false;
                                 toastr.error('有内容未填写或书写规范,无法进行下一步~', '提示');
@@ -114,7 +125,7 @@
                             }
                         }
                         // self input validator
-                        if (radioGoods == 1) {
+                        if (radioGoods == 1 || radioGoods == 2) {
                             if (isValid == true) {
                                 isValid = that.validatorRate();
                             }
@@ -137,17 +148,21 @@
                         }
                     }
                     if (isValid == true) {
+                        that.finishingSkuTableData();
                         that.nowStep = num + 1 == 4 ? 1 : num + 1;
                     }
                 } else if (type === 'back') {
                     // todo back
+                    if (that.canEdit == 0) {
+                        return;
+                    }
                     that.nowStep = num - 1 == 0 ? 1 : num - 1;
                 } else if (type === 'submit') {
                     // 最后保存数据的验证
                     // required input validator 验证第三步里面的表单
                     required = $('.step[data-now_step=3]').find('[required]');
                     for (var n = 0; n < required.length; n++) {
-                        result = validator.checkField.call(validator, required.eq(n));
+                        result = that.validator.checkField.call(that.validator, required.eq(n));
                         if (result.valid === false) {
                             isValid = false;
                             toastr.error('有内容未填写或书写规范,无法进行下一步~', '提示');
@@ -160,7 +175,7 @@
                         var f_type = $('[name=radio-' + warehouse_id + ']:checked').attr('data-value');
                         if (f_type == 1) {
                             // 如果是统一运费
-                            if ($.trim($('.common-freight-' + warehouse_id).val()) == '') {
+                            if ($.trim($('.common-freight-' + warehouse_id).val()) == '' || !decimal.test($.trim($('.common-freight-' + warehouse_id).val()))) {
                                 toastr.error('层级' + (j + 1) + '的统一运费未填写或者填写有误');
                                 isValid = false;
                                 return;
@@ -177,6 +192,10 @@
                     // 保存
                     if (isValid == true) {
                         that.setPostData();
+                        if (that.isAjax === true) {
+                            return;
+                        }
+                        that.isAjax = true;
                         if (!that.goodsId) {
                             that.addGoods();
                         } else {
@@ -197,6 +216,9 @@
          */
         imgModal: function () {
             var that = this;
+            if (that.canEdit == 0) {
+                return;
+            }
             $('.imgUploadBtn').imgModal({
                 selectImgPopupBtn: '.imgUploadBtn',
                 selectImgBtn: '.j-select-img',
@@ -269,6 +291,9 @@
          */
         selectPluginWarehouse: function () {
             var that = this;
+            if (that.canEdit == 0) {
+                return;
+            }
             $('#selectPluginButtonWarehouse').selectPlugin({
                 single: false,
                 isSku: false,
@@ -307,6 +332,7 @@
          * @returns {boolean}
          */
         validatorRate: function () {
+            var number = /^\d+(\.\d{1,2})?$/;
             var radioRate = $('input[name=radio-rate]:checked').val();
             var rateCommon = $.trim($('#rateCommon').val());
             var rateCommonThreshold = $.trim($('#rateCommonThreshold').val());
@@ -314,11 +340,11 @@
 
             if (radioRate == 1) {
                 // 验证统一税率
-                if (rateCommonThreshold == '') {
+                if (rateCommonThreshold == '' || !number.test(rateCommonThreshold)) {
                     toastr.error('统一税率起征点未填写或填写不合法', '提示');
                     return false;
                 }
-                if (rateCommon == '') {
+                if (rateCommon == '' || !number.test(rateCommon)) {
                     toastr.error('统一税率的税率未填写或填写不合法', '提示');
                     return false;
                 }
@@ -358,8 +384,30 @@
                 that.iCheck();
             });
 
+            // 刷新
+            $('.j-refresh').click(function () {
+                var type = $(this).attr('data-type');
+                if (type == 'brand') {
+                    that.queryBrand()
+                } else if (type == 'tax') {
+                    that.queryTaxTemplate()
+                }
+            });
+
+            // 物品体积和物品重量
+            $('#volume,#weight').blur(function () {
+                if ($(this).val() != '') {
+                    $(this).attr('required', 'required');
+                } else {
+                    $(this).removeAttr('required', 'required');
+                }
+            });
+
             // 添加 sku 规格
             $('.j-add-sku-specifications').click(function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 // 沿用老的 最多添加三个规格
                 if (that.selectizeNumber === 4) {
                     return false;
@@ -376,6 +424,9 @@
 
             // 添加 sku-prop
             $('.goods-content').on('click', '.j-add-prop', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var data = {};
                 var sku_name = $(this).attr('data-sku_name');
                 var sku_id = $(this).attr('data-sku_id');
@@ -422,6 +473,7 @@
                         }
                         that.combineData();
                         that.render(sku_id, 'click');
+                        that.initWarehouse();
                         dialog.close();
                     });
                 }, function (button, dialog) {
@@ -431,6 +483,9 @@
 
             // 批量设置 - sku 显示批量的输入框
             $('.goods-content').on('click', '.j-batch', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var type = $(this).attr('data-type');
                 $(this).hide();
                 $('input[data-type]').hide();
@@ -440,7 +495,9 @@
             // 批量设置 - sku - input
             $('.goods-content').on('blur', 'input[data-type=promotion_price],input[data-type=market_price],input[data-type=ean]', function () {
                 var type = $(this).attr('data-type');
-
+                if (that.canEdit == 0) {
+                    return;
+                }
                 $(this).hide();
                 $('.j-batch[data-type=' + type + ']').show();
 
@@ -453,8 +510,22 @@
 
             // 单个输入 - sku - input
             $('.goods-content').on('change', 'input[data-input_type=promotion_price],input[data-input_type=market_price],input[data-input_type=ean]', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
+                var required, result;
                 var type = $(this).attr('data-input_type');
                 var arr = [], hasEmpty = false;
+                // required input validator 验证第二步里面的表单
+                required = $('input[data-input_type=' + type + '][required]');
+                for (var i = 0; i < required.length; i++) {
+                    result = that.validator.checkField.call(that.validator, required.eq(i));
+                    if (result.valid === false) {
+                        required.eq(i).val(' ');
+                        $('#' + type).val(' ');
+                        return;
+                    }
+                }
                 if ($.trim($(this).val()) == '') {
                     return;
                 }
@@ -469,13 +540,16 @@
                 if (type != 'ean') {
                     hasEmpty ? $('#' + type).val('') : $('#' + type).val(arr.sort(this.sortNumber).shift().toFixed(2));
                 } else {
-                    hasEmpty ? $('#' + type).val('') : $('#' + type).val(arr.sort(this.sortNumber).shift());
+                    hasEmpty ? $('#' + type).val('') : $('#' + type).val($.trim($('input[data-input_type=' + type + ']').val()));
                 }
                 that.finishingSkuTableData();
             });
 
             // sku 属性切换
             $('.goods-content').on('ifChecked', 'input[name=radio-sku-prop]', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var sku_id = $(this).attr('data-sku_id');
 
                 // 切换的时候判断选择的sku主图属性
@@ -495,6 +569,9 @@
 
             // props 删除
             $('.goods-content').on('click', '.j-g-close.props-close', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var sid = $(this).parent().attr('data-sid');
                 var pid = $(this).parent().attr('data-pid');
                 for (var key in that.skuArr) {
@@ -507,21 +584,33 @@
                         }
                     }
                 }
-                for (var m = 0; m < that.skuTableData.length; m++) {
-                    for (var n = 0; n < that.skuTableData[m].sku_property_dto_list.length; n++) {
-                        if (pid == that.skuTableData[m].sku_property_dto_list[n].property_value_id) {
-                            that.skuTableData.splice(m, 1);
-                            m--;
-                        }
-                    }
-                }
+                //for (var m = 0; m < that.skuTableData.length; m++) {
+                //    if (that.skuTableData[m].sku_property_dto_list.length > 0) {
+                //        for (var n = 0; n < that.skuTableData[m].sku_property_dto_list.length; n++) {
+                //            if (that.skuTableData[m].sku_property_dto_list[n]) {
+                //                if (pid == that.skuTableData[m].sku_property_dto_list[n].property_value_id) {
+                //                    that.skuTableData.splice(m, 1);
+                //                    m--;
+                //                    break;
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
                 $(this).parent().remove();
+                // 因为删除的比较多 所以滞空
+                that.skuTableData = [];
+                that.combineData();
                 that.render(sid);
+                that.initWarehouse();
                 toastr.success('删除成功', '提示')
             });
 
             // selectize 删除
             $('.goods-content').on('click', '.j-g-close.selectize-close', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var floor = $(this).attr('data-floor');
                 for (var key in that.skuArr) {
                     if (that.skuArr[key]['floor'] == floor) {
@@ -533,6 +622,7 @@
                 that.skuTableData = [];
                 that.combineData();
                 that.render();
+                that.initWarehouse();
                 // 减少楼层
                 that.selectizeNumber -= 1;
                 if (that.selectizeNumber < 4) {
@@ -544,6 +634,9 @@
             // 图片删除
             $('.goods-content').on('click', '.j-g-close.img-close', function (e) {
                 e.stopPropagation();
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var type = $(this).parent().attr('data-type');
                 var index = $(this).parent().index();
                 var pid = $(this).parent().attr('data-pid');
@@ -576,6 +669,9 @@
 
             // 仓库删除
             $('#warehouse').on('click', '.j-delete-warehouse', function () {
+                if (that.canEdit == 0) {
+                    return;
+                }
                 var warehouseId = $(this).attr('data-warehouse_id');
                 var name = $(this).attr('data-name');
                 var data = {};
@@ -607,10 +703,22 @@
             $('#skuCont').append(selectizeTpl({
                 index: that.index
             }));
+            if (that.canEdit == 0) {
+                that.isEdit();
+            }
+            that.hoverFunc();
             var selectize = $('#selectize-' + that.index).selectize({
                 options: that.skuHistoryArr,
                 placeholder: '请添加规格',
                 create: true,
+                createFilter: function (value) {
+                    for (var optValue in this.options) {
+                        if (this.options[optValue].text.toLowerCase() === value.toLowerCase() || this.options[optValue].text === value) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
                 onItemAdd: function (value, $item) {
                     // 选择sku事件
                     var name = $item.html();
@@ -668,7 +776,7 @@
                             value: that.skuArr[m].value[i].value,
                             property_value_id: that.skuArr[m].value[i].property_value_id
                         }
-                        if( that.skuArr[m].value[i].has_image == 1 ){
+                        if (that.skuArr[m].value[i].has_image == 1) {
                             obj.has_image = 1;
                         }
                         dataArr[k].push(obj);
@@ -687,21 +795,22 @@
 
         render: function (sid, type) {
             var that = this;
-
             // sku组合
-            that.renderSkuTable(that.skuTableData);
-            // sku 图片select框
-            that.renderSkuSelect(that.skuTableData, sid);
+            if (that.skuTableData.length > 0 && that.skuTableData[0].sku_property_dto_list[0].sku_property_tmpl_id == 0) {
+            } else {
+                that.renderSkuTable(that.skuTableData);
+                // sku 图片select框
+                that.renderSkuSelect(that.skuTableData, sid);
+                that.checkedSkuExist(that.skuTableData);
+            }
             // sku 图片
             that.renderSkuImage(that.skuArr, sid, type);
-            that.checkedSkuExist(that.skuTableData);
-
-            that.initWarehouse();
-
             // 渲染完成后 初始化下icheck
             that.iCheck();
-
             that.hoverFunc();
+            if (that.canEdit == 0) {
+                that.isEdit();
+            }
         },
 
         /**
@@ -811,10 +920,10 @@
         renderSkuSelect: function (data, sku_id) {
             if (data.length > 0) {
 
-                function isHasImage (){
+                function isHasImage() {
                     for (var i = 0; i < data.length; i++) {
                         for (var n = 0; n < data[i].sku_property_dto_list.length; n++) {
-                            if( data[i].sku_property_dto_list[n].has_image == 1 ){
+                            if (data[i].sku_property_dto_list[n].has_image == 1) {
                                 return true;
                             }
                         }
@@ -839,7 +948,7 @@
          * @param data
          * @param sku_id
          */
-        renderSkuImage: function (data, sku_id ,type) {
+        renderSkuImage: function (data, sku_id, type) {
             var template = _.template($('#j-template-sku-img').html());
             $('.sku-gallery').html(template({
                 items: data,
@@ -893,7 +1002,7 @@
             var template = _.template($('#j-template-warehouse').html());
             console.log(that.freightList);
             //if (that.skuTableData.length > 0) {
-            console.log('warehousedata:' + that.warehouseData)
+            console.log('warehousedata:' + that.warehouseData);
             $('#warehouse').html(template({
                 items: that.warehouseData,
                 sku: that.skuTableData,
@@ -945,6 +1054,7 @@
          * icheck定义
          */
         iCheck: function () {
+            var that = this;
             if ($("input.flat")[0]) {
                 $(document).ready(function () {
                     $('input.flat').iCheck({
@@ -958,9 +1068,12 @@
                 if ($(this).val() != 1 && $(this).val() != 2) {
                     // 国内商品
                     $('#rate').hide();
+                    that.countrySelectize[0].selectize.setValue('中国');
+                    that.countrySelectize[0].selectize.disable()
                 } else {
                     // 跨进商品
                     $('#rate').show();
+                    that.countrySelectize[0].selectize.enable()
                 }
             });
             // 税率 切换
@@ -1091,15 +1204,21 @@
                 item_brand_id: this.brand_key,                                              // 选择的品牌
                 country_code: this.country_key,                                             // 货源地
                 delivery_type: $('[name=radio-goods]:checked').val(),                       // (发货方式) 1:跨境商品 2: 海外直邮 3:国内商品 4:一般贸易
-                weight: $.trim($('#weight').val()),                                         // 重量
-                volume: $.trim($('#volume').val()),                                         // 体积
                 item_desc: this.editor.getContent(),                                        // 商品详情
                 market_price: $.trim(($('#market_price').val() * 100).toFixed(0)),          // 建议零售价
                 promotion_price: $.trim(($('#promotion_price').val() * 100).toFixed(0)),    // 最低售价(促销价)
-                commodity_code: $.trim($('#ean').val()),                                     // 商品code(ean)
+                commodity_code: $.trim($('#ean').val()),                                    // 商品code(ean)
                 item_sku_dto_list: this.skuTableData,
                 tax_point: $.trim($('#taxPoint').val())
             };
+
+            if ($.trim($('#weight').val()) != '') {
+                this.postData.item_dto.weight = $.trim($('#weight').val());                 // 重量
+            }
+
+            if ($.trim($('#volume').val()) != '') {
+                this.postData.item_dto.volume = $.trim($('#volume').val());                 // 体积
+            }
 
             if (this.goodsId) {
                 this.postData.item_dto.id = this.goodsId;
@@ -1230,10 +1349,17 @@
                     that.categoryData = data.data;
 
                     var template = _.template($('#template-category').html());
+                    var item = data.data;
+                    var category1 = [];
+                    for (var i = 0; i < item.length; i++) {
+                        if (item[i].cate_level == 1) {
+                            category1.push(item[i]);
+                        }
+                    }
 
                     // 渲染一级类目
                     $('#add-goods-category-1').html(template({
-                        items: data.data,
+                        items: category1,
                         level: 1
                     }));
 
@@ -1243,13 +1369,22 @@
                         var parent_id = $(this).attr('data-parent_id');
                         var name = $.trim($(this).text());
                         var level = $(this).attr('data-cate_level');
+                        if (!id) {
+                            return;
+                        }
+                        var category2 = [];
 
                         if (parent_id == 0) {
                             // 点击的是一级类目
                             // 一级类目移除active
+                            for (var n = 0; n < item.length; n++) {
+                                if (item[n].parent_id == id && item[n].cate_level == 2) {
+                                    category2.push(item[n])
+                                }
+                            }
                             $('.category-list li[data-parent_id=' + parent_id + ']').removeClass('active');
                             $('#add-goods-category-2').html(template({
-                                items: data.data,
+                                items: category2,
                                 parent_id: id,
                                 level: 2
                             }));
@@ -1293,7 +1428,7 @@
         /**
          * sku历史记录
          */
-        queryHistorySkuProperty: function () {
+        queryHistorySkuProperty: function (cb) {
             var that = this;
             Api.get({
                 url: '/property/sku/query.do',
@@ -1308,6 +1443,7 @@
                             text: obj.sku_code
                         });
                     });
+                    cb && cb(data)
                 },
                 complete: function () {
                 },
@@ -1360,7 +1496,8 @@
                         obj.value = data.data.item_list[i].cName;
                         arr.push(obj);
                     }
-                    var selectize = $('#countrySelectize').selectize({
+                    that.countryList = arr;
+                    that.countrySelectize = $('#countrySelectize').selectize({
                         options: arr,
                         placeholder: '请选择商品货源地',
                         create: false,
@@ -1374,7 +1511,7 @@
                         }
                     });
 
-                    cb && cb(selectize[0].selectize);
+                    cb && cb(that.countrySelectize[0].selectize);
                 },
                 complete: function () {
                 },
@@ -1391,11 +1528,15 @@
             var that = this;
             Api.get({
                 url: '/brand/query.do',
-                data: {},
+                data: {
+                    current_page: 1,
+                    page_size: 10
+                },
                 beforeSend: function () {
                 },
                 success: function (data) {
                     var brand = data.data.data;
+                    that.brandList.length = 0;
                     for (var i = 0; i < brand.length; i++) {
                         that.brandList.push({
                             text: brand[i].brand_name,
@@ -1406,15 +1547,54 @@
                         options: that.brandList,
                         placeholder: '请选择商品品牌',
                         create: false,
+                        valueField: 'value',
+                        labelField: 'text',
+                        searchField: 'text',
+                        render: {
+                            option: function (item, escape) {
+                                console.log(item, escape);
+                                return '<div><span>' + item.text + '</span></div>'
+                            }
+                        },
                         onItemAdd: function (value, $item) {
                             // 选择品牌
                             that.brand_key = value
                         },
                         onItemRemove: function (value) {
                             that.brand_key = ''
+                        },
+                        score: function(search) {
+                            var score = this.getScoreFunction(search);
+                            return function(item) {
+                                return score(item) * (1 + Math.min(item.watchers / 100, 1));
+                            };
+                        },
+                        load: function (query, callback) {
+                            if (!query.length) return callback();
+                            Api.get({
+                                url: '/brand/query.do',
+                                data: {
+                                    keywords: query,
+                                    current_page: 1,
+                                    page_size: 5
+                                },
+                                beforeSend: function () {
+
+                                },
+                                success: function (data) {
+                                    callback(data.data.data);
+                                },
+                                complete: function () {
+
+                                },
+                                error: function () {
+                                    callback();
+                                    toastr.error(data.msg, '提示');
+                                }
+                            })
                         }
                     });
-
+                    selectize[0].selectize.addOption(that.brandList);
                     cb && cb(selectize[0].selectize);
                 },
                 complete: function () {
@@ -1445,6 +1625,7 @@
                 success: function (data) {
                     console.log(data);
                     var tax = data.data.data;
+                    that.taxList.length = 0;
                     for (var i = 0; i < tax.length; i++) {
                         that.taxList.push({
                             text: tax[i].tax_template_name,
@@ -1463,7 +1644,7 @@
                             that.tax_key = ''
                         }
                     });
-
+                    selectize[0].selectize.addOption(that.taxList);
                     cb && cb(selectize[0].selectize);
                 },
                 complete: function () {
@@ -1506,16 +1687,22 @@
         addGoods: function () {
             var that = this;
             console.log(that.postData);
-            Api.get({
+            Api.post({
                 url: '/item/add.do',
                 data: that.postData,
                 beforeSend: function (XMLHttpRequest) {
-                    toastr.success('添加成功!', '提示')
+
                 },
                 success: function (data) {
-                    // todo 添加商品
+                    toastr.success('添加成功!', '提示');
+                    setTimeout(function () {
+                        location.href = 'goods-price-management.html';
+                    }, 1000)
                 },
                 complete: function () {
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000)
                 },
                 error: function (data) {
                 }
@@ -1541,6 +1728,7 @@
                 complete: function () {
                 },
                 error: function (data) {
+                    toastr.error(data.msg, '提示');
                 }
             })
         },
@@ -1550,17 +1738,24 @@
          */
         updateGoods: function () {
             var that = this;
-            Api.get({
+            Api.post({
                 url: '/item/update.do',
                 data: that.postData,
                 beforeSend: function (XMLHttpRequest) {
                 },
                 success: function (data) {
-                    toastr.success('编辑成功!', '提示')
+                    toastr.success('编辑成功!', '提示');
+                    setTimeout(function () {
+                        location.href = 'goods-price-management.html';
+                    }, 1000)
                 },
                 complete: function () {
+                    setTimeout(function () {
+                        that.isAjax = false;
+                    }, 1000)
                 },
                 error: function (data) {
+                    toastr.error(data.msg, '提示');
                 }
             });
         },
@@ -1602,6 +1797,9 @@
                         if (value != 'null') {
                             that.queryCountry(function (selectize) {
                                 selectize.setValue(value);
+                                if ($('[name=radio-goods]:checked').val() == 3 || $('[name=radio-goods]:checked').val() == 4) {
+                                    selectize.disable();
+                                }
                             })
                         }
                         break;
@@ -1648,6 +1846,8 @@
                         $('.rate-table').show();
                         $('.rate-template').hide();
                         $('#rateCommonThreshold').val(value);
+                        that.queryTaxTemplate(function (selectize) {
+                        });
                         break;
                     // 税率
                     case "tax_rate":
@@ -1675,7 +1875,7 @@
                                 return d.property_value_id != 0 && d.property_value_id != 666;
                             }) || [];
 
-                        $.when(that.queryHistorySkuProperty()).done(function () {
+                        that.queryHistorySkuProperty(function (data) {
                             // selectize的个数
                             that.selectizeNumber = value[0].sku_property_dto_list.length;
 
@@ -1688,42 +1888,57 @@
                             $.each(value, function (index, obj) {
                                 $.each(obj.sku_property_dto_list, function (i, o) {
                                     // 如果没有直接塞进去
-                                    if (!that.skuArr[o.sku_property_tmpl_id]) {
-                                        that.index++;
-                                        that.addSku(function (selectize) {
-                                            selectize.setValue(o.sku_property_tmpl_id);
-                                        }, function () {
+                                    if (o.sku_property_tmpl_id != 0) {
+                                        if (!that.skuArr[o.sku_property_tmpl_id]) {
+                                            that.index++;
+                                            that.addSku(function (selectize) {
+                                                if (that.isInObjectArr(that.skuHistoryArr, 'value', o.sku_property_tmpl_id)) {
+                                                    // 存在
+                                                    selectize.setValue(o.sku_property_tmpl_id);
+                                                } else {
+                                                    // 不存在
+                                                    var newOption = {};
+                                                    newOption.text = o.name;
+                                                    newOption.value = o.sku_property_tmpl_id;
+                                                    selectize.addOption(newOption);
+                                                    selectize.setValue(o.sku_property_tmpl_id);
+                                                }
+
+                                            }, function () {
+                                                console.log(that.skuArr);
+                                                if (that.skuArr[o.sku_property_tmpl_id].sku_id) {
+                                                    if (that.skuArr[o.sku_property_tmpl_id].sku_id == o.sku_property_tmpl_id) {
+                                                        var props = {};
+                                                        props.name = (o.name);
+                                                        props.sku_property_tmpl_id = (o.sku_property_tmpl_id);
+                                                        props.value = (o.value);
+                                                        props.property_value_id = (o.property_value_id);
+                                                        props.thumb = (obj.image_url);
+                                                        if (o.has_image == 1) {
+                                                            props.has_image = o.has_image;
+                                                        }
+                                                        (that.skuArr[o.sku_property_tmpl_id].value).push(props);
+                                                        that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + o.sku_property_tmpl_id + ']'), props);
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            // 如果有了匹配下塞进去
                                             console.log(that.skuArr);
                                             if (that.skuArr[o.sku_property_tmpl_id].sku_id == o.sku_property_tmpl_id) {
-                                                var props = {};
-                                                props.name = (o.name);
-                                                props.sku_property_tmpl_id = (o.sku_property_tmpl_id);
-                                                props.value = (o.value);
-                                                props.property_value_id = (o.property_value_id);
-                                                props.thumb = (obj.image_url);
-                                                if (o.has_image == 1) {
-                                                    props.has_image = o.has_image;
+                                                if (that.isExistArr(o.property_value_id)) {
+                                                    var props = {};
+                                                    props.name = (o.name);
+                                                    props.sku_property_tmpl_id = (o.sku_property_tmpl_id);
+                                                    props.value = (o.value);
+                                                    props.property_value_id = (o.property_value_id);
+                                                    props.thumb = (obj.image_url);
+                                                    if (o.has_image == 1) {
+                                                        props.has_image = o.has_image;
+                                                    }
+                                                    (that.skuArr[o.sku_property_tmpl_id].value).push(props);
+                                                    that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + o.sku_property_tmpl_id + ']'), props);
                                                 }
-                                                (that.skuArr[o.sku_property_tmpl_id].value).push(props);
-                                                that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + o.sku_property_tmpl_id + ']'), props);
-                                            }
-                                        });
-                                    } else {
-                                        // 如果有了匹配下塞进去
-                                        console.log(that.skuArr);
-                                        if (that.skuArr[o.sku_property_tmpl_id].sku_id == o.sku_property_tmpl_id) {
-                                            if (that.isExistArr(o.property_value_id)) {
-                                                var props = {};
-                                                props.name = (o.name);
-                                                props.sku_property_tmpl_id = (o.sku_property_tmpl_id);
-                                                props.value = (o.value);
-                                                props.property_value_id = (o.property_value_id);
-                                                props.thumb = (obj.image_url);
-                                                if (o.has_image == 1) {
-                                                    props.has_image = o.has_image;
-                                                }
-                                                (that.skuArr[o.sku_property_tmpl_id].value).push(props);
-                                                that.renderSkuGroupCont($('.j-add-prop[data-sku_id=' + o.sku_property_tmpl_id + ']'), props);
                                             }
                                         }
                                     }
@@ -1741,6 +1956,12 @@
                         break;
                 }
             });
+
+            // 在没有选择相关税率的情况下
+            if (!data.tax_threshold || !data.tax_template_id) {
+                that.queryTaxTemplate(function (selectize) {
+                });
+            }
 
             // 拼装仓库的数据
             that.warehouseData = [];
@@ -1774,8 +1995,21 @@
 
                     }
                 }
+                if (that.canEdit == 0) {
+                    that.isEdit();
+                }
             });
+
+            if (that.canEdit == 0) {
+                that.isEdit();
+            }
         },
+
+        /**
+         * 是否在数组中存在
+         * @param value_id
+         * @returns {boolean}
+         */
         isExistArr: function (value_id) {
             for (var k in this.skuArr) {
                 for (var j = 0; j < this.skuArr[k].value.length; j++) {
@@ -1785,6 +2019,14 @@
                 }
             }
             return true;
+        },
+        isInObjectArr: function (arr, key, value) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i][key] == value) {
+                    return true;
+                }
+            }
+            return false;
         }
     };
     // run

@@ -41,7 +41,7 @@
     @include border-image()
   }
 }
-#orderList, #orderInfo {
+#orderList, #orderInfo, #partnerList {
   .order-header {
     background: #f8f8f8;
     box-shadow: 1px 1px 5px #ccc;
@@ -66,11 +66,15 @@
         width:64px;
         height: 64px;
       }
+      .partner-image{
+        width:64px;
+        height: 64px;
+      }
     }
     dd {
       float: left;
       p {
-        max-width: 120px;
+        max-width: 100px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -85,6 +89,7 @@
       padding: 6px;
   }
 }
+
 #skuList{
   max-height: 500px;
   overflow: scroll;

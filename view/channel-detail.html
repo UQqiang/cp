@@ -71,9 +71,9 @@
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">状态：</label>
                             <select id="shopStatusSearch" class="form-control form-control-lg">
-                                <option value="0">请选择状态</option>
-                                <option value="1">冻结中</option>
-                                <option value="2">运营中</option>
+                                <option value="">请选择状态</option>
+                                <option value="0">冻结中</option>
+                                <option value="1">运营中</option>
                             </select>
                         </div>
                         <br/>
@@ -85,7 +85,7 @@
                             </div>
                         </div>
                         <div class="form-group right">
-                            <a class="btn btn-sm btn-success search-submit" id="searchShop" href="javascript:;">查询</a>
+                            <a class="btn btn-sm btn-success search-submit" id="searchShop" href="javascript:;" data-type="shop">查询</a>
                             <a class="btn btn-sm btn-success export-shop export-list" href="javascript:;" data-type="shop">导出</a>
                             <a class="btn btn-sm btn-success check-export-shop check-export" href="javascript:;" data-type="shop">查看导出列表</a>
                         </div>
@@ -94,27 +94,27 @@
                     <div class="form-inline form-inline-partner" style="display:none">
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">所属店铺：</label>
-                            <input class="form-control form-control-lg" id="shopNameSearch" placeholder="输入店铺名称">
+                            <input class="form-control form-control-lg" id="partnerShopNameSearch" placeholder="输入店铺名称">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">联系方式：</label>
-                            <input class="form-control form-control-lg" id="shopNameSearch" placeholder="输入联系方式">
+                            <input class="form-control form-control-lg" id="partnerPhoneSearch" placeholder="输入联系方式">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">状态：</label>
-                            <select id="partnerStatusSearch" class="form-control form-control-lg">
-                                <option value="0">请选择状态</option>
-                                <option value="1">冻结中</option>
-                                <option value="2">运营中</option>
+                            <select id="partnerShopStatusSearch" class="form-control form-control-lg">
+                                <option value="">请选择状态</option>
+                                <option value="0">冻结中</option>
+                                <option value="1">运营中</option>
                             </select>
                         </div>
                         <br/>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr"></label>
-                            <input class="form-control form-control-lg" id="partnerSearch" placeholder="请输入用户ID、昵称或账号">
+                            <input class="form-control form-control-lg" id="partnerKeywordsSearch" placeholder="请输入用户ID、昵称或账号">
                         </div>
                         <div class="form-group right">
-                            <a class="btn btn-sm btn-success search-submit" id="searchPartner" href="javascript:;">查询</a>
+                            <a class="btn btn-sm btn-success search-submit" id="searchPartner" href="javascript:;" data-type="partner">查询</a>
                             <a class="btn btn-sm btn-success export-partner export-list" href="javascript:;" data-type="partner">导出</a>
                             <a class="btn btn-sm btn-success check-export-partner check-export" href="javascript:;" data-type="partner">查看导出列表</a>
                         </div>
@@ -123,7 +123,7 @@
                     <div class="form-inline form-inline-order" style="display:none">
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">订单号：</label>
-                            <input class="form-control form-control-lg" id="order_sn" placeholder="">
+                            <input class="form-control form-control-lg" id="orderSnSearch" placeholder="">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr pt5 pull-left">筛选日期：</label>
@@ -135,33 +135,26 @@
                         <br/>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">交易情况：</label>
-                            <select id="order_status" class="form-control form-control-md">
-                                <option value="0"></option>
-                                <option value="10">交易中</option>
-                                <option value="20">交易成功</option>
-                                <option value="21">退款</option>
+                            <select id="orderDealSearch" class="form-control form-control-md">
+                                <option value="">请选择</option>
+                                <option value="0">交易中</option>
+                                <option value="1">交易成功</option>
+                                <option value="2">退款</option>
                             </select>
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">结算状态：</label>
-                            <select id="order_status" class="form-control form-control-md">
-                                <option value="0"></option>
-                                <option value="10">待支付</option>
-                                <option value="20">买家已取消</option>
-                                <option value="21">卖家已取消</option>
-                                <option value="30">已支付</option>
-                                <option value="40">已发货</option>
-                                <option value="50">已签收</option>
-                                <option value="60">已评价</option>
-                                <option value="70">退款中</option>
-                                <option value="80">退款完成</option>
-                                <option value="90">订单关闭</option>
+                            <select id="orderClearStatusSearch" class="form-control form-control-md">
+                                <option value="">请选择</option>
+                                <option value="0">待结算</option>
+                                <option value="1">已结算</option>
+                                <option value="2">取消结算</option>
                             </select>
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">支付方式：</label>
-                            <select id="order_status" class="form-control form-control-md">
-                                <option value="0"></option>
+                            <select id="orderPayTypeSearch" class="form-control form-control-md">
+                                <option value=""></option>
                                 <option value="10">待支付</option>
                                 <option value="20">买家已取消</option>
                                 <option value="21">卖家已取消</option>
@@ -177,15 +170,15 @@
                         <br/>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">分享合伙人</label>
-                            <input class="form-control form-control-md" id="consignee" placeholder="">
+                            <input class="form-control form-control-md" id="orderPartnerSearch" placeholder="">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">店铺</label>
-                            <input class="form-control form-control-md" id="consignee" placeholder="">
+                            <input class="form-control form-control-md" id="orderShopNameSearch" placeholder="">
                         </div>
                         <div class="form-group mb10">
                             <label class="ui-label ui-label-md tr">买家</label>
-                            <input class="form-control form-control-md" id="consignee" placeholder="">
+                            <input class="form-control form-control-md" id="orderBuyerSearch" placeholder="">
                         </div>
                         <br/>
                         <div class="form-group right ml10">
@@ -193,7 +186,7 @@
                             <a class="btn btn-sm btn-success ml10 check-export-order check-export" href="javascript:;" data-type="order">查看导出列表</a>
                         </div>
                         <div class="form-group right mr10">
-                            <a class="btn btn-sm btn-success search-submit" id="searchOrder" href="javascript:;">查询</a>
+                            <a class="btn btn-sm btn-success search-submit" id="searchOrder" href="javascript:;" data-type="order">查询</a>
                         </div>
                     </div>
                 </div>
@@ -219,7 +212,7 @@
                             <li role="presentation" class="switch-tab-partner" data-type="partner">
                                 <a href="#" role="tab" data-toggle="tab" aria-expanded="false" aria-controls="分享合伙人" >分享合伙人</a>
                             </li>
-                            <li role="presentation" class="active switch-tab-shop" data-type="shop">
+                            <li role="presentation" class=" switch-tab-shop" data-type="shop">
                                 <a href="#" role="tab" data-toggle="tab" aria-controls="店铺" aria-expanded="false" >店铺</a>
                             </li>
                         </ul>
@@ -274,11 +267,11 @@
     <div class="row tile_count">
         <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
           <span class="count_top">今日交易额</span>
-          <div class="count green"> <%= item.today_income ? (item.today_income/100).toFixed(2) : '-' %> </div>
+          <div class="count green"> <%= item.today_dist_amount ? (item.today_dist_amount/100).toFixed(2) : '-' %> </div>
         </div>
         <div class="col-md-2 col-sm-3 col-xs-6 tile_stats_count">
           <span class="count_top">今日新增店铺</span>
-          <div class="count green">空</div>
+          <div class="count green"><%= item.today_shop_count ? item.today_shop_count : '-' %></div>
         </div>
         <div class="col-md-2 col-sm-3 col-xs-6 tile_stats_count">
           <span class="count_top">今日新增分享合伙人</span>
@@ -296,7 +289,7 @@
     <div class="row tile_count">
         <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
           <span class="count_top">累计交易额</span>
-          <div class="count green"><%= item.total_income ? (item.total_income/100).toFixed(2) : '-' %></div>
+          <div class="count green"><%= item.total_dist_amount ? (item.total_dist_amount/100).toFixed(2) : '-' %></div>
         </div>
         <div class="col-md-2 col-sm-3 col-xs-6 tile_stats_count">
           <span class="count_top">累计店铺数</span>
@@ -320,7 +313,7 @@
 
 <!-- 商品列表－店铺 -->
 <script type="text/template" id="j-template-shop">
-    <table id="datatableshop" class="table table-striped jambo_table bulk_action table-bordered">
+    <table id="datatableshop" class="dataTable table table-striped jambo_table bulk_action table-bordered">
         <thead>
         <tr class="headings">
             <th class="column-title tc cell-5">ID</th>
@@ -328,10 +321,10 @@
             <th class="column-title tc cell-8">店铺名称</th>
             <th class="column-title tc cell-9">加入时间</th>
             <th class="column-title tc cell-9">到期时间</th>
-            <th class="column-title tc cell-10">分享合伙人<br/>数量</th>
-            <th class="column-title tc cell-10">客户数量</th>
-            <th class="column-title tc cell-10">累计交易额<br/>（元）</th>
-            <th class="column-title tc cell-10">累计收益<br/>（元）</th>
+            <th class="column-title tc cell-10 sorting">分享合伙人<br/>数量</th>
+            <th class="column-title tc cell-10 sorting">客户数量</th>
+            <th class="column-title tc cell-10 sorting">累计交易额<br/>（元）</th>
+            <th class="column-title tc cell-10 sorting">累计收益<br/>（元）</th>
             <th class="column-title tc cell-6">状态</th>
             <th class="column-title tc cell-10">操作</th>
         </tr>
@@ -383,19 +376,19 @@
         <tbody id="partnerList">
             <% _.each(items,function(item,index){ %>
                 <tr class="list">
-                    <td class="tc">23423</td>
+                    <td class="tc"><%= item.user_id %></td>
                     <td>
                         <dl>
-                            <dt><img class="goods-image" src=""></dt>
-                            <dd class="ellipsis tc" style="-webkit-box-orient:vertical">时间的浪费</dd>
+                            <dt><img class="partner-image" src="<%= item.head_img_url %>"></dt>
+                            <dd class="ellipsis tc" style="-webkit-box-orient:vertical"><%= item.nick_name %></dd>
                         </dl>
                     </td>
-                    <td class="tc">18668228888</td>
-                    <td class="tc">12345678902345678</td>
-                    <td class="tc">100</td>
-                    <td class="tc">120.00</td>
-                    <td class="tc">120.00</td>
-                    <td class="tc">运营中</td>
+                    <td class="tc"><%= item.mobile %></td>
+                    <td class="tc"><%= item.dist_username %></td>
+                    <td class="tc"><%= item.total_fans_amount %></td>
+                    <td class="tc"><%= (item.total_order_amount/100).toFixed(2) %> </td>
+                    <td class="tc"><%= (item.total_income/100).toFixed(2) %></td>
+                    <td class="tc"><%= ['冻结中','运营中'][item.status] %></td>
                 </tr>
                 <% }) %>
         </tbody>
@@ -414,7 +407,7 @@
             <th class="column-title tc cell-10">买家</th>
             <th class="column-title tc cell-10">支付方式</th>
             <th class="column-title tc cell-6">交易<br/>情况</th>
-            <th class="column-title tc cell-15">分享合伙人<br/>/店铺</th>
+            <th class="column-title tc cell-10">分享合伙人<br/>/店铺</th>
             <th class="column-title tc cell-10">分佣金额<br/>（元）</th>
             <th class="column-title tc cell-6">佣金结算</br/>状态</th>
         </tr>
@@ -427,57 +420,47 @@
                     <tr>
                         <th colspan="3">
                             <span>订单号：</span>
-                            <a href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>" target="_blank"><%= item.order_sn %></a>
+                            <%= item.order_no %>
                         </th>
-                        <th colspan="3"><span>下单时间：<%= item.order_time_str %></span></th>
-                        <th colspan="3" class="green">【<span>首单</span>】</th>
+                        <th colspan="3"><span>下单时间：<%= item.trade_time %></span></th>
+                        <th colspan="3" class="green">
+                            <% if(item.first_order) { %>
+                                【<span>首单</span>】
+                            <% } %>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% _.each(item.order_items,function(o,i){ %>
-                        <% if( o.item_type != 11 ){ %>
-                            <tr>
-                                <td class="cell-25">
-                                    <dl>
-                                        <dt><img class="order-image left" src="<%= o.item_image_url %>"></dt>
-                                        <dd>
-                                            <p><%= o.item_name %></p>
-                                            <p class="sku"><%= o.item_sku_desc %></p>
-                                        </dd>
-                                    </dl>
+                    <% _.each(item.item_level_v_os,function(o,i){ %>
+                        <tr>
+                            <td class="cell-25">
+                                <dl>
+                                    <dt><img class="order-image left" src="<%= o.item_image_url %>"></dt>
+                                    <dd>
+                                        <p><%= o.item_name %></p>
+                                        <p class="sku"><%= o.item_sku_desc %></p>
+                                    </dd>
+                                </dl>
+                            </td>
+                            <td class="cell-10 tc"><span><%= (o.unit_price/100).toFixed(2) %></span></td>
+                            <td class="cell-6 tc"><span><%= o.number %></span></td>
+                            <td class="cell-10 tc" rowspan="<%= item.item_level_v_os.length %>"><span><%= o.buyer_name %></span></td>
+                            <td class="cell-10 tc" rowspan="<%= item.item_level_v_os.length %>"><span><%= ['优惠折扣','支付宝APP支付','微信APP支付','银联APP支付','支付宝wap支付','微信wap支付','银联wap支付'][o.pay_type] %></span></td>
+                            <td class="cell-6 tc" rowspan="<%= item.item_level_v_os.length %>">
+                                <%= ['交易中','交易成功','退款'][o.order_status] %>
+                            </td>
+                            <% _.each(o.statistic_v_os,function(k,j){ %>
+                                <td class="cell-10 tc" rowspan="<%= item.item_level_v_os.length %>">
+                                        <p>【<%= k.level_name %>】<%= k.distributor_name %></p>
                                 </td>
-                                <td class="cell-10 tc"><span><%= o.unit_price_str %></span></td>
-                                <td class="cell-6 tc"><span><%= o.number %></span></td>
-                                <% if( i == 0 ){ %>
-                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.order_consignee_d_t_o.mobile %></span></td>
-                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= ['优惠折扣','支付宝APP支付','微信APP支付','银联APP支付','支付宝wap支付','微信wap支付','银联wap支付','统统付APP支付','统统付wap支付','余额支付'][item.payment_id] %></span></td>
-                                <td class="cell-6 tc" rowspan="<%= item.order_items.length %>">
-                                    交易中
+                                <td class="cell-10 tc" rowspan="<%= item.item_level_v_os.length %>">
+                                    <%= (k.dist_amount/100).toFixed(2) %>
                                 </td>
-                                <td class="cell-25 tc" rowspan="<%= item.order_items.length %>">
-                                    <table>
-                                        <tbody>
-                                            <tr class="list">
-                                                <td class="cell-15 inset-td tl" >渠道名称</td>
-                                                <td class="cell-10 inset-td">100.00</td>
-                                            </tr>
-                                            <tr class="list">
-                                                <td class="cell-15 inset-td tl">【店铺】飞飞店铺</td>
-                                                <td class="cell-10 inset-td">100.00</td>
-                                            </tr>
-                                            <tr class="list">
-                                                <td class="cell-15 tl inset-td">【合伙人】12123213</td>
-                                                <td class="cell-10 inset-td">100.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td class="cell-6 tc" rowspan="<%= item.order_items.length %>">
-                                    <p>待结算</p>
-                                </td>
-                                <% } %>
-                            </tr>
-                        <% } %>
+                                    <td class="cell-6 tc" rowspan="<%= item.item_level_v_os.length %>">
+                                        <p><%= ['待结算','已结算','取消结算'][k.status] %></p>
+                                    </td>
+                            <% }) %>
+                        </tr>
                     <% }) %>
                 </tbody>
             </table>
@@ -580,29 +563,32 @@ if ($(".js-switch")[0]) {
     <table class="table table-bordered">
         <thead>
         <tr class="headings">
-            <th class="column-title tc cell-10">ID</th>
-            <th class="column-title tc cell-10">昵称</th>
-            <th class="column-title tc cell-10">店铺名称</th>
-            <th class="column-title tc cell-10">加入时间</th>
-            <th class="column-title tc cell-10">到期时间</th>
-            <th class="column-title tc cell-10">分享合伙人<br/>数量</th>
-            <th class="column-title tc cell-10">客户数量</th>
-            <th class="column-title tc cell-10">累计交易额<br/>（元）</th>
-            <th class="column-title tc cell-10">累计收益<br/>（元）</th>
+            <th class="column-title tc cell-10">导出时间</th>
+            <th class="column-title tc cell-10">状态</th>
+            <th class="column-title tc cell-10">操作</th>
         </tr>
         </thead>
         <tbody id="">
             <% _.each(items,function(item,index){ %>
             <tr class="list">
-                <td class="tc"><p><%= item.dist_username %></p></td>
-                <td><%= item.nick_name %></td>
-                <td class="tc"><%= item.shop_name %></td>
-                <td class="tc"><span><%= item.gmt_created %></td>
-                <td class="tc"><span><%= item.shop_gmt_created %></td>
-                <td class="tc"><%= item.total_partner_count %></td>
-                <td class="tc"><%= item.total_fans_amount %></td>
-                <td class="tc"><%= item.total_order_amount %></td>
-                <td class="tc"><%= item.total_income %></td>
+                <td class="tc"><%= item.create_time %></td>
+                <% var status = item.task_status;
+                switch(status) {
+                    case 1:
+                    case 2: %>
+                        <td class="tc">--</td>
+                        <td class="tc">--</td>
+                        <% break;
+                    case 3: %>
+                        <td class="tc">导出成功</td>
+                        <td class="tc"><a href="/bossmanager/export/download.do?oss_bucket_name=<%= item.oss_bucket_name %>&oss_object_key=<%= item.oss_object_key %>" data-name="<%= item.oss_bucket_name %>" data-key="<%= item.oss_object_key %>" class="download-btn" target="_blank">下载</a></td>
+                        <% break;
+                    case 4:
+                    case 5: %>
+                        <td class="tc">导出失败</td>
+                        <td class="tc">--</td>
+                        <% break; %>
+                <% } %>
             </tr>
             <% }) %>
         </tbody>
@@ -622,32 +608,32 @@ if ($(".js-switch")[0]) {
     <table id="datatable" class="table table-bordered">
         <thead>
         <tr class="headings">
-            <th class="column-title tc cell-5">ID</th>
-            <th class="column-title tc cell-25">头像/昵称</th>
-            <th class="column-title tc cell-8">联系方式</th>
-            <th class="column-title tc cell-9">账号</th>
-            <th class="column-title tc cell-10">粉丝数</th>
-            <th class="column-title tc cell-10">累计交易额<br/>（元）</th>
-            <th class="column-title tc cell-10">累计收益<br/>（元）</th>
-            <th class="column-title tc cell-6">状态</th>
+            <th class="column-title tc cell-10">导出时间</th>
+            <th class="column-title tc cell-10">状态</th>
+            <th class="column-title tc cell-10">操作</th>
         </tr>
         </thead>
         <tbody id="partnerList">
             <% _.each(items,function(item,index){ %>
                 <tr class="list">
-                    <td class="tc">23423</td>
-                    <td>
-                        <dl>
-                            <dt><img class="goods-image" src=""></dt>
-                            <dd class="ellipsis tc" style="-webkit-box-orient:vertical">时间的浪费</dd>
-                        </dl>
-                    </td>
-                    <td class="tc">18668228888</td>
-                    <td class="tc">12345678902345678</td>
-                    <td class="tc">100</td>
-                    <td class="tc">120.00</td>
-                    <td class="tc">120.00</td>
-                    <td class="tc">运营中</td>
+                    <td class="tc"><%= item.create_time %></td>
+                    <% var status = item.task_status;
+                    switch(status) {
+                        case 1:
+                        case 2: %>
+                            <td class="tc">--</td>
+                            <td class="tc">--</td>
+                            <% break;
+                        case 3: %>
+                            <td class="tc">导出成功</td>
+                            <td class="tc"><a href="/bossmanager/export/download.do?oss_bucket_name=<%= item.oss_bucket_name %>&oss_object_key=<%= item.oss_object_key %>" data-name="<%= item.oss_bucket_name %>" data-key="<%= item.oss_object_key %>" class="download-btn" target="_blank">下载</a></td>
+                            <% break;
+                        case 4:
+                        case 5: %>
+                            <td class="tc">导出失败</td>
+                            <td class="tc">--</td>
+                            <% break; %>
+                    <% } %>
                 </tr>
                 <% }) %>
         </tbody>
@@ -667,92 +653,48 @@ if ($(".js-switch")[0]) {
     <table id="datatable" class="table table-bordered">
         <thead>
         <tr class="headings">
-            <th class="column-title tc cell-25">商品</th>
-            <th class="column-title tc cell-10">单价</th>
-            <th class="column-title tc cell-6">数量</th>
-            <th class="column-title tc cell-10">买家</th>
-            <th class="column-title tc cell-10">支付方式</th>
-            <th class="column-title tc cell-6">交易<br/>情况</th>
-            <th class="column-title tc cell-15">分享合伙人<br/>/店铺</th>
-            <th class="column-title tc cell-10">分佣金额<br/>（元）</th>
-            <th class="column-title tc cell-6">佣金结算</br/>状态</th>
+            <th class="column-title tc cell-10">导出时间</th>
+            <th class="column-title tc cell-10">状态</th>
+            <th class="column-title tc cell-10">操作</th>
         </tr>
         </thead>
-    </table>
-    <div id="orderList">
+        <tbody id="orderList">
         <% _.each(items,function(item,index){ %>
-            <table class="table table-bordered">
-                <thead class="headings">
-                    <tr>
-                        <th colspan="3">
-                            <span>订单号：</span>
-                            <a href="order-detail.html?order_id=<%= item.id %>&user_id=<%= item.user_id %>" target="_blank"><%= item.order_sn %></a>
-                        </th>
-                        <th colspan="3"><span>下单时间：<%= item.order_time_str %></span></th>
-                        <th colspan="3" class="green">【<span>首单</span>】</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% _.each(item.order_items,function(o,i){ %>
-                        <% if( o.item_type != 11 ){ %>
-                            <tr>
-                                <td class="cell-25">
-                                    <dl>
-                                        <dt><img class="order-image left" src="<%= o.item_image_url %>"></dt>
-                                        <dd>
-                                            <p><%= o.item_name %></p>
-                                            <p class="sku"><%= o.item_sku_desc %></p>
-                                        </dd>
-                                    </dl>
-                                </td>
-                                <td class="cell-10 tc"><span><%= o.unit_price_str %></span></td>
-                                <td class="cell-6 tc"><span><%= o.number %></span></td>
-                                <% if( i == 0 ){ %>
-                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= item.order_consignee_d_t_o.mobile %></span></td>
-                                <td class="cell-10 tc" rowspan="<%= item.order_items.length %>"><span><%= ['优惠折扣','支付宝APP支付','微信APP支付','银联APP支付','支付宝wap支付','微信wap支付','银联wap支付','统统付APP支付','统统付wap支付','余额支付'][item.payment_id] %></span></td>
-                                <td class="cell-6 tc" rowspan="<%= item.order_items.length %>">
-                                    交易中
-                                </td>
-                                <td class="cell-25 tc" rowspan="<%= item.order_items.length %>">
-                                    <table>
-                                        <tbody>
-                                            <tr class="list">
-                                                <td class="cell-15 inset-td tl" >渠道名称</td>
-                                                <td class="cell-10 inset-td">100.00</td>
-                                            </tr>
-                                            <tr class="list">
-                                                <td class="cell-15 inset-td tl">【店铺】飞飞店铺</td>
-                                                <td class="cell-10 inset-td">100.00</td>
-                                            </tr>
-                                            <tr class="list">
-                                                <td class="cell-15 tl inset-td">【合伙人】12123213</td>
-                                                <td class="cell-10 inset-td">100.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td class="cell-6 tc" rowspan="<%= item.order_items.length %>">
-                                    <p>待结算</p>
-                                </td>
-                                <% } %>
-                            </tr>
-                        <% } %>
-                    <% }) %>
-                </tbody>
-            </table>
+            <tr class="list">
+                <td class="tc"><%= item.create_time %></td>
+                <% var status = item.task_status;
+                switch(status) {
+                    case 1:
+                    case 2: %>
+                        <td class="tc">--</td>
+                        <td class="tc">--</td>
+                        <% break;
+                    case 3: %>
+                        <td class="tc">导出成功</td>
+                        <td class="tc"><a href="/bossmanager/export/download.do?oss_bucket_name=<%= item.oss_bucket_name %>&oss_object_key=<%= item.oss_object_key %>" data-name="<%= item.oss_bucket_name %>" data-key="<%= item.oss_object_key %>" class="download-btn" target="_blank">下载</a></td>
+                        <% break;
+                    case 4:
+                    case 5: %>
+                        <td class="tc">导出失败</td>
+                        <td class="tc">--</td>
+                        <% break; %>
+                <% } %>
+            </tr>
         <% }) %>
-    </div>
+        </tbody>
+    </table>
+
     <!-- 页码 -->
     <div class="widget-list clearfix ">
         <div class="list-page fr">
             <span class="pagination-info-pop-order"></span>
-            <div class="ui-pagination pagination-pop-partner"></div>
+            <div class="ui-pagination pagination-pop-order"></div>
         </div>
     </div>
     <!-- /页码 -->
 </script>
 <!-- Datatables -->
-<script src="../src/plugin/datatables.net/js/jquery.dataTables.min.js"></script>
+<!-- <script src="../src/plugin/datatables.net/js/jquery.dataTables.min.js"></script> -->
 <script src="../src/plugin/switchery/switchery.min.js"></script>
 
 </body>

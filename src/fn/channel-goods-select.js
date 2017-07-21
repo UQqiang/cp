@@ -24,19 +24,20 @@
                 toastr.error('供应商信息出错!', '提示');
                 return false;
             } else {
+                $('.channel-name-list').show();
+                var template = _.template($('#j-template-channel-list').html());
+                $('.channel-name-lists').html(template({
+                    items: this.idList
+                }))
                 if (this.idList.length > 1) {
                     // 多个供应商
                     this.isSingle = false;
-                    $('.channel-name-list').show();
-                    var template = _.template($('#j-template-channel-list').html());
-                    $('.channel-name-lists').html(template({
-                        items: this.idList
-                    }))
                 } else {
                     // 单个供应商
                     this.isSingle = true;
                     // todo 单个供应商需要请求已经关联的商品列表
                     $('.channel-goods-list').show();
+                    this.queryAssociatedGoodsList()
                 }
             }
         },
@@ -108,7 +109,7 @@
                 title: '商品选择',
                 selectLength: 0,
                 selectedList: that.selectedList,
-                ajaxUrl: Api.domain() + '/item/query.do',
+                ajaxUrl: Api.domain() + '/control/item/query.do',
                 ajaxType: 'get',
                 ajaxDataType: 'jsonp',
                 categoryList: that.categoryList || [],
@@ -301,9 +302,14 @@
 
             // search
             $('#search').click(function () {
-                that.search_key = $.trim($('#keywords').val());
+                var key = $.trim($('#keywords').val());
+                if (key != '') {
+                    that.search_key.keywords = key;
+                } else {
+                    delete that.search_key.keywords;
+                }
                 that.pageId = 1;
-                that.queryBrand();
+                that.queryAssociatedGoodsList();
             });
 
             // batch delete
@@ -315,14 +321,14 @@
                 }
                 that.tip({
                     target: $(this),
-                    content: '确定要批量删除已经选择的商品吗?',
+                    content: '确定要批量取消关联已经选择的商品吗?',
                     position: 'right'
                 }, function (btn, dialog) {
 
                     console.log(idList);
-                    that.removeGoods(idList, function () {
-                        toastr.success('已成功批量删除', '提示');
-                        that.renderGoods();
+                    that.deleteAssociatedGoods(idList, function () {
+                        toastr.success('已成功批量取消关联', '提示');
+                        that.queryAssociatedGoodsList();
                     });
 
                     dialog.close();
@@ -339,14 +345,14 @@
                 idList.push(id);
                 that.tip({
                     target: $(this),
-                    content: '确定要删除商品：' + name + '吗?'
+                    content: '确定要取消关联商品：' + name + '吗?'
                 }, function (btn, dialog) {
+                    that.deleteAssociatedGoods(idList, function () {
+                        toastr.success('已成功取消关联：' + name, '提示');
+                        that.queryAssociatedGoodsList();
+                    }, function () {
 
-                    that.removeGoods(idList, function () {
-                        toastr.success('已成功删除：' + name, '提示');
-                        that.renderGoods();
                     });
-
                     dialog.close();
                 }, function (btn, dialog) {
                     dialog.close();
@@ -364,8 +370,31 @@
                     width: 800
                 }, function () {
                     that.goodsSkuList(id, name)
-                }, function () {
-
+                }, function (btn, dialog) {
+                    // 点击确定
+                    var input = $('.settlement-sku-input');
+                    var item_id = input.eq(0).attr('data-item_id');
+                    var obj = {};
+                    var postData = {};
+                    var price;
+                    var decimal = /^\d+(\.\d{1,2})?$/;
+                    for (var i = 0; i < input.length; i++) {
+                        price = $.trim((input.eq(i).val() * 100).toFixed(0));
+                        if (!decimal.test(price)) {
+                            toastr.error('结算价价格的输入有误,无法提交~', '提示');
+                            return;
+                        }
+                        obj[input.eq(i).attr('data-sku_id')] = price;
+                    }
+                    postData.biz_item_id = item_id;
+                    postData.price_map = JSON.stringify(obj);
+                    that.editSettlementPrice(postData, function (data) {
+                        toastr.success('更改结算价成功!', '提示');
+                        dialog.close();
+                    }, function (data) {
+                        toastr.error(data.msg, '提示');
+                        dialog.close();
+                    })
                 })
             });
 
@@ -449,21 +478,7 @@
                 }
             });
         },
-        /**
-         * 删除 & 批量删除已经选择的关联商品
-         * @param idList    要删除的关联商品的id数组
-         * @param cb        删除完后的回调
-         */
-        removeGoods: function (idList, cb) {
-            for (var i = 0; i < this.selectList.length; i++) {
-                for (var n = 0; n < idList.length; n++) {
-                    if (this.selectList[i].id == idList[n]) {
-                        this.selectList.splice(i, 1);
-                    }
-                }
-            }
-            cb && cb();
-        },
+
         /**
          * 品牌列表
          */
@@ -492,6 +507,7 @@
                 }
             });
         },
+
         /**
          * 类目列表
          */
@@ -522,15 +538,16 @@
                 }
             });
         },
+
         /**
          * sku
          */
         goodsSkuList: function (id, name) {
             var that = this;
             Api.get({
-                url: '/item/sku/query.do',
+                url: '/biz_item/get_sku.do',
                 data: {
-                    item_id: id
+                    biz_item_id: id
                 },
                 beforeSend: function () {
 
@@ -539,7 +556,7 @@
                     console.log(data);
                     var template = _.template($('#j-template-sku-table').html());
                     $('#skuList').html(template({
-                        items: data.data.skus,
+                        items: data.data,
                         name: name
                     }))
                 },
@@ -551,15 +568,53 @@
                 }
             });
         },
+
         /**
-         * 删除品牌
+         * 已经关联的商品列表
          */
-        deleteBrand: function (id, success, error) {
+        queryAssociatedGoodsList: function (id) {
             var that = this;
             Api.get({
-                url: '/brand/delete.do',
+                url: '/biz_item/query.do',
                 data: {
-                    brand_id: id
+                    biz_item_qto: JSON.stringify({
+                        biz_code: that.idList[0].biz_code,
+                        need_paging: true,
+                        page_size: that.page.pageSize,
+                        current_page: that.pageId,
+                        keywords: that.search_key.keywords,
+                        from: 1                         // 展示管控的渠道已经关联的商品
+                    })
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    var template = _.template($('#j-template-goods').html());
+                    $('#goodsList').html(template({
+                        items: data.data.data
+                    }));
+                    that.pagination(data.data.total_count);
+                    that.iCheck();
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    toastr.error(data.msg)
+                }
+            });
+        },
+
+        /**
+         * 取消已关联的商品
+         */
+        deleteAssociatedGoods: function (idList, success, error) {
+            var that = this;
+            Api.get({
+                url: '/biz_item/delete.do',
+                data: {
+                    id_list: JSON.stringify(idList)
                 },
                 beforeSend: function () {
 
@@ -576,9 +631,34 @@
                 }
             });
         },
+
+        /**
+         * 编辑结算价
+         */
+        editSettlementPrice: function (data, success, error) {
+            var that = this;
+            Api.get({
+                url: '/biz_item/update_settlement_price.do',
+                data: data,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    success && success(data);
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+
         pagination: function (total) {
             var that = this;
-            var pagination = $('.ui-pagination')
+            var pagination = $('.ui-pagination');
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -592,12 +672,12 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        that.queryBrand()
+                        that.queryAssociatedGoodsList()
                     }
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#warehouseList').find('tr.list').length;
+            var n = $('#goodsList').find('tr.list').length;
             if (total && total != 0) {
                 $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
             } else {

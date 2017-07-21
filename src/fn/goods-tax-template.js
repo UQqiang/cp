@@ -132,6 +132,10 @@
                 for (var i = 0; i < checkedBox.length; i++) {
                     idList.push(checkedBox.eq(i).attr('data-id'));
                 }
+                if(checkedBox.length <=0){
+                    toastr.error('请至少选择一个要删除的税率模板~', '提示');
+                    return;
+                }
                 that.tip({
                     target: $(this),
                     content: '确定要批量删除税率模板吗?'

@@ -6,12 +6,9 @@
             this.page.vpage = 10;
             this.pageId = 1;
             this.search_key = {};
-            this.selectedList = [{
-                id: 10,
-                name: '管理员三'
-            }];
+            this.selectedList = [];
             this.addEvent();
-            this.queryBrand();
+            this.queryChannel();
         },
         /**
          * tip
@@ -102,6 +99,7 @@
                 var checkbox = $('.checkbox');
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
+                var biz_code = $(this).attr('data-biz_code')
 
                 // 全选按钮
                 if (checkbox.length == checkedBox.length) {
@@ -112,7 +110,8 @@
                 if (that._isInArry(that.selectedList, id) === false) {
                     that.selectedList.push({
                         id: id,
-                        name: name
+                        name: name,
+                        biz_code: biz_code
                     });
                 }
                 $(this).parents('tr').addClass('selected');
@@ -157,7 +156,7 @@
             $('#search').click(function () {
                 that.search_key = $.trim($('#keywords').val());
                 that.pageId = 1;
-                that.queryBrand();
+                that.queryChannel();
             });
 
             // batch delete
@@ -310,38 +309,34 @@
 
             // 查看导出列表
             $('#exportList').click(function () {
+                that.pageId = 1;
                 that.popup({
                     title: '导出列表',
                     content: '<div class="export-wrapper"></div>'
                 }, function () {
-                    var template = _.template($('#j-export-list').html());
-                    $('.export-wrapper').html(template({
-                        items: []
-                    }))
+                    that.exportTask();
                 })
             });
 
             // 查看关联列表
             $('#channelList').click(function () {
+                that.pageId = 1;
                 that.popup({
                     title: '关联列表',
                     content: '<div class="channel-wrapper"></div>'
                 }, function () {
-                    that.bindTask(function (data) {
-                        var template = _.template($('#j-channel-list').html());
-                        $('.channel-wrapper').html(template({
-                            items: data.data
-                        }))
-                    })
+                    that.bindTask()
                 })
             });
 
             $(document).on('click', '.j-goods-channel', function () {
                 var id = $(this).attr('data-id');
                 var name = $(this).attr('data-name');
+                var biz_code = $(this).attr('data-biz_code');
                 var objArr = [{
                     id: id,
-                    name: name
+                    name: name,
+                    biz_code: biz_code
                 }];
                 window.open('channel-goods-select.html?id=' + JSON.stringify(objArr))
             });
@@ -350,19 +345,38 @@
          * 导出
          */
         exportApi: function () {
-
-        },
-        /**
-         * 品牌列表
-         */
-        queryBrand: function () {
             var that = this;
             Api.get({
-                url: '/brand/query.do',
+                url: '/channel/item/control/export.do',
+                data: {
+                    name: that.search_key || ''
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    toastr.success('导出成功', '提示')
+                },
+                complete: function () {
+
+                },
+                error: function (data) {
+                    toastr.error(data.msg, '提示');
+                }
+            })
+        },
+        /**
+         * 渠道列表
+         */
+        queryChannel: function () {
+            var that = this;
+            Api.get({
+                url: '/channel/control/query.do',
                 data: {
                     current_page: that.pageId || 1,
                     page_size: that.page.pageSize || 20,
-                    keywords: that.search_key || ''
+                    name: that.search_key || '',
+                    parent_biz_code: $.cookie('biz_code')
                 },
                 mask: true,
                 beforeSend: function () {
@@ -373,17 +387,16 @@
                     document.getElementsByTagName('body')[0].scrollTop = 0;
                     var total_count = data.data.total_count;
                     if (total_count > 0) {
-                        //var t = _.template($('#j-template').html());
-                        //$('#brandList').html(t({
-                        //    items: data.data.data
-                        //}));
+                        var t = _.template($('#j-template').html());
+                        $('#channel').html(t({
+                            items: data.data.data
+                        }));
                         that.iCheck();
-                        that._checked();
                     } else {
-                        $('#brandList').html('<tr><td class="tc" colspan="7">没有任何记录!</td></tr>')
+                        $('#channel').html('<tr><td class="tc" colspan="18">没有任何记录!</td></tr>')
                     }
 
-                    that.pagination(data.data.total_count);
+                    that.pagination(data.data.total_count, 1);
                 },
                 complete: function () {
 
@@ -426,17 +439,21 @@
             Api.get({
                 url: '/biz_item/query_bind_task.do',
                 data: {
-                    bind_task_qto: {
-                        needPaging: true,
-                        pageSize: that.page.pageSize,
-                        currentPage: that.pageId
-                    }
+                    bind_task_qto: JSON.stringify({
+                        need_paging: true,
+                        page_size: that.page.pageSize,
+                        current_page: that.pageId
+                    })
                 },
                 beforeSend: function () {
 
                 },
                 success: function (data) {
-                    success && success(data);
+                    var template = _.template($('#j-channel-list').html());
+                    $('.channel-wrapper').html(template({
+                        items: data.data.data
+                    }));
+                    that.pagination(data.data.total_count, 2)
                 },
                 complete: function () {
 
@@ -448,12 +465,45 @@
             });
         },
         /**
-         *
-         * @param total
+         * 导出列表
          */
-        pagination: function (total) {
+        exportTask: function () {
             var that = this;
-            var pagination = $('.ui-pagination')
+            Api.get({
+                url: '/item/export/task/query.do',
+                data: {
+                    task_type: 29,
+                    page_size: that.page.pageSize,
+                    page: that.pageId
+                },
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    var template = _.template($('#j-export-list').html());
+                    $('.export-wrapper').html(template({
+                        items: data.data.data,
+                        url: Api.domain()
+                    }));
+                    that.pagination(data.data.total_count, 3)
+                },
+                complete: function () {
+
+                },
+                error: function (data, msg) {
+                    console.log(data, msg);
+                    error && error(data);
+                }
+            });
+        },
+        /**
+         * 翻页
+         * @param total
+         * @param pType
+         */
+        pagination: function (total, pType) {
+            var that = this;
+            var pagination = $('.ui-pagination.p-' + pType);
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -467,16 +517,24 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        that.queryBrand()
+                        if (pType == 1) {
+                            that.queryBrand()
+                        } else if (pType == 2) {
+                            that.bindTask()
+                        } else if (pType == 3) {
+                            that.exportTask()
+                        }
                     }
                 }
             });
-            $('#check-all').iCheck("uncheck");
-            var n = $('#warehouseList').find('tr.list').length;
-            if (total && total != 0) {
-                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
-            } else {
-                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+            if (pType == 1) {
+                $('#check-all').iCheck("uncheck");
+                var n = $('#warehouseList').find('tr.list').length;
+                if (total && total != 0) {
+                    $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
+                } else {
+                    $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
+                }
             }
         },
         renderChannelList: function () {
