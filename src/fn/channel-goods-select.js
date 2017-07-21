@@ -302,9 +302,14 @@
 
             // search
             $('#search').click(function () {
-                that.search_key = $.trim($('#keywords').val());
+                var key = $.trim($('#keywords').val());
+                if (key != '') {
+                    that.search_key.keywords = key;
+                } else {
+                    delete that.search_key.keywords;
+                }
                 that.pageId = 1;
-                that.queryBrand();
+                that.queryAssociatedGoodsList();
             });
 
             // batch delete
@@ -570,6 +575,7 @@
                         need_paging: true,
                         page_size: that.page.pageSize,
                         current_page: that.pageId,
+                        keywords: that.search_key.keywords,
                         from: 1                         // 展示管控的渠道已经关联的商品
                     })
                 },

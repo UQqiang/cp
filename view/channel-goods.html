@@ -124,36 +124,38 @@
 <!-- end -->
 
 <script type="text/template" id="j-export-list">
-    <table class="table table-striped jambo_table bulk_action table-bordered">
-        <thead>
+    <div class="export-dialog-wrapper">
+        <table class="table table-striped jambo_table bulk_action table-bordered">
+            <thead>
             <tr>
                 <th class="tc">时间</th>
                 <th class="tc">状态</th>
                 <th class="tc">操作</th>
             </tr>
-        </thead>
-        <tbody>
-        <% if( items.length > 0 ){ %>
+            </thead>
+            <tbody>
+            <% if( items.length > 0 ){ %>
             <% _.each(items, function(item, index){ %>
-                <tr>
-                    <td class="tc"><%= item.create_time %></td>
-                    <td class="tc"><%= ['-','新建任务','导出中','导出成功','导出失败','失效'][item.task_status] %></td>
-                    <td class="tc">
-                        <% if( item.task_status != 3 ){ %>
-                        <span>-</span>
-                        <% }else{ %>
-                        <a href="<%= url %>/export/download.do?oss_bucket_name=<%= item.oss_bucket_name %>&oss_object_key=<%= item.oss_object_key %>" target="_blank">下载</a>
-                        <% } %>
-                    </td>
-                </tr>
+            <tr>
+                <td class="tc"><%= item.create_time %></td>
+                <td class="tc"><%= ['-','新建任务','导出中','导出成功','导出失败','失效'][item.task_status] %></td>
+                <td class="tc">
+                    <% if( item.task_status != 3 ){ %>
+                    <span>-</span>
+                    <% }else{ %>
+                    <a href="<%= url %>/export/download.do?oss_bucket_name=<%= item.oss_bucket_name %>&oss_object_key=<%= item.oss_object_key %>" target="_blank">下载</a>
+                    <% } %>
+                </td>
+            </tr>
             <% }) %>
-        <% }else{ %>
+            <% }else{ %>
             <tr>
                 <td class="tc" colspan="18">没有任何记录!</td>
             </tr>
-        <% } %>
-        </tbody>
-    </table>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
     <!-- 页码 -->
     <div class="widget-list clearfix">
         <div class="fl pagination">
@@ -167,19 +169,20 @@
 </script>
 
 <script type="text/template" id="j-channel-list">
-    <table class="table table-striped jambo_table bulk_action table-bordered">
-        <thead>
-        <tr>
-            <th class="tc">渠道</th>
-            <th class="tc">关联范围</th>
-            <th class="tc">关联时间</th>
-            <th class="tc">完成时间</th>
-            <th class="tc">状态</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% if( items.length > 0 ){ %>
-        <% _.each(items, function(item, index){ %>
+    <div class="channel-dialog-wrapper">
+        <table class="table table-striped jambo_table bulk_action table-bordered">
+            <thead>
+            <tr>
+                <th class="tc">渠道</th>
+                <th class="tc">关联范围</th>
+                <th class="tc">关联时间</th>
+                <th class="tc">完成时间</th>
+                <th class="tc">状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% if( items.length > 0 ){ %>
+            <% _.each(items, function(item, index){ %>
             <tr>
                 <td class="tc"><%= item.channel_name %></td>
                 <td class="tc"><%= ['-','全部','指定品牌','指定类目','指定商品'][item.type] %><%= item.target_name %></td>
@@ -187,14 +190,15 @@
                 <td class="tc"><%= item.end_time || '-' %></td>
                 <td class="tc"><%= ['-','进行中','成功','失败'][item.status] %></td>
             </tr>
-        <% }) %>
-        <% }else{ %>
-        <tr>
-            <td class="tc" colspan="18">没有任何记录!</td>
-        </tr>
-        <% } %>
-        </tbody>
-    </table>
+            <% }) %>
+            <% }else{ %>
+            <tr>
+                <td class="tc" colspan="18">没有任何记录!</td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
     <!-- 页码 -->
     <div class="widget-list clearfix">
         <div class="fl pagination ">

@@ -122,6 +122,11 @@
                             return;
                         }
                     }
+                    if($('input[value=unionpay]:checked').length == 1 && $('#unionpayCertificate').length == 0){
+                        toastr.error('未上传银联证书!', '提示');
+                        isValid = false;
+                        return;
+                    }
                     if (isValid == true) {
                         that.setPostData();
                         if (!that.id) {

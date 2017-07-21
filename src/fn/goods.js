@@ -73,6 +73,7 @@
          */
         step: function () {
             var that = this;
+            var decimal = /^\d+(\.\d{1,2})?$/;
 
             // 下一步 & 重新选择
             $('#nextStep,#nextStep2,.reselect,#submit').click(function () {
@@ -124,7 +125,7 @@
                             }
                         }
                         // self input validator
-                        if (radioGoods == 1) {
+                        if (radioGoods == 1 || radioGoods == 2) {
                             if (isValid == true) {
                                 isValid = that.validatorRate();
                             }
@@ -174,7 +175,7 @@
                         var f_type = $('[name=radio-' + warehouse_id + ']:checked').attr('data-value');
                         if (f_type == 1) {
                             // 如果是统一运费
-                            if ($.trim($('.common-freight-' + warehouse_id).val()) == '') {
+                            if ($.trim($('.common-freight-' + warehouse_id).val()) == '' || !decimal.test($.trim($('.common-freight-' + warehouse_id).val()))) {
                                 toastr.error('层级' + (j + 1) + '的统一运费未填写或者填写有误');
                                 isValid = false;
                                 return;
@@ -331,6 +332,7 @@
          * @returns {boolean}
          */
         validatorRate: function () {
+            var number = /^\d+(\.\d{1,2})?$/;
             var radioRate = $('input[name=radio-rate]:checked').val();
             var rateCommon = $.trim($('#rateCommon').val());
             var rateCommonThreshold = $.trim($('#rateCommonThreshold').val());
@@ -338,11 +340,11 @@
 
             if (radioRate == 1) {
                 // 验证统一税率
-                if (rateCommonThreshold == '') {
+                if (rateCommonThreshold == '' || !number.test(rateCommonThreshold)) {
                     toastr.error('统一税率起征点未填写或填写不合法', '提示');
                     return false;
                 }
-                if (rateCommon == '') {
+                if (rateCommon == '' || !number.test(rateCommon)) {
                     toastr.error('统一税率的税率未填写或填写不合法', '提示');
                     return false;
                 }
@@ -1753,6 +1755,9 @@
                         if (value != 'null') {
                             that.queryCountry(function (selectize) {
                                 selectize.setValue(value);
+                                if($('[name=radio-goods]:checked').val() == 3 || $('[name=radio-goods]:checked').val() == 4 ){
+                                    selectize.disable();
+                                }
                             })
                         }
                         break;

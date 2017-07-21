@@ -310,6 +310,10 @@ body .container.body .right_col {
   max-height: 400px !important;
 }
 
+a.green:hover, a.green:visited, a.green:active, a.green:link {
+  color: #1ABB9C !important;
+}
+
 /**  ------------------------------------------  **/
 .blue {
   color: #3498DB;
@@ -418,7 +422,7 @@ body {
   color: #73879C;
   background: #2A3F54;
   font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 400;
   line-height: 1.471;
   margin: 0 auto;
@@ -1013,7 +1017,7 @@ h2 {
   position: relative;
   width: 100%;
   margin-bottom: 10px;
-  padding: 10px 15px;
+  padding: 10px 12px;
   display: inline-block;
   background: #fff;
   border: 1px solid #E6E9ED;
@@ -2305,6 +2309,11 @@ a.star {
   border: 1px solid #EFEFEF;
 }
 
+.input-group {
+  display: inline-table;
+  vertical-align: middle;
+}
+
 .ln_solid {
   border-top: 1px solid #e5e5e5;
   color: #ffffff;
@@ -2386,6 +2395,11 @@ legend {
 
 .form-group {
   margin-bottom: 10px;
+  vertical-align: middle;
+}
+
+.form-inline .form-group {
+  display: inline-block;
 }
 
 .form-group-sm {
@@ -5378,6 +5392,30 @@ a.antoo {
 
 .right_col, footer {
   display: none;
+}
+
+.caret-bottom {
+  color: #1ABB9C;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin: 0 2px;
+  vertical-align: middle;
+  border-top: 5px solid;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+}
+
+.caret-top {
+  color: #1ABB9C;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin: 0 2px;
+  vertical-align: middle;
+  border-bottom: 5px solid;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
 }
 
 /**************************** 修正selectize使其兼容后台 ********************/

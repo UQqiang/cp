@@ -165,7 +165,7 @@
             // 显示弹窗
             $(that.body).on('click', that.$element, function () {
                 //if (that.options.selectedList.length > 0) {
-                    that.selected_list = that.options.selectedList;
+                that.selected_list = that.options.selectedList;
                 //}
                 that.target = $(this);
 
@@ -361,7 +361,7 @@
                     var selectBtn0, selectBtn1;
                     if (status == '0') {
                         // 选择
-                        if(that.isInArry(selectedList, data) === false){
+                        if (that.isInArry(selectedList, data) === false) {
                             selectedList.push(data);
                         }
                         $(this).attr('data-status', '1');
@@ -386,7 +386,7 @@
                                 } else {
                                     // 如果是没有展开的情况
                                     for (var n = 0; n < data.sub_categorys.length; n++) {
-                                        if(that.isInArry(selectedList, data.sub_categorys[n]) === false){
+                                        if (that.isInArry(selectedList, data.sub_categorys[n]) === false) {
                                             selectedList.push(data.sub_categorys[n]);
                                         }
                                     }
@@ -464,6 +464,12 @@
                 } else if (level == 2) {
 
                 }
+            });
+
+            // 只显示开放仓库
+            $(document).on('click', '#select-plugin-warehouse-input', function () {
+                that.pageConfig.pageId = 1;
+                that.successAjax();
             })
         },
 
@@ -582,15 +588,22 @@
                         // 不需要下架商品
                         itemStatus = that.statusKey || 4
                     }
+                    var item_qto = {
+                        current_page: that.pageConfig.pageId || 1,
+                        page_size: that.pageConfig.pageSize,
+                        item_status: itemStatus
+                    };
+                    if (that.search_key.brand_key && that.search_key.brand_key != '') {
+                        item_qto.item_brand_id = that.search_key.brand_key
+                    }
+                    if (that.search_key.cate_key && that.search_key.cate_key != '') {
+                        item_qto.category_id = that.search_key.cate_key
+                    }
+                    if (that.search_key.key && that.search_key.key != '') {
+                        item_qto.keywords = that.search_key.key
+                    }
                     obj = {
-                        item_qto: JSON.stringify({
-                            current_page: that.pageConfig.pageId || 1,
-                            page_size: that.pageConfig.pageSize,
-                            item_status: itemStatus,
-                            key: that.search_key.key,
-                            brand_key: that.search_key.brand_key,
-                            category_id: that.search_key.cate_key
-                        })
+                        item_qto: JSON.stringify(item_qto)
                     };
 
                     that.ajax(that.ajaxApi, obj, function (data) {
@@ -645,13 +658,20 @@
                     break;
                 // 仓库
                 case 3:
+                    var storage_qto = {
+                        current_page: that.pageConfig.pageId || 1,
+                        page_size: that.pageConfig.pageSize,
+                        need_paging: true,
+                        keywords: that.search_key.warehouse_key
+                    };
+                    if ($('#select-plugin-warehouse-input:checked').length > 0) {
+                        // 只显示开放仓库
+                        storage_qto.status = 1;
+                    } else {
+                        delete storage_qto.status
+                    }
                     obj = {
-                        storage_qto: JSON.stringify({
-                            current_page: that.pageConfig.pageId || 1,
-                            page_size: that.pageConfig.pageSize,
-                            need_paging: true,
-                            keywords: that.search_key.warehouse_key
-                        })
+                        storage_qto: JSON.stringify(storage_qto)
                     };
                     that.ajax(that.ajaxApi, obj, function (data) {
                         that.renderOption = {
@@ -912,7 +932,7 @@
                     items: data,
                     type: that.options.type
                 }))
-            }else{
+            } else {
                 $('#j-select-plugin-cate-level-2').html('<p class="tc">当前一级类目下无二级类目~</p>')
             }
         },
@@ -1041,7 +1061,7 @@
          */
         isInArry: function (selectedList, data) {
             for (var k = 0; k < selectedList.length; k++) {
-                if(selectedList[k].id == data.id){
+                if (selectedList[k].id == data.id) {
                     return true;
                 }
             }

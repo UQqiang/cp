@@ -128,3 +128,30 @@
 .channel-name-lists .channel-detail:hover .img-close {
   display: inline-block;
 }
+
+.channel-dialog-wrapper, .export-dialog-wrapper {
+  height: 450px;
+  overflow: scroll;
+}
+
+.tab-list {
+  overflow: hidden;
+}
+
+/*********** 渠道消息配置 *************/
+.message-table {
+  display: inline-block;
+  width: 340px;
+}
+
+.config-wrapper .form-inline {
+  padding: 30px;
+  background: #F5F7FA;
+}
+.config-wrapper .form-inline .form-group {
+  margin-bottom: 10px;
+}
+.config-wrapper .form-inline .form-group .token {
+  display: inline-block;
+  width: 260px;
+}

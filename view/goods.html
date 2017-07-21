@@ -45,38 +45,16 @@
                 <div class="x_content step" data-now_step="1">
                     <div class="categories">
                         <div class="add-goods-categories mr10">
-                            <!--<div class="add-goods-search">-->
-                                <!--<div class="form-group">-->
-                                    <!--<div class="input-group">-->
-                                        <!--<input type="text" class="form-control">-->
-                                        <!--<div class="input-group-btn">-->
-                                            <!--<button class="btn btn-success">搜索</button>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
                             <div id="add-goods-category-1" class="category-list"></div>
                         </div>
                         <div class="add-goods-categories">
-                            <!--<div class="add-goods-search">-->
-                                <!--<div class="form-group">-->
-                                    <!--<div class="input-group">-->
-                                        <!--<input type="text" class="form-control">-->
-                                        <!--<div class="input-group-btn">-->
-                                            <!--<button class="btn btn-success">搜索</button>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
+
                             <div id="add-goods-category-2" class="category-list"></div>
                         </div>
                     </div>
                     <div class="add-goods-footer clearfix">
                         <div class="col-md-4 col-sm-4 col-xs-4">
-                            <!--<span>您最近使用的类目：</span>-->
-                            <!--<select class="form-control form-control-md dib">-->
-                                <!--<option>美食 > 火龙果</option>-->
-                            <!--</select>-->
+
                         </div>
                         <div class="col-md-2 col-sm-2 col-xs-2">&nbsp;</div>
                         <div class="col-md-6 col-sm-6 col-xs-6 tr">
@@ -85,9 +63,6 @@
                             <a href="javascript:;" class="btn btn-success btn-sm" id="nextStep" disabled="disabled" data-type="next">
                                 请选择类目
                             </a>
-                            <!--<a href="javascript:;" class="btn btn-success btn-sm" id="nextStep" data-type="next">-->
-                            <!--下一步-->
-                            <!--</a>-->
                         </div>
                     </div>
                 </div>
@@ -247,7 +222,7 @@
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
                                             <label class="ui-label ui-label-md tr mb10"><span class="required-icon">*</span><span>增值税税率：</span></label>
-                                            <div class="input-group">
+                                            <div class="input-group col-xs-2">
                                                 <input class="form-control form-control-md" required="required" placeholder="请输入增值税税率" name="增值税税率" type="text" pattern="decimal" id="taxPoint">
                                                 <span class="input-group-addon">%</span>
                                             </div>
@@ -348,7 +323,7 @@
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
                                             <label class="ui-label ui-label-md tr mb10"><span>物品体积：</span></label>
-                                            <div class="input-group">
+                                            <div class="input-group col-xs-2">
                                                 <input class="form-control form-control-md" placeholder="请输入物品体积" name="物品体积" type="text" pattern="decimal" id="weight">
                                                 <span class="input-group-addon">m3</span>
                                             </div>
@@ -357,7 +332,7 @@
                                     <div class="form-inline clearfix">
                                         <div class="item form-group field mb10">
                                             <label class="ui-label ui-label-md tr mb10"><span>物品重量：</span></label>
-                                            <div class="input-group">
+                                            <div class="input-group col-xs-2">
                                                 <input class="form-control form-control-md" placeholder="请输入物品重量" name="物品重量" type="text" pattern="decimal" id="volume">
                                                 <span class="input-group-addon">kg</span>
                                             </div>
@@ -663,9 +638,9 @@
                 <td class="tc">
                     <div class="field item inl-bl">
                         <% if( o.sku_property_storage_dto_list){ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>" value="<%= o.sku_property_storage_dto_list[0].stock_num %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="numeric" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>" value="<%= o.sku_property_storage_dto_list[0].stock_num %>">
                         <% }else{ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="numeric" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
                         <% } %>
                     </div>
                 </td>
@@ -673,7 +648,7 @@
                     <div class="form-inline">
                         <div class="form-group mb10">
                             <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked" data-value="1">&nbsp;统一运费</label>
-                            <div class="input-group">
+                            <div class="input-group col-xs-2">
                                 <input class="form-control form-control-sm common-freight-<%= o.id %>" value="<%= o.freight ? (o.freight/100).toFixed(2) : ''  %>" pattern="decimal" data-name="统一运费">
                                 <span class="input-group-addon">元</span>
                             </div>
@@ -709,9 +684,9 @@
                 <td class="tc">
                     <div class="field item inl-bl">
                         <% if( o.sku_property_storage_dto_list){ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>" value="<%= o.sku_property_storage_dto_list[index].stock_num %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="numeric" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>" value="<%= o.sku_property_storage_dto_list[index].stock_num %>">
                         <% }else{ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="numeric" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(item)) %>">
                         <% } %>
                     </div>
                 </td>
@@ -724,9 +699,9 @@
                 <td class="tc">
                     <div class="field item inl-bl">
                         <% if( o.sku_property_storage_dto_list){ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(sku[0])) %>" value="<%= o.sku_property_storage_dto_list[i].stock_num %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="numeric" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(sku[0])) %>" value="<%= o.sku_property_storage_dto_list[i].stock_num %>">
                         <% }else{ %>
-                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="decimal" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(sku[0])) %>">
+                        <input class="form-control form-control-xs stock-<%= o.id %>" required="required" pattern="numeric" data-name="库存" data-input_type="stock" data-sku="<%= encodeURIComponent(JSON.stringify(sku[0])) %>">
                         <% } %>
                     </div>
                 </td>
@@ -734,7 +709,7 @@
                     <div class="form-inline">
                         <div class="form-group mb10">
                             <label class="ml10 mr10"><input type="radio" class="flat" name="radio-<%= o.id %>" checked="checked" data-value="1">&nbsp;统一运费</label>
-                            <div class="input-group">
+                            <div class="input-group col-xs-2">
                                 <input class="form-control form-control-sm common-freight-<%= o.id %>" value="<%= o.freight ? (o.freight/100).toFixed(2) : '' %>" data-name="统一运费">
                                 <span class="input-group-addon">元</span>
                             </div>

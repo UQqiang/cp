@@ -156,7 +156,7 @@
             $('#search').click(function () {
                 that.search_key = $.trim($('#keywords').val());
                 that.pageId = 1;
-                that.queryBrand();
+                that.queryChannel();
             });
 
             // batch delete
@@ -453,9 +453,9 @@
                 url: '/biz_item/query_bind_task.do',
                 data: {
                     bind_task_qto: JSON.stringify({
-                        needPaging: true,
-                        pageSize: that.page.pageSize,
-                        currentPage: that.pageId
+                        need_paging: true,
+                        page_size: that.page.pageSize,
+                        current_page: that.pageId
                     })
                 },
                 beforeSend: function () {
@@ -503,11 +503,11 @@
         /**
          * 翻页
          * @param total
-         * @param type
+         * @param pType
          */
-        pagination: function (total, type) {
+        pagination: function (total, pType) {
             var that = this;
-            var pagination = $('.ui-pagination.p-' + type);
+            var pagination = $('.ui-pagination.p-' + pType);
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数
@@ -521,17 +521,17 @@
                 onPageChange: function (num, type) {
                     that.pageId = num;
                     if (type == 'change') {
-                        if (type == 1) {
+                        if (pType == 1) {
                             that.queryBrand()
-                        } else if (type == 2) {
+                        } else if (pType == 2) {
                             that.bindTask()
-                        } else if (type == 3) {
+                        } else if (pType == 3) {
                             that.exportTask()
                         }
                     }
                 }
             });
-            if (type == 1) {
+            if (pType == 1) {
                 $('#check-all').iCheck("uncheck");
                 var n = $('#warehouseList').find('tr.list').length;
                 if (total && total != 0) {

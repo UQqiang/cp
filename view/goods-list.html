@@ -115,15 +115,16 @@
                                 <th class="tc cell-5">
                                     <input type="checkbox" id="check-all" class="flat">
                                 </th>
-                                <th class="column-title tc cell-30">商品标题</th>
+                                <th class="column-title tc cell-25">商品标题</th>
                                 <th class="column-title tc cell-5">类目</th>
                                 <th class="column-title tc cell-5">类型</th>
                                 <th class="column-title tc cell-5">品牌</th>
-                                <th class="column-title tc cell-10">成本价(元)</th>
-                                <th class="column-title tc cell-5">库存</th>
+                                <th class="column-title tc cell-10">分享汇成本价(元)</th>
+                                <th class="column-title tc cell-10"><a href="javascript:;" class="j-order-by green" data-order_by="stock_num"><span></span>库存</a></th>
                                 <th class="column-title tc cell-10">税率&nbsp;/&nbsp;起征点</th>
+                                <th class="column-title tc cell-5">添加时间</th>
                                 <th class="column-title tc cell-10">状态</th>
-                                <th class="column-title tc cell-30">操作</th>
+                                <th class="column-title tc cell-20">操作</th>
                             </tr>
                             </thead>
 
@@ -185,6 +186,7 @@
         <td class="tc"><%= item.cost_price ? (item.cost_price/100).toFixed(2) : '-' %></td>
         <td class="tc"><%= item.stock_num %></td>
         <td class="tc"><%= item.tax_rate %>&nbsp;/&nbsp;<%= item.tax_threshold %></td>
+        <td class="tc"><%= item.gmt_created %></td>
         <td class="tc"><%= ['-','正常','冻结'][item.freeze] %></td>
         <td class="tc">
             <% if(type == -1){ %>

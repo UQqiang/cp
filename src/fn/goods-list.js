@@ -304,6 +304,26 @@
 
                 })
             });
+
+            // 库存排序
+            $(document).on('click', '.j-order-by', function () {
+                that.search_key.order_by = $(this).attr('data-order_by');
+                var asc = $(this).attr('data-asc');
+                $(this).find('span').removeClass('caret-top caret-bottom');
+                if(!asc){
+                    that.search_key.asc = 1;
+                    $(this).find('span').addClass('caret-top');
+                }else{
+                    that.search_key.asc = asc;
+                    if(asc == 0){
+                        $(this).find('span').addClass('caret-bottom');
+                    }else{
+                        $(this).find('span').addClass('caret-top');
+                    }
+                }
+                $(this).attr('data-asc',(asc == 0 ? 1 : 0));
+                that.queryGoods();
+            });
         },
         iCheck: function () {
             var that = this;
@@ -518,22 +538,25 @@
          */
         queryGoods: function () {
             var that = this;
+            var item_qto = {
+                current_page: that.pageId || 1,
+                page_size: that.page.pageSize || 20,
+                keywords: that.search_key.key,
+                item_brand_id: that.search_key.brand_key,
+                category_id: that.search_key.category_id,
+                item_status: that.search_key.item_status,
+                freeze: that.search_key.freeze,
+                delivery_type: that.search_key.delivery_type,
+                storage_id: that.storage_id,
+                need_paging: true,
+                from: 3,                                         // 商品列表多传的参数
+                order_by: that.search_key.order_by,
+                asc: that.search_key.asc
+            };
             Api.get({
                 url: '/control/item/query.do',
                 data: {
-                    item_qto: JSON.stringify({
-                        current_page: that.pageId || 1,
-                        page_size: that.page.pageSize || 20,
-                        keywords: that.search_key.key,
-                        item_brand_id: that.search_key.brand_key,
-                        category_id: that.search_key.category_id,
-                        item_status: that.search_key.item_status,
-                        freeze: that.search_key.freeze,
-                        delivery_type: that.search_key.delivery_type,
-                        storage_id: that.storage_id,
-                        need_paging: true,
-                        from: 3                                         // 商品列表多传的参数
-                    })
+                    item_qto: JSON.stringify(item_qto)
                 },
                 mask: true,
                 beforeSend: function () {
