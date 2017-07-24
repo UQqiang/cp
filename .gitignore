@@ -11,3 +11,4 @@ vendors/
 .sass-cache/
 style/css/
 html.zip
+.gitlab-ci.yml
