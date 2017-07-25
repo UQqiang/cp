@@ -146,6 +146,7 @@ var compileCommonSASS = function (options, url) {
         // html
         return sass(url, options)
             .pipe(autoprefixer('last 2 versions', '> 5%'))
+            .pipe(gulp.dest('./style/css/'))
             .pipe(gulp.dest(DEST + '/style/css/'))
             .pipe(browserSync.stream());
     }
@@ -351,6 +352,6 @@ gulp.task('dev', ['build', 'clean'], function () {
 // Rc Task
 // 生产环境
 gulp.task('rc', ['html', 'clean'], function () {
-    gulp.start(['copy-plugin', 'copy-stub', 'copy-js', 'copy-img', 'hash']);
+    gulp.start(['copy-plugin', 'copy-stub', 'copy-js', 'copy-img', 'packHtml', 'hash']);
     console.log('============rc OK version!============')
 });
