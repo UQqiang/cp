@@ -1,0 +1,64 @@
+variables:
+  ACCOUNT: 'root'
+  PORT: '22'
+  IP: '10.10.10.21'
+  IDENTITY_FILE: '/home/gitlab-runner/.ssh/ydx'
+  DEPLOY_DOCUMENT: '/root/ydx'
+  DEPLOY_SCRIPT: '/root/ydx/deploy_html.sh'
+  #CI_DEBUG_TRACE: "true"
+
+stages:
+  - first
+  - build
+  - compress
+  - transfer
+  - md5_check
+  - deploy
+  - clean
+
+first:
+  stage: first
+  script:
+    - chown gitlab-runner.gitlab-runner ${IDENTITY_FILE}
+    - chmod 400 ${IDENTITY_FILE}
+    - mkdir -p /tmp/${CI_PROJECT_NAME}
+
+clean:
+  stage: clean
+  script:
+    - rm -rf /tmp/${CI_PROJECT_NAME}
+    - echo "clean all"
+
+build:
+  stage: build
+  script:
+    - gulp rc
+    - test -d /tmp/${CI_PROJECT_NAME}/html && rm -rf /tmp/${CI_PROJECT_NAME}/html
+    - mv html /tmp/${CI_PROJECT_NAME}/
+    - echo "build OK!"
+
+compress:
+  stage: compress
+  script:
+    - cd /tmp/${CI_PROJECT_NAME} && zip -r ${CI_PROJECT_NAME}.zip html
+    - echo "compress OK!" 
+   
+transfer:
+  stage: transfer
+  script:
+    - scp -o StrictHostKeyChecking=No -i ${IDENTITY_FILE} -P ${PORT} /tmp/${CI_PROJECT_NAME}/${CI_PROJECT_NAME}.zip ${ACCOUNT}@${IP}:${DEPLOY_DOCUMENT}/${CI_PROJECT_NAME}-${CI_BUILD_REF_NAME}.zip
+    - echo "transfer OK!"
+
+md5_check:
+  stage: md5_check
+  script:
+    - MD5_LOCAL=$( md5sum /tmp/${CI_PROJECT_NAME}/${CI_PROJECT_NAME}.zip | awk '{print $1}' )
+    - MD5_REMOTE=$( ssh -p ${PORT} -i ${IDENTITY_FILE} ${ACCOUNT}@${IP} "md5sum ${DEPLOY_DOCUMENT}/${CI_PROJECT_NAME}-${CI_BUILD_REF_NAME}.zip | awk '{print \$1}' " )
+    - test ${MD5_REMOTE} = ${MD5_LOCAL} || echo "transfer failed"
+    - echo "check OK!"
+
+deploy:
+  stage: deploy
+  script:
+    - ssh -o StrictHostKeyChecking=No -p ${PORT} -i ${IDENTITY_FILE} ${ACCOUNT}@${IP} "sh ${DEPLOY_SCRIPT}"
+    - echo "deploy OK!"
