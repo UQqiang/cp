@@ -39,7 +39,7 @@
 
             <!-- 渠道基本信息 -->
             <div class="x_content step editorContent" data-now_step="1">
-                <div class="form-inline">
+                <div class="form-inline edit-wrapper">
                     <div class="form-group field item mb10" >
                         <label class="ui-label ui-label-hg tr"><span class="required-icon">*</span>渠道商名称：</label>
                         <input class="form-control form-control-410" id="name" required="required" data-name="渠道商名称" type="text" placeholder="请输入渠道商名称">
@@ -122,23 +122,25 @@
                     <div class="small-title">
                         <h3>支付配置信息</h3>
                     </div>
-                    <div class="form-group field item mb10">
-                        <label class="ui-label ui-label-hg tr"><span class="required-icon">*</span>支付方式：</label>
-                        <input type="checkbox" class="flat" name="radio" id="radio-1" value="alipay" checked="checked"/>
-                        <label for="radio-1" class="ml5 mr5">
-                            支付宝
-                        </label>
-                        <input type="checkbox" class="flat" name="radio" id="radio-2" value="wxpay"/>
-                        <label for="radio-2" class="ml5 mr5">
-                            微信
-                        </label>
-                        <input type="checkbox" class="flat" name="radio" id="radio-3" value="unionpay"/>
-                        <label for="radio-3" class="ml5 mr5">
-                            银联
-                        </label>
+                    <div class="edit-wrapper">
+                        <div class="form-group field item mb10">
+                            <label class="ui-label ui-label-hg tr"><span class="required-icon">*</span>支付方式：</label>
+                            <input type="checkbox" class="flat" name="radio" id="radio-1" value="alipay" checked="checked"/>
+                            <label for="radio-1" class="ml5 mr5">
+                                支付宝
+                            </label>
+                            <input type="checkbox" class="flat" name="radio" id="radio-2" value="wxpay"/>
+                            <label for="radio-2" class="ml5 mr5">
+                                微信
+                            </label>
+                            <input type="checkbox" class="flat" name="radio" id="radio-3" value="unionpay"/>
+                            <label for="radio-3" class="ml5 mr5">
+                                银联
+                            </label>
+                        </div>
                     </div>
 
-                    <div class="pay-type-wrapper" data-type="alipay">
+                    <div class="pay-type-wrapper edit-wrapper" data-type="alipay">
                         <div class="form-group field item mb10">
                             <label class="ui-label ui-label-hg tr"><span class="required-icon">*</span>支付宝商户号：</label>
                             <input class="form-control form-control-410" id="alipayPartner" required="required" name="商户号" data-name="商户号" type="text" placeholder="请输入支付宝商户号">
@@ -161,7 +163,7 @@
                         <br/>
                     </div>
 
-                    <div class="pay-type-wrapper dpnone" data-type="wxpay">
+                    <div class="pay-type-wrapper dpnone edit-wrapper" data-type="wxpay">
                         <div class="form-group field item mb10">
                             <label class="ui-label ui-label-hg tr"><span class="required-icon">*</span>微信支付H5端APPID：</label>
                             <input class="form-control form-control-410" id="wechatH5AppId" required="required" data-name="H5端APPID" type="text" placeholder="请输入微信支付H5端APPID">
@@ -204,7 +206,7 @@
                         <br/>
                     </div>
 
-                    <div class="pay-type-wrapper dpnone" data-type="unionpay">
+                    <div class="pay-type-wrapper dpnone edit-wrapper" data-type="unionpay">
                         <div class="form-group field item mb10">
                             <label class="ui-label ui-label-hg tr"><span class="required-icon">*</span>银联商户号：</label>
                             <input class="form-control form-control-410" id="unionpayMchId" required="required" data-name="银联商户号" type="text" placeholder="请输入银联商户号">
@@ -225,7 +227,7 @@
                     <div class="small-title">
                         <h3>登录配置信息</h3>
                     </div>
-                    <div class="other-info">
+                    <div class="other-info edit-wrapper">
                         <div class="form-group field item mb10">
                             <label class="ui-label ui-label-hg tr"><span class="required-icon">*</span>微信登录H5端APPID：</label>
                             <input class="form-control form-control-410" id="wechatLoginH5AppId" required="required" data-name="微信登录H5端APPID" type="text" placeholder="请输入微信登录H5端APPID">
@@ -251,7 +253,7 @@
                     <div class="small-title">
                         <h3>其他配置信息</h3>
                     </div>
-                    <div class="other-info">
+                    <div class="other-info edit-wrapper">
                         <div class="form-group field item mb10">
                             <label class="ui-label ui-label-hg tr">客服电话：</label>
                             <input class="form-control form-control-410" id="csTel" data-name="客服电话" type="text" placeholder="请输入客服电话">

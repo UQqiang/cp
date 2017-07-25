@@ -500,7 +500,14 @@
                 }
                 $(this).hide();
                 $('.j-batch[data-type=' + type + ']').show();
+            });
 
+            // 批量设置 - sku - input
+            $('.goods-content').on('keyup', 'input[data-type=promotion_price],input[data-type=market_price],input[data-type=ean]', function () {
+                var type = $(this).attr('data-type');
+                if (that.canEdit == 0) {
+                    return;
+                }
                 if ($.trim($(this).val()) == '') {
                     return;
                 }
@@ -1529,8 +1536,8 @@
             Api.get({
                 url: '/brand/query.do',
                 data: {
-                    current_page: 1,
-                    page_size: 10
+                    page_size: 200,
+                    current_page: 1
                 },
                 beforeSend: function () {
                 },
@@ -1544,18 +1551,12 @@
                         });
                     }
                     var selectize = $('#brand-selectize').selectize({
-                        options: that.brandList,
+                        options: brand,
                         placeholder: '请选择商品品牌',
                         create: false,
-                        valueField: 'value',
-                        labelField: 'text',
-                        searchField: 'text',
-                        render: {
-                            option: function (item, escape) {
-                                console.log(item, escape);
-                                return '<div><span>' + item.text + '</span></div>'
-                            }
-                        },
+                        valueField: 'id',
+                        labelField: 'brand_name',
+                        searchField: 'brand_name',
                         onItemAdd: function (value, $item) {
                             // 选择品牌
                             that.brand_key = value
@@ -1563,35 +1564,37 @@
                         onItemRemove: function (value) {
                             that.brand_key = ''
                         },
-                        score: function(search) {
-                            var score = this.getScoreFunction(search);
-                            return function(item) {
-                                return score(item) * (1 + Math.min(item.watchers / 100, 1));
-                            };
+                        render: {
+                            option: function (item, escape) {
+                                return '<div>' +
+                                    '<span class="title">' +
+                                    '<span class="name" data-id="' + item.id + '">' + escape(item.brand_name) + '</span>' +
+                                    '</span>' +
+                                    '</div>';
+                            }
                         },
                         load: function (query, callback) {
                             if (!query.length) return callback();
-                            Api.get({
-                                url: '/brand/query.do',
+                            $.ajax({
+                                url: Api.domain() + '/brand/query.do',
+                                type: 'GET',
+                                dataType: 'jsonp',
                                 data: {
-                                    keywords: query,
+                                    page_size: 200,
                                     current_page: 1,
-                                    page_size: 5
-                                },
-                                beforeSend: function () {
-
-                                },
-                                success: function (data) {
-                                    callback(data.data.data);
-                                },
-                                complete: function () {
-
+                                    keywords: query
                                 },
                                 error: function () {
                                     callback();
-                                    toastr.error(data.msg, '提示');
+                                },
+                                success: function (res) {
+                                    var arr = [];
+                                    for (var i = 0; i < res.data.data.length; i++) {
+                                        arr.push(res.data.data[i]);
+                                    }
+                                    callback(arr);
                                 }
-                            })
+                            });
                         }
                     });
                     selectize[0].selectize.addOption(that.brandList);

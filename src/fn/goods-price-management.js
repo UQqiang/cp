@@ -354,12 +354,8 @@
             });
 
             // 批量设置 - sku - input
-            $(document).on('blur', 'input[data-set_type=1],input[data-set_type=2],input[data-set_type=3],input[data-set_type=4]', function () {
+            $(document).on('keyup', 'input[data-set_type=1],input[data-set_type=2],input[data-set_type=3],input[data-set_type=4]', function () {
                 var type = $(this).attr('data-set_type');
-
-                $(this).hide();
-                $('.j-batch[data-type=' + type + ']').show();
-
                 if ($.trim($(this).val()) == '') {
                     return;
                 }
@@ -367,8 +363,13 @@
                     var item_id = $('.checkbox:checked').eq(i).attr('data-item_id');
                     $('.list-' + item_id).find('input[data-input_type=' + type + ']').val($(this).val()).change();
                 }
+            });
 
-                //that.finishingSkuTableData();
+            // 批量设置 - sku - input
+            $(document).on('blur', 'input[data-set_type=1],input[data-set_type=2],input[data-set_type=3],input[data-set_type=4]', function () {
+                var type = $(this).attr('data-set_type');
+                $(this).hide();
+                $('.j-batch[data-type=' + type + ']').show();
             });
 
         },

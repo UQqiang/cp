@@ -194,7 +194,7 @@
                             content: '未保存的数据将会丢失，确定要离开吗?'
                         }, function (btn, dialog) {
                             dialog.close();
-                            location.href = 'goods-brand.html';
+                            location.href = 'channel-management.html';
                         }, function (btn, dialog) {
                             dialog.close();
                         })

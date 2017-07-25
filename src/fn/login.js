@@ -6,6 +6,11 @@
         init: function () {
             this.refreshVerifyCode('verifyCode');
             this.addEvent();
+
+            $('#backgroundJs').particleground({
+                dotColor: '#e2dfdf',
+                lineColor: '#e2dfdf'
+            });
         },
         addEvent: function () {
             var that = this;

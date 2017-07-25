@@ -47,13 +47,13 @@
             var app = new Vue({
                 el: '#openShopHistory',
                 data: {
-                    searchValue: '',
-                    channelList: '',
-                    dataList: {
-                        data: {
-                            data: []
-                        }
-                    }
+                    searchValue: {
+                        name: '',
+                        channel: ''
+                    },
+                    channelList: [],
+                    dataList: [],
+                    total: ''
                 },
                 created: function () {
                     this.ajaxChannel();
@@ -61,23 +61,37 @@
                 mounted: function () {
                     $('#openShopHistory').show();
                 },
+                updated: function () {
+                    var n = $('#historyList').find('tr.list').length;
+                    if (this.total && this.total != 0) {
+                        $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + this.total + '条</span>')
+                    } else {
+                        $('.pagination-info').html('<span>当前0条</span>/<span>共' + this.total + '条</span>')
+                    }
+                },
                 methods: {
                     searchInformation: function () {
-                        console.log(this.searchValue + that.name);
+                        var _self = this;
+
+                        console.log(this.searchValue.name + this.searchValue.channel);
+
+                        that.search_key.keywords = this.searchValue.name;
+
+                        that.getData(function (res) {
+                            _self.dataList = res.data.data;
+                            _self.total = res.data.total_count;
+                        })
                     },
                     ajaxChannel: function () {
                         var _self = this;
-                        console.log(this);
-                        this.channelList = [{
-                            name: '宁波',
-                            id: '1'
-                        }, {
-                            name: '上海',
-                            id: '2'
-                        }];
-                        that.getData(function (data) {
-                            _self.dataList = data;
-                            that.pagination(_self.dataList.data.data.total_count)
+
+                        that.getChannelList(function (res) {
+                            _self.channelList = res.data.data;
+                        });
+
+                        that.getData(function (res) {
+                            _self.dataList = res.data.data;
+                            _self.total = res.data.total_count;
                         });
                     },
                     freeze: function (e, currentData) {
@@ -90,10 +104,10 @@
                             target: target,
                             content: status == 1 ? '确定要关闭' + name + '吗?' : '确定要激活' + name + '吗?'
                         }, function (btn, dialog) {
-                            toastr.success((status == 1 ? '关闭':'激活') + name + '成功!', '提示');
-                            for (var i = 0; i < _self.dataList.data.data.length; i++) {
-                                if (_self.dataList.data.data[i].id == id) {
-                                    _self.dataList.data.data[i].status = (status == 1 ? 2 : 1);
+                            toastr.success((status == 1 ? '关闭' : '激活') + name + '成功!', '提示');
+                            for (var i = 0; i < _self.dataList.length; i++) {
+                                if (_self.dataList[i].id == id) {
+                                    _self.dataList[i].status = (status == 1 ? 2 : 1);
                                 }
                             }
                             dialog.close();
@@ -103,6 +117,32 @@
                     }
                 }
             });
+        },
+        /**
+         * 渠道
+         * @param cb
+         */
+        getChannelList: function (cb) {
+            var that = this;
+            Api.get({
+                url: '/channel/control/query.do',
+                data: {
+                    current_page: that.pageId,
+                    pageSize: 1000
+                },
+                beforeSend: function () {
+
+                },
+                success: function (res) {
+                    cb && cb(res)
+                },
+                complete: function () {
+
+                },
+                error: function () {
+                    toastr.error(data.msg, '提示');
+                }
+            })
         },
         getData: function (cb) {
             var that = this;
@@ -122,7 +162,7 @@
                 },
                 success: function (data) {
                     cb && cb(data);
-                    //that.pagination(data.data.total_count);
+                    that.pagination(data.data.total_count);
                 },
                 complete: function () {
 
@@ -157,12 +197,6 @@
                 }
             });
             $('#check-all').iCheck("uncheck");
-            var n = $('#brandList').find('tr.list').length;
-            if (total && total != 0) {
-                $('.pagination-info').html('<span>当前' + n + '条</span>/<span>共' + total + '条</span>')
-            } else {
-                $('.pagination-info').html('<span>当前0条</span>/<span>共' + total + '条</span>')
-            }
         }
     };
     // run

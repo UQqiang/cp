@@ -956,7 +956,7 @@
          */
         pagination: function (total) {
             var that = this;
-            var pagination = $('.pagination')
+            var pagination = $('.ui-pagination');
             pagination.jqPaginator({
                 totalCounts: total == 0 ? 10 : total,                            // 设置分页的总条目数
                 pageSize: that.page.pageSize,                                    // 设置每一页的条目数

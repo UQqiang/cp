@@ -3961,11 +3961,19 @@ a.hiddenanchor {
 
 .login_wrapper {
   // right: 0px;
-  margin: auto;
+  margin: auto 35% auto auto;
   max-width: 350px;
   position: relative;
   min-height: 500px;
   width: 100%;
+  background: rgba(0,0,0,0.1);
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+}
+
+@media screen and (max-width: 760px) {
+  .login_wrapper{
+    margin: auto!important;
+  }
 }
 
 .registration_form, .login_form {
@@ -5632,6 +5640,11 @@ a.antoo {
   border-bottom: 5px solid;
   border-right: 5px solid transparent;
   border-left: 5px solid transparent;
+}
+
+.edit-wrapper{
+  width: 650px;
+  margin: 0 auto;
 }
 
 /**************************** 修正selectize使其兼容后台 ********************/

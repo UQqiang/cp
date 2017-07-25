@@ -72,6 +72,7 @@
                                 </th>
                                 <th class="column-title tc cell-20">商品标题</th>
                                 <th class="column-title tc cell-20">商品规格</th>
+                                <th class="column-title tc cell-10">EAN</th>
                                 <th class="column-title tc cell-10">供应商报价(元)</th>
                                 <th class="column-title tc cell-10">运营成本费用率(%)</th>
                                 <th class="column-title tc cell-10">分享汇成本价(元)</th>
@@ -86,7 +87,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3" class="tr">批量设置：</td>
+                                    <td colspan="4" class="tr">批量设置：</td>
                                     <td class="tc">
                                         <a href="javascript:;" class="j-batch" data-type="1">供应商报价</a>
                                         <input class="form-control form-control-sm dpnone" data-set_type="1">
@@ -145,6 +146,7 @@
 <!-- 商品列表 -->
 <script type="text/template" id="j-template">
     <% _.each(items,function(item,index){ %>
+        <% if(item.item_sku_dto_list.length > 0){ %>
         <% _.each(item.item_sku_dto_list, function(obj, i){ %>
             <% if( i == 0 ){ %>
                 <tr class="list-<%= item.id %>" data-sku_id="<%= obj.id %>">
@@ -159,6 +161,13 @@
                          -
                         <% } %>
                     <% }) %>
+                    </td>
+                    <td class="tc">
+                        <% if( obj.bar_code ){ %>
+                        <span><%= obj.bar_code %></span>
+                        <% }else{ %>
+                        -
+                        <% } %>
                     </td>
                     <td class="tc cell-10 field item">
                         <span>
@@ -194,6 +203,13 @@
                         <% } %>
                     <% }) %>
                     </td>
+                    <td class="tc">
+                        <% if( obj.bar_code ){ %>
+                        <span><%= obj.bar_code %></span>
+                        <% }else{ %>
+                        -
+                        <% } %>
+                    </td>
                     <td class="tc cell-10 field item">
                         <span>
                             <input data-input_type="1" type="text" class="form-control form-control-sm price-so" value="<%= obj.supplier_cost ? (obj.supplier_cost/100).toFixed(2) : '' %>" required="required" pattern="decimal" data-validate-length-range="1,10">
@@ -217,6 +233,9 @@
                 </tr>
             <% } %>
         <% }) %>
+        <% }else{ %>
+    
+        <% } %>
     <% }) %>
 </script>
 

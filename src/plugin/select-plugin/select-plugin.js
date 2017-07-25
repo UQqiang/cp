@@ -591,7 +591,9 @@
                     var item_qto = {
                         current_page: that.pageConfig.pageId || 1,
                         page_size: that.pageConfig.pageSize,
-                        item_status: itemStatus
+                        item_status: itemStatus,
+                        from: 3,
+                        need_paging: true
                     };
                     if (that.search_key.brand_key && that.search_key.brand_key != '') {
                         item_qto.item_brand_id = that.search_key.brand_key

@@ -66,16 +66,35 @@
                     });
                 });
             }
-            // 商品类型 切换
-            $('[name=radio]').on('ifChecked', function () {
+            // checked
+            $('[name=radio]').on('ifClicked', function () {
                 var payType = $(this).val();
-                $('.pay-type-wrapper[data-type=' + payType + ']').show();
+
+                if (this.checked) {
+                    $('.pay-type-wrapper[data-type=' + payType + ']').hide();
+                } else {
+                    $('.pay-type-wrapper[data-type=' + payType + ']').show();
+                }
             });
 
-            $('[name=radio]').on('ifUnchecked', function () {
-                var payType = $(this).val();
-                $('.pay-type-wrapper[data-type=' + payType + ']').hide();
-            });
+            // 商品类型 切换
+            //$('[name=radio]').on('ifChecked', function () {
+            //    var payType = $(this).val();
+            //    $('.pay-type-wrapper[data-type=' + payType + ']').show();
+            //});
+            //
+            //$('[name=radio]').on('ifUnchecked', function () {
+            //    var payType = $(this).val();
+            //
+            //    if($('[name=radio]:checked').length <= 0 ){
+            //        toastr.error('支付方式请务必选择一种!', '提示');
+            //        $(this).prop('checked', true);
+            //        $(this).iCheck('check');
+            //        return;
+            //    }
+            //
+            //    $('.pay-type-wrapper[data-type=' + payType + ']').hide();
+            //});
         },
         /**
          * 步骤
@@ -128,6 +147,10 @@
                         return;
                     }
                     if (isValid == true) {
+                        if($('input[name=radio]:checked').length <= 0 ){
+                            toastr.error('请务必选择一种支付方式!', '提示');
+                            return false;
+                        }
                         that.setPostData();
                         if (!that.id) {
                             that.addAccount();
