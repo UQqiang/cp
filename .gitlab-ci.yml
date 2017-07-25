@@ -32,7 +32,7 @@ clean:
 build:
   stage: build
   script:
-    - gulp rc
+    - source /etc/profile && gulp rc
     - test -d /tmp/${CI_PROJECT_NAME}/html && rm -rf /tmp/${CI_PROJECT_NAME}/html
     - mv html /tmp/${CI_PROJECT_NAME}/
     - echo "build OK!"
