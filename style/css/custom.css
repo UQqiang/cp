@@ -3816,7 +3816,7 @@ a.hiddenanchor {
 }
 
 .login_wrapper {
-  margin: auto 35% auto auto;
+  margin: auto 25% auto auto;
   max-width: 350px;
   position: relative;
   min-height: 500px;
@@ -3981,12 +3981,7 @@ a.hiddenanchor {
 
 .login_content form input[type="text"], .login_content form input[type="email"], .login_content form input[type="password"] {
   border-radius: 3px;
-  -ms-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
-  -o-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
-  box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0, 0, 0, 0.08) inset;
-  border: 1px solid #c8c8c8;
   color: #777;
-  margin: 0 0 20px;
   width: 85%;
 }
 
@@ -5245,6 +5240,10 @@ ul.notifications {
   margin-bottom: 10px !important;
 }
 
+.mb20 {
+  margin-bottom: 20px !important;
+}
+
 .mr15 {
   margin-right: 15px !important;
 }
@@ -5428,6 +5427,15 @@ a.antoo {
 .edit-wrapper {
   width: 650px;
   margin: 0 auto;
+}
+
+#backgroundJs {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  z-index: 0;
 }
 
 /**************************** 修正selectize使其兼容后台 ********************/

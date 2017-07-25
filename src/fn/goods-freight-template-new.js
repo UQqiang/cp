@@ -259,6 +259,21 @@
                     data.width = 800;
                     data.height = 100;
                     that.popup(data, function () {
+                        var radioVal = $('input[name=radio]:checked').attr('data-value');
+                        if (radioVal == 0) {
+                            $('.unit').text('件');
+                            $('.unit-che').text('件');
+                            $('.basic_count,.extra_count').attr('pattern', 'numeric')
+                        } else if (radioVal == 2) {
+                            $('.unit').text('m³');
+                            $('.unit-che').text('体积');
+                            $('.basic_count,.extra_count').attr('pattern', 'decimalOne')
+                        } else {
+                            $('.unit').text('kg');
+                            $('.unit-che').text('重');
+                            $('.basic_count,.extra_count').attr('pattern', 'decimalOne')
+                        }
+
                     }, function () {
                         var $parent = $('.check-item:checked').parents(".template-tr");
                         $parent.find(".basic_count").val($(".batch-input").find(".basic_counts").val());
@@ -559,7 +574,7 @@
                     if ($pricing_method == 0) {
                         $('input[name=radio][data-value=0]').attr('checked', 'checked');
                         $('.unit').text('件');
-                        $('.unit-che').text('件')
+                        $('.unit-che').text('件');
                         $('.basic_count,.extra_count').attr('pattern', 'numeric')
                     } else if ($pricing_method == 1) {
                         $('input[name=radio][data-value=1]').attr('checked', 'checked');

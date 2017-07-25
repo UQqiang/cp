@@ -70,6 +70,13 @@
                         $('.mask').fadeOut();
                     }, 500);
                     opts.complete && opts.complete(data);
+
+                    // tooltip
+                    $(document).ready(function () {
+                        $('[data-toggle="tooltip"]').tooltip({
+                            container: 'body'
+                        });
+                    });
                 },
                 error: function (xhr, status, error) {
                     if (xhr.status === 500) {

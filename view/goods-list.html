@@ -122,9 +122,9 @@
                                 <th class="column-title tc cell-10">分享汇成本价(元)</th>
                                 <th class="column-title tc cell-10"><a href="javascript:;" class="j-order-by green" data-order_by="stock_num"><span></span>库存</a></th>
                                 <th class="column-title tc cell-10">税率&nbsp;/&nbsp;起征点</th>
-                                <th class="column-title tc cell-5">添加时间</th>
-                                <th class="column-title tc cell-10">状态</th>
-                                <th class="column-title tc cell-20">操作</th>
+                                <th class="column-title tc cell-10">添加时间</th>
+                                <th class="column-title tc cell-5">状态</th>
+                                <th class="column-title tc cell-25">操作</th>
                             </tr>
                             </thead>
 
@@ -177,7 +177,9 @@
         <td>
             <dl>
                 <dt><img class="goods-image" src="<%= item.icon_url %>"></dt>
-                <dd class="ellipsis" style="-webkit-box-orient:vertical"><%= item.item_name %></dd>
+                <dd class="ellipsis" style="-webkit-box-orient:vertical">
+                    <a data-toggle="tooltip" data-placement="top" data-original-title="<%= item.item_name %>"><%= item.item_name %></a>
+                </dd>
             </dl>
         </td>
         <td class="tc"><%= item.category_name %></td>

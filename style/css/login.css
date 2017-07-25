@@ -18,6 +18,10 @@ body {
       flex-wrap: nowrap;
 }
 
+.login_content .input-group input {
+  width: 250px !important;
+}
+
 .verify-input {
   display: inline-block;
   border-radius: 3px 0 0 3px;
@@ -27,7 +31,7 @@ body {
   display: inline-block;
   background: #dedede;
   height: 34px;
-  width: 100px;
+  width: 104px;
   border-radius: 0 3px 3px 0;
   vertical-align: top;
   /* padding: 1px; */
@@ -45,8 +49,9 @@ input:focus:-webkit-autofill {
 }
 
 i {
-  font-size: 22px !important;
+  font-size: 20px !important;
   vertical-align: middle;
+  color: #5A738E;
 }
 
 .verify-input {
@@ -84,25 +89,15 @@ label {
   line-height: 40px;
   margin-top: auto;
 }
+.login-bottom p {
+  margin-bottom: 0;
+}
 
 .forget-secret-wrap {
   margin-bottom: 20px;
 }
 .forget-secret-wrap .forget-secret {
   font-size: 14px;
-}
-
-.form-group {
-  margin-bottom: 0 !important;
-}
-
-#backgroundJs {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  right: 0;
-  bottom: 60px;
-  z-index: 0;
 }
 
 .pwd-change .button-wrapper {

@@ -577,6 +577,12 @@
                         $('#goodsList').html('<tr><td class="tc" colspan="18">没有任何记录!</td></tr>')
                     }
 
+                    // 动态计算商品名称的宽度
+                    var width = $('#goodsList dl').width();
+                    $('#goodsList dl dd').css({
+                        "max-width": (width - 80) + 'px'
+                    });
+
                     that.pagination(data.data.total_count);
                 },
                 complete: function () {

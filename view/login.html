@@ -40,32 +40,32 @@
     <div class="login_wrapper">
         <div class="animate form login_form">
             <section class="login_content">
-                <form>
+                <form class="form-inline">
                     <h1>登录</h1>
-                    <div class="item field">
-                        <div class="form-group form-inline">
-                            <label class="tr mr10"><i class="fa fa-user"></i></label>
+                    <div class="form-group item field mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><font><i class="fa fa-user"></i></font></span>
                             <input type="text" class="form-control" placeholder="请输入用户名" required="required" data-name="用户名" id="username"/>
                         </div>
+                        <!--<label class="tr mr10"><i class="fa fa-user"></i></label>-->
+                        <!--<input type="text" class="form-control" placeholder="请输入用户名" required="required" data-name="用户名" id="username"/>-->
                     </div>
-                    <div class="item field">
-                        <div class="form-group form-inline">
-                            <label class="tr mr10"><i class="fa fa-lock"></i></label>
+                    <div class="form-group item field mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><font><i class="fa fa-lock"></i></font></span>
                             <input type="password" class="form-control" placeholder="请输入密码" required="required" data-name="密码" id="password"/>
                         </div>
                     </div>
-                    <div class="item field">
-                        <div class="form-group form-inline">
-                            <input type="text" class="form-control verify-input mr10" id="verify" placeholder="请输入验证码" required="required" data-name="验证码">
-                            <span class="verify">
-                                 <script>
-                                     document.write('<img id="verifyCode" title="看不清？换一张" src="'+ Api.domain() + '/verify_code.do" />')
-                                 </script>
-                            </span>
-                        </div>
+                    <div class="form-group item field mb20">
+                        <input type="text" class="form-control verify-input mr10" id="verify" placeholder="请输入验证码" required="required" data-name="验证码">
+                        <span class="verify">
+                             <script>
+                                 document.write('<img id="verifyCode" title="看不清？换一张" src="'+ Api.domain() + '/verify_code.do" />')
+                             </script>
+                        </span>
                     </div>
                     <div class="forget-secret-wrap tr">
-                        <a href="forget-secret.html" class="green forget-secret">忘记密码？</a>
+                        <a href="forget-secret.html" class="forget-secret">忘记密码？</a>
                     </div>
                     <div>
                         <a class="btn btn-success btn-success-lg submit" href="javascript:;" id="j-submit" style="width:100%">登 录</a>

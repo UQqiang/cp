@@ -69,17 +69,17 @@
                     <table id="datatable" class="table table-striped jambo_table bulk_action table-bordered">
                         <thead>
                         <tr class="headings">
-                            <th class="tc">
+                            <th class="tc cell-5">
                                 <input type="checkbox" id="check-all" class="flat">
                             </th>
-                            <th class="column-title tc">仓库ID</th>
-                            <th class="column-title tc">仓库简称</th>
-                            <th class="column-title tc">仓库全名</th>
-                            <th class="column-title tc">联系人</th>
-                            <th class="column-title tc">联系方式</th>
-                            <th class="column-title tc">地址</th>
-                            <th class="column-title tc">状态</th>
-                            <th class="column-title no-link last tc"><span class="nobr">操作</span>
+                            <th class="cell-5 tc">仓库ID</th>
+                            <th class="cell-10 tc">仓库简称</th>
+                            <th class="cell-10 tc">仓库全名</th>
+                            <th class="cell-10 tc">联系人</th>
+                            <th class="cell-10 tc">联系方式</th>
+                            <th class="cell-25">地址</th>
+                            <th class="cell-10 tc">状态</th>
+                            <th class="cell-15 no-link last tc"><span class="nobr">操作</span>
                             </th>
                             <th class="bulk-actions tc" colspan="7">
                                 <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
@@ -136,7 +136,7 @@
         <td class="tc"><%= item.storage_name %></td>
         <td class="tc"><%= item.link_man %></td>
         <td class="tc"><%= item.mobile %></td>
-        <td class="tc">
+        <td>
             <%= item.address_country ? (item.address_country).split('|')[0] : '' %>
             <%= item.address_province ? (item.address_province).split('|')[0] : '' %>
             <%= item.address_city ? (item.address_city).split('|')[0] : '' %>
