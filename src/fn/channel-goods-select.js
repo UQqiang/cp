@@ -614,7 +614,8 @@
             Api.get({
                 url: '/biz_item/delete.do',
                 data: {
-                    id_list: JSON.stringify(idList)
+                    id_list: JSON.stringify(idList),
+                    channel_id: that.idList[0].id
                 },
                 beforeSend: function () {
 
