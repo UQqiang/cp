@@ -39,12 +39,28 @@
                 <div class="x_content">
                     <div class="form-inline fr">
                         <div class="form-group">
+                            <label class="ui-label ui-label-sm tr">选择渠道：</label>
                             <select class="form-control form-control-md" v-model="searchValue.channel">
                                 <option value="">请选择所属渠道</option>
                                 <option v-for="item in channelList">
                                     {{ item.name }}
                                 </option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="ui-label ui-label-sm tr">选择状态：</label>
+                            <select class="form-control form-control-md" v-model="searchValue.status">
+                                <option value="">全部</option>
+                                <option>待结算</option>
+                                <option>已结算</option>
+                            </select>
+                        </div>
+                        <div class="form-group mr10">
+                            <label class="ui-label ui-label-sm tr pt5">时间段：</label>
+                            <div id="timepicker" class="pull-right timepicker">
+                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                <span class="fz12">请选择相应的时间</span> <b class="caret"></b>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
@@ -71,6 +87,9 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
+                    <div class="form-group">
+                        <a href="javascript:;" class="btn btn-sm btn-success" v-on:click="exportHistroy()">导出</a>
+                    </div>
                     <!--<div>-->
                         <!--<div class="form-group">-->
                             <!--<a class="btn btn-sm btn-success" href="goods-brand-add.html">添加品牌</a>-->
@@ -83,19 +102,25 @@
                                 <th class="tc cell-5">
                                     <input type="checkbox" id="check-all" class="flat">
                                 </th>
-                                <th class="tc column-title">id</th>
-                                <th class="tc column-title cell-20">头像/昵称</th>
+                                <th class="tc column-title">用户ID</th>
+                                <th class="tc column-title cell-20">用户姓名</th>
                                 <th class="tc column-title cell-30">用户账号</th>
-                                <th class="tc column-title">所属渠道</th>
                                 <th class="tc column-title">店铺名称</th>
-                                <th class="tc column-title">联系方式</th>
-                                <th class="tc column-title">创建时间</th>
-                                <th class="tc column-title">到期时间</th>
+                                <th class="tc column-title">所属渠道</th>
+                                <th class="tc column-title">
+                                    <span class="caret-top" v-if="recharge.asc"></span>
+                                    <span class="caret-bottom" v-if="recharge.desc"></span>
+                                    <a href="javascript:;" v-on:click="orderBy($event, recharge)" class="j-order-by green">充值时间</a>
+                                </th>
+                                <th class="tc column-title">
+                                    <span class="caret-top" v-if="expiration.asc"></span>
+                                    <span class="caret-bottom" v-if="expiration.desc"></span>
+                                    <a href="javascript:;" v-on:click="orderBy($event, expiration)" class="j-order-by green">到期时间</a>
+                                </th>
+                                <th class="tc column-title">充值时长（月）</th>
                                 <th class="tc column-title">状态</th>
                                 <th class="tc column-title">操作</th>
-                                <th class="bulk-actions" colspan="7">
-                                    <a class="antoo">当前选中 ( <span class="action-cnt"> </span> )</a>
-                                </th>
+                                <th class="tc column-title">结算金额</th>
                             </tr>
                             </thead>
                             <tbody id="historyList">
@@ -103,17 +128,18 @@
                                 <td class="tc" colspan="18">没有任何记录!</td>
                             </tr>
                             <tr v-if="dataList.length > 0" v-for="item in dataList" class="list">
-                                <td class="tc">{{item.brand_name}}</td>
-                                <td class="tc">{{item.brand_desc}}</td>
-                                <td class="tc">{{item.brand_name}}</td>
-                                <td class="tc">{{item.brand_name}}</td>
-                                <td class="tc">{{item.brand_name}}</td>
-                                <td class="tc">{{item.brand_name}}</td>
-                                <td class="tc">{{item.brand_name}}</td>
-                                <td class="tc">{{item.brand_name}}</td>
-                                <td class="tc">{{item.brand_name}}</td>
+                                <td class="tc"><input type="checkbox" class="checkbox flat" :data-id="item.id"></td>
+                                <td class="tc">{{item.brand_desc || '-'}}</td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
                                 <td class="tc">{{item.status == 1 ? '激活' : '关闭'}}</td>
-                                <td class="tc"><a href="javascript:;" v-on:click="freeze($event,item)" :data-id="item.id">{{item.status == 1 ? '关闭' : '激活'}}</a></td>
+                                <td class="tc"><a href="javascript:;" v-on:click="settlementFunc($event,item)" :data-id="item.id">{{item.status == 1 ? '关闭' : '激活'}}</a></td>
+                                <td class="tc">{{item.brand_name || '-'}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -122,7 +148,7 @@
                     <!-- 页码 -->
                     <div class="widget-list clearfix ">
                         <div class="fl pagination">
-                            <!--<button class="btn btn-sm btn-success" id="batchDelete">删除</button>-->
+                            <button class="btn btn-sm btn-success" id="batchSettlement" v-on:click="batchSettlementFunc($event)">批量结算</button>
                         </div>
                         <div class="list-page fr">
                             <span class="pagination-info"></span>
@@ -152,22 +178,6 @@
 <script type="text/javascript" src="../src/plugin/vue/vue.js"></script>
 <script type="text/javascript" src="../src/fn/market-open-shop-history.js"></script>
  <!--end -->
-
-<script type="text/template" id="j-template">
-     <% _.each(items,function(item,index){ %>
-    <tr class="list">
-    <td class="tc"><input type="checkbox" class="checkbox flat" data-id="<%= item.id %>"></td>
-    <td class="tc"><span><%= item.brand_name %></span></td>
-    <td class="tc"><span><img class="image" src="<%= item.logo %>"></span></td>
-    <td class="tc"><p class="ellipsis" style="-webkit-box-orient: vertical;"><%= item.brand_desc || '-' %></p></td>
-    <td class="tc">
-    <a href="goods-brand-add.html?id=<%= item.id %>">编辑</a>
-    <span>-</span>
-    <a href="javascript:;" class="j-brand-delete" data-id="<%= item.id %>" data-name="<%= item.brand_name %>">删除</a>
-    </td>
-    </tr>
-    <% }) %>
-</script>
 
 </body>
 </html>
