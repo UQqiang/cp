@@ -38,6 +38,10 @@ $ gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
 $ gem sources -l
 $ sudo gem install sass
 
+// 如果使用淘宝镜像还是无法安装。可能是mac（本人mac osx系统）自带的ruby版本问题。
+// 使用rvm 或者 brew 安装更新ruby（安装rvm 或者 brew 的过程可能要安装xcode）
+// 在使用 sudo gem install sass 安装
+
 ```
 
 ## gulp-concat - 连接文件
